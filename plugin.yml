@@ -1,0 +1,11 @@
+name: KoTH
+main: subside.plugins.koth.Koth
+version: 1.0.14 BETA
+author: SubSide
+commands:
+  koth:
+    description: Gives access to koth
+permissions:
+  koth.admin:
+    description: Allows you to configure koths
+    default: op

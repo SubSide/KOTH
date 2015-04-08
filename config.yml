@@ -1,0 +1,54 @@
+# To grab your own timezone go to: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+#
+# The use-playermoveevent feature, when true, will use the PlayerMoveEvent (suprise!)
+# This means that it will check if the player left the KOTH every single time the player moves
+# This will end up with a VERY smooth koth experience, but is discouraged as again, it will trigger every time a player moves.
+# You can turn it on if you like, see how it goes, and can always turn it off if lag occurs (a reload is required for this)
+#
+#
+# Setting the knock time to something higher than 0 will make the koth "freeze" for that amount of seconds
+# This means that when someone gets knocked off the koth, it will take a moment before it can be capped again.
+# This can be used to stop the spam messages in the chat.
+#
+#
+# For everything, a reload is required.
+#
+# Available placeholders (this is also used for the Lang.json),
+# Note that not all placeholders are available for every message.
+#
+# %area% - The area for this message
+# %player% - The player capping the area
+# %world% - The world where the area is running
+# %minutes% - The amount of minutes that this area is running
+# %seconds% - The amount of seconds that this area is running
+# %minutes_left% - The amount of minutes left for this area
+# %seconds_left% - The amount of seconds left for this area
+# %x% - X coordinate for the running area
+# %y% - Y coordinate for the running area
+# %z% - Z coordinate for the running area
+# %day% - Day of the schedule
+# %time% - The time of the schedule
+# %length% - The length of the area
+# %id% - Schedule ID
+# %date% - The current date
+# %command% - This is the command for the help menu
+# %command_info% - This is the description of the command for help menu
+
+
+
+schedule-timezone: "Europe/Amsterdam"
+use-scoreboard: true
+use-playermoveevent: false
+one-for-all: false
+amount-of-loot: 5
+knockTime: 0
+
+scoreboard:
+  title: "&a&l%area%"
+  contents:
+    - "&6&lTime Left:"
+    - "&9%minutes_left%:%seconds_left%"
+    - " "
+    - "&6&lCoords:"
+    - "&cX: &e%x%"
+    - "&cZ: &e%z%"
