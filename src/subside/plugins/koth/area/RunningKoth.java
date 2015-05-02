@@ -36,7 +36,16 @@ public class RunningKoth {
 	@SuppressWarnings("deprecation")
 	public void checkPlayerCapping() {
 		if(cappingPlayer != null){
-			if (!area.isInArea(Bukkit.getOfflinePlayer(cappingPlayer))) {
+			boolean shouldClear = !area.isInArea(Bukkit.getOfflinePlayer(cappingPlayer));
+			if(!shouldClear){
+				if(Bukkit.getOfflinePlayer(cappingPlayer).isOnline()){
+					if(((Player)Bukkit.getOfflinePlayer(cappingPlayer)).isDead()){
+						shouldClear = true;
+					}
+				}
+			}
+			
+			if (shouldClear) {
 				int secondsCapped = timeCapped % 60;
 				int minutesCapped = timeCapped / 60;
 				int secondsLeft = (captureTime - timeCapped) % 60;

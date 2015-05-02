@@ -10,6 +10,7 @@ public class ConfigHandler {
 	private int lootAmount = 5;
 	private String timeZone = "Europe/Amsterdam";
 	private boolean singleLootChest = false;
+	private boolean randomizeLoot = true;
 	private int knockTime = 0;
 	private static ConfigHandler cfgHandler;
 	
@@ -22,6 +23,7 @@ public class ConfigHandler {
 		lootAmount = cfg.getInt("amount-of-loot");
 		knockTime = cfg.getInt("knockTime");
 		singleLootChest = cfg.getBoolean("one-for-all");
+		randomizeLoot = cfg.getBoolean("randomize-loot");
 		
 		if(useScoreboard){
 			ScoreboardHandler.load(cfg.getString("scoreboard.title"), cfg.getStringList("scoreboard.contents").toArray(new String[cfg.getStringList("scoreboard.contents").size()]));
@@ -46,6 +48,10 @@ public class ConfigHandler {
 	
 	public int getKnockTime(){
 		return knockTime;
+	}
+	
+	public boolean getRandomizeLoot(){
+		return randomizeLoot;
 	}
 	
 	public boolean getUsePlayerMoveEvent(){
