@@ -12,6 +12,8 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
+import org.bukkit.craftbukkit.libs.com.google.gson.JsonParser;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -43,43 +45,36 @@ public class KothLoader {
 				Iterator<?> it = areas.iterator();
 				while(it.hasNext()){
 					JSONObject ar = (JSONObject)it.next();
+					Area area = new Area((String)ar.get("name"), getLocFromObject((JSONObject)ar.get("min")), getLocFromObject((JSONObject)ar.get("max")));
 					try {
-						Area area = new Area((String)ar.get("name"), getLocFromObject((JSONObject)ar.get("min")), getLocFromObject((JSONObject)ar.get("max")));
-						try {
-							if(ar.get("loot") != null){
-								Inventory inv = Bukkit.createInventory(null, 54, new MessageBuilder(Lang.KOTH_LOOT_CHEST).area((String)ar.get("name")).build());
-								JSONObject loot = (JSONObject)ar.get("loot");
-								if(loot.containsKey("pos")){
-									area.setLootPos(getLocFromObject((JSONObject)loot.get("pos")));
-								}
-								if(loot.containsKey("items")){
-									JSONObject lootItems = (JSONObject)loot.get("items");
-									Set<?> keys = lootItems.keySet();
-									for(Object key : keys){
-										try {
-											inv.setItem(Integer.parseInt(key+""), itemFrom64((String)lootItems.get(key)));
-										} catch(Exception e){
-											e.printStackTrace();
-										}
+						if(ar.get("loot") != null){
+							Inventory inv = Bukkit.createInventory(null, 54, new MessageBuilder(Lang.KOTH_LOOT_CHEST).area((String)ar.get("name")).build());
+							JSONObject loot = (JSONObject)ar.get("loot");
+							if(loot.containsKey("pos")){
+								area.setLootPos(getLocFromObject((JSONObject)loot.get("pos")));
+							}
+							if(loot.containsKey("items")){
+								JSONObject lootItems = (JSONObject)loot.get("items");
+								Set<?> keys = lootItems.keySet();
+								for(Object key : keys){
+									try {
+										inv.setItem(Integer.parseInt(key+""), itemFrom64((String)lootItems.get(key)));
+									} catch(Exception e){
+										e.printStackTrace();
 									}
-									area.setInventory(inv);
 								}
+								area.setInventory(inv);
 							}
-							if(ar.get("lastWinner") != null){
-								area.setLastWinner((String)ar.get("lastWinner"));
-							}
-						} catch(Exception e){
-							e.printStackTrace();
 						}
-						
-						
-						KothHandler.getAvailableAreas().add(area);
+						if(ar.get("lastWinner") != null){
+							area.setLastWinner((String)ar.get("lastWinner"));
+						}
 					} catch(Exception e){
-						System.out.println("////////////////");
-						System.out.println("Error loading koth: "+ar.get("name"));
-						System.out.println("////////////////");
 						e.printStackTrace();
 					}
+					
+					
+					KothHandler.getAvailableAreas().add(area);
 				}
 			}
 			
@@ -122,7 +117,7 @@ public class KothLoader {
 					}
 					if(area.getInventory().getSize() > 0){
 						JSONObject lootItems = new JSONObject();
-						for (int x = 0; x < 54; x++) {
+						for (int x = 0; x < 53; x++) {
 							ItemStack item = area.getInventory().getItem(x);
 							if (item != null) {
 								lootItems.put(x, itemTo64(item));
@@ -144,7 +139,7 @@ public class KothLoader {
 			FileOutputStream fileStream = new FileOutputStream(new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "koths.json"));
 			OutputStreamWriter file = new OutputStreamWriter(fileStream, "UTF-8");
 			try {
-				file.write(Utils.getGson(obj.toJSONString()));
+				file.write(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new JsonParser().parse(obj.toJSONString())));
 			}
 			catch (IOException e) {
 				e.printStackTrace();

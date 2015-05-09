@@ -5,12 +5,6 @@
 # This will end up with a VERY smooth koth experience, but is discouraged as again, it will trigger every time a player moves.
 # You can turn it on if you like, see how it goes, and can always turn it off if lag occurs (a reload is required for this)
 #
-# One for all creates a single loot chest for all the koths
-# Since this was request a lot, I added it in. It's disabled by default
-#
-# Randomize loot will make it so it will randomly generate the loot for you
-# If you don't want this (You want all the items to be given in the chest)
-# You should put this to false
 #
 # Setting the knock time to something higher than 0 will make the koth "freeze" for that amount of seconds
 # This means that when someone gets knocked off the koth, it will take a moment before it can be capped again.
@@ -29,9 +23,9 @@
 # %seconds% - The amount of seconds that this area is running
 # %minutes_left% - The amount of minutes left for this area
 # %seconds_left% - The amount of seconds left for this area
-# %x% - X coordinate for the area
-# %y% - Y coordinate for the area
-# %z% - Z coordinate for the area
+# %x% - X coordinate for the running area
+# %y% - Y coordinate for the running area
+# %z% - Z coordinate for the running area
 # %day% - Day of the schedule
 # %time% - The time of the schedule
 # %length% - The length of the area
@@ -47,7 +41,6 @@ use-scoreboard: true
 use-playermoveevent: false
 one-for-all: false
 amount-of-loot: 5
-randomize-loot: true
 knockTime: 0
 
 scoreboard:

@@ -10,13 +10,14 @@ import java.util.Calendar;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
+import org.bukkit.craftbukkit.libs.com.google.gson.JsonParser;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Koth;
-import subside.plugins.koth.Utils;
 import subside.plugins.koth.area.Area;
 
 public class ScheduleHandler {
@@ -168,7 +169,7 @@ public class ScheduleHandler {
 			FileOutputStream fileStream = new FileOutputStream(new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "schedule.json"));
 			OutputStreamWriter file = new OutputStreamWriter(fileStream, "UTF-8");
 			try {
-				file.write(Utils.getGson(obj.toJSONString()));
+				file.write(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new JsonParser().parse(obj.toJSONString())));
 			}
 			catch (IOException e) {
 				e.printStackTrace();

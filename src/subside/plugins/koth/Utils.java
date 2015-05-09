@@ -7,12 +7,7 @@ public class Utils {
 		new MessageBuilder(Lang.PREFIX+msg).buildAndSend(sender);
 	}
 	
-	public static String getGson(String str){
-		try {
-			return new com.google.gson.GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new com.google.gson.JsonParser().parse(str));
-		} catch(NoClassDefFoundError e){
-			return new org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new org.bukkit.craftbukkit.libs.com.google.gson.JsonParser().parse(str));
-		}
-		
+	public static boolean hasPerms(CommandSender sender){
+		return sender.hasPermission("koth.admin");
 	}
 }

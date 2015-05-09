@@ -41,6 +41,7 @@ public class Koth extends JavaPlugin {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onDisable() {
 		ScoreboardHandler.clearAll();

@@ -1,6 +1,6 @@
 name: KoTH
 main: subside.plugins.koth.Koth
-version: 1.0.17
+version: 1.0.14 BETA
 author: SubSide
 commands:
   koth:
@@ -9,12 +9,3 @@ permissions:
   koth.admin:
     description: Allows you to configure koths
     default: op
-  koth.schedule:
-    description: Allows you to schedule koths
-    default: true
-  koth.list:
-    description: Allows you to see the list of koths
-    default: true
-  koth.loot:
-    description: Allows you to see the loot
-    default: true

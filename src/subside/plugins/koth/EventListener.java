@@ -27,14 +27,12 @@ public class EventListener implements Listener {
 				Location loc = chest.getLocation();
 				for (Area area : KothHandler.getAvailableAreas()) {
 					Location vec = area.getLootPos();
-					if (vec == null) continue;
 					if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
 						if (!area.getLastWinner().equalsIgnoreCase(e.getPlayer().getName())) {
 							e.setCancelled(true);
 						}
 
 					}
-
 				}
 			}
 		}
@@ -45,11 +43,9 @@ public class EventListener implements Listener {
 		Location loc = e.getBlock().getLocation();
 		for (Area area : KothHandler.getAvailableAreas()) {
 			Location vec = area.getLootPos();
-			if (vec == null) continue;
 			if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
 				e.setCancelled(true);
 			}
-
 		}
 	}
 
@@ -67,7 +63,7 @@ public class EventListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryChange(InventoryClickEvent event) {
-		if (!Perm.ADMIN.has((Player) event.getWhoClicked())) {
+		if (!Utils.hasPerms((Player) event.getWhoClicked())) {
 			if (event.getInventory().equals(SingleLootChest.getInventory())) {
 				event.setCancelled(true);
 				return;
@@ -86,9 +82,9 @@ public class EventListener implements Listener {
 
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
-		if (Perm.ADMIN.has((Player) event.getPlayer())) {
-			if (ConfigHandler.getCfgHandler().getSingleLootChest()) {
-				if (SingleLootChest.getInventory().equals(event.getInventory())) {
+		if (Utils.hasPerms((Player) event.getPlayer())) {
+			if(ConfigHandler.getCfgHandler().getSingleLootChest()){
+				if(SingleLootChest.getInventory().equals(event.getInventory())){
 					KothLoader.save();
 					return;
 				}

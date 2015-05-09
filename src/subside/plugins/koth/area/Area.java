@@ -106,29 +106,22 @@ public class Area {
 			if (lootPos.getBlock().getState() instanceof Chest) {
 				Chest chest = (Chest) lootPos.getBlock().getState();
 				ItemStack[] loot;
-				if (ConfigHandler.getCfgHandler().getSingleLootChest()) {
+				if(ConfigHandler.getCfgHandler().getSingleLootChest()){
 					loot = SingleLootChest.getInventory().getContents();
 				} else {
 					loot = this.lootInv.getContents();
 				}
-
+				
 				ArrayList<ItemStack> usableLoot = new ArrayList<ItemStack>();
 				for (ItemStack stack : loot) {
 					if (stack != null) {
 						usableLoot.add(stack.clone());
 					}
 				}
-				if (usableLoot.size() < 1) return;
-
+				if(usableLoot.size() < 1) return;
 				Inventory inv = chest.getInventory();
-				if (ConfigHandler.getCfgHandler().getRandomizeLoot()) {
-					for (int x = 0; x < ConfigHandler.getCfgHandler().getLootAmount(); x++) {
-						inv.setItem(x, usableLoot.get(new Random().nextInt(usableLoot.size())).clone());
-					}
-				} else {
-					for (int x = 0; x < usableLoot.size(); x++) {
-						inv.setItem(x, usableLoot.get(x).clone());
-					}
+				for (int x = 0; x < ConfigHandler.getCfgHandler().getLootAmount(); x++) {
+					inv.setItem(x, usableLoot.get(new Random().nextInt(usableLoot.size())).clone());
 				}
 			}
 		}
@@ -150,7 +143,7 @@ public class Area {
 		Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable() {
 			public void run() {
 				if (area.getLootPos() != null) {
-					if (area.getLootPos().getBlock() != null) {
+					if(area.getLootPos().getBlock() != null){
 						if (area.getLootPos().getBlock().getState() instanceof Chest) {
 							Chest chest = (Chest) area.getLootPos().getBlock().getState();
 							Inventory inv = chest.getInventory();

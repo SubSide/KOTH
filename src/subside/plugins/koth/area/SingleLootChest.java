@@ -10,6 +10,8 @@ import java.io.OutputStreamWriter;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
+import org.bukkit.craftbukkit.libs.com.google.gson.JsonParser;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -21,7 +23,6 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import subside.plugins.koth.Koth;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.MessageBuilder;
-import subside.plugins.koth.Utils;
 
 public class SingleLootChest {
 	private static Inventory inventory;
@@ -78,7 +79,7 @@ public class SingleLootChest {
 			FileOutputStream fileStream = new FileOutputStream(new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "singleloot.json"));
 			OutputStreamWriter file = new OutputStreamWriter(fileStream, "UTF-8");
 			try {
-				file.write(Utils.getGson(obj.toJSONString()));
+				file.write(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new JsonParser().parse(obj.toJSONString())));
 			}
 			catch (IOException e) {
 				e.printStackTrace();

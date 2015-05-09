@@ -24,6 +24,7 @@ public class ScoreboardHandler {
 		scoreboard = new KothSB(new String[textLoader.length]);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void updateScoreboard() {
 		WeakReference<RunningKoth> koth = KothHandler.getRunningKoth();
 		if (koth == null) {
@@ -42,10 +43,10 @@ public class ScoreboardHandler {
 		int posY = Math.round((area.getMin().getBlockY() + area.getMax().getBlockY()) / 2);
 		int posZ = Math.round((area.getMin().getBlockZ() + area.getMax().getBlockZ()) / 2);
 
-		scoreboard.setTitle(new MessageBuilder(titleLoader).area(area.getName()).world(area.getMin().getWorld().getName()).player(player).seconds(secs).minutes(mins).secondsLeft(secs_left).minutesLeft(mins_left).x(posX).y(posY).z(posZ).build());
+		scoreboard.setTitle(new MessageBuilder(titleLoader).area(area.getName()).player(player).seconds(secs).minutes(mins).secondsLeft(secs_left).minutesLeft(mins_left).x(posX).y(posY).z(posZ).build());
 
 		for (int x = 0; x < text.length; x++) {
-			scoreboard.setScore(x, new MessageBuilder(text[x]).area(area.getName()).world(area.getMin().getWorld().getName()).player(player).seconds(secs).minutes(mins).secondsLeft(secs_left).minutesLeft(mins_left).x(posX).y(posY).z(posZ).build());
+			scoreboard.setScore(x, new MessageBuilder(text[x]).area(area.getName()).player(player).seconds(secs).minutes(mins).secondsLeft(secs_left).minutesLeft(mins_left).x(posX).y(posY).z(posZ).build());
 
 		}
 
@@ -58,19 +59,19 @@ public class ScoreboardHandler {
 		return;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void clearAll() {
 		for (Player pl : Bukkit.getOnlinePlayers()) {
-			clearPlayer(pl);
+			if (pl.getScoreboard() == null) continue;
+			if (pl.getScoreboard() == scoreboard.getScoreboard()) {
+				pl.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+			}
 		}
 	}
 
 	public static void clearPlayer(Player pl) {
-		try {
-			if (pl.getScoreboard() == scoreboard.getScoreboard()) {
-				pl.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-			}
-		} catch(Exception e){
-			
+		if (pl.getScoreboard() == scoreboard.getScoreboard()) {
+			pl.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 		}
 	}
 }
