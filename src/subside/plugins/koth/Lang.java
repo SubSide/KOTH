@@ -8,8 +8,6 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder;
-import org.bukkit.craftbukkit.libs.com.google.gson.JsonParser;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,7 +21,7 @@ public class Lang {
 	public static String KOTH_PLAYERCAP = "&a%player% has started to cap %area%!";
 	public static String KOTH_CAPTIME = "&a%player% is capping the koth! %minutes_left%:%seconds_left% left!";
 	public static String KOTH_LEFT = "&a%player% left the koth!";
-	public static String KOTH_LOOT_CHEST = "&1&l%area%s &8&lloot chest!";
+	public static String KOTH_LOOT_CHEST = "&1&l%area%s &8&lloot";
 	
 	public static String AREA_ALREADYRUNNING = "&aThe area %area% is already running!";
 	public static String AREA_ALREADYEXISTS = "&aThe area %area% already exists!";
@@ -128,11 +126,10 @@ public class Lang {
 				}
 			}
 
-			//FileWriter file = new FileWriter(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json");
 			FileOutputStream fileStream = new FileOutputStream(new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json"));
 			OutputStreamWriter file = new OutputStreamWriter(fileStream, "UTF-8");
 			try {
-				file.write(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new JsonParser().parse(obj.toJSONString())));
+				file.write(Utils.getGson(obj.toJSONString()));
 			}
 			catch (IOException e) {
 				e.printStackTrace();

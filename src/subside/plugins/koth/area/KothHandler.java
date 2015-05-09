@@ -96,7 +96,6 @@ public class KothHandler {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void removeArea(String name) {
 		Area area = getArea(name);
 		if (area != null) {
