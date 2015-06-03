@@ -26,10 +26,8 @@ public class RunningKoth {
 		this.timeCapped = 0;
 		this.cappingPlayer = null;
 		area.removeLootChest();
-		area.setLastWinner(null);	
-		int seconds = captureTime % 60;
-		int minutes = captureTime / 60;
-		new MessageBuilder(Lang.KOTH_STARTING).minutes(minutes).seconds(seconds).area(area.getName()).world(area.getMin().getWorld().getName()).buildAndBroadcast();
+		area.setLastWinner(null);
+		new MessageBuilder(Lang.KOTH_STARTING).time(captureTime, timeCapped).area(area.getName()).buildAndBroadcast();
 
 	}
 
@@ -46,11 +44,7 @@ public class RunningKoth {
 			}
 			
 			if (shouldClear) {
-				int secondsCapped = timeCapped % 60;
-				int minutesCapped = timeCapped / 60;
-				int secondsLeft = (captureTime - timeCapped) % 60;
-				int minutesLeft = (captureTime - timeCapped) / 60;
-				new MessageBuilder(Lang.KOTH_LEFT).minutes(minutesCapped).seconds(secondsCapped).minutesLeft(minutesLeft).secondsLeft(secondsLeft).player(cappingPlayer).area(area.getName()).world(area.getMin().getWorld().getName()).buildAndBroadcast();
+				new MessageBuilder(Lang.KOTH_LEFT).time(captureTime, timeCapped).player(cappingPlayer).area(area.getName()).buildAndBroadcast();
 	
 				cappingPlayer = null;
 				timeCapped = 0;
@@ -82,14 +76,10 @@ public class RunningKoth {
 			Player player = Bukkit.getOfflinePlayer(cappingPlayer).getPlayer();
 			if (++timeCapped < captureTime) {
 				if (timeCapped % 30 == 0) {
-					int secondsCapped = timeCapped % 60;
-					int minutesCapped = timeCapped / 60;
-					int secondsLeft = (captureTime - timeCapped) % 60;
-					int minutesLeft = (captureTime - timeCapped) / 60;
-					new MessageBuilder(Lang.KOTH_CAPTIME).minutes(minutesCapped).seconds(secondsCapped).minutesLeft(minutesLeft).secondsLeft(secondsLeft).player(cappingPlayer).area(area.getName()).world(area.getMin().getWorld().getName()).buildAndBroadcast();
+					new MessageBuilder(Lang.KOTH_CAPTIME).time(captureTime, timeCapped).player(cappingPlayer).area(area.getName()).buildAndBroadcast();
 				}
 			} else {
-				new MessageBuilder(Lang.KOTH_WON).player(cappingPlayer).world(player.getWorld().getName()).area(area.getName()).buildAndBroadcast();
+				new MessageBuilder(Lang.KOTH_WON).player(cappingPlayer).area(area.getName()).buildAndBroadcast();
 				area.setLastWinner(player.getName());
 				Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable(){
 					public void run(){
@@ -112,16 +102,14 @@ public class RunningKoth {
 			}
 			if (insideArea.size() > 0) {
 				cappingPlayer = insideArea.get(new Random().nextInt(insideArea.size())).getName();
-				int seconds = captureTime % 60;
-				int minutes = captureTime / 60;
-				new MessageBuilder(Lang.KOTH_PLAYERCAP).player(cappingPlayer).area(area.getName()).world(area.getMin().getWorld().getName()).minutes(minutes).seconds(seconds).buildAndBroadcast();
+				new MessageBuilder(Lang.KOTH_PLAYERCAP).player(cappingPlayer).area(area.getName()).time(captureTime, timeCapped).buildAndBroadcast();
 			}
 
 		}
 	}
 	
 	public void quickEnd(){
-		timeCapped = 9999999;
+		timeCapped = captureTime;
 	}
 	
 	public String getCappingPlayer(){

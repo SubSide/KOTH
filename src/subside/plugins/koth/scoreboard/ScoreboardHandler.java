@@ -33,19 +33,11 @@ public class ScoreboardHandler {
 
 		Area area = koth.get().getArea();
 		String player = koth.get().getCappingPlayer();
-		int secs = koth.get().getTimeCapped() % 60;
-		int mins = koth.get().getTimeCapped() / 60;
-		int secs_left = (koth.get().getCaptureTime() - koth.get().getTimeCapped()) % 60;
-		int mins_left = (koth.get().getCaptureTime() - koth.get().getTimeCapped()) / 60;
 
-		int posX = Math.round((area.getMin().getBlockX() + area.getMax().getBlockX()) / 2);
-		int posY = Math.round((area.getMin().getBlockY() + area.getMax().getBlockY()) / 2);
-		int posZ = Math.round((area.getMin().getBlockZ() + area.getMax().getBlockZ()) / 2);
-
-		scoreboard.setTitle(new MessageBuilder(titleLoader).area(area.getName()).world(area.getMin().getWorld().getName()).player(player).seconds(secs).minutes(mins).secondsLeft(secs_left).minutesLeft(mins_left).x(posX).y(posY).z(posZ).build());
+		scoreboard.setTitle(new MessageBuilder(titleLoader).area(area.getName()).player(player).time(koth.get().getCaptureTime(), koth.get().getTimeCapped()).build());
 
 		for (int x = 0; x < text.length; x++) {
-			scoreboard.setScore(x, new MessageBuilder(text[x]).area(area.getName()).world(area.getMin().getWorld().getName()).player(player).seconds(secs).minutes(mins).secondsLeft(secs_left).minutesLeft(mins_left).x(posX).y(posY).z(posZ).build());
+			scoreboard.setScore(x, new MessageBuilder(text[x]).area(area.getName()).player(player).time(koth.get().getCaptureTime(), koth.get().getTimeCapped()).build());
 
 		}
 

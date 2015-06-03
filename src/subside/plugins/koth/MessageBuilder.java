@@ -2,7 +2,11 @@ package subside.plugins.koth;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+
+import subside.plugins.koth.area.Area;
+import subside.plugins.koth.area.KothHandler;
 
 public class MessageBuilder {
 	String message;
@@ -13,17 +17,21 @@ public class MessageBuilder {
 	}
 	
 	public MessageBuilder area(String area){
-		message = message.replaceAll("%area%", area);
+		message = message.replaceAll("%area%", area.replaceAll("([^\\])_", "$1 "));
+		Area ar = KothHandler.getArea(area);
+		if (ar != null) {
+			Location loc = ar.getMiddle();
+			message = message
+					.replaceAll("%x%", ""+loc.getBlockX())
+					.replaceAll("%y%", ""+loc.getBlockY())
+					.replaceAll("%z%", ""+loc.getBlockZ());
+			message = message.replaceAll("%world%", loc.getWorld().getName());
+		}
 		return this;
 	}
 	
 	public MessageBuilder player(String player){
 		message = message.replaceAll("%player%", player);
-		return this;
-	}
-	
-	public MessageBuilder world(String world){
-		message = message.replaceAll("%world%", world);
 		return this;
 	}
 	
@@ -52,40 +60,17 @@ public class MessageBuilder {
 		return this;
 	}
 	
-	public MessageBuilder minutes(int minutes){
-		message = message.replaceAll("%minutes%", String.format("%02d", minutes));
-		return this;
-	}
-	
-	public MessageBuilder seconds(int seconds){
-		message = message.replaceAll("%seconds%", String.format("%02d", seconds));
-		return this;
-	}
-	
-	public MessageBuilder minutesLeft(int left){
-		message = message.replaceAll("%minutes_left%", String.format("%02d", left));
-		return this;
-	}
-	
-	public MessageBuilder secondsLeft(int left){
-		message = message.replaceAll("%seconds_left%", String.format("%02d", left));
-		return this;
-	}
+	public MessageBuilder time(int captureTime, int timeCapped){
+		int secondsCapped = timeCapped % 60;
+		int minutesCapped = timeCapped / 60;
+		int secondsLeft = (captureTime - timeCapped) % 60;
+		int minutesLeft = (captureTime - timeCapped) / 60;
 
-	
-	public MessageBuilder x(int x){
-		message = message.replaceAll("%x%", ""+x);
-		return this;
-	}
-
-	
-	public MessageBuilder y(int y){
-		message = message.replaceAll("%y%", ""+y);
-		return this;
-	}
-	
-	public MessageBuilder z(int z){
-		message = message.replaceAll("%z%", ""+z);
+		message = message.replaceAll("%minutes%", String.format("%02d", minutesCapped));
+		message = message.replaceAll("%seconds%", String.format("%02d", secondsCapped));
+		message = message.replaceAll("%minutes_left%", String.format("%02d", minutesLeft));
+		message = message.replaceAll("%seconds_left%", String.format("%02d", secondsLeft));
+		
 		return this;
 	}
 	

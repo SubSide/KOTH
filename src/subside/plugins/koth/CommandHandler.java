@@ -52,7 +52,7 @@ public class CommandHandler implements CommandExecutor {
 					schedule(player, newArgs);
 				} else if (args[0].equalsIgnoreCase("list") && Perm.LIST.has(sender)) {
 					list(player, newArgs);
-				} else if (args[0].equalsIgnoreCase("info")) {
+				} else if (args[0].equalsIgnoreCase("info") && Perm.INFO.has(sender)) {
 					info(player, newArgs);
 				} else {
 					help(player, newArgs);
@@ -132,15 +132,15 @@ public class CommandHandler implements CommandExecutor {
 		if (args.length > 0) {
 			if (args.length > 1) {
 				try {
-					KothHandler.startKoth(args[0], Integer.parseInt(args[1]));
-					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_TRIGGERED).world(KothHandler.getArea(args[0]).getMin().getWorld().getName()).area(args[0]).build());
+					KothHandler.startKoth(args[0], Integer.parseInt(args[1])*60);
+					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_TRIGGERED).area(args[0]).build());
 				}
 				catch (NumberFormatException e) {
 					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_USAGE + "/koth start <name> [time]").build());
 				}
 			} else {
 				KothHandler.startKoth(args[0]);
-				throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_TRIGGERED).world(KothHandler.getArea(args[0]).getMin().getWorld().getName()).area(args[0]).build());
+				throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_TRIGGERED).area(args[0]).build());
 			}
 		} else {
 			throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_USAGE + "/koth start <name> [time]").build());
@@ -153,12 +153,12 @@ public class CommandHandler implements CommandExecutor {
 				Selection sel = Koth.getWorldEdit().getSelection(player);
 				if (sel != null) {
 					KothHandler.createArea(args[0], sel.getMinimumPoint(), sel.getMaximumPoint());
-					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_CREATED).world(KothHandler.getArea(args[0]).getMin().getWorld().getName()).area(args[0]).build());
+					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_CREATED).area(args[0]).build());
 				} else {
 					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_SELECT).area(args[0]).build());
 				}
 			} else {
-				throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_ALREADYEXISTS).world(KothHandler.getArea(args[0]).getMin().getWorld().getName()).area(args[0]).build());
+				throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_ALREADYEXISTS).area(args[0]).build());
 			}
 		} else {
 			throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_USAGE + "/koth create <name>").build());
@@ -168,15 +168,7 @@ public class CommandHandler implements CommandExecutor {
 	public void list(Player player, String[] args) {
 		player.sendMessage(new MessageBuilder(Lang.COMMAND_LIST_MESSAGE).build());
 		for (Area areas : KothHandler.getAvailableAreas()) {
-			int posX = 0;
-			int posY = 0;
-			int posZ = 0;
-			if (areas != null) {
-				posX = Math.round((areas.getMin().getBlockX() + areas.getMax().getBlockX()) / 2);
-				posY = Math.round((areas.getMin().getBlockY() + areas.getMax().getBlockY()) / 2);
-				posZ = Math.round((areas.getMin().getBlockZ() + areas.getMax().getBlockZ()) / 2);
-			}
-			player.sendMessage(new MessageBuilder(Lang.COMMAND_LIST_ENTRY).area(areas.getName()).x(posX).y(posY).z(posZ).build());
+			player.sendMessage(new MessageBuilder(Lang.COMMAND_LIST_ENTRY).area(areas.getName()).build());
 		}
 	}
 
@@ -262,16 +254,7 @@ public class CommandHandler implements CommandExecutor {
 					ArrayList<String> subList = new ArrayList<String>();
 					for (Schedule sched : schedules) {
 						if (sched.getDay() == day) {
-							Area area = KothHandler.getArea(sched.getArea());
-							int posX = 0;
-							int posY = 0;
-							int posZ = 0;
-							if (area != null) {
-								posX = Math.round((area.getMin().getBlockX() + area.getMax().getBlockX()) / 2);
-								posY = Math.round((area.getMin().getBlockY() + area.getMax().getBlockY()) / 2);
-								posZ = Math.round((area.getMin().getBlockZ() + area.getMax().getBlockZ()) / 2);
-							}
-							subList.add(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_ENTRY).id(schedules.indexOf(sched)).day(day.getDay()).area(sched.getArea()).time(sched.getTime()).x(posX).y(posY).z(posZ).length(sched.getRunTime()).build());
+							subList.add(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_ENTRY).id(schedules.indexOf(sched)).day(day.getDay()).area(sched.getArea()).time(sched.getTime()).length(sched.getRunTime()).build());
 						}
 					}
 					if (subList.size() > 0) {
@@ -302,16 +285,7 @@ public class CommandHandler implements CommandExecutor {
 				ArrayList<String> subList = new ArrayList<String>();
 				for (Schedule sched : schedules) {
 					if (sched.getDay() == day) {
-						Area area = KothHandler.getArea(sched.getArea());
-						int posX = 0;
-						int posY = 0;
-						int posZ = 0;
-						if (area != null) {
-							posX = Math.round((area.getMin().getBlockX() + area.getMax().getBlockX()) / 2);
-							posY = Math.round((area.getMin().getBlockY() + area.getMax().getBlockY()) / 2);
-							posZ = Math.round((area.getMin().getBlockZ() + area.getMax().getBlockZ()) / 2);
-						}
-						subList.add(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_ENTRY).day(day.getDay()).area(sched.getArea()).time(sched.getTime()).x(posX).y(posY).z(posZ).length(sched.getRunTime()).build());
+						subList.add(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_ENTRY).day(day.getDay()).area(sched.getArea()).time(sched.getTime()).length(sched.getRunTime()).build());
 					}
 				}
 				if (subList.size() > 0) {
@@ -353,7 +327,7 @@ public class CommandHandler implements CommandExecutor {
 			if (Perm.LIST.has(player)) list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth list").commandInfo("Shows all available koths").build());
 			if (Perm.LOOT.has(player)) list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth loot").commandInfo("Shows the loot for the upcoming koth").build());
 			if (Perm.SCHEDULE.has(player)) list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth schedule").commandInfo("Shows the schedule for koths").build());
-			list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth info").commandInfo("Shows info about this plugin").build());
+			if (Perm.INFO.has(player)) list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth info").commandInfo("Shows info about this plugin").build());
 		}
 
 		player.sendMessage(list.toArray(new String[list.size()]));

@@ -1,6 +1,6 @@
 name: KoTH
 main: subside.plugins.koth.Koth
-version: 1.0.17
+version: 1.1.1
 author: SubSide
 commands:
   koth:
@@ -16,5 +16,8 @@ permissions:
     description: Allows you to see the list of koths
     default: true
   koth.loot:
+    description: Allows you to see the loot
+    default: true
+  koth.info:
     description: Allows you to see the loot
     default: true

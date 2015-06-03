@@ -3,6 +3,7 @@ package subside.plugins.koth.area;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -77,6 +78,13 @@ public class KothHandler {
 	}
 
 	public static void startKoth(String area, int time) {
+		if(area.equalsIgnoreCase("random")){
+			if(availableAreas.size() > 0){
+				startKoth(availableAreas.get(new Random().nextInt(availableAreas.size())), time);
+				return;
+			}
+		}
+		
 		for (Area ar : availableAreas) {
 			if (ar.getName().equalsIgnoreCase(area)) {
 				startKoth(ar, time);
@@ -87,7 +95,7 @@ public class KothHandler {
 	}
 
 	public static void createArea(String name, Location min, Location max) {
-		if (getArea(name) == null) {
+		if (getArea(name) == null && !name.equalsIgnoreCase("random")) {
 			Area area = new Area(name, min, max);
 			availableAreas.add(area);
 			KothLoader.save();

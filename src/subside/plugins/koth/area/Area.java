@@ -20,15 +20,17 @@ import subside.plugins.koth.MessageBuilder;
 public class Area {
 	private String name;
 	private Location min;
+	private Location mid;
 	private Location max;
 	private Location lootPos = null;
 	private String lastWinner;
-	public Inventory lootInv;
+	private Inventory lootInv;
 
 	public Area(String name, Location min, Location max) {
 		this.name = name;
 		this.min = getMinimum(min, max);
 		this.max = getMaximum(min, max);
+		calculateMiddle();
 		this.lootInv = Bukkit.createInventory(null, 54, new MessageBuilder(Lang.KOTH_LOOT_CHEST).area(name).build());
 	}
 
@@ -39,6 +41,11 @@ public class Area {
 	private Location getMaximum(Location loc1, Location loc2) {
 		return new Location(loc1.getWorld(), (loc1.getX() > loc2.getX()) ? loc1.getX() : loc2.getX(), (loc1.getY() > loc2.getY()) ? loc1.getY() : loc2.getY(), (loc1.getZ() > loc2.getZ()) ? loc1.getZ() : loc2.getZ());
 	}
+	
+	private void calculateMiddle(){
+		this.mid = min.clone().add(max.clone()).multiply(0.5);
+	}
+	
 
 	private boolean isInAABB(Location pos, Location pos2, Location pos3) {
 		Location min = getMinimum(pos2, pos3);
@@ -55,6 +62,10 @@ public class Area {
 		}
 		Player player = oPlayer.getPlayer();
 		if (player == null) {
+			return false;
+		}
+		
+		if(player.isDead()){
 			return false;
 		}
 
@@ -74,6 +85,7 @@ public class Area {
 	public void setArea(Location min, Location max) {
 		this.min = getMinimum(min, max);
 		this.max = getMaximum(min, max);
+		calculateMiddle();
 	}
 
 	public Location getMin() {
@@ -82,6 +94,10 @@ public class Area {
 
 	public Location getMax() {
 		return max;
+	}
+	
+	public Location getMiddle(){
+		return mid;
 	}
 
 	public String getName() {
