@@ -17,7 +17,7 @@ public class MessageBuilder {
 	}
 	
 	public MessageBuilder area(String area){
-		message = message.replaceAll("%area%", area.replaceAll("([^\\])_", "$1 "));
+		message = message.replaceAll("%area%", area.replaceAll("\\\\\\\\", "%5C").replaceAll("([^\\\\])_", "$1 ").replaceAll("\\\\_", "_").replaceAll("%5C", "\\\\\\\\"));
 		Area ar = KothHandler.getArea(area);
 		if (ar != null) {
 			Location loc = ar.getMiddle();

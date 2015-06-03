@@ -31,7 +31,9 @@ public class Area {
 		this.min = getMinimum(min, max);
 		this.max = getMaximum(min, max);
 		calculateMiddle();
-		this.lootInv = Bukkit.createInventory(null, 54, new MessageBuilder(Lang.KOTH_LOOT_CHEST).area(name).build());
+		String title = new MessageBuilder(Lang.KOTH_LOOT_CHEST).area(name).build();
+		if(title.length() > 32) title = title.substring(0,32);
+		this.lootInv = Bukkit.createInventory(null, 54, title);
 	}
 
 	private Location getMinimum(Location loc1, Location loc2) {

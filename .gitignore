@@ -45,3 +45,7 @@ Temporary Items
 .settings/org.eclipse.jdt.core.prefs
 *.project
 *.classpath
+*.html
+*.gif
+*.css
+doc/package-list
