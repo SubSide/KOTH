@@ -10,6 +10,10 @@ import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Koth;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.MessageBuilder;
+import subside.plugins.koth.events.KothCapEvent;
+import subside.plugins.koth.events.KothEndEvent;
+import subside.plugins.koth.events.KothLeftEvent;
+import subside.plugins.koth.events.KothStartEvent;
 
 public class RunningKoth {
 	private Area area;
@@ -29,6 +33,7 @@ public class RunningKoth {
 		area.setLastWinner(null);
 		new MessageBuilder(Lang.KOTH_STARTING).time(captureTime, timeCapped).area(area.getName()).buildAndBroadcast();
 
+        Bukkit.getServer().getPluginManager().callEvent(new KothStartEvent(area, captureTime));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -44,14 +49,23 @@ public class RunningKoth {
 			}
 			
 			if (shouldClear) {
-				new MessageBuilder(Lang.KOTH_LEFT).time(captureTime, timeCapped).player(cappingPlayer).area(area.getName()).buildAndBroadcast();
-	
-				cappingPlayer = null;
-				timeCapped = 0;
-				if(ConfigHandler.getCfgHandler().getKnockTime() > 0){
-					timeKnocked = 0;
-					knocked = true;
-				}
+                KothLeftEvent event = new KothLeftEvent(area, cappingPlayer, timeCapped);
+                Bukkit.getServer().getPluginManager().callEvent(event);
+                if(event.getNextCapper() == null){
+                    new MessageBuilder(Lang.KOTH_LEFT).time(captureTime, timeCapped).player(cappingPlayer).area(area.getName()).shouldExcludePlayer().buildAndBroadcast();
+                    if(Bukkit.getPlayer(cappingPlayer) != null){
+                        new MessageBuilder(Lang.KOTH_LEFT_CAPPER).time(captureTime, timeCapped).player(cappingPlayer).area(area.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+                    }
+                    
+    				cappingPlayer = null;
+    				timeCapped = 0;
+    				if(ConfigHandler.getCfgHandler().getKnockTime() > 0){
+    					timeKnocked = 0;
+    					knocked = true;
+    				}
+                } else {
+                    cappingPlayer = event.getNextCapper();
+                }
 			}
 		}
 	}
@@ -61,7 +75,7 @@ public class RunningKoth {
 		if (!ConfigHandler.getCfgHandler().getUsePlayerMoveEvent()){
 			checkPlayerCapping();
 		} else {
-			if(!Bukkit.getOfflinePlayer(cappingPlayer).isOnline()){
+			if(cappingPlayer != null && !Bukkit.getOfflinePlayer(cappingPlayer).isOnline()){
 				cappingPlayer = null;
 			}
 		}
@@ -76,16 +90,24 @@ public class RunningKoth {
 			Player player = Bukkit.getOfflinePlayer(cappingPlayer).getPlayer();
 			if (++timeCapped < captureTime) {
 				if (timeCapped % 30 == 0) {
-					new MessageBuilder(Lang.KOTH_CAPTIME).time(captureTime, timeCapped).player(cappingPlayer).area(area.getName()).buildAndBroadcast();
+                    new MessageBuilder(Lang.KOTH_CAPTIME).time(captureTime, timeCapped).player(cappingPlayer).area(area.getName()).shouldExcludePlayer().buildAndBroadcast();
+                    new MessageBuilder(Lang.KOTH_CAPTIME_CAPPER).time(captureTime, timeCapped).player(cappingPlayer).area(area.getName()).buildAndSend(player);
 				}
 			} else {
-				new MessageBuilder(Lang.KOTH_WON).player(cappingPlayer).area(area.getName()).buildAndBroadcast();
+                new MessageBuilder(Lang.KOTH_WON).player(cappingPlayer).area(area.getName()).shouldExcludePlayer().buildAndBroadcast();
+                new MessageBuilder(Lang.KOTH_WON_CAPPER).player(cappingPlayer).area(area.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+
+                KothEndEvent event = new KothEndEvent(area, player.getName());
+                Bukkit.getServer().getPluginManager().callEvent(event);
+                
 				area.setLastWinner(player.getName());
-				Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable(){
-					public void run(){
-						area.createLootChest();
-					}
-				});
+				if(event.isCreatingChest()){
+    				Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable(){
+    					public void run(){
+    						area.createLootChest();
+    					}
+    				});
+				}
 				
 				Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable(){
 					public void run(){
@@ -101,8 +123,16 @@ public class RunningKoth {
 				}
 			}
 			if (insideArea.size() > 0) {
-				cappingPlayer = insideArea.get(new Random().nextInt(insideArea.size())).getName();
-				new MessageBuilder(Lang.KOTH_PLAYERCAP).player(cappingPlayer).area(area.getName()).time(captureTime, timeCapped).buildAndBroadcast();
+				String nextCappingPlayer = insideArea.get(new Random().nextInt(insideArea.size())).getName();
+				
+				KothCapEvent event = new KothCapEvent(area, insideArea, nextCappingPlayer);
+				Bukkit.getServer().getPluginManager().callEvent(event);
+				
+				if(!event.isCancelled()){
+				    cappingPlayer = event.getNextPlayerCapping();
+                    new MessageBuilder(Lang.KOTH_PLAYERCAP).player(cappingPlayer).area(area.getName()).time(captureTime, timeCapped).shouldExcludePlayer().buildAndBroadcast();
+                    new MessageBuilder(Lang.KOTH_PLAYERCAP_CAPPER).player(cappingPlayer).area(area.getName()).time(captureTime, timeCapped).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+                }
 			}
 
 		}

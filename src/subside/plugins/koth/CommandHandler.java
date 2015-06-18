@@ -99,10 +99,8 @@ public class CommandHandler implements CommandExecutor {
 			return;
 		} else {
 			WeakReference<RunningKoth> koth = KothHandler.getRunningKoth();
-			if (koth != null) {
-				if (koth.get() != null) {
-					ar = koth.get().getArea().getName();
-				}
+			if (koth.get() != null) {
+			    ar = koth.get().getArea().getName();
 			}
 			if (ar.equalsIgnoreCase("")) {
 				Schedule schedule = ScheduleHandler.getNextEvent();

@@ -1,5 +1,6 @@
 package subside.plugins.koth;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import subside.plugins.koth.area.Area;
 import subside.plugins.koth.area.KothHandler;
 import subside.plugins.koth.area.SingleLootChest;
+import subside.plugins.koth.events.KothOpenChestEvent;
 import subside.plugins.koth.scoreboard.ScoreboardHandler;
 
 public class EventListener implements Listener {
@@ -29,9 +31,16 @@ public class EventListener implements Listener {
 					Location vec = area.getLootPos();
 					if (vec == null) continue;
 					if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
-						if (!area.getLastWinner().equalsIgnoreCase(e.getPlayer().getName())) {
-							e.setCancelled(true);
-						}
+
+		                KothOpenChestEvent event = new KothOpenChestEvent(area, (Player)e.getPlayer());
+                        if (!area.getLastWinner().equalsIgnoreCase(e.getPlayer().getName())) {
+                            event.setCancelled(true);
+                        }
+		                Bukkit.getServer().getPluginManager().callEvent(event);
+		                
+		                if(event.isCancelled()){
+		                    e.setCancelled(true);
+		                }
 
 					}
 

@@ -4,12 +4,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import subside.plugins.koth.area.Area;
 import subside.plugins.koth.area.KothHandler;
 
 public class MessageBuilder {
 	String message;
+	String excluder;
+	boolean shouldExclude;
+	
 	public MessageBuilder(String msg){
 		this.message = "";
 		if(msg != null)
@@ -31,6 +35,8 @@ public class MessageBuilder {
 	}
 	
 	public MessageBuilder player(String player){
+	    excluder = player;
+	    shouldExclude = true;
 		message = message.replaceAll("%player%", player);
 		return this;
 	}
@@ -84,10 +90,22 @@ public class MessageBuilder {
 		return this;
 	}
 	
+	public MessageBuilder shouldExcludePlayer(){
+	    shouldExclude = true;
+	    return this;
+	}
+	
 	public void buildAndBroadcast(){
 		String msg = build();
 		if(!msg.trim().equalsIgnoreCase("")){
-			Bukkit.broadcastMessage(msg);
+		    for(Player player : Bukkit.getOnlinePlayers()){
+		        if(shouldExclude){
+		            if(excluder.equalsIgnoreCase(player.getName())){
+		                continue;
+		            }
+		        }
+		        player.sendMessage(msg);
+		    }
 		}
 	}
 	

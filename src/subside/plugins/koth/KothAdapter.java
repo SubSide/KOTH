@@ -16,12 +16,20 @@ public class KothAdapter {
 	
 	// Basic info
 	public String getName(){
-		WeakReference<RunningKoth> rKoth = KothHandler.getRunningKoth();
-		if(rKoth.get() != null){
-			return rKoth.get().getArea().getName();
-		}
-		return null;
-	}
+        WeakReference<RunningKoth> rKoth = KothHandler.getRunningKoth();
+        if(rKoth.get() != null){
+            return rKoth.get().getArea().getName();
+        }
+        return "None";
+    }
+	
+	public String getCapper(){
+        WeakReference<RunningKoth> rKoth = KothHandler.getRunningKoth();
+        if(rKoth.get() != null){
+            return rKoth.get().getCappingPlayer();
+        }
+        return "None";
+    }
 	
 	public Location getLocation(){
 		WeakReference<RunningKoth> rKoth = KothHandler.getRunningKoth();
@@ -54,7 +62,7 @@ public class KothAdapter {
 		if(rKoth.get() != null){
 			return rKoth.get().getTimeCapped()%60;
 		}
-		return -1;
+		return 0;
 	}
 	
 	public int getTotalSecondsCapped(){
@@ -62,7 +70,7 @@ public class KothAdapter {
 		if(rKoth.get() != null){
 			return rKoth.get().getTimeCapped();
 		}
-		return -1;
+		return 0;
 	}
 	
 	public int getMinutesCapped(){
@@ -70,7 +78,7 @@ public class KothAdapter {
 		if(rKoth.get() != null){
 			return (int)(rKoth.get().getTimeCapped()/60);
 		}
-		return -1;
+		return 0;
 	}
 	
 	
@@ -80,7 +88,7 @@ public class KothAdapter {
 		if(rKoth.get() != null){
 			return (rKoth.get().getCaptureTime() - rKoth.get().getTimeCapped()) % 60;
 		}
-		return -1;
+		return 0;
 	}
 	
 	public int getTotalSecondsLeft(){
@@ -88,7 +96,7 @@ public class KothAdapter {
 		if(rKoth.get() != null){
 			return rKoth.get().getCaptureTime() - rKoth.get().getTimeCapped();
 		}
-		return -1;
+		return 0;
 	}
 	
 	public int getMinutesLeft(){
@@ -96,7 +104,7 @@ public class KothAdapter {
 		if(rKoth.get() != null){
 			return (rKoth.get().getCaptureTime() - rKoth.get().getTimeCapped()) / 60;
 		}
-		return -1;
+		return 0;
 	}
 	
 	
@@ -106,7 +114,7 @@ public class KothAdapter {
 		if(rKoth.get() != null){
 			return rKoth.get().getCaptureTime()/60;
 		}
-		return -1;
+		return 0;
 	}
 	
 	public int getLengthInSeconds(){
@@ -114,6 +122,6 @@ public class KothAdapter {
 		if(rKoth.get() != null){
 			return rKoth.get().getCaptureTime();
 		}
-		return -1;
+		return 0;
 	}
 }

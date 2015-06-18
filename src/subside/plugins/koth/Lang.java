@@ -15,12 +15,16 @@ import org.json.simple.parser.JSONParser;
 public class Lang {
 
 	public static String PREFIX = "&2[KOTH] &a";
-	
-	public static String KOTH_WON = "&aThe koth %area% ended! %player% won!";
+
+    public static String KOTH_WON = "&aThe koth %area% ended! %player% won!";
+    public static String KOTH_WON_CAPPER = "&aThe koth %area% ended! You won!";
 	public static String KOTH_STARTING = "&aThe koth %area% has begun!";
-	public static String KOTH_PLAYERCAP = "&a%player% has started to cap %area%!";
-	public static String KOTH_CAPTIME = "&a%player% is capping the koth! %minutes_left%:%seconds_left% left!";
-	public static String KOTH_LEFT = "&a%player% left the koth!";
+    public static String KOTH_PLAYERCAP = "&a%player% has started to cap %area%!";
+    public static String KOTH_PLAYERCAP_CAPPER = "&aYou have started capping %area%!";
+    public static String KOTH_CAPTIME = "&a%player% is capping the koth! %minutes_left%:%seconds_left% left!";
+    public static String KOTH_CAPTIME_CAPPER = "&aYou are capping the koth! %minutes_left%:%seconds_left% left!";
+    public static String KOTH_LEFT = "&a%player% left the koth!";
+    public static String KOTH_LEFT_CAPPER = "&aYou left the koth!";
 	public static String KOTH_LOOT_CHEST = "&1&l%area%s &8&lloot";
 	
 	public static String AREA_ALREADYRUNNING = "&aThe area %area% is already running!";

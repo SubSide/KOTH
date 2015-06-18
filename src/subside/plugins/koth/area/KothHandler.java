@@ -40,6 +40,8 @@ public class KothHandler {
 			Iterator<RunningKoth> it = runningKoths.iterator();
 			while (it.hasNext()) {
 				RunningKoth koth = it.next();
+				if (koth.getCappingPlayer() == null)
+				    return;
 				if (koth.getCappingPlayer().equalsIgnoreCase(player.getName())) {
 					koth.checkPlayerCapping();
 				}
@@ -52,7 +54,7 @@ public class KothHandler {
 			if (runningKoths.size() > 0) {
 				return new WeakReference<RunningKoth>(runningKoths.get(0));
 			} else {
-				return null;
+				return new WeakReference<RunningKoth>(null);
 			}
 		}
 	}

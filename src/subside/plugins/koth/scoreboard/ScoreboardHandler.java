@@ -26,7 +26,7 @@ public class ScoreboardHandler {
 
 	public static void updateScoreboard() {
 		WeakReference<RunningKoth> koth = KothHandler.getRunningKoth();
-		if (koth == null) {
+		if (koth.get() == null) {
 			return;
 		}
 		String[] text = textLoader.clone();
