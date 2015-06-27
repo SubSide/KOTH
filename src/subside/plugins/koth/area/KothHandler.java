@@ -3,6 +3,7 @@ package subside.plugins.koth.area;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Koth;
 import subside.plugins.koth.KothLoader;
+import subside.plugins.koth.adapter.KothAdapter;
 import subside.plugins.koth.exceptions.AreaAlreadyExistException;
 import subside.plugins.koth.exceptions.AreaAlreadyRunningException;
 import subside.plugins.koth.exceptions.AreaNotExistException;
@@ -41,7 +43,7 @@ public class KothHandler {
 			while (it.hasNext()) {
 				RunningKoth koth = it.next();
 				if (koth.getCappingPlayer() == null)
-				    return;
+				    continue;
 				if (koth.getCappingPlayer().equalsIgnoreCase(player.getName())) {
 					koth.checkPlayerCapping();
 				}
@@ -70,7 +72,9 @@ public class KothHandler {
 					throw new AreaAlreadyRunningException(area.getName());
 				}
 			}
-			runningKoths.add(new RunningKoth(area, time));
+			RunningKoth koth = new RunningKoth(area, time);
+			runningKoths.add(koth);
+			KothAdapter.getAdapter().addRunningKoth(koth);
 		}
 
 	}
@@ -137,7 +141,8 @@ public class KothHandler {
 		synchronized (runningKoths) {
 			Iterator<RunningKoth> it = runningKoths.iterator();
 			while (it.hasNext()) {
-				it.next();
+				RunningKoth koth = it.next();
+				KothAdapter.getAdapter().removeRunningKoth(koth);
 				it.remove();
 			}
 		}
@@ -156,6 +161,7 @@ public class KothHandler {
 				RunningKoth koth = it.next();
 				if (koth.getArea().getName().equalsIgnoreCase(name)) {
 					runningKoths.remove(koth);
+	                KothAdapter.getAdapter().removeRunningKoth(koth);
 					Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable() {
 						public void run() {
 							ScoreboardHandler.clearAll();
@@ -191,7 +197,7 @@ public class KothHandler {
 		}
 	}
 
-	public static ArrayList<Area> getAvailableAreas() {
+	public static List<Area> getAvailableAreas() {
 		return availableAreas;
 	}
 }

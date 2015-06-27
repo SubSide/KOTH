@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -60,7 +61,7 @@ public class ScheduleHandler {
 		}
 	}
 
-	public static ArrayList<Schedule> getSchedules() {
+	public static List<Schedule> getSchedules() {
 		return schedules;
 	}
 

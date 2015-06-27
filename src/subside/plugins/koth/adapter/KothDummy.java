@@ -1,4 +1,4 @@
-package subside.plugins.koth.events;
+package subside.plugins.koth.adapter;
 
 import org.bukkit.Location;
 

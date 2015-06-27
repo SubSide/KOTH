@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.bukkit.block.Block;
@@ -242,7 +243,7 @@ public class CommandHandler implements CommandExecutor {
 					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_USAGE + "/koth schedule remove <ID>").build());
 				}
 			} else if (args[0].equalsIgnoreCase("list")) {
-				ArrayList<Schedule> schedules = ScheduleHandler.getSchedules();
+				List<Schedule> schedules = ScheduleHandler.getSchedules();
 				ArrayList<String> list = new ArrayList<String>();
 				SimpleDateFormat sdf = new SimpleDateFormat();
 				sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getTimeZone()));
@@ -273,7 +274,7 @@ public class CommandHandler implements CommandExecutor {
 				});
 			}
 		} else {
-			ArrayList<Schedule> schedules = ScheduleHandler.getSchedules();
+		    List<Schedule> schedules = ScheduleHandler.getSchedules();
 			ArrayList<String> list = new ArrayList<String>();
 			SimpleDateFormat sdf = new SimpleDateFormat();
 			sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getTimeZone()));
@@ -337,7 +338,6 @@ public class CommandHandler implements CommandExecutor {
 		list.add(new MessageBuilder("&8========> &2INFO &8<========").build());
 		list.add(new MessageBuilder("&2Author: &aSubSide").build());
 		list.add(new MessageBuilder("&2Version: &a" + Koth.getPlugin().getDescription().getVersion()).build());
-		list.add(new MessageBuilder("&2Website: &ahttp://mcplugins.co/").build());
 		player.sendMessage(list.toArray(new String[list.size()]));
 	}
 }
