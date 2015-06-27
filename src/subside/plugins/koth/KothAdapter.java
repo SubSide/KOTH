@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import subside.plugins.koth.area.KothHandler;
 import subside.plugins.koth.area.RunningKoth;
 
+@Deprecated
 public class KothAdapter {
 	private static KothAdapter adapter = new KothAdapter();
 	

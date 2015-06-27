@@ -45,6 +45,7 @@ public class KothWrapper {
     }
     
     public TimeObject getTimeObject(){
+        check();
         return timeObject;
     }
 }
