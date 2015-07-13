@@ -1,5 +1,7 @@
 package subside.plugins.koth.events;
 
+import lombok.Getter;
+
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -8,9 +10,9 @@ import subside.plugins.koth.area.Area;
 
 public class KothLeftEvent extends Event implements IEvent {
     private String capper;
-    private int amountSecondsCapped;
+    private @Getter int amountSecondsCapped;
     private String nextCapper;
-    private KothDummy koth;
+    private @Getter KothDummy koth;
     
     public KothLeftEvent(Area area, String capper, int amountSecondsCapped){
         this.koth = new KothDummy(area);
@@ -18,16 +20,8 @@ public class KothLeftEvent extends Event implements IEvent {
         this.amountSecondsCapped = amountSecondsCapped;
     }
     
-    public KothDummy getKoth(){
-        return koth;
-    }
-    
     public String getPlayerCapping(){
         return capper;
-    }
-    
-    public int getAmountSecondsCapped(){
-        return amountSecondsCapped;
     }
     
     public String getNextCapper(){

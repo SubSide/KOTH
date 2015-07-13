@@ -14,6 +14,7 @@ import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Koth;
 import subside.plugins.koth.KothLoader;
 import subside.plugins.koth.adapter.KothAdapter;
+import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.exceptions.AreaAlreadyExistException;
 import subside.plugins.koth.exceptions.AreaAlreadyRunningException;
 import subside.plugins.koth.exceptions.AreaNotExistException;
@@ -21,8 +22,8 @@ import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.scoreboard.ScoreboardHandler;
 
 public class KothHandler {
-	private static ArrayList<RunningKoth> runningKoths = new ArrayList<RunningKoth>();
-	private static ArrayList<Area> availableAreas = new ArrayList<Area>();
+	private static ArrayList<RunningKoth> runningKoths = new ArrayList<>();
+	private static ArrayList<Area> availableAreas = new ArrayList<>();
 
 	public static void update() {
 		synchronized (runningKoths) {
@@ -61,39 +62,44 @@ public class KothHandler {
 		}
 	}
 
-	public static void startKoth(Area area) throws AreaAlreadyRunningException {
-		startKoth(area, 15 * 60);
+	public static void startKoth(Area area, int maxRunTime) throws AreaAlreadyRunningException {
+		startKoth(area, 15 * 60, maxRunTime, false);
 	}
 
-	public static void startKoth(Area area, int time) throws AreaAlreadyRunningException {
+	public static void startKoth(Area area, int time, int maxRunTime, boolean isScheduled) throws AreaAlreadyRunningException {
 		synchronized (runningKoths) {
 			for (RunningKoth koth : runningKoths) {
 				if (koth.getArea() == area) {
 					throw new AreaAlreadyRunningException(area.getName());
 				}
 			}
-			RunningKoth koth = new RunningKoth(area, time);
-			runningKoths.add(koth);
-			KothAdapter.getAdapter().addRunningKoth(koth);
+			KothStartEvent event = new KothStartEvent(area, time, maxRunTime, isScheduled);
+	        Bukkit.getServer().getPluginManager().callEvent(event);
+	        
+	        if(!event.isCancelled()){
+	            RunningKoth koth = new RunningKoth(area, event.getLength(), event.getMaxLength());
+    			runningKoths.add(koth);
+    			KothAdapter.getAdapter().addRunningKoth(koth);
+	        }
 		}
 
 	}
 
-	public static void startKoth(String area) {
+	public static void startKoth(String area, int maxRunTime) {
 		startKoth(area, 15 * 60);
 	}
 
-	public static void startKoth(String area, int time) {
+	public static void startKoth(String area, int time, int maxRunTime, boolean isScheduled) {
 		if(area.equalsIgnoreCase("random")){
 			if(availableAreas.size() > 0){
-				startKoth(availableAreas.get(new Random().nextInt(availableAreas.size())), time);
+				startKoth(availableAreas.get(new Random().nextInt(availableAreas.size())), time, maxRunTime, isScheduled);
 				return;
 			}
 		}
 		
 		for (Area ar : availableAreas) {
 			if (ar.getName().equalsIgnoreCase(area)) {
-				startKoth(ar, time);
+				startKoth(ar, time, maxRunTime, isScheduled);
 				return;
 			}
 		}
@@ -160,7 +166,7 @@ public class KothHandler {
 			while (it.hasNext()) {
 				RunningKoth koth = it.next();
 				if (koth.getArea().getName().equalsIgnoreCase(name)) {
-					runningKoths.remove(koth);
+					it.remove();
 	                KothAdapter.getAdapter().removeRunningKoth(koth);
 					Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable() {
 						public void run() {

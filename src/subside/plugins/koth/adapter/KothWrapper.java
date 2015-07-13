@@ -7,11 +7,9 @@ import subside.plugins.koth.exceptions.KothNotRunningException;
 
 public class KothWrapper {
     private WeakReference<RunningKoth> koth;
-    private TimeObject timeObject;
     
     public KothWrapper(RunningKoth koth){
         this.koth = new WeakReference<>(koth);
-        timeObject = new TimeObject(koth.getCaptureTime(), koth.getTimeCapped());
     }
 
     public KothDummy getKoth(){
@@ -46,6 +44,6 @@ public class KothWrapper {
     
     public TimeObject getTimeObject(){
         check();
-        return timeObject;
+        return new TimeObject(koth.get().getCaptureTime(), koth.get().getTimeCapped());
     }
 }

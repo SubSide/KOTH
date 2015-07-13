@@ -3,6 +3,9 @@ package subside.plugins.koth.area;
 import java.util.ArrayList;
 import java.util.Random;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,13 +21,13 @@ import subside.plugins.koth.Lang;
 import subside.plugins.koth.MessageBuilder;
 
 public class Area {
-	private String name;
-	private Location min;
-	private Location mid;
-	private Location max;
-	private Location lootPos = null;
+	private @Getter String name;
+	private @Getter Location min;
+	private @Getter Location middle;
+	private @Getter Location max;
+	private @Getter @Setter Location lootPos = null;
 	private String lastWinner;
-	private Inventory lootInv;
+	private @Getter @Setter Inventory inventory;
 
 	public Area(String name, Location min, Location max) {
 		this.name = name;
@@ -33,7 +36,7 @@ public class Area {
 		calculateMiddle();
 		String title = new MessageBuilder(Lang.KOTH_LOOT_CHEST).area(name).build();
 		if(title.length() > 32) title = title.substring(0,32);
-		this.lootInv = Bukkit.createInventory(null, 54, title);
+		this.inventory = Bukkit.createInventory(null, 54, title);
 	}
 
 	private Location getMinimum(Location loc1, Location loc2) {
@@ -45,7 +48,7 @@ public class Area {
 	}
 	
 	private void calculateMiddle(){
-		this.mid = min.clone().add(max.clone()).multiply(0.5);
+		this.middle = min.clone().add(max.clone()).multiply(0.5);
 	}
 	
 
@@ -80,34 +83,10 @@ public class Area {
 		return false;
 	}
 
-	public void setLootPos(Location pos) {
-		this.lootPos = pos;
-	}
-
 	public void setArea(Location min, Location max) {
 		this.min = getMinimum(min, max);
 		this.max = getMaximum(min, max);
 		calculateMiddle();
-	}
-
-	public Location getMin() {
-		return min;
-	}
-
-	public Location getMax() {
-		return max;
-	}
-	
-	public Location getMiddle(){
-		return mid;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Location getLootPos() {
-		return lootPos;
 	}
 
 	public void setLastWinner(String player) {
@@ -127,7 +106,7 @@ public class Area {
 				if (ConfigHandler.getCfgHandler().getSingleLootChest()) {
 					loot = SingleLootChest.getInventory().getContents();
 				} else {
-					loot = this.lootInv.getContents();
+					loot = this.inventory.getContents();
 				}
 
 				ArrayList<ItemStack> usableLoot = new ArrayList<ItemStack>();
@@ -141,7 +120,25 @@ public class Area {
 				Inventory inv = chest.getInventory();
 				if (ConfigHandler.getCfgHandler().getRandomizeLoot()) {
 					for (int x = 0; x < ConfigHandler.getCfgHandler().getLootAmount(); x++) {
-						inv.setItem(x, usableLoot.get(new Random().nextInt(usableLoot.size())).clone());
+					    if(usableLoot.size() < 1){
+					        break;
+					    }
+					    
+					    // UseItemsMultipleTimes
+    					ItemStack uLoot = usableLoot.get(new Random().nextInt(usableLoot.size()));
+    					if(!ConfigHandler.getCfgHandler().getUseItemsMultipleTimes()){
+    					    usableLoot.remove(uLoot);
+    					}
+    					
+    					//Randomize amount of loot or not?
+    					if(ConfigHandler.getCfgHandler().getRandomizeAmountLoot()){
+    					    int amount = uLoot.getAmount();
+    					    ItemStack stack = uLoot.clone();
+    					    stack.setAmount(new Random().nextInt(amount)+1);
+    					    inv.setItem(x, stack);
+    					} else {
+                            inv.setItem(x, uLoot.clone());
+    					}
 					}
 				} else {
 					for (int x = 0; x < usableLoot.size(); x++) {
@@ -154,15 +151,6 @@ public class Area {
 			e.printStackTrace();
 		}
 	}
-
-	public Inventory getInventory() {
-		return lootInv;
-	}
-
-	public void setInventory(Inventory inv) {
-		lootInv = inv;
-	}
-
 	public void removeLootChest() {
 		final Area area = this;
 		Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable() {

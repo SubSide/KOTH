@@ -16,6 +16,10 @@
 # This means that when someone gets knocked off the koth, it will take a moment before it can be capped again.
 # This can be used to stop the spam messages in the chat.
 #
+# The randomize-amount-of-loot now chooses a random amount of loot of the stack you given.
+#
+# can-use-same-items is for if it can use the same item multiple times.
+#
 #
 # For everything, a reload is required.
 #
@@ -39,6 +43,7 @@
 # %date% - The current date
 # %command% - This is the command for the help menu
 # %command_info% - This is the description of the command for help menu
+# %maxtime% - The maximal time in minutes the koth will run
 
 
 
@@ -48,6 +53,8 @@ use-playermoveevent: false
 one-for-all: false
 amount-of-loot: 5
 randomize-loot: true
+randomize-amount-of-loot: false
+can-use-same-items: true
 knockTime: 0
 
 scoreboard:

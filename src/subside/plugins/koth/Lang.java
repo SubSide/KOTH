@@ -26,6 +26,7 @@ public class Lang {
     public static String KOTH_LEFT = "&a%player% left the koth!";
     public static String KOTH_LEFT_CAPPER = "&aYou left the koth!";
 	public static String KOTH_LOOT_CHEST = "&1&l%area%s &8&lloot";
+    public static String KOTH_TIME_UP = "&aAfter %maxtime% minute noone capped the KoTH! Event is over!";
 	
 	public static String AREA_ALREADYRUNNING = "&aThe area %area% is already running!";
 	public static String AREA_ALREADYEXISTS = "&aThe area %area% already exists!";
@@ -50,7 +51,7 @@ public class Lang {
 
 	public static String COMMAND_SCHEDULE_CREATED = "&aYou have created a schedule for %area% on %day% at %time% (Length: %length% minutes)!";
 	public static String COMMAND_SCHEDULE_NOVALIDDAY = "&aThis is not a valid day! (monday, tuesday etc)";
-	public static String COMMAND_SCHEDULE_RUNTIMEERROR = "&aCould not change the run time into an integer!";
+	public static String COMMAND_SCHEDULE_RUNTIMEERROR = "&aCould not change the (max) run time into an integer!";
 	public static String COMMAND_SCHEDULE_REMOVED = "&aThe schedule for %area% is removed.";
 	public static String COMMAND_SCHEDULE_NOTEXIST = "&aThis schedule doesn't exist! (Check /koth schedule list for numbers)";
 	public static String COMMAND_SCHEDULE_REMOVENOID = "&aThe ID must be a number! (Shown in /koth schedule list)";

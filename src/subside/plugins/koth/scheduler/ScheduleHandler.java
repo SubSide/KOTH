@@ -71,13 +71,13 @@ public class ScheduleHandler {
 		}
 	}
 
-	public static void createSchedule(String area, int runTime, Day day, String time) {
+	public static void createSchedule(String area, int runTime, Day day, String time, int maxRunTime) {
 		long eventTime = day.getDayStart() + getTime(time);
 
 		if (eventTime < System.currentTimeMillis()) {
 			eventTime += 7 * 24 * 60 * 60 * 1000;
 		}
-		schedules.add(new Schedule(eventTime, area, runTime, day, time));
+		schedules.add(new Schedule(eventTime, area, runTime, day, time, maxRunTime));
 		save();
 	}
 
@@ -129,8 +129,13 @@ public class ScheduleHandler {
 			if (eventTime < System.currentTimeMillis()) {
 				eventTime += 7 * 24 * 60 * 60 * 1000;
 			}
+			
+			int maxRunTime = -1;
+			if(sched.containsKey("maxruntime")){
+			    maxRunTime = Integer.parseInt(sched.get("maxruntime")+"");
+			}
 
-			schedules.add(new Schedule(eventTime, (String) sched.get("area"), Integer.parseInt(sched.get("runtime") + ""), day, (String) sched.get("time")));
+			schedules.add(new Schedule(eventTime, (String) sched.get("area"), Integer.parseInt(sched.get("runtime") + ""), day, (String) sched.get("time"), maxRunTime));
 		}
 	}
 

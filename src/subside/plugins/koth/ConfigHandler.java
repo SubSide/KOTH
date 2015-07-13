@@ -11,6 +11,8 @@ public class ConfigHandler {
 	private String timeZone = "Europe/Amsterdam";
 	private boolean singleLootChest = false;
 	private boolean randomizeLoot = true;
+	private boolean randomizeAmountLoot = false;
+	private boolean useItemsMultipleTimes = true;
 	private int knockTime = 0;
 	private static ConfigHandler cfgHandler;
 	
@@ -24,6 +26,8 @@ public class ConfigHandler {
 		knockTime = cfg.getInt("knockTime");
 		singleLootChest = cfg.getBoolean("one-for-all");
 		randomizeLoot = cfg.getBoolean("randomize-loot");
+		randomizeAmountLoot = cfg.getBoolean("randomize-amount-of-loot");
+		useItemsMultipleTimes = cfg.getBoolean("can-use-same-items");
 		
 		if(useScoreboard){
 			ScoreboardHandler.load(cfg.getString("scoreboard.title"), cfg.getStringList("scoreboard.contents").toArray(new String[cfg.getStringList("scoreboard.contents").size()]));
@@ -32,6 +36,14 @@ public class ConfigHandler {
 	
 	public static ConfigHandler getCfgHandler(){
 		return cfgHandler;
+	}
+	
+	public boolean getRandomizeAmountLoot(){
+	    return randomizeAmountLoot;
+	}
+	
+	public boolean getUseItemsMultipleTimes(){
+	    return useItemsMultipleTimes;
 	}
 	
 	public boolean getSingleLootChest(){

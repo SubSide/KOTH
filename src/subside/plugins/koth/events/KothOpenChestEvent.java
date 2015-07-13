@@ -1,5 +1,7 @@
 package subside.plugins.koth.events;
 
+import lombok.Getter;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -10,22 +12,13 @@ import subside.plugins.koth.area.Area;
 
 public class KothOpenChestEvent extends Event implements IEvent, Cancellable {
 
-    private Player player;
+    private @Getter Player player;
     private boolean isCancelled;
-    private KothDummy koth;
+    private @Getter KothDummy koth;
     
     public KothOpenChestEvent(Area area, Player player) {
         this.koth = new KothDummy(area);
         this.player = player;
-    }
-    
-    public KothDummy getKoth(){
-        return koth;
-    }
-    
-    
-    public Player getPlayer(){
-        return player;
     }
 
     @Override

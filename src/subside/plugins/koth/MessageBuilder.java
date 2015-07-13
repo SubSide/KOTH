@@ -55,12 +55,12 @@ public class MessageBuilder {
 		message = message.replaceAll("%length%", ""+length);
 		return this;
 	}
-	
-	public MessageBuilder id(int id){
-		message = message.replaceAll("%id%", ""+id);
-		return this;
-	}
-	
+    
+    public MessageBuilder id(int id){
+        message = message.replaceAll("%id%", ""+id);
+        return this;
+    }
+    
 	public MessageBuilder date(String date){
 		message = message.replaceAll("%date%", date);
 		return this;
@@ -79,6 +79,11 @@ public class MessageBuilder {
 		
 		return this;
 	}
+
+    public MessageBuilder maxTime(int maxTime){
+        message = message.replaceAll("%maxtime%", ""+((int)maxTime/60));
+        return this;
+    }
 	
 	public MessageBuilder command(String command){
 		message = message.replaceAll("%command%", command);

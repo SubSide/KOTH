@@ -129,20 +129,23 @@ public class CommandHandler implements CommandExecutor {
 
 	public void start(Player player, String[] args) {
 		if (args.length > 0) {
-			if (args.length > 1) {
-				try {
-					KothHandler.startKoth(args[0], Integer.parseInt(args[1])*60);
-					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_TRIGGERED).area(args[0]).build());
-				}
-				catch (NumberFormatException e) {
-					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_USAGE + "/koth start <name> [time]").build());
-				}
-			} else {
-				KothHandler.startKoth(args[0]);
-				throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_TRIGGERED).area(args[0]).build());
-			}
+		    String area = args[0];
+		    int runTime = 15;
+		    int maxRunTime = -1;
+		    if(args.length > 1){
+		        try {
+		            runTime = Integer.parseInt(args[1]);
+		            
+		            if(args.length > 2){
+		                maxRunTime = Integer.parseInt(args[2]);
+		            }
+		        } catch(NumberFormatException e){
+                    throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_USAGE + "/koth start <name> [time] [maxRunTime]").build());
+		        }
+		    }
+		    KothHandler.startKoth(area, runTime*60, maxRunTime, false);
 		} else {
-			throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_USAGE + "/koth start <name> [time]").build());
+			throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_USAGE + "/koth start <name> [time] [maxRunTime]").build());
 		}
 	}
 
@@ -201,16 +204,21 @@ public class CommandHandler implements CommandExecutor {
 							Day day = Day.getDay(args[2].toUpperCase());
 							String time = args[3];
 							int runTime = 15;
+							int maxRunTime = -1;
 							try {
 								if (args.length > 4) {
 									runTime = Integer.parseInt(args[4]);
+									
+									if(args.length > 5){
+									    maxRunTime = Integer.parseInt(args[5]);
+									}
 								}
 							}
 							catch (Exception e) {
 								throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_RUNTIMEERROR).build());
 							}
 
-							ScheduleHandler.createSchedule(area.getName(), runTime, day, time);
+							ScheduleHandler.createSchedule(area.getName(), runTime, day, time, maxRunTime);
 							throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_CREATED).area(area.getName()).day(day.getDay()).time(time).length(runTime).build());
 
 						}
@@ -221,7 +229,7 @@ public class CommandHandler implements CommandExecutor {
 						throw new CommandMessageException(new MessageBuilder(Lang.AREA_NOTEXIST).area(args[1]).build());
 					}
 				} else {
-					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_USAGE + "/koth schedule create <area> <day> <time> [runtime]").build());
+					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_USAGE + "/koth schedule create <area> <day> <time> [runtime] [maxruntime]").build());
 				}
 			} else if (args[0].equalsIgnoreCase("remove")) {
 				if (args.length > 1) {
@@ -253,7 +261,7 @@ public class CommandHandler implements CommandExecutor {
 					ArrayList<String> subList = new ArrayList<String>();
 					for (Schedule sched : schedules) {
 						if (sched.getDay() == day) {
-							subList.add(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_ENTRY).id(schedules.indexOf(sched)).day(day.getDay()).area(sched.getArea()).time(sched.getTime()).length(sched.getRunTime()).build());
+							subList.add(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_ENTRY).id(schedules.indexOf(sched)).day(day.getDay()).maxTime(sched.getMaxRunTime()*60).area(sched.getArea()).time(sched.getTime()).length(sched.getRunTime()).build());
 						}
 					}
 					if (subList.size() > 0) {

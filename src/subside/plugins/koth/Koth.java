@@ -1,5 +1,7 @@
 package subside.plugins.koth;
 
+import lombok.Getter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,8 +15,8 @@ import subside.plugins.koth.scoreboard.ScoreboardHandler;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class Koth extends JavaPlugin {
-	private static Koth plugin;
-	private static WorldEditPlugin worldEdit;
+	private @Getter static Koth plugin;
+	private @Getter static WorldEditPlugin worldEdit;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -59,13 +61,5 @@ public class Koth extends JavaPlugin {
 				}
 			}
 		}
-	}
-
-	public static Koth getPlugin() {
-		return plugin;
-	}
-
-	public static WorldEditPlugin getWorldEdit() {
-		return worldEdit;
 	}
 }
