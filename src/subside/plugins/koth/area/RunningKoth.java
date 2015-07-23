@@ -77,7 +77,7 @@ public class RunningKoth {
 	@SuppressWarnings("deprecation")
 	public void update() {
 	    timeRunning++;
-		if (!ConfigHandler.getCfgHandler().getUsePlayerMoveEvent()){
+		if (!ConfigHandler.getCfgHandler().isUsePlayerMoveEvent()){
 			checkPlayerCapping();
 		} else {
 			if(cappingPlayer != null && !Bukkit.getOfflinePlayer(cappingPlayer).isOnline()){

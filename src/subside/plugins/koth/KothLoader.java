@@ -83,7 +83,7 @@ public class KothLoader {
 				}
 			}
 			
-			if(ConfigHandler.getCfgHandler().getSingleLootChest()){
+			if(ConfigHandler.getCfgHandler().isSingleLootChest()){
 				try {
 					SingleLootChest.load();
 				} catch(Exception e){
@@ -157,7 +157,7 @@ public class KothLoader {
 			
 
 			
-			if(ConfigHandler.getCfgHandler().getSingleLootChest()){
+			if(ConfigHandler.getCfgHandler().isSingleLootChest()){
 				try {
 					SingleLootChest.save();
 				} catch(Exception e){

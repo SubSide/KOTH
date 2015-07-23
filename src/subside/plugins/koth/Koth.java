@@ -38,7 +38,7 @@ public class Koth extends JavaPlugin {
 			}
 		}, 20, 20);
 
-		if (ConfigHandler.getCfgHandler().getUsePlayerMoveEvent()) {
+		if (ConfigHandler.getCfgHandler().isUsePlayerMoveEvent()) {
 			getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
 		}
 	}
@@ -54,7 +54,7 @@ public class Koth extends JavaPlugin {
 				}
 			}
 		}
-		if(ConfigHandler.getCfgHandler().getSingleLootChest()){
+		if(ConfigHandler.getCfgHandler().isSingleLootChest()){
 			for(Player player : Bukkit.getOnlinePlayers()){
 				if(SingleLootChest.getInventory().getViewers().contains(player)){
 					player.closeInventory();

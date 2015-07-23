@@ -33,7 +33,7 @@ public class EventListener implements Listener {
 					if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
 
 		                KothOpenChestEvent event = new KothOpenChestEvent(area, (Player)e.getPlayer());
-                        if (!area.getLastWinner().equalsIgnoreCase(e.getPlayer().getName())) {
+                        if (!area.getLastWinner().equalsIgnoreCase(e.getPlayer().getName()) && !Perm.BYPASS.has((Player)e.getPlayer())) {
                             event.setCancelled(true);
                         }
 		                Bukkit.getServer().getPluginManager().callEvent(event);
@@ -51,6 +51,7 @@ public class EventListener implements Listener {
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
+	    if(Perm.BYPASS.has((Player)e.getPlayer())) return;
 		Location loc = e.getBlock().getLocation();
 		for (Area area : KothHandler.getAvailableAreas()) {
 			Location vec = area.getLootPos();
@@ -64,6 +65,7 @@ public class EventListener implements Listener {
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
+        if(Perm.BYPASS.has((Player)e.getPlayer())) return;
 		Location loc = e.getBlock().getLocation();
 		for (Area area : KothHandler.getAvailableAreas()) {
 			Location vec = area.getLootPos();
@@ -96,7 +98,7 @@ public class EventListener implements Listener {
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
 		if (Perm.ADMIN.has((Player) event.getPlayer())) {
-			if (ConfigHandler.getCfgHandler().getSingleLootChest()) {
+			if (ConfigHandler.getCfgHandler().isSingleLootChest()) {
 				if (SingleLootChest.getInventory().equals(event.getInventory())) {
 					KothLoader.save();
 					return;

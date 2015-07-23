@@ -20,6 +20,13 @@
 #
 # can-use-same-items is for if it can use the same item multiple times.
 #
+# remove-lootchest-after will remove the loot chest after this amount of seconds
+# do note that if the server gets reloaded/restarted that this (might) not be the case!
+# 0 to disable this
+#
+# drop-loot-on-removal makes it so when the loot chest gets removed, it drops the loot instead
+# of it just disappearing. default is false
+#
 #
 # For everything, a reload is required.
 #
@@ -54,6 +61,8 @@ one-for-all: false
 amount-of-loot: 5
 randomize-loot: true
 randomize-amount-of-loot: false
+remove-lootchest-after: 0
+drop-loot-on-removal: false
 can-use-same-items: true
 knockTime: 0
 

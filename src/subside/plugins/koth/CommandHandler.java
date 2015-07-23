@@ -94,7 +94,7 @@ public class CommandHandler implements CommandExecutor {
 				}
 			}
 			ar = args[0];
-		} else if (ConfigHandler.getCfgHandler().getSingleLootChest()) {
+		} else if (ConfigHandler.getCfgHandler().isSingleLootChest()) {
 			player.openInventory(SingleLootChest.getInventory());
 			new MessageBuilder(Lang.COMMAND_LOOT_EXPLANATION).area("global").buildAndSend(player);
 			return;

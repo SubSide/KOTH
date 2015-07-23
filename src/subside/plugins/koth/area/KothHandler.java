@@ -31,7 +31,7 @@ public class KothHandler {
 			while (it.hasNext()) {
 				it.next().update();
 			}
-			if (ConfigHandler.getCfgHandler().getUseScoreboard()) {
+			if (ConfigHandler.getCfgHandler().isUseScoreboard()) {
 				ScoreboardHandler.updateScoreboard();
 			}
 			ScheduleHandler.tick();

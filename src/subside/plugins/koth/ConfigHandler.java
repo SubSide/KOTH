@@ -1,20 +1,24 @@
 package subside.plugins.koth;
 
+import lombok.Getter;
+
 import org.bukkit.configuration.file.FileConfiguration;
 
 import subside.plugins.koth.scoreboard.ScoreboardHandler;
 
 public class ConfigHandler {
-	private boolean usePlayerMoveEvent = false;
-	private boolean useScoreboard = true;
-	private int lootAmount = 5;
-	private String timeZone = "Europe/Amsterdam";
-	private boolean singleLootChest = false;
-	private boolean randomizeLoot = true;
-	private boolean randomizeAmountLoot = false;
-	private boolean useItemsMultipleTimes = true;
-	private int knockTime = 0;
-	private static ConfigHandler cfgHandler;
+	private @Getter boolean usePlayerMoveEvent = false;
+	private @Getter boolean useScoreboard = true;
+	private @Getter int lootAmount = 5;
+	private @Getter String timeZone = "Europe/Amsterdam";
+	private @Getter boolean singleLootChest = false;
+	private @Getter boolean randomizeLoot = true;
+	private @Getter boolean randomizeAmountLoot = false;
+	private @Getter boolean useItemsMultipleTimes = true;
+	private @Getter long removeLootAfterSeconds = 0;
+	private @Getter boolean dropLootOnRemoval = false;
+	private @Getter int knockTime = 0;
+	private @Getter static ConfigHandler cfgHandler;
 	
 	
 	public ConfigHandler(FileConfiguration cfg){
@@ -28,49 +32,11 @@ public class ConfigHandler {
 		randomizeLoot = cfg.getBoolean("randomize-loot");
 		randomizeAmountLoot = cfg.getBoolean("randomize-amount-of-loot");
 		useItemsMultipleTimes = cfg.getBoolean("can-use-same-items");
-		
+		removeLootAfterSeconds = cfg.getInt("remove-lootchest-after");
+		dropLootOnRemoval = cfg.getBoolean("drop-loot-on-removal");
+	
 		if(useScoreboard){
 			ScoreboardHandler.load(cfg.getString("scoreboard.title"), cfg.getStringList("scoreboard.contents").toArray(new String[cfg.getStringList("scoreboard.contents").size()]));
 		}
-	}
-	
-	public static ConfigHandler getCfgHandler(){
-		return cfgHandler;
-	}
-	
-	public boolean getRandomizeAmountLoot(){
-	    return randomizeAmountLoot;
-	}
-	
-	public boolean getUseItemsMultipleTimes(){
-	    return useItemsMultipleTimes;
-	}
-	
-	public boolean getSingleLootChest(){
-		return singleLootChest;
-	}
-	
-	public int getLootAmount(){
-		return lootAmount;
-	}
-	
-	public String getTimeZone(){
-		return timeZone;
-	}
-	
-	public int getKnockTime(){
-		return knockTime;
-	}
-	
-	public boolean getRandomizeLoot(){
-		return randomizeLoot;
-	}
-	
-	public boolean getUsePlayerMoveEvent(){
-		return usePlayerMoveEvent;
-	}
-	
-	public boolean getUseScoreboard(){
-		return useScoreboard;
 	}
 }
