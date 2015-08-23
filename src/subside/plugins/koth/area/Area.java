@@ -97,7 +97,7 @@ public class Area {
         return lastWinner == null ? "" : lastWinner;
     }
 
-    public void createLootChest() {
+    public void createLootChest(int lootAmount) {
         try {
             ItemStack[] loot;
             if (ConfigHandler.getCfgHandler().isSingleLootChest()) {
@@ -116,7 +116,7 @@ public class Area {
 
             Inventory inv = Bukkit.createInventory(null, 27);
             if (ConfigHandler.getCfgHandler().isRandomizeLoot()) {
-                for (int x = 0; x < ConfigHandler.getCfgHandler().getLootAmount(); x++) {
+                for (int x = 0; x < lootAmount; x++) {
                     if (usableLoot.size() < 1) {
                         break;
                     }
@@ -142,6 +142,8 @@ public class Area {
                     inv.setItem(x, usableLoot.get(x).clone());
                 }
             }
+            
+            
             KothChestCreationEvent event = new KothChestCreationEvent(this, inv.getContents());
             Bukkit.getServer().getPluginManager().callEvent(event);
 
@@ -149,10 +151,10 @@ public class Area {
                 lootPos.getBlock().setType(Material.CHEST);
                 if (lootPos.getBlock().getState() instanceof Chest) {
                     Chest chest = (Chest) lootPos.getBlock().getState();
-
-                    chest.getInventory().setContents(event.getLoot());
-
-                    if (ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() <= 0) {
+                    
+                    chest.getInventory().setContents(inv.getContents());
+                    
+                    if (ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() > 0) {
                         Bukkit.getScheduler().runTaskLater(Koth.getPlugin(), new Runnable() {
                             @Override
                             public void run() {

@@ -11,14 +11,16 @@ public class Schedule {
 	private @Getter Day day;
 	private @Getter String time;
 	private @Getter int maxRunTime;
+	private @Getter int lootAmount;
 
-	public Schedule(long nextEvent, String area, int runTime, Day day, String time, int maxRunTime) {
+	public Schedule(long nextEvent, String area, int runTime, Day day, String time, int maxRunTime, int lootAmount) {
 		this.nextEventMillis = nextEvent;
 		this.area = area;
 		this.runTime = runTime;
 		this.day = day;
 		this.time = time;
 		this.maxRunTime = maxRunTime;
+		this.lootAmount = lootAmount;
 		
 	}
 
@@ -27,7 +29,7 @@ public class Schedule {
 			setNextEventTime();
 			
 			//TODO
-			KothHandler.startKoth(area, runTime*60, maxRunTime, true);
+			KothHandler.startKoth(area, runTime*60, maxRunTime, lootAmount, true);
 		}
 	}
 

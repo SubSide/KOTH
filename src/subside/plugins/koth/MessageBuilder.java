@@ -25,11 +25,16 @@ public class MessageBuilder {
 		Area ar = KothHandler.getArea(area);
 		if (ar != null) {
 			Location loc = ar.getMiddle();
-			message = message
-					.replaceAll("%x%", ""+loc.getBlockX())
-					.replaceAll("%y%", ""+loc.getBlockY())
-					.replaceAll("%z%", ""+loc.getBlockZ());
-			message = message.replaceAll("%world%", loc.getWorld().getName());
+			if(loc != null){
+    			message = message
+    					.replaceAll("%x%", ""+loc.getBlockX())
+    					.replaceAll("%y%", ""+loc.getBlockY())
+    					.replaceAll("%z%", ""+loc.getBlockZ());
+    			try {
+    			    message = message.replaceAll("%world%", loc.getWorld().getName());
+    			} catch(Exception e){
+    			}
+			}
 		}
 		return this;
 	}
@@ -42,9 +47,14 @@ public class MessageBuilder {
 	}
 	
 	public MessageBuilder day(String day){
-		message = message.replaceAll("%day%", day);
-		return this;
-	}
+        message = message.replaceAll("%day%", day);
+        return this;
+    }
+	
+	public MessageBuilder lootAmount(int lootamount){
+        message = message.replaceAll("%lootamount%", lootamount+"");
+        return this;
+    }
 	
 	public MessageBuilder time(String time){
 		message = message.replaceAll("%time%", time);

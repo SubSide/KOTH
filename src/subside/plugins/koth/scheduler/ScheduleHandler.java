@@ -71,13 +71,13 @@ public class ScheduleHandler {
 		}
 	}
 
-	public static void createSchedule(String area, int runTime, Day day, String time, int maxRunTime) {
+	public static void createSchedule(String area, int runTime, Day day, String time, int maxRunTime, int lootAmount) {
 		long eventTime = day.getDayStart() + getTime(time);
 
 		if (eventTime < System.currentTimeMillis()) {
 			eventTime += 7 * 24 * 60 * 60 * 1000;
 		}
-		schedules.add(new Schedule(eventTime, area, runTime, day, time, maxRunTime));
+		schedules.add(new Schedule(eventTime, area, runTime, day, time, maxRunTime, lootAmount));
 		save();
 	}
 
@@ -131,11 +131,15 @@ public class ScheduleHandler {
 			}
 			
 			int maxRunTime = -1;
-			if(sched.containsKey("maxruntime")){
-			    maxRunTime = Integer.parseInt(sched.get("maxruntime")+"");
-			}
+			int lootAmount = ConfigHandler.getCfgHandler().getLootAmount();
+            if(sched.containsKey("maxruntime")){
+                maxRunTime = Integer.parseInt(sched.get("maxruntime")+"");
+            }
+            if(sched.containsKey("lootamount")){
+                lootAmount = Integer.parseInt(sched.get("lootamount")+"");
+            }
 
-			schedules.add(new Schedule(eventTime, (String) sched.get("area"), Integer.parseInt(sched.get("runtime") + ""), day, (String) sched.get("time"), maxRunTime));
+			schedules.add(new Schedule(eventTime, (String) sched.get("area"), Integer.parseInt(sched.get("runtime") + ""), day, (String) sched.get("time"), maxRunTime, lootAmount));
 		}
 	}
 
@@ -160,6 +164,12 @@ public class ScheduleHandler {
 						sch.put("time", sched.getTime());
 						sch.put("area", sched.getArea());
 						sch.put("runtime", sched.getRunTime());
+						if(sched.getMaxRunTime() != -1){
+						    sch.put("maxruntime", sched.getMaxRunTime());
+						}
+						if(sched.getLootAmount() != ConfigHandler.getCfgHandler().getLootAmount()){
+						    sch.put("lootamount", sched.getLootAmount());
+						}
 						dayObj.put(x, sch);
 						shouldAdd = true;
 						x++;
@@ -207,7 +217,7 @@ public class ScheduleHandler {
 			catch (Exception e) {}
 		}
 
-		if (time.endsWith("PM") && hours % 12 != 0) {
+		if (time.toLowerCase().endsWith("pm") && hours % 12 != 0) {
 			hours += 12;
 		}
 		return hours * 60 * 60 * 1000 + minutes * 60 * 1000;

@@ -22,6 +22,7 @@ public class RunningKoth {
 
 	private @Getter String cappingPlayer;
 	private @Getter int timeCapped;
+	private int lootAmount;
 	private int timeKnocked;
 	private boolean knocked;
 	
@@ -29,11 +30,12 @@ public class RunningKoth {
     private @Getter int maxRunTime;
     private int timeRunning;
 
-	public RunningKoth(Area area, int time, int maxRunTime) {
+	public RunningKoth(Area area, int time, int maxRunTime, int lootAmount) {
 		this.area = area;
 		this.captureTime = time;
 		this.timeCapped = 0;
 		this.cappingPlayer = null;
+		this.lootAmount = lootAmount;
 		this.maxRunTime = maxRunTime*60;
 		area.removeLootChest();
 		area.setLastWinner(null);
@@ -109,7 +111,7 @@ public class RunningKoth {
 				if(event.isCreatingChest()){
     				Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable(){
     					public void run(){
-    						area.createLootChest();
+    						area.createLootChest(lootAmount);
     					}
     				});
 				}

@@ -63,10 +63,10 @@ public class KothHandler {
 	}
 
 	public static void startKoth(Area area, int maxRunTime) throws AreaAlreadyRunningException {
-		startKoth(area, 15 * 60, maxRunTime, false);
+		startKoth(area, 15 * 60, maxRunTime, ConfigHandler.getCfgHandler().getLootAmount(), false);
 	}
 
-	public static void startKoth(Area area, int time, int maxRunTime, boolean isScheduled) throws AreaAlreadyRunningException {
+	public static void startKoth(Area area, int time, int maxRunTime, int lootAmount, boolean isScheduled) throws AreaAlreadyRunningException {
 		synchronized (runningKoths) {
 			for (RunningKoth koth : runningKoths) {
 				if (koth.getArea() == area) {
@@ -77,7 +77,7 @@ public class KothHandler {
 	        Bukkit.getServer().getPluginManager().callEvent(event);
 	        
 	        if(!event.isCancelled()){
-	            RunningKoth koth = new RunningKoth(area, event.getLength(), event.getMaxLength());
+	            RunningKoth koth = new RunningKoth(area, event.getLength(), event.getMaxLength(), lootAmount);
     			runningKoths.add(koth);
     			KothAdapter.getAdapter().addRunningKoth(koth);
 	        }
@@ -89,17 +89,17 @@ public class KothHandler {
 		startKoth(area, 15 * 60);
 	}
 
-	public static void startKoth(String area, int time, int maxRunTime, boolean isScheduled) {
+	public static void startKoth(String area, int time, int maxRunTime, int lootAmount, boolean isScheduled) {
 		if(area.equalsIgnoreCase("random")){
 			if(availableAreas.size() > 0){
-				startKoth(availableAreas.get(new Random().nextInt(availableAreas.size())), time, maxRunTime, isScheduled);
+				startKoth(availableAreas.get(new Random().nextInt(availableAreas.size())), time, maxRunTime, lootAmount, isScheduled);
 				return;
 			}
 		}
 		
 		for (Area ar : availableAreas) {
 			if (ar.getName().equalsIgnoreCase(area)) {
-				startKoth(ar, time, maxRunTime, isScheduled);
+				startKoth(ar, time, maxRunTime, lootAmount, isScheduled);
 				return;
 			}
 		}
