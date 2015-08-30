@@ -17,8 +17,9 @@ public class Lang {
 	public static String PREFIX = "&2[KOTH] &a";
 
     public static String KOTH_WON = "&aThe koth %area% ended! %player% won!";
+    public static String KOTH_WON_DROPPING_ITEMS = "&aCouldn't place all items in your inventory! It's on the floor!";
     public static String KOTH_WON_CAPPER = "&aThe koth %area% ended! You won!";
-	public static String KOTH_STARTING = "&aThe koth %area% has begun!";
+    public static String KOTH_STARTING = "&aThe koth %area% has begun!";
     public static String KOTH_PLAYERCAP = "&a%player% has started to cap %area%!";
     public static String KOTH_PLAYERCAP_CAPPER = "&aYou have started capping %area%!";
     public static String KOTH_CAPTIME = "&a%player% is capping the koth! %minutes_left%:%seconds_left% left!";
@@ -34,10 +35,13 @@ public class Lang {
 	
 
 	public static String COMMAND_ONLYFROMINGAME = "&aThis command can only be executed from ingame!";
-	public static String COMMAND_USAGE = "Usage: ";
+    public static String COMMAND_USAGE = "Usage: ";
+    public static String COMMAND_NO_PERMISSION = "&cYou have no permission to use this command!";
 
 	public static String COMMAND_HELP_TITLE = "&8========> &2Koth &8<========";
 	public static String COMMAND_HELP_INFO = "&a%command% &7%command_info%";
+	
+	public static String COMMAND_RELOAD = "&aReload complete";
 	
 	public static String COMMAND_SCHEDULE_HELP_TITLE = "&8========> &2Koth scheduler &8<========";
 	public static String COMMAND_SCHEDULE_HELP_INFO = "&a%command% &7%command_info%";

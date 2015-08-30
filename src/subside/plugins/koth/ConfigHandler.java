@@ -1,5 +1,7 @@
 package subside.plugins.koth;
 
+import java.util.List;
+
 import lombok.Getter;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -15,8 +17,11 @@ public class ConfigHandler {
 	private @Getter boolean randomizeLoot = true;
 	private @Getter boolean randomizeAmountLoot = false;
 	private @Getter boolean useItemsMultipleTimes = true;
+	private @Getter boolean instantLoot = false;
 	private @Getter long removeLootAfterSeconds = 0;
 	private @Getter boolean dropLootOnRemoval = false;
+	private @Getter int minimumPlayersNeeded = 0;
+	private @Getter List<String> helpCommand = null;
 	private @Getter int knockTime = 0;
 	private @Getter static ConfigHandler cfgHandler;
 	
@@ -30,10 +35,13 @@ public class ConfigHandler {
 		knockTime = cfg.getInt("knockTime");
 		singleLootChest = cfg.getBoolean("one-for-all");
 		randomizeLoot = cfg.getBoolean("randomize-loot");
+		instantLoot = cfg.getBoolean("instant-loot");
 		randomizeAmountLoot = cfg.getBoolean("randomize-amount-of-loot");
 		useItemsMultipleTimes = cfg.getBoolean("can-use-same-items");
 		removeLootAfterSeconds = cfg.getInt("remove-lootchest-after");
+		minimumPlayersNeeded = cfg.getInt("minimum-players-needed");
 		dropLootOnRemoval = cfg.getBoolean("drop-loot-on-removal");
+		helpCommand = cfg.getStringList("helpcommand");
 	
 		if(useScoreboard){
 			ScoreboardHandler.load(cfg.getString("scoreboard.title"), cfg.getStringList("scoreboard.contents").toArray(new String[cfg.getStringList("scoreboard.contents").size()]));

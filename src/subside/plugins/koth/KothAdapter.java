@@ -10,7 +10,8 @@ import subside.plugins.koth.area.RunningKoth;
 @Deprecated
 public class KothAdapter {
 	private static KothAdapter adapter = new KothAdapter();
-	
+
+	@Deprecated
 	public static KothAdapter getAdapter(){
 		return adapter;
 	}

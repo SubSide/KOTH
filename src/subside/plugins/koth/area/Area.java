@@ -143,26 +143,50 @@ public class Area {
                 }
             }
             
-            
-            KothChestCreationEvent event = new KothChestCreationEvent(this, inv.getContents());
-            Bukkit.getServer().getPluginManager().callEvent(event);
-
-            if (!event.isCancelled()) {
-                lootPos.getBlock().setType(Material.CHEST);
-                if (lootPos.getBlock().getState() instanceof Chest) {
-                    Chest chest = (Chest) lootPos.getBlock().getState();
-                    
-                    chest.getInventory().setContents(inv.getContents());
-                    
-                    if (ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() > 0) {
-                        Bukkit.getScheduler().runTaskLater(Koth.getPlugin(), new Runnable() {
-                            @Override
-                            public void run() {
-                                removeLootChest();
-                            }
-                        }, ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() * 20);
+            if(ConfigHandler.getCfgHandler().isInstantLoot()){
+                Player player = Bukkit.getPlayer(this.lastWinner);
+                if(player != null){
+                    ArrayList<ItemStack> dropItems = new ArrayList<>();
+                    for(ItemStack is : inv.getContents()){
+                        if(is == null) continue;
+                        if(player.getInventory().addItem(is).size() > 0){
+                            dropItems.add(is);
+                        }
                     }
-
+                    if(dropItems.size() > 0){
+                        new MessageBuilder(Lang.KOTH_WON_DROPPING_ITEMS).buildAndSend(player);
+                        for(ItemStack item : dropItems){
+                            player.getWorld().dropItemNaturally(player.getLocation(), item);
+                        }
+                    }
+                } else {
+                    for(ItemStack item : inv.getContents()){
+                        if(item == null) continue;
+                        middle.getWorld().dropItemNaturally(middle, item);
+                    } 
+                }
+                
+            } else {
+                KothChestCreationEvent event = new KothChestCreationEvent(this, inv.getContents());
+                Bukkit.getServer().getPluginManager().callEvent(event);
+    
+                if (!event.isCancelled()) {
+                    lootPos.getBlock().setType(Material.CHEST);
+                    if (lootPos.getBlock().getState() instanceof Chest) {
+                        Chest chest = (Chest) lootPos.getBlock().getState();
+                        
+                        chest.getInventory().setContents(inv.getContents());
+                        
+                        if (ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() > 0) {
+                            Bukkit.getScheduler().runTaskLater(Koth.getPlugin(), new Runnable() {
+                                @Override
+                                public void run() {
+                                    removeLootChest();
+                                }
+                            }, ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() * 20);
+                        }
+    
+                    }
                 }
             }
         }

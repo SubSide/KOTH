@@ -1,34 +1,4 @@
-# To grab your own timezone go to: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-#
-# The use-playermoveevent feature, when true, will use the PlayerMoveEvent (suprise!)
-# This means that it will check if the player left the KOTH every single time the player moves
-# This will end up with a VERY smooth koth experience, but is discouraged as again, it will trigger every time a player moves.
-# You can turn it on if you like, see how it goes, and can always turn it off if lag occurs (a reload is required for this)
-#
-# One for all creates a single loot chest for all the koths
-# Since this was request a lot, I added it in. It's disabled by default
-#
-# Randomize loot will make it so it will randomly generate the loot for you
-# If you don't want this (You want all the items to be given in the chest)
-# You should put this to false
-#
-# Setting the knock time to something higher than 0 will make the koth "freeze" for that amount of seconds
-# This means that when someone gets knocked off the koth, it will take a moment before it can be capped again.
-# This can be used to stop the spam messages in the chat.
-#
-# The randomize-amount-of-loot now chooses a random amount of loot of the stack you given.
-#
-# can-use-same-items is for if it can use the same item multiple times.
-#
-# remove-lootchest-after will remove the loot chest after this amount of seconds
-# do note that if the server gets reloaded/restarted that this (might) not be the case!
-# 0 to disable this
-#
-# drop-loot-on-removal makes it so when the loot chest gets removed, it drops the loot instead
-# of it just disappearing. default is false
-#
-#
-# For everything, a reload is required.
+# For everything (Except ingame command changes), a reload is required.
 #
 # Available placeholders (this is also used for the Lang.json),
 # Note that not all placeholders are available for every message.
@@ -52,19 +22,63 @@
 # %command_info% - This is the description of the command for help menu
 # %maxtime% - The maximal time in minutes the koth will run
 
-
-
+# To grab your own timezone go to: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 schedule-timezone: "Europe/Amsterdam"
-use-scoreboard: true
+
+# The use-playermoveevent feature, when true, will use the PlayerMoveEvent (suprise!)
+# This means that it will check if the player left the KOTH every single time the player moves
+# This will end up with a VERY smooth koth experience, but is discouraged as again, it will trigger every time a player moves.
+# You can turn it on if you like, see how it goes, and can always turn it off if lag occurs
 use-playermoveevent: false
+
+# one-for-all creates a single loot chest for all the koths (disabled on default)
 one-for-all: false
-amount-of-loot: 5
+
+# Randomize loot will make it so it will randomly generate the loot for you
+# If you don't want this (You want all the items to be given in the chest) You should put this to false
 randomize-loot: true
-randomize-amount-of-loot: false
-remove-lootchest-after: 0
-drop-loot-on-removal: false
-can-use-same-items: true
+
+# This is the amount of loot that will randomly be selected from the loot chest.
+amount-of-loot: 5
+
+# Setting the knock time to something higher than 0 will make the koth "freeze" for that amount of seconds
+# This means that when someone gets knocked off the koth, it will take a moment before it can be capped again. This is NOT channel time.
+# This can be used to stop the spam messages in the chat.
 knockTime: 0
+
+# The randomize-amount-of-loot now chooses a random amount of loot of the stack you given.
+randomize-amount-of-loot: false
+
+# can-use-same-items is for if it can use the same item multiple times.
+can-use-same-items: true
+
+# remove-lootchest-after will remove the loot chest after this amount of seconds
+# do note that if the server gets reloaded/restarted that this (might) not be the case!
+# 0 to disable this
+remove-lootchest-after: 0
+
+# drop-loot-on-removal makes it so when the loot chest gets removed, it drops the loot instead
+# of it just disappearing. default is false
+drop-loot-on-removal: false
+
+# minimum-players-needed is what it says, the minimum amount of players needed for a KoTH to start.
+minimum-players-needed: 0
+
+# instant-loot should be put to true if you want the winner to immediately get all items instead of in a chest
+# This can be very useful for crate keys and such.
+# Putting this to true means that no chest will spawn!
+instant-loot: false
+
+# The help menu (that players see)
+helpcommand:
+  - "&8========> &2Koth &8<========"
+  - "&a/koth list &7Shows all available koths"
+  - "&a/koth loot &7Shows the loot for the upcoming koth"
+  - "&a/koth schedule &7Shows the schedule for koths"
+
+
+# use-scoreboard should speak for itself, put this on false to disable the scoreboard.
+use-scoreboard: true
 
 scoreboard:
   title: "&a&l%area%"

@@ -12,13 +12,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import subside.plugins.koth.area.Area;
 import subside.plugins.koth.area.KothHandler;
 import subside.plugins.koth.area.SingleLootChest;
 import subside.plugins.koth.events.KothOpenChestEvent;
-import subside.plugins.koth.scoreboard.ScoreboardHandler;
 
 public class EventListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
@@ -38,9 +36,7 @@ public class EventListener implements Listener {
                         }
 		                Bukkit.getServer().getPluginManager().callEvent(event);
 		                
-		                if(event.isCancelled()){
-		                    e.setCancelled(true);
-		                }
+		                e.setCancelled(event.isCancelled());
 
 					}
 
@@ -112,9 +108,9 @@ public class EventListener implements Listener {
 			}
 		}
 	}
-
+	/*
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		ScoreboardHandler.clearPlayer(event.getPlayer());
-	}
+	}*/
 }

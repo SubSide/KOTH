@@ -1,6 +1,6 @@
 name: KoTH
 main: subside.plugins.koth.Koth
-version: 1.1.6 BETA v2
+version: 1.1.7 BETA
 author: SubSide
 softdepend: [Multiverse-Core]
 commands:
@@ -10,6 +10,9 @@ permissions:
   koth.admin:
     description: Allows you to configure koths
     default: op
+  koth.help:
+    description: Allows you to use the unargumented /koth
+    default: true
   koth.schedule:
     description: Allows you to schedule koths
     default: true

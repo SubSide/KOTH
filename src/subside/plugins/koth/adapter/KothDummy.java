@@ -1,27 +1,42 @@
 package subside.plugins.koth.adapter;
 
-import lombok.Getter;
-
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 
 import subside.plugins.koth.area.Area;
 
 public class KothDummy {
-    private @Getter Location lootPos;
-    private @Getter Location min;
-    private @Getter Location middle;
-    private @Getter Location max;
-    private @Getter String lastWinner;
-    private @Getter String name;
+    private Area area;
     
     public KothDummy(Area area){
-        min = area.getMin().clone();
-        middle = area.getMiddle().clone();
-        max = area.getMax().clone();
-        try {
-            lootPos = area.getLootPos().clone();
-        } catch(Exception e){}
-        lastWinner = area.getLastWinner();
-        name = area.getName();
+        this.area = area;
+    }
+    
+    public Location getLootPos(){
+        return area.getLootPos();
+    }
+    
+    public Location getMin(){
+        return area.getMin().clone();
+    }
+    
+    public Location getMiddle(){
+        return area.getMiddle().clone();
+    }
+    
+    public Location getMax(){
+        return area.getMax().clone();
+    }
+    
+    public String getLastWinner(){
+        return area.getLastWinner();
+    }
+    
+    public String getName(){
+        return area.getName();
+    }
+    
+    public boolean isInArea(OfflinePlayer player){
+        return area.isInArea(player);
     }
 }

@@ -41,26 +41,34 @@ public class CommandHandler implements CommandExecutor {
 					create(player, newArgs);
 				} else if (args[0].equalsIgnoreCase("remove") && Perm.ADMIN.has(sender)) {
 					remove(player, newArgs);
-				} else if (args[0].equalsIgnoreCase("loot") && Perm.LOOT.has(sender)) {
-					loot(player, newArgs);
 				} else if (args[0].equalsIgnoreCase("start") && Perm.ADMIN.has(sender)) {
 					start(player, newArgs);
 				} else if (args[0].equalsIgnoreCase("stop") && Perm.ADMIN.has(sender)) {
 					stop(player, newArgs);
-				} else if (args[0].equalsIgnoreCase("end") && Perm.ADMIN.has(sender)) {
-					end(player, newArgs);
+                } else if (args[0].equalsIgnoreCase("end") && Perm.ADMIN.has(sender)) {
+                    end(player, newArgs);
+                } else if (args[0].equalsIgnoreCase("reload") && Perm.ADMIN.has(sender)) {
+                    reload(player, newArgs);
+                } else if (args[0].equalsIgnoreCase("asmember") && Perm.ADMIN.has(sender)) {
+                    help2(player, newArgs);
 				} else if (args[0].equalsIgnoreCase("schedule") && Perm.SCHEDULE.has(sender)) {
 					schedule(player, newArgs);
+                } else if (args[0].equalsIgnoreCase("loot") && Perm.LOOT.has(sender)) {
+                    loot(player, newArgs);
 				} else if (args[0].equalsIgnoreCase("list") && Perm.LIST.has(sender)) {
 					list(player, newArgs);
-				} else if (args[0].equalsIgnoreCase("info") && Perm.INFO.has(sender)) {
-					info(player, newArgs);
-				} else {
+                } else if ((args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("version")) && Perm.INFO.has(sender)) {
+                    info(player, newArgs);
+				} else if(Perm.HELP.has(sender)) {
 					help(player, newArgs);
+				} else {
+				    new MessageBuilder(Lang.COMMAND_NO_PERMISSION).buildAndSend(sender);
 				}
-			} else {
+			} else if(Perm.HELP.has(sender)) {
 				help(player, args);
-			}
+			} else {
+                new MessageBuilder(Lang.COMMAND_NO_PERMISSION).buildAndSend(sender);
+            }
 
 		}
 		catch (CommandMessageException | AreaAlreadyRunningException | AreaNotExistException e) {
@@ -69,6 +77,12 @@ public class CommandHandler implements CommandExecutor {
 		return false;
 	}
 
+	public void reload(Player player, String[] args) {
+	    Koth.getPlugin().init();
+	    throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_RELOAD).build());
+	    
+	}
+	
 	@SuppressWarnings("deprecation")
 	public void loot(Player player, String[] args) {
 
@@ -119,7 +133,7 @@ public class CommandHandler implements CommandExecutor {
 			} else {
 				msgb = new MessageBuilder(Lang.COMMAND_LOOT_NOARGSEXPLANATION);
 			}
-			player.sendMessage(msgb.area(area.getName()).build());
+			msgb.area(area.getName()).buildAndSend(player);
 			player.openInventory(area.getInventory());
 		} else {
 			throw new CommandMessageException(new MessageBuilder(Lang.AREA_NOTEXIST).area(ar).build());
@@ -173,9 +187,9 @@ public class CommandHandler implements CommandExecutor {
 	}
 
 	public void list(Player player, String[] args) {
-		player.sendMessage(new MessageBuilder(Lang.COMMAND_LIST_MESSAGE).build());
+		new MessageBuilder(Lang.COMMAND_LIST_MESSAGE).buildAndSend(player);
 		for (Area areas : KothHandler.getAvailableAreas()) {
-			player.sendMessage(new MessageBuilder(Lang.COMMAND_LIST_ENTRY).area(areas.getName()).build());
+			new MessageBuilder(Lang.COMMAND_LIST_ENTRY).area(areas.getName()).buildAndSend(player);
 		}
 	}
 
@@ -262,7 +276,7 @@ public class CommandHandler implements CommandExecutor {
 				}
 			} else if (args[0].equalsIgnoreCase("list")) {
 				List<Schedule> schedules = ScheduleHandler.getSchedules();
-				ArrayList<String> list = new ArrayList<String>();
+				List<String> list = new ArrayList<String>();
 				SimpleDateFormat sdf = new SimpleDateFormat();
 				sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getTimeZone()));
 				list.add(" ");
@@ -293,7 +307,7 @@ public class CommandHandler implements CommandExecutor {
 			}
 		} else {
 		    List<Schedule> schedules = ScheduleHandler.getSchedules();
-			ArrayList<String> list = new ArrayList<String>();
+			List<String> list = new ArrayList<String>();
 			SimpleDateFormat sdf = new SimpleDateFormat();
 			sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getTimeZone()));
 			list.add(" ");
@@ -327,8 +341,8 @@ public class CommandHandler implements CommandExecutor {
 	}
 
 	public void help(Player player, String[] args) {
-		ArrayList<String> list = new ArrayList<String>();
 		if (Perm.ADMIN.has(player)) {
+	        List<String> list = new ArrayList<String>();
 			list.add(new MessageBuilder(Lang.COMMAND_HELP_TITLE).build());
 			list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth create <area>").commandInfo("creates a new koth").build());
 			list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth remove <area>").commandInfo("removes an existing koth").build());
@@ -337,25 +351,34 @@ public class CommandHandler implements CommandExecutor {
 			list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth start <area>").commandInfo("Starts a koth at a certain area").build());
 			list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth stop [area]").commandInfo("Stops a (specific) koth").build());
 			list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth end [area]").commandInfo("Gracefully ends a (specific) koth").build());
-			list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth schedule (?)").commandInfo("Shows/Schedules a koth at a certain time").build());
+            list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth schedule (?)").commandInfo("Shows/Schedules a koth at a certain time").build());
+            list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth reload").commandInfo("Reloads the plugin").build());
+            list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth asmember").commandInfo("Shows the help menu as a normal player").build());
 			list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth info").commandInfo("Shows info about this plugin").build());
+	        player.sendMessage(list.toArray(new String[list.size()]));
 		} else {
-			list.add(new MessageBuilder(Lang.COMMAND_HELP_TITLE).build());
-			if (Perm.LIST.has(player)) list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth list").commandInfo("Shows all available koths").build());
-			if (Perm.LOOT.has(player)) list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth loot").commandInfo("Shows the loot for the upcoming koth").build());
-			if (Perm.SCHEDULE.has(player)) list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth schedule").commandInfo("Shows the schedule for koths").build());
-			if (Perm.INFO.has(player)) list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth info").commandInfo("Shows info about this plugin").build());
+		    help2(player, args);
 		}
 
-		player.sendMessage(list.toArray(new String[list.size()]));
+	}
+	
+	@SuppressWarnings("deprecation")
+    public void help2(Player player, String[] args){
+        List<String> list = ConfigHandler.getCfgHandler().getHelpCommand();
+        List<String> list2 = new ArrayList<String>();
+        for(String hlp : list){
+            list2.add(new MessageBuilder(hlp).area(KothAdapter.getAdapter().getName()).time(KothAdapter.getAdapter().getLengthInSeconds(), KothAdapter.getAdapter().getTotalSecondsCapped()).player(KothAdapter.getAdapter().getCapper()).build());
+        }
+        player.sendMessage(list2.toArray(new String[list2.size()]));
 	}
 
 	public void info(Player player, String[] args) {
-		ArrayList<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<String>();
 		list.add(" ");
 		list.add(new MessageBuilder("&8========> &2INFO &8<========").build());
 		list.add(new MessageBuilder("&2Author: &aSubSide").build());
 		list.add(new MessageBuilder("&2Version: &a" + Koth.getPlugin().getDescription().getVersion()).build());
+		list.add(new MessageBuilder("&2Site: &ahttps://www.spigotmc.org/resources/koth-king-of-the-hill.7689/").build());
 		player.sendMessage(list.toArray(new String[list.size()]));
 	}
 }

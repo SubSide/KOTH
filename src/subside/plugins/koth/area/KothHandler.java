@@ -11,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.Koth;
 import subside.plugins.koth.KothLoader;
 import subside.plugins.koth.adapter.KothAdapter;
 import subside.plugins.koth.events.KothStartEvent;
@@ -74,6 +73,11 @@ public class KothHandler {
 				}
 			}
 			KothStartEvent event = new KothStartEvent(area, time, maxRunTime, isScheduled);
+			
+			if(isScheduled && Bukkit.getOnlinePlayers().size() < ConfigHandler.getCfgHandler().getMinimumPlayersNeeded()){
+			    event.setCancelled(true);
+			}
+			
 	        Bukkit.getServer().getPluginManager().callEvent(event);
 	        
 	        if(!event.isCancelled()){
@@ -152,12 +156,8 @@ public class KothHandler {
 				it.remove();
 			}
 		}
-
-		Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable() {
-			public void run() {
-				ScoreboardHandler.clearAll();
-			}
-		});
+		
+		ScoreboardHandler.clearSB();
 	}
 
 	public static void stopKoth(String name) {
@@ -168,11 +168,7 @@ public class KothHandler {
 				if (koth.getArea().getName().equalsIgnoreCase(name)) {
 					it.remove();
 	                KothAdapter.getAdapter().removeRunningKoth(koth);
-					Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable() {
-						public void run() {
-							ScoreboardHandler.clearAll();
-						}
-					});
+					ScoreboardHandler.clearSB();
 					return;
 				}
 			}

@@ -3,7 +3,7 @@ package subside.plugins.koth;
 import org.bukkit.command.CommandSender;
 
 public enum Perm {
-	SCHEDULE("schedule"), LIST("list"), ADMIN("admin"), LOOT("loot"), INFO("info"), BYPASS("bypass");
+	SCHEDULE("schedule"), LIST("list"), ADMIN("admin"), LOOT("loot"), INFO("info"), BYPASS("bypass"), HELP("help");
 	
 	private String perm;
 	
