@@ -18,7 +18,7 @@ import subside.plugins.koth.exceptions.AreaAlreadyExistException;
 import subside.plugins.koth.exceptions.AreaAlreadyRunningException;
 import subside.plugins.koth.exceptions.AreaNotExistException;
 import subside.plugins.koth.scheduler.ScheduleHandler;
-import subside.plugins.koth.scoreboard.ScoreboardHandler;
+import subside.plugins.koth.scoreboard.SBManager;
 
 public class KothHandler {
 	private static ArrayList<RunningKoth> runningKoths = new ArrayList<>();
@@ -31,7 +31,7 @@ public class KothHandler {
 				it.next().update();
 			}
 			if (ConfigHandler.getCfgHandler().isUseScoreboard()) {
-				ScoreboardHandler.updateScoreboard();
+				SBManager.getManager().update();
 			}
 			ScheduleHandler.tick();
 		}
@@ -157,7 +157,7 @@ public class KothHandler {
 			}
 		}
 		
-		ScoreboardHandler.clearSB();
+		SBManager.getManager().clearAll();
 	}
 
 	public static void stopKoth(String name) {
@@ -168,7 +168,7 @@ public class KothHandler {
 				if (koth.getArea().getName().equalsIgnoreCase(name)) {
 					it.remove();
 	                KothAdapter.getAdapter().removeRunningKoth(koth);
-					ScoreboardHandler.clearSB();
+					SBManager.getManager().clearAll();
 					return;
 				}
 			}

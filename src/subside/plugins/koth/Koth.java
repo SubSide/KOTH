@@ -11,7 +11,7 @@ import subside.plugins.koth.area.Area;
 import subside.plugins.koth.area.KothHandler;
 import subside.plugins.koth.area.SingleLootChest;
 import subside.plugins.koth.scheduler.ScheduleHandler;
-import subside.plugins.koth.scoreboard.ScoreboardHandler;
+import subside.plugins.koth.scoreboard.SBManager;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
@@ -43,6 +43,8 @@ public class Koth extends JavaPlugin {
         Bukkit.getScheduler().cancelTasks(this);
         
         getServer().getPluginManager().registerEvents(new EventListener(), this);
+        getServer().getPluginManager().registerEvents(SBManager.getManager(), this);
+        
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
             public void run() {
                 KothHandler.update();
@@ -56,7 +58,7 @@ public class Koth extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		ScoreboardHandler.clearSB();
+		SBManager.getManager().clearAll();
 		
 		for(Area area : KothHandler.getAvailableAreas()){
 			for(Player player : Bukkit.getOnlinePlayers()){

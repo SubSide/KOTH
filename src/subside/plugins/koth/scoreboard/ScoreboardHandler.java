@@ -7,7 +7,7 @@ import subside.plugins.koth.area.Area;
 import subside.plugins.koth.area.KothHandler;
 import subside.plugins.koth.area.RunningKoth;
 
-public class ScoreboardHandler {
+class ScoreboardHandler {
 
 	private static String titleLoader;
 
@@ -15,13 +15,13 @@ public class ScoreboardHandler {
 
 	private static KothSB scoreboard;
 
-	public static void load(String titleLoader, String[] textLoader) {
+	static void load(String titleLoader, String[] textLoader) {
 		ScoreboardHandler.titleLoader = titleLoader;
 		ScoreboardHandler.textLoader = textLoader;
 		scoreboard = new KothSB();
 	}
 
-	public static void updateScoreboard() {
+	static void updateScoreboard() {
 		WeakReference<RunningKoth> koth = KothHandler.getRunningKoth();
 		if (koth.get() == null) {
 			return;
@@ -52,7 +52,7 @@ public class ScoreboardHandler {
 		return;
 	}
 	
-	public static void clearSB(){
+	static void clearSB(){
 	    if(scoreboard != null)
 	        scoreboard.clearScoreboard();
 	}

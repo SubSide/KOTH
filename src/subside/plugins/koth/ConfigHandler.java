@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import subside.plugins.koth.scoreboard.ScoreboardHandler;
+import subside.plugins.koth.scoreboard.SBManager;
 
 public class ConfigHandler {
 	private @Getter boolean usePlayerMoveEvent = false;
@@ -22,6 +22,7 @@ public class ConfigHandler {
 	private @Getter boolean dropLootOnRemoval = false;
 	private @Getter int minimumPlayersNeeded = 0;
 	private @Getter List<String> helpCommand = null;
+    private @Getter boolean useOldScoreboard = false;
 	private @Getter int knockTime = 0;
 	private @Getter static ConfigHandler cfgHandler;
 	
@@ -42,9 +43,10 @@ public class ConfigHandler {
 		minimumPlayersNeeded = cfg.getInt("minimum-players-needed");
 		dropLootOnRemoval = cfg.getBoolean("drop-loot-on-removal");
 		helpCommand = cfg.getStringList("helpcommand");
+		useOldScoreboard = cfg.getBoolean("use-old-scoreboard");
 	
 		if(useScoreboard){
-			ScoreboardHandler.load(cfg.getString("scoreboard.title"), cfg.getStringList("scoreboard.contents").toArray(new String[cfg.getStringList("scoreboard.contents").size()]));
+			SBManager.getManager().load(useOldScoreboard, cfg.getString("scoreboard.title"), cfg.getStringList("scoreboard.contents").toArray(new String[cfg.getStringList("scoreboard.contents").size()]));
 		}
 	}
 }

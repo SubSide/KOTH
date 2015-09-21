@@ -80,6 +80,10 @@ helpcommand:
 # use-scoreboard should speak for itself, put this on false to disable the scoreboard.
 use-scoreboard: true
 
+# use-old-scoreboard is for if you have problems with the scoreboard not showing up
+# keep in mind that this one does not try to be compatible with any other scoreboard plugin
+use-old-scoreboard: false
+
 scoreboard:
   title: "&a&l%area%"
   contents:

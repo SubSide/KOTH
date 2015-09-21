@@ -41,8 +41,9 @@ public class MessageBuilder {
 	
 	public MessageBuilder player(String player){
 	    excluder = player;
-	    shouldExclude = true;
-		message = message.replaceAll("%player%", player);
+	    if(player == null)
+	        player = "None";
+	    message = message.replaceAll("%player%", player);
 		return this;
 	}
 	

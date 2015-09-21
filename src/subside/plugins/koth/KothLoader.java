@@ -75,9 +75,9 @@ public class KothLoader {
 						
 						KothHandler.getAvailableAreas().add(area);
 					} catch(Exception e){
-						System.out.println("////////////////");
-						System.out.println("Error loading koth: "+ar.get("name"));
-						System.out.println("////////////////");
+					    Koth.getPlugin().getLogger().severe("////////////////");
+					    Koth.getPlugin().getLogger().severe("Error loading koth: "+ar.get("name"));
+					    Koth.getPlugin().getLogger().severe("////////////////");
 						e.printStackTrace();
 					}
 				}
@@ -93,7 +93,7 @@ public class KothLoader {
 
 		}
 		catch (Exception e) {
-			System.out.println("///// KOTH FILE NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
+		    Koth.getPlugin().getLogger().warning("///// KOTH FILE NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
 
 			e.printStackTrace();
 		}

@@ -31,41 +31,45 @@ public class CommandHandler implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
 		try {
-			if (!(sender instanceof Player)) {
-				throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_ONLYFROMINGAME).build());
-			}
-			Player player = (Player) sender;
 			if (args.length > 0) {
 				String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
 				if (args[0].equalsIgnoreCase("create") && Perm.ADMIN.has(sender)) {
-					create(player, newArgs);
+				    if(sender instanceof Player){
+				        create((Player)sender, newArgs);
+				    } else {
+		                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_ONLYFROMINGAME).build());
+				    }
 				} else if (args[0].equalsIgnoreCase("remove") && Perm.ADMIN.has(sender)) {
-					remove(player, newArgs);
+					remove(sender, newArgs);
 				} else if (args[0].equalsIgnoreCase("start") && Perm.ADMIN.has(sender)) {
-					start(player, newArgs);
+					start(sender, newArgs);
 				} else if (args[0].equalsIgnoreCase("stop") && Perm.ADMIN.has(sender)) {
-					stop(player, newArgs);
+					stop(sender, newArgs);
                 } else if (args[0].equalsIgnoreCase("end") && Perm.ADMIN.has(sender)) {
-                    end(player, newArgs);
+                    end(sender, newArgs);
                 } else if (args[0].equalsIgnoreCase("reload") && Perm.ADMIN.has(sender)) {
-                    reload(player, newArgs);
+                    reload(sender, newArgs);
                 } else if (args[0].equalsIgnoreCase("asmember") && Perm.ADMIN.has(sender)) {
-                    help2(player, newArgs);
+                    help2(sender, newArgs);
 				} else if (args[0].equalsIgnoreCase("schedule") && Perm.SCHEDULE.has(sender)) {
-					schedule(player, newArgs);
+					schedule(sender, newArgs);
                 } else if (args[0].equalsIgnoreCase("loot") && Perm.LOOT.has(sender)) {
-                    loot(player, newArgs);
+                    if(sender instanceof Player){
+                        loot((Player)sender, newArgs);
+                    } else {
+                        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_ONLYFROMINGAME).build());
+                    }
 				} else if (args[0].equalsIgnoreCase("list") && Perm.LIST.has(sender)) {
-					list(player, newArgs);
+					list(sender, newArgs);
                 } else if ((args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("version")) && Perm.INFO.has(sender)) {
-                    info(player, newArgs);
+                    info(sender, newArgs);
 				} else if(Perm.HELP.has(sender)) {
-					help(player, newArgs);
+					help(sender, newArgs);
 				} else {
 				    new MessageBuilder(Lang.COMMAND_NO_PERMISSION).buildAndSend(sender);
 				}
 			} else if(Perm.HELP.has(sender)) {
-				help(player, args);
+				help(sender, args);
 			} else {
                 new MessageBuilder(Lang.COMMAND_NO_PERMISSION).buildAndSend(sender);
             }
@@ -77,7 +81,7 @@ public class CommandHandler implements CommandExecutor {
 		return false;
 	}
 
-	public void reload(Player player, String[] args) {
+	public void reload(CommandSender sender, String[] args) {
 	    Koth.getPlugin().init();
 	    throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_RELOAD).build());
 	    
@@ -141,7 +145,7 @@ public class CommandHandler implements CommandExecutor {
 
 	}
 
-	public void start(Player player, String[] args) {
+	public void start(CommandSender sender, String[] args) {
 		if (args.length > 0) {
 		    String area = args[0];
 		    int runTime = 15;
@@ -186,14 +190,14 @@ public class CommandHandler implements CommandExecutor {
 		}
 	}
 
-	public void list(Player player, String[] args) {
-		new MessageBuilder(Lang.COMMAND_LIST_MESSAGE).buildAndSend(player);
+	public void list(CommandSender sender, String[] args) {
+		new MessageBuilder(Lang.COMMAND_LIST_MESSAGE).buildAndSend(sender);
 		for (Area areas : KothHandler.getAvailableAreas()) {
-			new MessageBuilder(Lang.COMMAND_LIST_ENTRY).area(areas.getName()).buildAndSend(player);
+			new MessageBuilder(Lang.COMMAND_LIST_ENTRY).area(areas.getName()).buildAndSend(sender);
 		}
 	}
 
-	public void stop(Player player, String[] args) {
+	public void stop(CommandSender sender, String[] args) {
 		if (args.length > 0) {
 			KothHandler.stopKoth(args[0]);
 			throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_TERMINATE_SPECIFIC_KOTH).area(args[0]).build());
@@ -203,7 +207,7 @@ public class CommandHandler implements CommandExecutor {
 		}
 	}
 
-	public void end(Player player, String[] args) {
+	public void end(CommandSender sender, String[] args) {
 		if (args.length > 0) {
 			KothHandler.endKoth(args[0]);
 			throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_TERMINATE_SPECIFIC_KOTH).area(args[0]).build());
@@ -213,40 +217,40 @@ public class CommandHandler implements CommandExecutor {
 		}
 	}
 
-	public void schedule(Player player, String[] args) {
-		if (args.length > 0 && Perm.ADMIN.has(player)) {
+	public void schedule(CommandSender sender, String[] args) {
+		if (args.length > 0 && Perm.ADMIN.has(sender)) {
 			if (args[0].equalsIgnoreCase("create")) {
 				if (args.length > 3) {
 					Area area = KothHandler.getArea(args[1]);
 					if (area != null) {
-						try {
-							Day day = Day.getDay(args[2].toUpperCase());
-							String time = args[3];
-							int runTime = 15;
-							int maxRunTime = -1;
-							int lootAmount = ConfigHandler.getCfgHandler().getLootAmount();
-							try {
-								if (args.length > 4) {
-									runTime = Integer.parseInt(args[4]);
-									
-									if(args.length > 5){
-									    maxRunTime = Integer.parseInt(args[5]);
-									    
-									    if(args.length > 6){
-	                                        lootAmount = Integer.parseInt(args[6]);
-	                                    }
-									}
-								}
-							}
-							catch (Exception e) {
-								throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_RUNTIMEERROR).build());
+					    Day day = Day.getDay(args[2].toUpperCase());
+					    if(day != null){
+							    
+					        String time = args[3];
+					        int runTime = 15;
+					        int maxRunTime = -1;
+					        int lootAmount = ConfigHandler.getCfgHandler().getLootAmount();
+					        try {
+					            if (args.length > 4) {
+					                runTime = Integer.parseInt(args[4]);
+					            
+					                if(args.length > 5){
+					                    maxRunTime = Integer.parseInt(args[5]);
+					                
+					                    if(args.length > 6){
+					                        lootAmount = Integer.parseInt(args[6]);
+					                    }
+					                }
+					            }
+					        }
+					        catch (Exception e) {
+					            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_RUNTIMEERROR).build());
 							}
 
 							ScheduleHandler.createSchedule(area.getName(), runTime, day, time, maxRunTime, lootAmount);
 							throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_CREATED).area(area.getName()).lootAmount(lootAmount).day(day.getDay()).time(time).length(runTime).build());
 
-						}
-						catch (IllegalArgumentException e) {
+						} else {
 							throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_NOVALIDDAY).build());
 						}
 					} else {
@@ -293,12 +297,12 @@ public class CommandHandler implements CommandExecutor {
 						list.addAll(subList);
 					}
 				}
-				player.sendMessage(list.toArray(new String[list.size()]));
+				sender.sendMessage(list.toArray(new String[list.size()]));
 				if (schedules.size() < 1) {
 					throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_EMPTY).build());
 				}
 			} else {
-				player.sendMessage(new String[] {
+			    sender.sendMessage(new String[] {
 						new MessageBuilder(Lang.COMMAND_SCHEDULE_HELP_TITLE).build(),
 						new MessageBuilder(Lang.COMMAND_SCHEDULE_HELP_INFO).command("/koth schedule create").commandInfo("schedule a koth").build(),
 						new MessageBuilder(Lang.COMMAND_SCHEDULE_HELP_INFO).command("/koth schedule remove <ID>").commandInfo("removes an existing schedule").build(),
@@ -327,11 +331,11 @@ public class CommandHandler implements CommandExecutor {
 			if (schedules.size() < 1) {
 				throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_EMPTY).build());
 			}
-			player.sendMessage(list.toArray(new String[list.size()]));
+			sender.sendMessage(list.toArray(new String[list.size()]));
 		}
 	}
 
-	public void remove(Player player, String[] args) {
+	public void remove(CommandSender sender, String[] args) {
 		if (args.length > 0) {
 			KothHandler.removeArea(args[0]);
 			throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_AREA_REMOVED).area(args[0]).build());
@@ -340,8 +344,8 @@ public class CommandHandler implements CommandExecutor {
 		}
 	}
 
-	public void help(Player player, String[] args) {
-		if (Perm.ADMIN.has(player)) {
+	public void help(CommandSender sender, String[] args) {
+		if (Perm.ADMIN.has(sender)) {
 	        List<String> list = new ArrayList<String>();
 			list.add(new MessageBuilder(Lang.COMMAND_HELP_TITLE).build());
 			list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth create <area>").commandInfo("creates a new koth").build());
@@ -355,30 +359,30 @@ public class CommandHandler implements CommandExecutor {
             list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth reload").commandInfo("Reloads the plugin").build());
             list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth asmember").commandInfo("Shows the help menu as a normal player").build());
 			list.add(new MessageBuilder(Lang.COMMAND_HELP_INFO).command("/koth info").commandInfo("Shows info about this plugin").build());
-	        player.sendMessage(list.toArray(new String[list.size()]));
+			sender.sendMessage(list.toArray(new String[list.size()]));
 		} else {
-		    help2(player, args);
+		    help2(sender, args);
 		}
 
 	}
 	
 	@SuppressWarnings("deprecation")
-    public void help2(Player player, String[] args){
+    public void help2(CommandSender sender, String[] args){
         List<String> list = ConfigHandler.getCfgHandler().getHelpCommand();
         List<String> list2 = new ArrayList<String>();
         for(String hlp : list){
             list2.add(new MessageBuilder(hlp).area(KothAdapter.getAdapter().getName()).time(KothAdapter.getAdapter().getLengthInSeconds(), KothAdapter.getAdapter().getTotalSecondsCapped()).player(KothAdapter.getAdapter().getCapper()).build());
         }
-        player.sendMessage(list2.toArray(new String[list2.size()]));
+        sender.sendMessage(list2.toArray(new String[list2.size()]));
 	}
 
-	public void info(Player player, String[] args) {
+	public void info(CommandSender sender, String[] args) {
 		List<String> list = new ArrayList<String>();
 		list.add(" ");
 		list.add(new MessageBuilder("&8========> &2INFO &8<========").build());
 		list.add(new MessageBuilder("&2Author: &aSubSide").build());
 		list.add(new MessageBuilder("&2Version: &a" + Koth.getPlugin().getDescription().getVersion()).build());
 		list.add(new MessageBuilder("&2Site: &ahttps://www.spigotmc.org/resources/koth-king-of-the-hill.7689/").build());
-		player.sendMessage(list.toArray(new String[list.size()]));
+		sender.sendMessage(list.toArray(new String[list.size()]));
 	}
 }

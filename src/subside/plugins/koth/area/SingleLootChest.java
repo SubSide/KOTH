@@ -51,7 +51,7 @@ public class SingleLootChest {
 
 		}
 		catch (Exception e) {
-			System.out.println("///// LOOT CHEST NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
+			Koth.getPlugin().getLogger().warning("///// LOOT CHEST NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
 
 			e.printStackTrace();
 		}

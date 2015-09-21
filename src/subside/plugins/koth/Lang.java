@@ -109,9 +109,9 @@ public class Lang {
 			save(plugin);
 		}
 		catch (Exception e) {
-			System.out.println("///// LANG FILE NOT FOUND OR NOT CORRECTLY SET UP ////");
-			System.out.println("Will use default variables instead.");
-			System.out.println("You could try to delete the lang.json in the plugin folder.");
+		    Koth.getPlugin().getLogger().warning("///// LANG FILE NOT FOUND OR NOT CORRECTLY SET UP ////");
+		    Koth.getPlugin().getLogger().warning("Will use default variables instead.");
+		    Koth.getPlugin().getLogger().warning("You could try to delete the lang.json in the plugin folder.");
 
 			e.printStackTrace();
 		}
