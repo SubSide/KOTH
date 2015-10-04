@@ -31,6 +31,7 @@ public class EventListener implements Listener {
 					if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
 
 		                KothOpenChestEvent event = new KothOpenChestEvent(area, (Player)e.getPlayer());
+		                event.setCancelled(false);
                         if (!area.getLastWinner().equalsIgnoreCase(e.getPlayer().getName()) && !Perm.BYPASS.has((Player)e.getPlayer())) {
                             event.setCancelled(true);
                         }
