@@ -8,16 +8,15 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-import subside.plugins.koth.adapter.KothDummy;
-import subside.plugins.koth.area.Area;
+import subside.plugins.koth.adapter.Area;
 
 public class KothChestCreationEvent extends Event implements IEvent, Cancellable {
     private boolean isCancelled;
-    private @Getter KothDummy koth;
+    private @Getter Area area;
     private @Getter @Setter ItemStack[] loot;
     
-    public KothChestCreationEvent(Area koth, ItemStack[] loot){
-        this.koth = new KothDummy(koth);
+    public KothChestCreationEvent(Area area, ItemStack[] loot){
+        this.area = area;
         this.loot = loot;
     }
     

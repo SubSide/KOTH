@@ -1,4 +1,4 @@
-package subside.plugins.koth.area;
+package subside.plugins.koth.adapter;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,11 +14,13 @@ import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.json.simple.JSONObject;
 
 import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.Koth;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.MessageBuilder;
+import subside.plugins.koth.SingleLootChest;
 import subside.plugins.koth.events.KothChestCreationEvent;
 
 public class Area {
@@ -52,10 +54,10 @@ public class Area {
         this.middle = min.clone().add(max.clone()).multiply(0.5);
     }
 
-    private boolean isInAABB(Location pos, Location pos2, Location pos3) {
-        Location min = getMinimum(pos2, pos3);
-        Location max = getMaximum(pos2, pos3);
-        if (min.getBlockX() <= pos.getBlockX() && max.getBlockX() >= pos.getBlockX() && min.getBlockY() <= pos.getBlockY() && max.getBlockY() >= pos.getBlockY() && min.getBlockZ() <= pos.getBlockZ() && max.getBlockZ() >= pos.getBlockZ()) {
+    private boolean isInAABB(Location loc, Location pos1, Location pos2) {
+        Location min = getMinimum(pos1, pos2);
+        Location max = getMaximum(pos1, pos2);
+        if (min.getBlockX() <= loc.getBlockX() && max.getBlockX() >= loc.getBlockX() && min.getBlockY() <= loc.getBlockY() && max.getBlockY() >= loc.getBlockY() && min.getBlockZ() <= loc.getBlockZ() && max.getBlockZ() >= loc.getBlockZ()) {
             return true;
         }
         return false;
@@ -74,12 +76,15 @@ public class Area {
             return false;
         }
 
-        if (player.getWorld() == min.getWorld()) {
-            Location loc = player.getLocation();
-            if (isInAABB(loc, min, max)) {
-                return true;
-            }
+        if (player.getWorld() != min.getWorld()) {
+            return false;
         }
+        
+        Location loc = player.getLocation();
+        if (isInAABB(loc, min, max)) {
+            return true;
+        }
+
         return false;
     }
 
@@ -142,53 +147,59 @@ public class Area {
                     inv.setItem(x, usableLoot.get(x).clone());
                 }
             }
-            
-            if(ConfigHandler.getCfgHandler().isInstantLoot()){
+
+            if (ConfigHandler.getCfgHandler().isInstantLoot()) {
                 Player player = Bukkit.getPlayer(this.lastWinner);
-                if(player != null){
+                if (player != null) {
                     ArrayList<ItemStack> dropItems = new ArrayList<>();
-                    for(ItemStack is : inv.getContents()){
-                        if(is == null) continue;
-                        if(player.getInventory().addItem(is).size() > 0){
+                    for (ItemStack is : inv.getContents()) {
+                        if (is == null) continue;
+                        if (player.getInventory().addItem(is).size() > 0) {
                             dropItems.add(is);
                         }
                     }
-                    if(dropItems.size() > 0){
+                    if (dropItems.size() > 0) {
                         new MessageBuilder(Lang.KOTH_WON_DROPPING_ITEMS).buildAndSend(player);
-                        for(ItemStack item : dropItems){
+                        for (ItemStack item : dropItems) {
                             player.getWorld().dropItemNaturally(player.getLocation(), item);
                         }
                     }
                 } else {
-                    for(ItemStack item : inv.getContents()){
-                        if(item == null) continue;
+                    for (ItemStack item : inv.getContents()) {
+                        if (item == null) continue;
                         middle.getWorld().dropItemNaturally(middle, item);
-                    } 
-                }
-                
-            } else {
-                KothChestCreationEvent event = new KothChestCreationEvent(this, inv.getContents());
-                Bukkit.getServer().getPluginManager().callEvent(event);
-    
-                if (!event.isCancelled()) {
-                    lootPos.getBlock().setType(Material.CHEST);
-                    if (lootPos.getBlock().getState() instanceof Chest) {
-                        Chest chest = (Chest) lootPos.getBlock().getState();
-                        
-                        chest.getInventory().setContents(inv.getContents());
-                        
-                        if (ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() > 0) {
-                            Bukkit.getScheduler().runTaskLater(Koth.getPlugin(), new Runnable() {
-                                @Override
-                                public void run() {
-                                    removeLootChest();
-                                }
-                            }, ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() * 20);
-                        }
-    
                     }
                 }
+
+            } else {
+                KothChestCreationEvent event = new KothChestCreationEvent(this, inv.getContents());
+
+                Bukkit.getServer().getPluginManager().callEvent(event);
+                if (event.isCancelled()) {
+                    return;
+                }
+
+                lootPos.getBlock().setType(Material.CHEST);
+                if (!(lootPos.getBlock().getState() instanceof Chest)) {
+                    return;
+                }
+
+                Chest chest = (Chest) lootPos.getBlock().getState();
+                chest.getInventory().setContents(inv.getContents());
+
+                if (ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() < 1) {
+                    return;
+                }
+
+                Bukkit.getScheduler().runTaskLater(KothPlugin.getPlugin(), new Runnable() {
+                    @Override
+                    public void run() {
+                        removeLootChest();
+                    }
+                }, ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() * 20);
+
             }
+
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -197,23 +208,37 @@ public class Area {
 
     public void removeLootChest() {
         final Area area = this;
-        Bukkit.getScheduler().runTask(Koth.getPlugin(), new Runnable() {
+        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
             public void run() {
-                if (area.getLootPos() != null) {
-                    if (area.getLootPos().getBlock() != null) {
-                        if (!ConfigHandler.getCfgHandler().isDropLootOnRemoval()) {
-                            if (area.getLootPos().getBlock().getState() instanceof Chest) {
-                                Chest chest = (Chest) area.getLootPos().getBlock().getState();
-                                Inventory inv = chest.getInventory();
-                                inv.clear();
-                            }
-                        }
-                        area.getLootPos().getBlock().setType(Material.AIR);
+                if (area.getLootPos() == null) {
+                    return;
+                }
+
+                if (area.getLootPos().getBlock() == null) {
+                    return;
+                }
+
+                if (!ConfigHandler.getCfgHandler().isDropLootOnRemoval()) {
+                    if (area.getLootPos().getBlock().getState() instanceof Chest) {
+                        Chest chest = (Chest) area.getLootPos().getBlock().getState();
+                        Inventory inv = chest.getInventory();
+                        inv.clear();
                     }
                 }
+                area.getLootPos().getBlock().setType(Material.AIR);
+
             }
+
         });
 
+    }
+    
+    public JSONObject saveObject(){
+        JSONObject obj = new JSONObject();
+    }
+    
+    public static Area loadObject(JSONObject obj){
+        
     }
 
 }

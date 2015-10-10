@@ -21,14 +21,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import subside.plugins.koth.area.Area;
-import subside.plugins.koth.area.KothHandler;
-import subside.plugins.koth.area.SingleLootChest;
+import subside.plugins.koth.adapter.Area;
+import subside.plugins.koth.adapter.KothHandler;
 
 public class KothLoader {
 	
 	public static void load() {
-		Koth plugin = Koth.getPlugin();
+		KothPlugin plugin = KothPlugin.getPlugin();
 		try {
 			KothHandler.getAvailableAreas().clear();
 			if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "koths.json").exists()) {
@@ -75,9 +74,9 @@ public class KothLoader {
 						
 						KothHandler.getAvailableAreas().add(area);
 					} catch(Exception e){
-					    Koth.getPlugin().getLogger().severe("////////////////");
-					    Koth.getPlugin().getLogger().severe("Error loading koth: "+ar.get("name"));
-					    Koth.getPlugin().getLogger().severe("////////////////");
+					    KothPlugin.getPlugin().getLogger().severe("////////////////");
+					    KothPlugin.getPlugin().getLogger().severe("Error loading koth: "+ar.get("name"));
+					    KothPlugin.getPlugin().getLogger().severe("////////////////");
 						e.printStackTrace();
 					}
 				}
@@ -93,7 +92,7 @@ public class KothLoader {
 
 		}
 		catch (Exception e) {
-		    Koth.getPlugin().getLogger().warning("///// KOTH FILE NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
+		    KothPlugin.getPlugin().getLogger().warning("///// KOTH FILE NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
 
 			e.printStackTrace();
 		}
@@ -101,7 +100,7 @@ public class KothLoader {
 
 	@SuppressWarnings("unchecked")
 	public static void save() {
-		Koth plugin = Koth.getPlugin();
+		KothPlugin plugin = KothPlugin.getPlugin();
 		try {
 
 			if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "koths.json").exists()) {

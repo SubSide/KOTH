@@ -1,4 +1,4 @@
-package subside.plugins.koth.area;
+package subside.plugins.koth;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,17 +18,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import subside.plugins.koth.Koth;
-import subside.plugins.koth.Lang;
-import subside.plugins.koth.MessageBuilder;
-import subside.plugins.koth.Utils;
-
 public class SingleLootChest {
 	private static Inventory inventory;
 
 	public static void load() {
 		inventory = Bukkit.createInventory(null, 54, new MessageBuilder(Lang.KOTH_LOOT_CHEST).area("Global").build());
-		Koth plugin = Koth.getPlugin();
+		KothPlugin plugin = KothPlugin.getPlugin();
 		try {
 			if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "singleloot.json").exists()) {
 				save();
@@ -51,7 +46,7 @@ public class SingleLootChest {
 
 		}
 		catch (Exception e) {
-			Koth.getPlugin().getLogger().warning("///// LOOT CHEST NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
+			KothPlugin.getPlugin().getLogger().warning("///// LOOT CHEST NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
 
 			e.printStackTrace();
 		}
@@ -59,7 +54,7 @@ public class SingleLootChest {
 
 	@SuppressWarnings("unchecked")
 	public static void save() {
-		Koth plugin = Koth.getPlugin();
+		KothPlugin plugin = KothPlugin.getPlugin();
 		try {
 
 			if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "singleloot.json").exists()) {

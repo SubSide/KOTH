@@ -1,7 +1,7 @@
 package subside.plugins.koth.events;
 
-import subside.plugins.koth.adapter.KothDummy;
+import subside.plugins.koth.adapter.Area;
 
 public interface IEvent {
-    public KothDummy getKoth();
+    public Area getArea();
 }

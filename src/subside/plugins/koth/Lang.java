@@ -28,6 +28,8 @@ public class Lang {
     public static String KOTH_LEFT_CAPPER = "&aYou left the koth!";
 	public static String KOTH_LOOT_CHEST = "&1&l%area%s &8&lloot";
     public static String KOTH_TIME_UP = "&aAfter %maxtime% minute noone capped the KoTH! Event is over!";
+    
+    public static String KOTH_PRE_BROADCAST = "&aThe koth %area% will start in 30 minutes!";
 	
 	public static String AREA_ALREADYRUNNING = "&aThe area %area% is already running!";
 	public static String AREA_ALREADYEXISTS = "&aThe area %area% already exists!";
@@ -42,9 +44,14 @@ public class Lang {
 	public static String COMMAND_HELP_INFO = "&a%command% &7%command_info%";
 	
 	public static String COMMAND_RELOAD = "&aReload complete";
-	
-	public static String COMMAND_SCHEDULE_HELP_TITLE = "&8========> &2Koth scheduler &8<========";
-	public static String COMMAND_SCHEDULE_HELP_INFO = "&a%command% &7%command_info%";
+
+    public static String COMMAND_SCHEDULE_HELP_TITLE = "&8========> &2Koth scheduler &8<========";
+    public static String COMMAND_SCHEDULE_HELP_INFO = "&a%command% &7%command_info%";
+    
+
+    public static String COMMAND_EDITOR_HELP_TITLE = "&8========> &2Koth editor &8<========";
+    public static String COMMAND_EDITOR_HELP_INFO = "&a%command% &7%command_info%";
+    public static String COMMAND_EDITOR_EDIT_AREA = "&aYou succesfully redefined the area!";
 	
 	
 	public static String COMMAND_AREA_TRIGGERED = "&aYou've started the area %area%!";
@@ -109,9 +116,9 @@ public class Lang {
 			save(plugin);
 		}
 		catch (Exception e) {
-		    Koth.getPlugin().getLogger().warning("///// LANG FILE NOT FOUND OR NOT CORRECTLY SET UP ////");
-		    Koth.getPlugin().getLogger().warning("Will use default variables instead.");
-		    Koth.getPlugin().getLogger().warning("You could try to delete the lang.json in the plugin folder.");
+		    KothPlugin.getPlugin().getLogger().warning("///// LANG FILE NOT FOUND OR NOT CORRECTLY SET UP ////");
+		    KothPlugin.getPlugin().getLogger().warning("Will use default variables instead.");
+		    KothPlugin.getPlugin().getLogger().warning("You could try to delete the lang.json in the plugin folder.");
 
 			e.printStackTrace();
 		}

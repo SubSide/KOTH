@@ -6,9 +6,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import subside.plugins.koth.MessageBuilder;
-import subside.plugins.koth.area.Area;
-import subside.plugins.koth.area.KothHandler;
-import subside.plugins.koth.area.RunningKoth;
+import subside.plugins.koth.adapter.Area;
+import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.adapter.RunningKoth;
 
 class OldScoreboardHandler {
 
@@ -35,10 +35,10 @@ class OldScoreboardHandler {
         Area area = koth.get().getArea();
         String player = koth.get().getCappingPlayer();
 
-        scoreboard.setTitle(new MessageBuilder(titleLoader).maxTime(koth.get().getMaxRunTime()).area(area.getName()).player(player).time(koth.get().getCaptureTime(), koth.get().getTimeCapped()).build());
+        scoreboard.setTitle(new MessageBuilder(titleLoader).maxTime(koth.get().getMaxRunTime()).area(area.getName()).player(player).time(koth.get().getTimeObject()).build());
 
         for (int x = 0; x < text.length; x++) {
-            scoreboard.setScore(x, new MessageBuilder(text[x]).maxTime(koth.get().getMaxRunTime()).area(area.getName()).player(player).time(koth.get().getCaptureTime(), koth.get().getTimeCapped()).build());
+            scoreboard.setScore(x, new MessageBuilder(text[x]).maxTime(koth.get().getMaxRunTime()).area(area.getName()).player(player).time(koth.get().getTimeObject()).build());
 
         }
         

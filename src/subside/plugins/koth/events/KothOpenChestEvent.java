@@ -7,17 +7,16 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import subside.plugins.koth.adapter.KothDummy;
-import subside.plugins.koth.area.Area;
+import subside.plugins.koth.adapter.Area;
 
 public class KothOpenChestEvent extends Event implements IEvent, Cancellable {
 
     private @Getter Player player;
     private boolean isCancelled;
-    private @Getter KothDummy koth;
+    private @Getter Area area;
     
     public KothOpenChestEvent(Area area, Player player) {
-        this.koth = new KothDummy(area);
+        this.area = area;
         this.player = player;
     }
 

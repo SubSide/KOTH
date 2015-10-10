@@ -77,6 +77,9 @@ helpcommand:
   - "&a/koth schedule &7Shows the schedule for koths"
 
 
+# broadcast X amount of minutes before a scheduled koth starts (0 disables it)
+pre-broadcast: 0
+
 # use-scoreboard should speak for itself, put this on false to disable the scoreboard.
 use-scoreboard: true
 

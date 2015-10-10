@@ -9,17 +9,16 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import subside.plugins.koth.adapter.KothDummy;
-import subside.plugins.koth.area.Area;
+import subside.plugins.koth.adapter.Area;
 
 public class KothCapEvent extends Event implements IEvent, Cancellable {
     private String nextCapper;
     private @Getter List<Player> playersInArea;
     private boolean isCancelled;
-    private @Getter KothDummy koth;
+    private @Getter Area area;
     
-    public KothCapEvent(Area koth, List<Player> playersInArea, String nextCapper){
-        this.koth = new KothDummy(koth);
+    public KothCapEvent(Area area, List<Player> playersInArea, String nextCapper){
+        this.area = area;
         this.playersInArea = playersInArea;
         this.nextCapper = nextCapper;
     }

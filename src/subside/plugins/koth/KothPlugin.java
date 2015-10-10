@@ -7,16 +7,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import subside.plugins.koth.area.Area;
-import subside.plugins.koth.area.KothHandler;
-import subside.plugins.koth.area.SingleLootChest;
+import subside.plugins.koth.adapter.Area;
+import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.scoreboard.SBManager;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
-public class Koth extends JavaPlugin {
-	private @Getter static Koth plugin;
+public class KothPlugin extends JavaPlugin {
+	private @Getter static KothPlugin plugin;
 	private @Getter static WorldEditPlugin worldEdit;
 
 	@Override
