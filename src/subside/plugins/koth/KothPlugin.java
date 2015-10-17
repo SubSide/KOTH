@@ -7,9 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import subside.plugins.koth.adapter.Area;
 import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.scheduler.ScheduleHandler;
+import subside.plugins.koth.commands.CommandHandler;
+import subside.plugins.koth.loaders.KothLoader;
+import subside.plugins.koth.loaders.ScheduleLoader;
 import subside.plugins.koth.scoreboard.SBManager;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -23,7 +24,7 @@ public class KothPlugin extends JavaPlugin {
 		plugin = this;
 
 		worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
-		getCommand("koth").setExecutor(new CommandHandler());
+		getCommand("koth").setExecutor(new CommandHandler(this));
 		init();
 		
 	}
@@ -36,7 +37,7 @@ public class KothPlugin extends JavaPlugin {
 	    new ConfigHandler(this.getConfig());
         Lang.load(this);
         KothLoader.load();
-        ScheduleHandler.load();
+        ScheduleLoader.load();
         
         HandlerList.unregisterAll(this);
         Bukkit.getScheduler().cancelTasks(this);
@@ -59,19 +60,8 @@ public class KothPlugin extends JavaPlugin {
 	public void onDisable() {
 		SBManager.getManager().clearAll();
 		
-		for(Area area : KothHandler.getAvailableAreas()){
-			for(Player player : Bukkit.getOnlinePlayers()){
-				if(area.getInventory().getViewers().contains(player)){
-					player.closeInventory();
-				}
-			}
-		}
-		if(ConfigHandler.getCfgHandler().isSingleLootChest()){
-			for(Player player : Bukkit.getOnlinePlayers()){
-				if(SingleLootChest.getInventory().getViewers().contains(player)){
-					player.closeInventory();
-				}
-			}
-		}
+        for(Player player : Bukkit.getOnlinePlayers()){
+            player.closeInventory();
+        }
 	}
 }

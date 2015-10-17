@@ -5,16 +5,16 @@ import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import subside.plugins.koth.adapter.Area;
+import subside.plugins.koth.adapter.Koth;
 
 public class KothEndEvent extends Event implements IEvent {
     private String winner;
     private boolean createChest;
-    private @Getter Area area;
+    private @Getter Koth koth;
     
     
-    public KothEndEvent(Area area, String capper){
-        this.area = area;
+    public KothEndEvent(Koth koth, String capper){
+        this.koth = koth;
         this.winner = capper;
         this.createChest = true;
     }

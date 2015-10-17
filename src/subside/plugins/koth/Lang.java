@@ -9,86 +9,106 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import subside.plugins.koth.utils.Utils;
+
 public class Lang {
 
-	public static String PREFIX = "&2[KOTH] &a";
+	public static String[] PREFIX = new String[]{"&2[KOTH] &a"};
 
-    public static String KOTH_WON = "&aThe koth %area% ended! %player% won!";
-    public static String KOTH_WON_DROPPING_ITEMS = "&aCouldn't place all items in your inventory! It's on the floor!";
-    public static String KOTH_WON_CAPPER = "&aThe koth %area% ended! You won!";
-    public static String KOTH_STARTING = "&aThe koth %area% has begun!";
-    public static String KOTH_PLAYERCAP = "&a%player% has started to cap %area%!";
-    public static String KOTH_PLAYERCAP_CAPPER = "&aYou have started capping %area%!";
-    public static String KOTH_CAPTIME = "&a%player% is capping the koth! %minutes_left%:%seconds_left% left!";
-    public static String KOTH_CAPTIME_CAPPER = "&aYou are capping the koth! %minutes_left%:%seconds_left% left!";
-    public static String KOTH_LEFT = "&a%player% left the koth!";
-    public static String KOTH_LEFT_CAPPER = "&aYou left the koth!";
-	public static String KOTH_LOOT_CHEST = "&1&l%area%s &8&lloot";
-    public static String KOTH_TIME_UP = "&aAfter %maxtime% minute noone capped the KoTH! Event is over!";
+    public static String[] KOTH_PLAYING_WON = new String[]{"&aThe koth %koth% ended! %player% won!"};
+    public static String[] KOTH_PLAYING_WON_DROPPING_ITEMS = new String[]{"&aCouldn't place all items in your inventory! It's on the floor!"};
+    public static String[] KOTH_PLAYING_WON_CAPPER = new String[]{"&aThe koth %koth% ended! You won!"};
+    public static String[] KOTH_PLAYING_STARTING = new String[]{"&aThe koth %koth% has begun!"};
+    public static String[] KOTH_PLAYING_PLAYERCAP = new String[]{"&a%player% has started to cap %koth%!"};
+    public static String[] KOTH_PLAYING_PLAYERCAP_CAPPER = new String[]{"&aYou have started capping %koth%!"};
+    public static String[] KOTH_PLAYING_CAPTIME = new String[]{"&a%player% is capping the koth! %minutes_left%:%seconds_left% left!"};
+    public static String[] KOTH_PLAYING_CAPTIME_CAPPER = new String[]{"&aYou are capping the koth! %minutes_left%:%seconds_left% left!"};
+    public static String[] KOTH_PLAYING_LEFT = new String[]{"&a%player% left the koth!"};
+    public static String[] KOTH_PLAYING_LEFT_CAPPER = new String[]{"&aYou left the koth!"};
+	public static String[] KOTH_PLAYING_LOOT_CHEST = new String[]{"&1&l%koth%s &8&lloot"};
+    public static String[] KOTH_PLAYING_TIME_UP = new String[]{"&aAfter %maxtime% minute noone capped the KoTH! Event is over!"};
     
-    public static String KOTH_PRE_BROADCAST = "&aThe koth %area% will start in 30 minutes!";
+    public static String[] KOTH_PLAYING_PRE_BROADCAST = new String[]{"&aThe koth %koth% will start in 30 minutes!"};
 	
-	public static String AREA_ALREADYRUNNING = "&aThe area %area% is already running!";
-	public static String AREA_ALREADYEXISTS = "&aThe area %area% already exists!";
-	public static String AREA_NOTEXIST = "&aThe area %area% doesn't exist!";
+	public static String[] KOTH_ERROR_ALREADYRUNNING = new String[]{"&aThe koth %koth% is already running!"};
+    public static String[] KOTH_ERROR_ALREADYEXISTS = new String[]{"&aThe koth %koth% already exists!"};
+	public static String[] KOTH_ERROR_NOTEXIST = new String[]{"&aThe koth %koth% doesn't exist!"};
+
+    public static String[] AREA_ERROR_ALREADYEXISTS = new String[]{"&aThe area %area% already exists!"};
+    public static String[] AREA_ERROR_NOTEXIST = new String[]{"&aThe area %area% doesn't exist!"};
+    public static String[] LOOT_ERROR_ALREADYEXISTS = new String[]{"&aThe loot %loot% already exists!"};
+    public static String[] LOOT_ERROR_NOTEXIST = new String[]{"&aThe loot %loot% doesn't exist!"};
 	
 
-	public static String COMMAND_ONLYFROMINGAME = "&aThis command can only be executed from ingame!";
-    public static String COMMAND_USAGE = "Usage: ";
-    public static String COMMAND_NO_PERMISSION = "&cYou have no permission to use this command!";
-
-	public static String COMMAND_HELP_TITLE = "&8========> &2Koth &8<========";
-	public static String COMMAND_HELP_INFO = "&a%command% &7%command_info%";
+	public static String[] COMMAND_GLOBAL_ONLYFROMINGAME = new String[]{"&aThis command can only be executed from ingame!"};
+    public static String[] COMMAND_GLOBAL_USAGE = new String[]{"Usage: "};
+    public static String[] COMMAND_GLOBAL_NO_PERMISSION = new String[]{"&cYou have no permission to use this command!"};
+    public static String[] COMMAND_GLOBAL_WESELECT = new String[]{"&aYou need to select an koth with worldedit!"};
+    public static String[] COMMAND_GLOBAL_HELP_TITLE = new String[]{"&8========> &2%title% &8<========"};
+    public static String[] COMMAND_GLOBAL_HELP_INFO = new String[]{"&a%command% &7%command_info%"};
 	
-	public static String COMMAND_RELOAD = "&aReload complete";
+	public static String[] COMMAND_RELOAD_RELOAD = new String[]{"&aReload complete"};
 
-    public static String COMMAND_SCHEDULE_HELP_TITLE = "&8========> &2Koth scheduler &8<========";
-    public static String COMMAND_SCHEDULE_HELP_INFO = "&a%command% &7%command_info%";
+    public static String[] COMMAND_LISTS_EDITOR_AREA_TITLE = new String[]{"&8========> &2KoTH area list &8<========"};
+    public static String[] COMMAND_LISTS_EDITOR_AREA_ENTRY = new String[]{"&a%area% - &7%x% %z%"};
+    public static String[] COMMAND_LISTS_LIST_TITLE = new String[]{"&8========> &2Available KoTHs &8<========"};
+    public static String[] COMMAND_LISTS_LIST_ENTRY = new String[]{"- &a%koth%"};
+    public static String[] COMMAND_LISTS_LOOT_TITLE = new String[]{"&8========> &2Available Loot chests &8<========"};
+    public static String[] COMMAND_LISTS_LOOT_ENTRY = new String[]{"- &a%loot%"};
+
+    public static String[] COMMAND_LOOT_CREATE = new String[]{ "&aLoot succesfully created!"};
+    public static String[] COMMAND_LOOT_OPENING = new String[]{ "&aOpening %loot%."};
+    public static String[] COMMAND_LOOT_REMOVE = new String[]{ "&aSuccesfully removed the loot!"};
     
 
-    public static String COMMAND_EDITOR_HELP_TITLE = "&8========> &2Koth editor &8<========";
-    public static String COMMAND_EDITOR_HELP_INFO = "&a%command% &7%command_info%";
-    public static String COMMAND_EDITOR_EDIT_AREA = "&aYou succesfully redefined the area!";
-	
-	
-	public static String COMMAND_AREA_TRIGGERED = "&aYou've started the area %area%!";
-	public static String COMMAND_AREA_CREATED = "&aYou successfully created the area %area%!";
-	public static String COMMAND_AREA_REMOVED = "&aYou've successfully removed the area %area%!";
-	public static String COMMAND_AREA_ALREADYEXISTS = "&aThe area %area% already exists!";
-	public static String COMMAND_AREA_SELECT = "&aYou need to select an area with worldedit!";
+    
 
-	public static String COMMAND_SCHEDULE_CREATED = "&aYou have created a schedule for %area% on %day% at %time% (Length: %length% minutes)!";
-	public static String COMMAND_SCHEDULE_NOVALIDDAY = "&aThis is not a valid day! (monday, tuesday etc)";
-	public static String COMMAND_SCHEDULE_RUNTIMEERROR = "&aCould not change the (max) run time into an integer!";
-	public static String COMMAND_SCHEDULE_REMOVED = "&aThe schedule for %area% is removed.";
-	public static String COMMAND_SCHEDULE_NOTEXIST = "&aThis schedule doesn't exist! (Check /koth schedule list for numbers)";
-	public static String COMMAND_SCHEDULE_REMOVENOID = "&aThe ID must be a number! (Shown in /koth schedule list)";
-	public static String COMMAND_SCHEDULE_EMPTY = "&aThe server owner did not schedule any Koths!";
+    public static String[] COMMAND_EDITOR_AREA_ADDED = new String[]{"&aYou succesfully added the area!"};
+    public static String[] COMMAND_EDITOR_AREA_EDITED = new String[]{"&aYou succesfully edited the area!"};
+    public static String[] COMMAND_EDITOR_AREA_DELETED = new String[]{"&aYou succesfully deleted the area!"};
+    public static String[] COMMAND_EDITOR_LOOT_SETNOBLOCK = new String[]{"&aYou need to look at the block where the chest should spawn!"};
+    public static String[] COMMAND_EDITOR_LOOT_POSITION_SET = new String[]{"&aLoot position succesfully set!"};
+    public static String[] COMMAND_EDITOR_LOOT_LINK = new String[]{"&aChanged the link of the loot!"};
+    public static String[] COMMAND_EDITOR_NAME_CHANGE = new String[]{"&aChanged the name of the koth!"};
+	
+	
+	public static String[] COMMAND_KOTH_CREATED = new String[]{"&aYou successfully created the koth %koth%!"};
+	public static String[] COMMAND_KOTH_REMOVED = new String[]{"&aYou've successfully removed the koth %koth%!"};
+	public static String[] COMMAND_KOTH_ALREADYEXISTS = new String[]{"&aThe koth %koth% already exists!"};
 
-	public static String COMMAND_SCHEDULE_LIST_CURRENTDATETIME = "&aCurrent date: %date%";
-	public static String COMMAND_SCHEDULE_LIST_DAY = "&8========> &2%day% &8<========";
-	public static String COMMAND_SCHEDULE_LIST_ENTRY = "&a%area% at %time%";
-	public static String COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME = "&aCurrent date: %date%";
-	public static String COMMAND_SCHEDULE_ADMIN_LIST_DAY = "&8========> &2%day% &8<========";
-	public static String COMMAND_SCHEDULE_ADMIN_LIST_ENTRY = "&a(#%id%) %area% at %time% with length %length%";
-	public static String COMMAND_SCHEDULE_ADMIN_EMPTY = "&aThe schedule list is currently empty!";
-	
-	public static String COMMAND_LOOT_EXPLANATION = "&aThis is the loot chest for %area%!";
-	public static String COMMAND_LOOT_NOARGSEXPLANATION = "&aThis is the loot chest for the next running koth (%area%)!";
-	public static String COMMAND_LOOT_SETNOAREA = "&aYou need to specify an area to set the loot chest!";
-	public static String COMMAND_LOOT_SETNOBLOCK = "&aYou need to look at the block where the chest should spawn!";
-	public static String COMMAND_LOOT_CHESTSET= "&aYou've set the loot chest for the area %area%!";
-	
-	public static String COMMAND_TERMINATE_SPECIFIC_KOTH = "&aYou have terminated %area%!";
-	public static String COMMAND_TERMINATE_ALL_KOTHS = "&aYou have terminated all areas!";
-	
-	public static String COMMAND_LIST_MESSAGE = "&2List of areas:";
-	public static String COMMAND_LIST_ENTRY = "&a- %area%";
+	public static String[] COMMAND_SCHEDULE_CREATED = new String[]{"&aYou have created a schedule for %koth% on %day% at %time% (Length: %length% minutes)!"};
+	public static String[] COMMAND_SCHEDULE_NOVALIDDAY = new String[]{"&aThis is not a valid day! (monday, tuesday etc)"};
+	public static String[] COMMAND_SCHEDULE_REMOVED = new String[]{"&aThe schedule for %koth% is removed."};
+	public static String[] COMMAND_SCHEDULE_NOTEXIST = new String[]{"&aThis schedule doesn't exist! (Check /koth schedule list for numbers)"};
+	public static String[] COMMAND_SCHEDULE_REMOVENOID = new String[]{"&aThe ID must be a number! (Shown in /koth schedule list)"};
+	public static String[] COMMAND_SCHEDULE_EMPTY = new String[]{"&aThe server owner did not schedule any Koths!"};
 
-	public static void load(JavaPlugin plugin) {
+	public static String[] COMMAND_SCHEDULE_LIST_CURRENTDATETIME = new String[]{"&aCurrent date: %date%"};
+	public static String[] COMMAND_SCHEDULE_LIST_DAY = new String[]{"&8========> &2%day% &8<========"};
+	public static String[] COMMAND_SCHEDULE_LIST_ENTRY = new String[]{"&a%koth% at %time%"};
+	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME = new String[]{"&aCurrent date: %date%"};
+	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_DAY = new String[]{"&8========> &2%day% &8<========"};
+	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_ENTRY = new String[]{"&a(#%id%) %koth% at %time% with length %length%"};
+	public static String[] COMMAND_SCHEDULE_ADMIN_EMPTY = new String[]{"&aThe schedule list is currently empty!"};
+
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_KOTH = new String[]{"&aYou changed the koth for #%id% to %koth"};
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_NONUMBER = new String[]{"&aThis is not a valid number!"};
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_NOVALIDDAY = new String[]{"&aThis is not a valid day! (monday, tuesday etc)"};
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_RUNTIME = new String[]{"&aYou changed the runtime for #%id%!"};
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_DAY = new String[]{"&aYou changed the day for #%id%!"};
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_TIME = new String[]{"&aYou changed the time for #%id%!"};
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_MAXRUNTIME = new String[]{"&aYou changed the max runtime for #%id%!"};
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_LOOTAMOUNT = new String[]{"&aYou changed the loot amount for #%id%!"};
+	
+	public static String[] COMMAND_TERMINATE_SPECIFIC_KOTH = new String[]{"&aYou have terminated %koth%!"};
+	public static String[] COMMAND_TERMINATE_ALL_KOTHS = new String[]{"&aYou have terminated all koths!"};
+
+	@SuppressWarnings("unchecked")
+    public static void load(JavaPlugin plugin) {
 		try {
 
 			if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json").exists()) {
@@ -98,15 +118,33 @@ public class Lang {
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse(new FileReader(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json"));
 
-			JSONObject jsonObject = (JSONObject) obj;
+			JSONObject jsonObject2 = (JSONObject) obj;
 
 			Field[] fields = Lang.class.getFields();
 			for (Field field : fields) {
 				try {
 					if (Modifier.isStatic(field.getModifiers())) {
-						if(jsonObject.containsKey(field.getName())){
-							field.set(null, jsonObject.get(field.getName()));
-						}
+					    String[] fieldName = field.getName().split("_", 3);
+					    if(jsonObject2.containsKey(fieldName[0])){
+					        JSONObject jsonObject3 = (JSONObject)jsonObject2.get(fieldName[0]);
+					        if(jsonObject3.containsKey(fieldName[1])){
+					            JSONObject jsonObject = (JSONObject)jsonObject3.get(fieldName[1]);
+        						if(jsonObject.containsKey(fieldName[2])){
+        						    Object strObj = jsonObject.get(fieldName[2]);
+        						    
+        						    if(strObj instanceof String){
+        	                            field.set(null, new String[]{(String)strObj});
+        						    } else {
+        						        JSONArray strArray = (JSONArray)strObj;
+        //						        String[] strArray2 = new String[strArray.size()];
+        //						        for(Object strObj2 : strArray){
+        //						            strArray2[]
+        //						        }
+        	                            field.set(null, strArray.toArray(new String[strArray.size()]));
+        						    }
+        						}
+					        }
+					    }
 					}
 				}
 				catch (Exception e) {
@@ -138,7 +176,29 @@ public class Lang {
 			Field[] fields = Lang.class.getFields();
 			for (Field field : fields) {
 				if (Modifier.isStatic(field.getModifiers())) {
-					obj.put(field.getName(), field.get(null));
+				    String[] fieldName = field.getName().split("_", 3);
+				    JSONObject obj2 = new JSONObject();
+				    if(obj.containsKey(fieldName[0])){
+				        obj2.get(fieldName[0]);
+				    }
+				    
+				    JSONObject obj3 = new JSONObject();
+				    if(obj2.containsKey(fieldName[1])){
+				        obj2.get(fieldName[1]);
+				    }
+				    
+				    
+				    String[] strObj = (String[])field.get(null);
+				    if(strObj.length > 1){
+	                    obj3.put(field.getName(), field.get(null));
+				    } else if(strObj.length == 1) {
+				        obj3.put(field.getName(), strObj[0]);
+				    } else {
+				        obj3.put(field.getName(), new String[]{});
+				    }
+				    
+				    obj2.put(fieldName[1], obj3);
+				    obj.put(fieldName[0], obj2);
 				}
 			}
 

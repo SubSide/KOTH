@@ -7,18 +7,18 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import subside.plugins.koth.adapter.Area;
+import subside.plugins.koth.adapter.Koth;
 
 public class KothStartEvent extends Event implements IEvent, Cancellable {
     private @Getter @Setter int length;
     private @Getter @Setter int maxLength;
-    private @Getter Area area;
+    private @Getter Koth koth;
     private boolean isScheduled;
     
     private boolean isCancelled;
     
-    public KothStartEvent(Area area, int length, int maxLength, boolean isScheduled){
-        this.area = area;
+    public KothStartEvent(Koth koth, int length, int maxLength, boolean isScheduled){
+        this.koth = koth;
         this.length = length;
         this.maxLength = maxLength;
         this.isScheduled = isScheduled;

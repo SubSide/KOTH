@@ -1,0 +1,87 @@
+package subside.plugins.koth.loaders;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.Iterator;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.adapter.Loot;
+import subside.plugins.koth.utils.Utils;
+
+public class LootLoader {
+    
+    public static void load() {
+        KothPlugin plugin = KothPlugin.getPlugin();
+        try {
+            KothHandler.getAvailableKoths().clear();
+            if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "loot.json").exists()) {
+                save();
+                return;
+            }
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(new FileReader(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "loot.json"));
+            if(obj instanceof JSONArray){
+                JSONArray koths = (JSONArray) obj;
+                
+                Iterator<?> it = koths.iterator();
+                while(it.hasNext()){
+                    try {
+                        KothHandler.getLoots().add(Loot.load((JSONObject)it.next()));
+                    } catch(Exception e){
+                        KothPlugin.getPlugin().getLogger().severe("////////////////");
+                        KothPlugin.getPlugin().getLogger().severe("Error loading koth!");
+                        KothPlugin.getPlugin().getLogger().severe("////////////////");
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }
+        catch (Exception e) {
+            KothPlugin.getPlugin().getLogger().warning("///// KOTH FILE NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
+
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void save() {
+        KothPlugin plugin = KothPlugin.getPlugin();
+        try {
+
+            if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "loot.json").exists()) {
+                plugin.getDataFolder().mkdirs();
+                new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "loot.json").createNewFile();
+            }
+
+            JSONArray obj = new JSONArray();
+            for (Loot loot : KothHandler.getLoots()) {
+                obj.add(loot.save());
+            }
+            FileOutputStream fileStream = new FileOutputStream(new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "loot.json"));
+            OutputStreamWriter file = new OutputStreamWriter(fileStream, "UTF-8");
+            try {
+                file.write(Utils.getGson(obj.toJSONString()));
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+
+            }
+            finally {
+                file.flush();
+                file.close();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

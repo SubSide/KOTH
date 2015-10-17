@@ -1,5 +1,5 @@
 name: KoTH
-main: subside.plugins.koth.Koth
+main: subside.plugins.koth.KothPlugin
 version: 1.2.0
 author: SubSide
 softdepend: [Multiverse-Core]
@@ -7,24 +7,84 @@ commands:
   koth:
     description: Gives access to koth
 permissions:
-  koth.admin:
-    description: Allows you to configure koths
-    default: op
+  koth.*:
+    description: Gives the player all the permissions
+    children:
+      koth.default: true
+      koth.admin: true
+      koth.control: true
+  koth.default:
+    description: Gives the player all the default permissions
+    children:
+      koth.help: true
+      koth.list: true
+      koth.loot: true
+      koth.schedule: true
+      koth.info: true
   koth.help:
-    description: Allows you to use the unargumented /koth
-    default: true
-  koth.schedule:
-    description: Allows you to schedule koths
+    description: Gives the player permissions to /koth (help)
     default: true
   koth.list:
-    description: Allows you to see the list of koths
+    description: Gives the player permissions to /koth list
     default: true
   koth.loot:
-    description: Allows you to see the loot
+    description: Gives the player permissions to /koth loot
+    default: true
+  koth.schedule:
+    description: Gives the player permissions to /koth schedule
     default: true
   koth.info:
-    description: Allows you to use koth info
+    description: Gives the player permissions to /koth info
     default: true
-  koth.bypass:
-    description: Allows you to bypass the blocking of chest opening and breaking.
+
+  koth.admin:
+    description: Gives access to all admin permissions!
+    children:
+      koth.admin.create: true
+      koth.admin.edit: true
+      koth.admin.remove: true
+      koth.admin.bypass: true
+      koth.admin.help: true
+      koth.admin.loot: true
+      koth.admin.reload: true
+      koth.admin.schedule: true
+  koth.admin.create:
+    description: Gives the player permissions to create koths
+    default: op
+  koth.admin.edit:
+    description: Gives the player permissions to edit koths
+    default: op
+  koth.admin.remove:
+    description: Gives the player permissions to remove koths
+    default: op
+  koth.admin.bypass:
+    description: Gives the player permissions to bypass chest protection
+    default: op
+  koth.admin.help:
+    description: Gives the player permissions to the full help menu
+    default: op
+  koth.admin.loot:
+    description: Gives the player permissions to edit the loot chest
+    default: op
+  koth.admin.reload:
+    description: Gives the player permissions to reload the plugin
+    default: op
+  koth.admin.schedule:
+    description: Gives the player permissions to schedule koths
+    default: op
+
+  koth.control:
+    description: Gives the player permissions to all control commands
+    children:
+      koth.control.start: true
+      koth.control.end: true
+      koth.control.stop: true
+  koth.control.start:
+    description: Gives the player permissions to start koths
+    default: op
+  koth.control.end:
+    description: Gives the player permissions to gracefully end koths
+    default: op
+  koth.control.stop:
+    description: Gives the player permissions to forcefully stop koths
     default: op

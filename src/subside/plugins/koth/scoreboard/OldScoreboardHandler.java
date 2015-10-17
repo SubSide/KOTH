@@ -5,10 +5,10 @@ import java.lang.ref.WeakReference;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import subside.plugins.koth.MessageBuilder;
-import subside.plugins.koth.adapter.Area;
+import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.RunningKoth;
+import subside.plugins.koth.utils.MessageBuilder;
 
 class OldScoreboardHandler {
 
@@ -25,20 +25,22 @@ class OldScoreboardHandler {
     }
 
     static void updateScoreboard() {
-        WeakReference<RunningKoth> koth = KothHandler.getRunningKoth();
-        if (koth.get() == null) {
+        WeakReference<RunningKoth> wKoth = KothHandler.getRunningKoth();
+        if (wKoth.get() == null) {
             return;
         }
         
         String[] text = textLoader.clone();
 
-        Area area = koth.get().getArea();
-        String player = koth.get().getCappingPlayer();
+        RunningKoth rKoth = wKoth.get();
+        Koth koth = rKoth.getKoth();
+        
+        String player = wKoth.get().getCappingPlayer();
 
-        scoreboard.setTitle(new MessageBuilder(titleLoader).maxTime(koth.get().getMaxRunTime()).area(area.getName()).player(player).time(koth.get().getTimeObject()).build());
+        scoreboard.setTitle(new MessageBuilder(titleLoader).maxTime(rKoth.getMaxRunTime()).koth(koth.getName()).player(player).time(rKoth.getTimeObject()).build()[0]);
 
         for (int x = 0; x < text.length; x++) {
-            scoreboard.setScore(x, new MessageBuilder(text[x]).maxTime(koth.get().getMaxRunTime()).area(area.getName()).player(player).time(koth.get().getTimeObject()).build());
+            scoreboard.setScore(x, new MessageBuilder(text[x]).maxTime(rKoth.getMaxRunTime()).koth(koth.getName()).player(player).time(rKoth.getTimeObject()).build()[0]);
 
         }
         

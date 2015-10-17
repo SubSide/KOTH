@@ -13,9 +13,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
-import subside.plugins.koth.adapter.Area;
+import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.adapter.Loot;
 import subside.plugins.koth.events.KothOpenChestEvent;
+import subside.plugins.koth.loaders.KothLoader;
+import subside.plugins.koth.utils.Perm;
 
 public class EventListener implements Listener {
     @EventHandler(ignoreCancelled = true)
@@ -30,15 +33,15 @@ public class EventListener implements Listener {
 
         Chest chest = (Chest) e.getInventory().getHolder();
         Location loc = chest.getLocation();
-        for (Area area : KothHandler.getAvailableAreas()) {
-            Location vec = area.getLootPos();
+        for (Koth koth : KothHandler.getAvailableKoths()) {
+            Location vec = koth.getLootPos();
             if (vec == null) continue;
 
             if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
 
-                KothOpenChestEvent event = new KothOpenChestEvent(area, (Player) e.getPlayer());
+                KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
                 event.setCancelled(false);
-                if (!area.getLastWinner().equalsIgnoreCase(e.getPlayer().getName()) && !Perm.BYPASS.has((Player) e.getPlayer())) {
+                if (!koth.getLastWinner().equalsIgnoreCase(e.getPlayer().getName()) && !Perm.Admin.BYPASS.has((Player) e.getPlayer())) {
                     event.setCancelled(true);
                 }
                 Bukkit.getServer().getPluginManager().callEvent(event);
@@ -53,11 +56,11 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
-        if (Perm.BYPASS.has((Player) e.getPlayer())) return;
+        if (Perm.Admin.BYPASS.has((Player) e.getPlayer())) return;
 
         Location loc = e.getBlock().getLocation();
-        for (Area area : KothHandler.getAvailableAreas()) {
-            Location vec = area.getLootPos();
+        for (Koth koth : KothHandler.getAvailableKoths()) {
+            Location vec = koth.getLootPos();
             if (vec == null) continue;
             if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
                 e.setCancelled(true);
@@ -68,10 +71,10 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
-        if (Perm.BYPASS.has((Player) e.getPlayer())) return;
+        if (Perm.Admin.BYPASS.has((Player) e.getPlayer())) return;
         Location loc = e.getBlock().getLocation();
-        for (Area area : KothHandler.getAvailableAreas()) {
-            Location vec = area.getLootPos();
+        for (Koth koth : KothHandler.getAvailableKoths()) {
+            Location vec = koth.getLootPos();
             if (vec == null) continue;
             if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
                 e.setCancelled(true);
@@ -81,18 +84,12 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInventoryChange(InventoryClickEvent event) {
-        if (Perm.ADMIN.has((Player) event.getWhoClicked())) {
+        if (Perm.Admin.LOOT.has((Player) event.getWhoClicked())) {
             return;
         }
 
-        if (event.getInventory().equals(SingleLootChest.getInventory())) {
-            event.setCancelled(true);
-            return;
-
-        }
-
-        for (Area area : KothHandler.getAvailableAreas()) {
-            if (event.getInventory().equals(area.getInventory())) {
+        for (Loot koth : KothHandler.getLoots()) {
+            if (event.getInventory().equals(koth.getInventory())) {
                 event.setCancelled(true);
                 return;
             }
@@ -102,19 +99,12 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        if (!Perm.ADMIN.has((Player) event.getPlayer())) {
+        if (!Perm.Admin.LOOT.has((Player) event.getPlayer())) {
             return;
         }
-
-        if (ConfigHandler.getCfgHandler().isSingleLootChest()) {
-            if (SingleLootChest.getInventory().equals(event.getInventory())) {
-                KothLoader.save();
-                return;
-            }
-        }
         
-        for (Area area : KothHandler.getAvailableAreas()) {
-            if (event.getInventory().equals(area.getInventory())) {
+        for (Koth koth : KothHandler.getAvailableKoths()) {
+            if (event.getInventory().equals(KothHandler.getLoot(koth.getLoot()).getInventory())) {
                 KothLoader.save();
                 return;
             }

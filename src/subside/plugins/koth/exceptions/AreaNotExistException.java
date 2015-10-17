@@ -1,20 +1,20 @@
 package subside.plugins.koth.exceptions;
 
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.MessageBuilder;
+import subside.plugins.koth.utils.MessageBuilder;
 
-public class AreaNotExistException extends RuntimeException {
+public class AreaNotExistException extends CommandMessageException {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5151644382896622615L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7000103830855773310L;
 
-	public AreaNotExistException(){
-		super(new MessageBuilder(Lang.AREA_NOTEXIST).build());
-	}
-	
-	public AreaNotExistException(String area){
-		super(new MessageBuilder(Lang.AREA_NOTEXIST).area(area).build());
-	}
+    public AreaNotExistException(){
+        super(new MessageBuilder(Lang.AREA_ERROR_NOTEXIST).build());
+    }
+    
+    public AreaNotExistException(String area){
+        super(new MessageBuilder(Lang.AREA_ERROR_NOTEXIST).area(area).build());
+    }
 }

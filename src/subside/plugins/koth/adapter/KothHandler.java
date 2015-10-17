@@ -6,22 +6,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import lombok.Getter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.KothLoader;
 import subside.plugins.koth.events.KothStartEvent;
-import subside.plugins.koth.exceptions.AreaAlreadyExistException;
-import subside.plugins.koth.exceptions.AreaAlreadyRunningException;
-import subside.plugins.koth.exceptions.AreaNotExistException;
+import subside.plugins.koth.exceptions.KothAlreadyExistException;
+import subside.plugins.koth.exceptions.KothAlreadyRunningException;
+import subside.plugins.koth.exceptions.KothNotExistException;
+import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.scoreboard.SBManager;
 
 public class KothHandler {
-    private static ArrayList<RunningKoth> runningKoths = new ArrayList<>();
-    private static ArrayList<Area> availableAreas = new ArrayList<>();
+    private static @Getter List<RunningKoth> runningKoths = new ArrayList<>();
+    private static @Getter List<Koth> availableKoths = new ArrayList<>();
+    private static @Getter List<Loot> loots = new ArrayList<>();
 
     @Deprecated
     public static void update() {
@@ -33,7 +36,7 @@ public class KothHandler {
             if (ConfigHandler.getCfgHandler().isUseScoreboard()) {
                 SBManager.getManager().update();
             }
-            ScheduleHandler.tick();
+            ScheduleHandler.getInstance().tick();
         }
     }
 
@@ -61,14 +64,14 @@ public class KothHandler {
         }
     }
 
-    public static void startKoth(Area area, int time, int maxRunTime, int lootAmount, boolean isScheduled) throws AreaAlreadyRunningException {
+    public static void startKoth(Koth koth, int time, int maxRunTime, int lootAmount, boolean isScheduled) throws KothAlreadyRunningException {
         synchronized (runningKoths) {
-            for (RunningKoth koth : runningKoths) {
-                if (koth.getArea() == area) {
-                    throw new AreaAlreadyRunningException(area.getName());
+            for (RunningKoth rKoth : runningKoths) {
+                if (rKoth.getKoth() == koth) {
+                    throw new KothAlreadyRunningException(koth.getName());
                 }
             }
-            KothStartEvent event = new KothStartEvent(area, time, maxRunTime, isScheduled);
+            KothStartEvent event = new KothStartEvent(koth, time, maxRunTime, isScheduled);
 
             if (isScheduled && Bukkit.getOnlinePlayers().size() < ConfigHandler.getCfgHandler().getMinimumPlayersNeeded()) {
                 event.setCancelled(true);
@@ -77,62 +80,63 @@ public class KothHandler {
             Bukkit.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
-                RunningKoth koth = new RunningKoth(area, event.getLength(), event.getMaxLength(), lootAmount);
-                runningKoths.add(koth);
+                RunningKoth rKoth = new RunningKoth(koth, event.getLength(), event.getMaxLength(), lootAmount);
+                runningKoths.add(rKoth);
             }
         }
 
     }
 
-    public static void startKoth(String area, int time, int maxRunTime, int lootAmount, boolean isScheduled) {
-        if (area.equalsIgnoreCase("random")) {
-            if (availableAreas.size() > 0) {
-                startKoth(availableAreas.get(new Random().nextInt(availableAreas.size())), time, maxRunTime, lootAmount, isScheduled);
+    public static void startKoth(String name, int time, int maxRunTime, int lootAmount, boolean isScheduled) {
+        if (name.equalsIgnoreCase("random")) {
+            if (availableKoths.size() > 0) {
+                startKoth(availableKoths.get(new Random().nextInt(availableKoths.size())), time, maxRunTime, lootAmount, isScheduled);
                 return;
             }
         }
 
-        for (Area ar : availableAreas) {
-            if (ar.getName().equalsIgnoreCase(area)) {
-                startKoth(ar, time, maxRunTime, lootAmount, isScheduled);
+        for (Koth koth : availableKoths) {
+            if (koth.getName().equalsIgnoreCase(name)) {
+                startKoth(koth, time, maxRunTime, lootAmount, isScheduled);
                 return;
             }
         }
-        throw new AreaNotExistException(area);
+        throw new KothNotExistException(name);
     }
 
-    public static void createArea(String name, Location min, Location max) {
-        if (getArea(name) == null && !name.equalsIgnoreCase("random")) {
-            Area area = new Area(name, min, max);
-            availableAreas.add(area);
+    public static void createKoth(String name, Location min, Location max) {
+        if (getKoth(name) == null && !name.equalsIgnoreCase("random")) {
+            Koth koth = new Koth(name);
+            availableKoths.add(koth);
             KothLoader.save();
         } else {
-            throw new AreaAlreadyExistException(name);
+            throw new KothAlreadyExistException(name);
         }
     }
 
-    public static void removeArea(String name) {
-        Area area = getArea(name);
-        if (area == null) {
-            throw new AreaNotExistException(name);
-        }
-        
-        if (area.getInventory() != null) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (area.getInventory().getViewers().contains(player)) {
-                    player.closeInventory();
-                }
-            }
+    public static void removeKoth(String name) {
+        Koth koth = getKoth(name);
+        if (koth == null) {
+            throw new KothNotExistException(name);
         }
 
-        availableAreas.remove(area);
+        availableKoths.remove(koth);
         KothLoader.save();
     }
+    
+    public static Loot getLoot(String name){
+        for(Loot loot : loots){
+            if(loot.getName().equalsIgnoreCase(name)){
+                return loot;
+            }
+        }
+        return null;
+    }
 
-    public static Area getArea(String name) {
-        for (Area area : availableAreas) {
-            if (area.getName().equalsIgnoreCase(name)) {
-                return area;
+    public static Koth getKoth(String name) {
+        for (Koth koth : availableKoths) {
+            if (koth.getName().equalsIgnoreCase(name)) {
+                return koth;
             }
         }
         return null;
@@ -154,13 +158,13 @@ public class KothHandler {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
                 RunningKoth koth = it.next();
-                if (koth.getArea().getName().equalsIgnoreCase(name)) {
+                if (koth.getKoth().getName().equalsIgnoreCase(name)) {
                     it.remove();
                     SBManager.getManager().clearAll();
                     return;
                 }
             }
-            throw new AreaNotExistException(name);
+            throw new KothNotExistException(name);
         }
     }
 
@@ -178,16 +182,12 @@ public class KothHandler {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
                 RunningKoth koth = it.next();
-                if (koth.getArea().getName().equalsIgnoreCase(name)) {
+                if (koth.getKoth().getName().equalsIgnoreCase(name)) {
                     koth.quickEnd();
                     return;
                 }
             }
-            throw new AreaNotExistException(name);
+            throw new KothNotExistException(name);
         }
-    }
-
-    public static List<Area> getAvailableAreas() {
-        return availableAreas;
     }
 }

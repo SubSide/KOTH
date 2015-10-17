@@ -1,0 +1,31 @@
+package subside.plugins.koth.commands;
+
+import org.bukkit.command.CommandSender;
+
+import subside.plugins.koth.Lang;
+import subside.plugins.koth.adapter.Koth;
+import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.utils.MessageBuilder;
+import subside.plugins.koth.utils.Perm;
+
+public class CommandList implements ICommand {
+
+    @Override
+    public void run(CommandSender sender, String[] args) {
+        new MessageBuilder(Lang.COMMAND_LISTS_LIST_TITLE).buildAndSend(sender);
+        for (Koth koth : KothHandler.getAvailableKoths()) {
+            new MessageBuilder(Lang.COMMAND_LISTS_LIST_ENTRY).koth(koth.getName()).buildAndSend(sender);
+        }
+    }
+
+    @Override
+    public Perm getPermission() {
+        return Perm.LIST;
+    }
+
+    @Override
+    public String[] getCommands() {
+        return new String[]{"list"};
+    }
+
+}

@@ -13,7 +13,6 @@ public class ConfigHandler {
 	private @Getter boolean useScoreboard = true;
 	private @Getter int lootAmount = 5;
 	private @Getter String timeZone = "Europe/Amsterdam";
-	private @Getter boolean singleLootChest = false;
 	private @Getter boolean randomizeLoot = true;
 	private @Getter boolean randomizeAmountLoot = false;
 	private @Getter boolean useItemsMultipleTimes = true;
@@ -35,7 +34,6 @@ public class ConfigHandler {
 		timeZone = cfg.getString("schedule-timezone");
 		lootAmount = cfg.getInt("amount-of-loot");
 		knockTime = cfg.getInt("knockTime");
-		singleLootChest = cfg.getBoolean("one-for-all");
 		randomizeLoot = cfg.getBoolean("randomize-loot");
 		instantLoot = cfg.getBoolean("instant-loot");
 		randomizeAmountLoot = cfg.getBoolean("randomize-amount-of-loot");

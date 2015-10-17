@@ -1,6 +1,7 @@
 package subside.plugins.koth.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import lombok.Getter;
@@ -11,13 +12,13 @@ import org.bukkit.entity.Player;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.MessageBuilder;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.events.KothLeftEvent;
+import subside.plugins.koth.utils.MessageBuilder;
 
 public class RunningKoth {
-    private @Getter Area area;
+    private @Getter Koth koth;
     private int captureTime;
 
     private @Getter String cappingPlayer;
@@ -29,16 +30,16 @@ public class RunningKoth {
     private @Getter int maxRunTime;
     private int timeRunning;
 
-    public RunningKoth(Area area, int time, int maxRunTime, int lootAmount) {
-        this.area = area;
+    public RunningKoth(Koth koth, int time, int maxRunTime, int lootAmount) {
+        this.koth = koth;
         this.captureTime = time;
         this.timeCapped = 0;
         this.cappingPlayer = null;
         this.lootAmount = lootAmount;
         this.maxRunTime = maxRunTime * 60;
-        area.removeLootChest();
-        area.setLastWinner(null);
-        new MessageBuilder(Lang.KOTH_STARTING).maxTime(maxRunTime).time(getTimeObject()).area(area.getName()).buildAndBroadcast();
+        koth.removeLootChest();
+        koth.setLastWinner(null);
+        new MessageBuilder(Lang.KOTH_PLAYING_STARTING).maxTime(maxRunTime).time(getTimeObject()).koth(koth.getName()).buildAndBroadcast();
     }
     
     public TimeObject getTimeObject(){
@@ -53,7 +54,7 @@ public class RunningKoth {
 
         boolean shouldClear = true;
         try {
-            shouldClear = !area.isInArea(Bukkit.getOfflinePlayer(cappingPlayer));
+            shouldClear = !koth.isInArea(Bukkit.getOfflinePlayer(cappingPlayer));
             if (!shouldClear) {
                 if (Bukkit.getOfflinePlayer(cappingPlayer).isOnline()) {
                     if (((Player) Bukkit.getOfflinePlayer(cappingPlayer)).isDead()) {
@@ -68,16 +69,16 @@ public class RunningKoth {
             return;
         }
 
-        KothLeftEvent event = new KothLeftEvent(area, cappingPlayer, timeCapped);
+        KothLeftEvent event = new KothLeftEvent(koth, cappingPlayer, timeCapped);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
         }
         
         if (event.getNextCapper() == null) {
-            new MessageBuilder(Lang.KOTH_LEFT).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).area(area.getName()).shouldExcludePlayer().buildAndBroadcast();
+            new MessageBuilder(Lang.KOTH_PLAYING_LEFT).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth.getName()).shouldExcludePlayer().buildAndBroadcast();
             if (Bukkit.getPlayer(cappingPlayer) != null) {
-                new MessageBuilder(Lang.KOTH_LEFT_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).area(area.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+                new MessageBuilder(Lang.KOTH_PLAYING_LEFT_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
             }
 
             cappingPlayer = null;
@@ -108,64 +109,64 @@ public class RunningKoth {
         if (cappingPlayer != null) {
             if (++timeCapped < captureTime) {
                 if (timeCapped % 30 == 0) {
-                    new MessageBuilder(Lang.KOTH_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).area(area.getName()).shouldExcludePlayer().buildAndBroadcast();
+                    new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth.getName()).shouldExcludePlayer().buildAndBroadcast();
                     if (Bukkit.getPlayer(cappingPlayer) != null) {
-                        new MessageBuilder(Lang.KOTH_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).area(area.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+                        new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
                     }
                 }
             } else {
-                new MessageBuilder(Lang.KOTH_WON).maxTime(maxRunTime).player(cappingPlayer).area(area.getName()).shouldExcludePlayer().buildAndBroadcast();
+                new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).player(cappingPlayer).koth(koth.getName()).shouldExcludePlayer().buildAndBroadcast();
                 if (Bukkit.getPlayer(cappingPlayer) != null) {
-                    new MessageBuilder(Lang.KOTH_WON_CAPPER).maxTime(maxRunTime).player(cappingPlayer).area(area.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+                    new MessageBuilder(Lang.KOTH_PLAYING_WON_CAPPER).maxTime(maxRunTime).player(cappingPlayer).koth(koth.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
                 }
 
-                KothEndEvent event = new KothEndEvent(area, cappingPlayer);
+                KothEndEvent event = new KothEndEvent(koth, cappingPlayer);
                 Bukkit.getServer().getPluginManager().callEvent(event);
 
-                area.setLastWinner(cappingPlayer);
+                koth.setLastWinner(cappingPlayer);
                 if (event.isCreatingChest()) {
                     Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
                         public void run() {
-                            area.createLootChest(lootAmount);
+                            koth.createLootChest(lootAmount);
                         }
                     });
                 }
 
                 Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
                     public void run() {
-                        KothHandler.stopKoth(getArea().getName());
+                        KothHandler.stopKoth(getKoth().getName());
                     }
                 });
             }
         } else {
             if (maxRunTime > 0 && timeRunning > maxRunTime) {
-                new MessageBuilder(Lang.KOTH_TIME_UP).maxTime(maxRunTime).area(area.getName()).buildAndBroadcast();
+                new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP).maxTime(maxRunTime).koth(koth.getName()).buildAndBroadcast();
 
                 Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
                     public void run() {
-                        KothHandler.stopKoth(getArea().getName());
+                        KothHandler.stopKoth(getKoth().getName());
                     }
                 });
                 return;
             }
 
-            ArrayList<Player> insideArea = new ArrayList<Player>();
+            List<Player> insideArea = new ArrayList<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (area.isInArea(player)) {
+                if (koth.isInArea(player)) {
                     insideArea.add(player);
                 }
             }
             if (insideArea.size() > 0) {
                 String nextCappingPlayer = insideArea.get(new Random().nextInt(insideArea.size())).getName();
 
-                KothCapEvent event = new KothCapEvent(area, insideArea, nextCappingPlayer);
+                KothCapEvent event = new KothCapEvent(koth, insideArea, nextCappingPlayer);
                 Bukkit.getServer().getPluginManager().callEvent(event);
 
                 if (!event.isCancelled()) {
                     cappingPlayer = event.getNextPlayerCapping();
-                    new MessageBuilder(Lang.KOTH_PLAYERCAP).maxTime(maxRunTime).player(cappingPlayer).area(area.getName()).time(getTimeObject()).shouldExcludePlayer().buildAndBroadcast();
+                    new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP).maxTime(maxRunTime).player(cappingPlayer).koth(koth.getName()).time(getTimeObject()).shouldExcludePlayer().buildAndBroadcast();
                     if (Bukkit.getPlayer(cappingPlayer) != null) {
-                        new MessageBuilder(Lang.KOTH_PLAYERCAP_CAPPER).maxTime(maxRunTime).player(cappingPlayer).area(area.getName()).time(getTimeObject()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+                        new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP_CAPPER).maxTime(maxRunTime).player(cappingPlayer).koth(koth.getName()).time(getTimeObject()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
                     }
                 }
             }
