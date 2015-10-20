@@ -29,7 +29,7 @@ import subside.plugins.koth.utils.Utils;
 public class Koth {
     private @Getter @Setter String name;
     private @Getter @Setter Location lootPos = null;
-    private @Getter @Setter String loot = null;
+    private @Setter String loot = null;
     private String lastWinner;
     private @Getter List<Area> areas = new ArrayList<>();
 
@@ -37,8 +37,18 @@ public class Koth {
         this.name = name;
     }
     
-    public Location getMidd(){
-        return areas.get(0).getMiddle();
+    public String getLoot(){
+        if(loot != null && !loot.equalsIgnoreCase("")){
+            return loot;
+        }
+        return ConfigHandler.getCfgHandler().getDefaultLoot();
+    }
+    
+    public Location getMiddle(){
+        if(areas.size() > 0){
+            return areas.get(0).getMiddle();
+        }
+        return new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
     }
 
     public void setLastWinner(String player) {
@@ -58,9 +68,14 @@ public class Koth {
         return false;
     }
 
-    public void createLootChest(int lootAmount) {
+    public void createLootChest(int lootAmount, String lootChest) {
         try {
-            ItemStack[] lt = KothHandler.getLoot(loot).getInventory(name).getContents();
+            ItemStack[] lt;
+            if(lootChest == null){
+                lt = KothHandler.getLoot(getLoot()).getInventory(name).getContents();
+            } else {
+                lt = KothHandler.getLoot(lootChest).getInventory(name).getContents();
+            }
 
             List<ItemStack> usableLoot = new ArrayList<>();
             for (ItemStack stack : lt) {
@@ -118,7 +133,7 @@ public class Koth {
                 } else {
                     for (ItemStack item : inv.getContents()) {
                         if (item == null) continue;
-                        getMidd().getWorld().dropItemNaturally(getMidd(), item);
+                        getMiddle().getWorld().dropItemNaturally(getMiddle(), item);
                     }
                 }
 
@@ -200,17 +215,27 @@ public class Koth {
     
     public static Koth load(JSONObject obj){
         Koth koth = new Koth((String)obj.get("name")); //name
-        koth.lastWinner = (String)obj.get("lastWinner"); //lastwinner
         
-        JSONObject lootObj = (JSONObject)obj.get("loot");
-        koth.lootPos = Utils.getLocFromObject((JSONObject)lootObj.get("position")); //lootpos
-        koth.loot = (String)lootObj.get("name"); //loot
+        if(obj.containsKey("lastWinner")){
+            koth.lastWinner = (String)obj.get("lastWinner"); //lastwinner
+        }
+        
+        if(obj.containsKey("loot")){
+            JSONObject lootObj = (JSONObject)obj.get("loot");
+            if(lootObj.containsKey("position")){
+                koth.lootPos = Utils.getLocFromObject((JSONObject)lootObj.get("position")); //lootpos
+            }
+            if(lootObj.containsKey("name")){
+                koth.loot = (String)lootObj.get("name"); //loot
+            }
+        }
 
-
-        JSONArray areaz = (JSONArray)obj.get("areas");
-        Iterator<?> it = areaz.iterator();
-        while(it.hasNext()){
-            koth.areas.add(Area.load((JSONObject)it.next())); //areas
+        if(obj.containsKey("areas")){
+            JSONArray areaz = (JSONArray)obj.get("areas");
+            Iterator<?> it = areaz.iterator();
+            while(it.hasNext()){
+                koth.areas.add(Area.load((JSONObject)it.next())); //areas
+            }
         }
         
         return koth;
@@ -220,18 +245,29 @@ public class Koth {
     public JSONObject save(){
         JSONObject obj = new JSONObject();
         obj.put("name", this.name); //name
-        obj.put("lastWinner", this.lastWinner); //lastwinner
         
-        JSONObject lootObj = new JSONObject();
-        lootObj.put("position", Utils.createLocObject(this.lootPos)); //lootpos
-        lootObj.put("name", this.loot); // loot
-        obj.put("loot", lootObj);
-        
-        JSONArray areaz = new JSONArray();
-        for(Area area : areas){
-            areaz.add(area.save());
+        if(this.lastWinner != null){
+            obj.put("lastWinner", this.lastWinner); //lastwinner
         }
-        obj.put("areas", areaz);
+        
+        if(this.lootPos != null || (this.loot != null && !this.loot.equalsIgnoreCase(""))){
+            JSONObject lootObj = new JSONObject();
+            if(this.lootPos != null){
+                lootObj.put("position", Utils.createLocObject(this.lootPos)); //lootpos
+            }
+            if(this.loot != null && !this.loot.equalsIgnoreCase("")){
+                lootObj.put("name", this.loot); // loot
+            }
+            obj.put("loot", lootObj);
+        }
+        
+        if(areas.size() > 0){
+            JSONArray areaz = new JSONArray();
+            for(Area area : areas){
+                areaz.add(area.save());
+            }
+            obj.put("areas", areaz);
+        }
         
         return obj;
     }

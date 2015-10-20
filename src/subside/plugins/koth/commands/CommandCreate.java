@@ -18,25 +18,24 @@ public class CommandCreate implements ICommand {
     @Override
     public void run(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_ONLYFROMINGAME).build());
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_ONLYFROMINGAME);
+        }
+
+        Player player = (Player) sender;
+        if (args.length < 1) {
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth create <name>");
+        }
+        if (KothHandler.getKoth(args[0]) != null) {
+            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_ALREADYEXISTS).koth(args[0]));
+        }
+
+        Selection sel = KothPlugin.getWorldEdit().getSelection(player);
+        if (sel == null) {
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_WESELECT);
         }
         
-        Player player = (Player) sender;
-        if (args.length > 0) {
-            if (KothHandler.getKoth(args[0]) == null) {
-                Selection sel = KothPlugin.getWorldEdit().getSelection(player);
-                if (sel != null) {
-                    KothHandler.createKoth(args[0], sel.getMinimumPoint(), sel.getMaximumPoint());
-                    throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_CREATED).koth(args[0]).build());
-                } else {
-                    throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_WESELECT).build());
-                }
-            } else {
-                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_ALREADYEXISTS).koth(args[0]).build());
-            }
-        } else {
-            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE + "/koth create <name>").build());
-        }
+        KothHandler.createKoth(args[0], sel.getMinimumPoint(), sel.getMaximumPoint());
+        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_CREATED).koth(args[0]));
     }
 
     @Override

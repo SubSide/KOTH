@@ -9,11 +9,8 @@ public class KothAlreadyRunningException extends CommandMessageException {
 	 * 
 	 */
 	private static final long serialVersionUID = 8423094669308851410L;
-	public KothAlreadyRunningException(){
-		super(new MessageBuilder(Lang.KOTH_ERROR_ALREADYRUNNING).build());
-	}
-	
+
 	public KothAlreadyRunningException(String koth){
-		super(new MessageBuilder(Lang.KOTH_ERROR_ALREADYRUNNING).koth(koth).build());
+		super(new MessageBuilder(Lang.KOTH_ERROR_ALREADYRUNNING).koth(koth));
 	}
 }

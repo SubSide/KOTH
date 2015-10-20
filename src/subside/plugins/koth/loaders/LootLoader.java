@@ -21,7 +21,7 @@ public class LootLoader {
     public static void load() {
         KothPlugin plugin = KothPlugin.getPlugin();
         try {
-            KothHandler.getAvailableKoths().clear();
+            KothHandler.getLoots().clear();
             if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "loot.json").exists()) {
                 save();
                 return;
@@ -37,7 +37,7 @@ public class LootLoader {
                         KothHandler.getLoots().add(Loot.load((JSONObject)it.next()));
                     } catch(Exception e){
                         KothPlugin.getPlugin().getLogger().severe("////////////////");
-                        KothPlugin.getPlugin().getLogger().severe("Error loading koth!");
+                        KothPlugin.getPlugin().getLogger().severe("Error loading loot!");
                         KothPlugin.getPlugin().getLogger().severe("////////////////");
                         e.printStackTrace();
                     }
@@ -46,7 +46,7 @@ public class LootLoader {
 
         }
         catch (Exception e) {
-            KothPlugin.getPlugin().getLogger().warning("///// KOTH FILE NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
+            KothPlugin.getPlugin().getLogger().warning("///// LOOT FILE NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
 
             e.printStackTrace();
         }

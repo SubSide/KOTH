@@ -14,11 +14,11 @@ public class CommandRemove implements ICommand {
     @Override
     public void run(CommandSender sender, String[] args) {
         if (args.length < 1) {
-            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE + "/koth remove <name>").build());
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth remove <name>");
         }
         
         KothHandler.removeKoth(args[0]);
-        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_REMOVED).koth(args[0]).build());
+        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_REMOVED).koth(args[0]));
 
     }
 

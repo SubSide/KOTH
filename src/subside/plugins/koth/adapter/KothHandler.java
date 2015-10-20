@@ -18,6 +18,7 @@ import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothNotExistException;
 import subside.plugins.koth.loaders.KothLoader;
+import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.scoreboard.SBManager;
 
@@ -63,15 +64,19 @@ public class KothHandler {
             }
         }
     }
+    
+    public static void startKoth(Schedule schedule){
+        startKoth(schedule.getKoth(), schedule.getCaptureTime()*60, schedule.getMaxRunTime(), schedule.getLootAmount(), schedule.getLootChest(), true);
+    }
 
-    public static void startKoth(Koth koth, int time, int maxRunTime, int lootAmount, boolean isScheduled) throws KothAlreadyRunningException {
+    public static void startKoth(Koth koth, int captureTime, int maxRunTime, int lootAmount, String lootChest, boolean isScheduled) throws KothAlreadyRunningException {
         synchronized (runningKoths) {
             for (RunningKoth rKoth : runningKoths) {
                 if (rKoth.getKoth() == koth) {
                     throw new KothAlreadyRunningException(koth.getName());
                 }
             }
-            KothStartEvent event = new KothStartEvent(koth, time, maxRunTime, isScheduled);
+            KothStartEvent event = new KothStartEvent(koth, captureTime, maxRunTime, isScheduled);
 
             if (isScheduled && Bukkit.getOnlinePlayers().size() < ConfigHandler.getCfgHandler().getMinimumPlayersNeeded()) {
                 event.setCancelled(true);
@@ -80,24 +85,24 @@ public class KothHandler {
             Bukkit.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
-                RunningKoth rKoth = new RunningKoth(koth, event.getLength(), event.getMaxLength(), lootAmount);
+                RunningKoth rKoth = new RunningKoth(koth, event.getCaptureTime(), event.getMaxLength(), lootAmount, lootChest);
                 runningKoths.add(rKoth);
             }
         }
 
     }
 
-    public static void startKoth(String name, int time, int maxRunTime, int lootAmount, boolean isScheduled) {
-        if (name.equalsIgnoreCase("random")) {
+    public static void startKoth(String name, int captureTime, int maxRunTime, int lootAmount, String lootChest, boolean isScheduled) {
+        String kth = name;
+        if (kth.equalsIgnoreCase("random")) {
             if (availableKoths.size() > 0) {
-                startKoth(availableKoths.get(new Random().nextInt(availableKoths.size())), time, maxRunTime, lootAmount, isScheduled);
-                return;
+                kth = availableKoths.get(new Random().nextInt(availableKoths.size())).getName();
             }
         }
 
         for (Koth koth : availableKoths) {
             if (koth.getName().equalsIgnoreCase(name)) {
-                startKoth(koth, time, maxRunTime, lootAmount, isScheduled);
+                startKoth(koth, captureTime, maxRunTime, lootAmount, lootChest, isScheduled);
                 return;
             }
         }
@@ -107,6 +112,7 @@ public class KothHandler {
     public static void createKoth(String name, Location min, Location max) {
         if (getKoth(name) == null && !name.equalsIgnoreCase("random")) {
             Koth koth = new Koth(name);
+            koth.getAreas().add(new Area(name, min, max));
             availableKoths.add(koth);
             KothLoader.save();
         } else {
@@ -146,6 +152,7 @@ public class KothHandler {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
+                it.next();
                 it.remove();
             }
         }

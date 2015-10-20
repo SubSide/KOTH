@@ -10,11 +10,7 @@ public class AreaAlreadyExistException extends CommandMessageException {
      */
     private static final long serialVersionUID = 2460236074387468684L;
 
-    public AreaAlreadyExistException(){
-        super(new MessageBuilder(Lang.AREA_ERROR_ALREADYEXISTS).build());
-    }
-
     public AreaAlreadyExistException(String area){
-        super(new MessageBuilder(Lang.AREA_ERROR_ALREADYEXISTS).area(area).build());
+        super(new MessageBuilder(Lang.AREA_ERROR_ALREADYEXISTS).area(area));
     }
 }

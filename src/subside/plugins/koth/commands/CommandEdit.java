@@ -29,12 +29,12 @@ public class CommandEdit implements ICommand {
     @Override
     public void run(CommandSender sender, String[] args) {
         if (!(sender instanceof Player)) {
-            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_ONLYFROMINGAME).build());
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_ONLYFROMINGAME);
         }
 
         Player player = (Player) sender;
 
-        if (args.length < 1) {
+        if (args.length < 2) {
             Utils.sendMsg(player, 
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH editor").build(), 
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> area").commandInfo("Area commands").build(), 
@@ -44,15 +44,15 @@ public class CommandEdit implements ICommand {
         }
         Koth koth = KothHandler.getKoth(args[0]);
         if (koth == null) {
-            throw new KothNotExistException();
+            throw new KothNotExistException(args[0]);
         }
 
         String[] newArgs = Arrays.copyOfRange(args, 2, args.length);
-        if (args[0].equalsIgnoreCase("area")) {
+        if (args[1].equalsIgnoreCase("area")) {
             area(sender, newArgs, koth);
-        } else if(args[0].equalsIgnoreCase("loot")){
+        } else if(args[1].equalsIgnoreCase("loot")){
             loot(sender, newArgs, koth);
-        } else if(args[0].equalsIgnoreCase("rename")){
+        } else if(args[1].equalsIgnoreCase("rename")){
             name(sender, newArgs, koth);
         } else {
             Utils.sendMsg(player, 
@@ -66,10 +66,10 @@ public class CommandEdit implements ICommand {
 
     private void name(CommandSender sender, String[] args, Koth koth){
         if(args.length < 1){
-            new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE+"/koth edit <koth> name <name>").build());
+            new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> name <name>");
         }
         koth.setName(args[0]);
-        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_EDITOR_NAME_CHANGE).build());
+        throw new CommandMessageException(Lang.COMMAND_EDITOR_NAME_CHANGE);
     }
     
     private void area(CommandSender sender, String[] args, Koth koth) {
@@ -78,7 +78,7 @@ public class CommandEdit implements ICommand {
                 Selection selection = KothPlugin.getWorldEdit().getSelection((Player) sender);
                 if (selection != null) {
                     if(args.length < 2){
-                        new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE+"/koth edit <koth> area create <name>").build());
+                        new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> area create <name>");
                     }
                     Location min = selection.getMinimumPoint();
                     Location max = selection.getMaximumPoint();
@@ -96,15 +96,16 @@ public class CommandEdit implements ICommand {
             } else if (args[0].equalsIgnoreCase("list")) {
                 new MessageBuilder(Lang.COMMAND_LISTS_EDITOR_AREA_TITLE).buildAndSend(sender);
                 for (Area area : koth.getAreas()) {
-                    new MessageBuilder(Lang.COMMAND_LISTS_EDITOR_AREA_ENTRY).area(area.getName()).buildAndSend(sender);
+                    new MessageBuilder(Lang.COMMAND_LISTS_EDITOR_AREA_ENTRY).area(area).buildAndSend(sender);
                 }
+                return;
             } else if (args[0].equalsIgnoreCase("edit")) {
                 Selection selection = KothPlugin.getWorldEdit().getSelection((Player) sender);
                 if (selection == null) {
                     throw new CommandMessageException(Lang.COMMAND_GLOBAL_WESELECT);
                 }
                 if(args.length < 2){
-                    new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE+"/koth edit <koth> area edit <name>").build());
+                    new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> area edit <name>");
                 }
                 Location min = selection.getMinimumPoint();
                 Location max = selection.getMaximumPoint();
@@ -140,17 +141,17 @@ public class CommandEdit implements ICommand {
             if(args[0].equalsIgnoreCase("setpos")){
                 Block block = ((Player)sender).getTargetBlock(null, 8);
                 if(block == null){
-                    throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_EDITOR_LOOT_SETNOBLOCK).build());
+                    throw new CommandMessageException(Lang.COMMAND_EDITOR_LOOT_SETNOBLOCK);
                 }
                 koth.setLootPos(block.getLocation());
                 KothLoader.save();
-                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_EDITOR_LOOT_POSITION_SET).build());
+                throw new CommandMessageException(Lang.COMMAND_EDITOR_LOOT_POSITION_SET);
             } else if(args[0].equalsIgnoreCase("link")){
                 if(args.length < 2){
-                    new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE+"/koth edit <koth> loot link <loot>").build());
+                    new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> loot link <loot>");
                 }
                 koth.setLoot(args[1]);
-                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_EDITOR_LOOT_LINK).build());
+                throw new CommandMessageException(Lang.COMMAND_EDITOR_LOOT_LINK);
             }
         }
 

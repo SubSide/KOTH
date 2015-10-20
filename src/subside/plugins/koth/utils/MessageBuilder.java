@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import subside.plugins.koth.adapter.Area;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.TimeObject;
@@ -22,13 +23,21 @@ public class MessageBuilder {
         private String[] message;
 
         private StrObj(String[] message) {
-            this.message = message;
-            if (message == null) this.message = new String[] {};
+            if (message == null){
+                this.message = new String[] {};
+            } else {
+                this.message = message.clone();
+            }
         }
 
         protected StrObj replaceAll(String search, String replace) {
             for (int x = 0; x < message.length; x++) {
-                message[x] = message[x].replaceAll(search, replace);
+                try {
+                    message[x] = message[x].replaceAll(search, replace);
+                } catch(Exception e){
+                    System.out.println(search+" : "+replace);
+                    e.printStackTrace();
+                }
             }
             return this;
         }
@@ -51,23 +60,36 @@ public class MessageBuilder {
     }
 
     public MessageBuilder koth(String koth) {
-        message.replaceAll("%koth%", koth.replaceAll("\\\\\\\\", "%5C").replaceAll("([^\\\\])_", "$1 ").replaceAll("\\\\_", "_").replaceAll("%5C", "\\\\\\\\"));
-        Koth ar = KothHandler.getKoth(koth);
-        if (ar != null) {
-            Location loc = ar.getMidd();
-            if (loc != null) {
-                message.replaceAll("%x%", "" + loc.getBlockX()).replaceAll("%y%", "" + loc.getBlockY()).replaceAll("%z%", "" + loc.getBlockZ());
-                try {
-                    message.replaceAll("%world%", loc.getWorld().getName());
-                }
-                catch (Exception e) {}
+        Koth kth = KothHandler.getKoth(koth);
+        if (kth != null) {
+            koth(kth);
+        } else {
+            message.replaceAll("%koth%", koth.replaceAll("\\\\\\\\", "%5C").replaceAll("([^\\\\])_", "$1 ").replaceAll("\\\\_", "_").replaceAll("%5C", "\\\\\\\\"));
+        }
+        return this;
+    }
+    
+    public MessageBuilder koth(Koth koth){
+        message.replaceAll("%koth%", koth.getName().replaceAll("\\\\\\\\", "%5C").replaceAll("([^\\\\])_", "$1 ").replaceAll("\\\\_", "_").replaceAll("%5C", "\\\\\\\\"));
+        Location loc = koth.getMiddle();
+        if (loc != null) {
+            message.replaceAll("%x%", "" + loc.getBlockX()).replaceAll("%y%", "" + loc.getBlockY()).replaceAll("%z%", "" + loc.getBlockZ());
+            try {
+                message.replaceAll("%world%", loc.getWorld().getName());
             }
+            catch (Exception e) {}
         }
         return this;
     }
     
     public MessageBuilder area(String area){
         message.replaceAll("%area%", area);
+        return this;
+    }
+    
+    public MessageBuilder area(Area area){
+        Location mid = area.getMiddle();
+        message.replaceAll("%area%", area.getName()).replaceAll("%x%", ""+mid.getBlockX()).replaceAll("%y%", ""+mid.getBlockY()).replaceAll("%z%", ""+mid.getBlockZ());
         return this;
     }
     
@@ -103,8 +125,8 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder length(int length) {
-        message.replaceAll("%length%", "" + length);
+    public MessageBuilder captureTime(int captureTime) {
+        message.replaceAll("%capturetime%", "" + captureTime);
         return this;
     }
 
@@ -122,7 +144,7 @@ public class MessageBuilder {
         message.replaceAll("%minutes%", String.format("%02d", tO.getMinutesCapped()));
         message.replaceAll("%seconds%", String.format("%02d", tO.getSecondsCapped()));
         message.replaceAll("%minutes_left%", String.format("%02d", tO.getMinutesLeft()));
-        message.replaceAll("%seconds_left%", String.format("%02d", tO.getSecondsCapped()));
+        message.replaceAll("%seconds_left%", String.format("%02d", tO.getSecondsLeft()));
 
         return this;
     }

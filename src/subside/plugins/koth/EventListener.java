@@ -84,12 +84,8 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInventoryChange(InventoryClickEvent event) {
-        if (Perm.Admin.LOOT.has((Player) event.getWhoClicked())) {
-            return;
-        }
-
-        for (Loot koth : KothHandler.getLoots()) {
-            if (event.getInventory().equals(koth.getInventory())) {
+        for (Koth koth : KothHandler.getAvailableKoths()) {
+            if (event.getInventory().getTitle().equals(Loot.getKothLootTitle(koth.getName()))) {
                 event.setCancelled(true);
                 return;
             }
@@ -103,8 +99,10 @@ public class EventListener implements Listener {
             return;
         }
         
-        for (Koth koth : KothHandler.getAvailableKoths()) {
-            if (event.getInventory().equals(KothHandler.getLoot(koth.getLoot()).getInventory())) {
+        for (Loot loot : KothHandler.getLoots()) {
+            System.out.println(loot);
+            if (event.getInventory().equals(loot.getInventory())) {
+                System.out.println("test!");
                 KothLoader.save();
                 return;
             }

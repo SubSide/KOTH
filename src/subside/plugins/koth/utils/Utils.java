@@ -18,7 +18,7 @@ import subside.plugins.koth.Lang;
 
 public class Utils {
 	public static void msg(CommandSender sender, String msg){
-		new MessageBuilder(Lang.PREFIX+msg).buildAndSend(sender);
+		new MessageBuilder(Lang.COMMAND_GLOBAL_PREFIX+msg).buildAndSend(sender);
 	}
 	
 	public static String getGson(String str){

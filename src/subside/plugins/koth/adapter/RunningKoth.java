@@ -22,6 +22,7 @@ public class RunningKoth {
     private int captureTime;
 
     private @Getter String cappingPlayer;
+    private String lootChest;
     private int timeCapped;
     private int lootAmount;
     private int timeKnocked;
@@ -30,16 +31,17 @@ public class RunningKoth {
     private @Getter int maxRunTime;
     private int timeRunning;
 
-    public RunningKoth(Koth koth, int time, int maxRunTime, int lootAmount) {
+    public RunningKoth(Koth koth, int captureTime, int maxRunTime, int lootAmount, String lootChest) {
         this.koth = koth;
-        this.captureTime = time;
+        this.captureTime = captureTime;
         this.timeCapped = 0;
         this.cappingPlayer = null;
+        this.lootChest = lootChest;
         this.lootAmount = lootAmount;
         this.maxRunTime = maxRunTime * 60;
         koth.removeLootChest();
         koth.setLastWinner(null);
-        new MessageBuilder(Lang.KOTH_PLAYING_STARTING).maxTime(maxRunTime).time(getTimeObject()).koth(koth.getName()).buildAndBroadcast();
+        new MessageBuilder(Lang.KOTH_PLAYING_STARTING).maxTime(maxRunTime).time(getTimeObject()).koth(koth).buildAndBroadcast();
     }
     
     public TimeObject getTimeObject(){
@@ -76,9 +78,9 @@ public class RunningKoth {
         }
         
         if (event.getNextCapper() == null) {
-            new MessageBuilder(Lang.KOTH_PLAYING_LEFT).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth.getName()).shouldExcludePlayer().buildAndBroadcast();
+            new MessageBuilder(Lang.KOTH_PLAYING_LEFT).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth).shouldExcludePlayer().buildAndBroadcast();
             if (Bukkit.getPlayer(cappingPlayer) != null) {
-                new MessageBuilder(Lang.KOTH_PLAYING_LEFT_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+                new MessageBuilder(Lang.KOTH_PLAYING_LEFT_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth).buildAndSend(Bukkit.getPlayer(cappingPlayer));
             }
 
             cappingPlayer = null;
@@ -109,15 +111,15 @@ public class RunningKoth {
         if (cappingPlayer != null) {
             if (++timeCapped < captureTime) {
                 if (timeCapped % 30 == 0) {
-                    new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth.getName()).shouldExcludePlayer().buildAndBroadcast();
+                    new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth).shouldExcludePlayer().buildAndBroadcast();
                     if (Bukkit.getPlayer(cappingPlayer) != null) {
-                        new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+                        new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(cappingPlayer).koth(koth).buildAndSend(Bukkit.getPlayer(cappingPlayer));
                     }
                 }
             } else {
-                new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).player(cappingPlayer).koth(koth.getName()).shouldExcludePlayer().buildAndBroadcast();
+                new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).player(cappingPlayer).koth(koth).shouldExcludePlayer().buildAndBroadcast();
                 if (Bukkit.getPlayer(cappingPlayer) != null) {
-                    new MessageBuilder(Lang.KOTH_PLAYING_WON_CAPPER).maxTime(maxRunTime).player(cappingPlayer).koth(koth.getName()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+                    new MessageBuilder(Lang.KOTH_PLAYING_WON_CAPPER).maxTime(maxRunTime).player(cappingPlayer).koth(koth).buildAndSend(Bukkit.getPlayer(cappingPlayer));
                 }
 
                 KothEndEvent event = new KothEndEvent(koth, cappingPlayer);
@@ -127,7 +129,7 @@ public class RunningKoth {
                 if (event.isCreatingChest()) {
                     Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
                         public void run() {
-                            koth.createLootChest(lootAmount);
+                            koth.createLootChest(lootAmount, lootChest);
                         }
                     });
                 }
@@ -140,7 +142,7 @@ public class RunningKoth {
             }
         } else {
             if (maxRunTime > 0 && timeRunning > maxRunTime) {
-                new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP).maxTime(maxRunTime).koth(koth.getName()).buildAndBroadcast();
+                new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP).maxTime(maxRunTime).koth(koth).buildAndBroadcast();
 
                 Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
                     public void run() {
@@ -164,9 +166,9 @@ public class RunningKoth {
 
                 if (!event.isCancelled()) {
                     cappingPlayer = event.getNextPlayerCapping();
-                    new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP).maxTime(maxRunTime).player(cappingPlayer).koth(koth.getName()).time(getTimeObject()).shouldExcludePlayer().buildAndBroadcast();
+                    new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP).maxTime(maxRunTime).player(cappingPlayer).koth(koth).time(getTimeObject()).shouldExcludePlayer().buildAndBroadcast();
                     if (Bukkit.getPlayer(cappingPlayer) != null) {
-                        new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP_CAPPER).maxTime(maxRunTime).player(cappingPlayer).koth(koth.getName()).time(getTimeObject()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+                        new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP_CAPPER).maxTime(maxRunTime).player(cappingPlayer).koth(koth).time(getTimeObject()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
                     }
                 }
             }

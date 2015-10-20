@@ -14,7 +14,7 @@ public class CommandList implements ICommand {
     public void run(CommandSender sender, String[] args) {
         new MessageBuilder(Lang.COMMAND_LISTS_LIST_TITLE).buildAndSend(sender);
         for (Koth koth : KothHandler.getAvailableKoths()) {
-            new MessageBuilder(Lang.COMMAND_LISTS_LIST_ENTRY).koth(koth.getName()).buildAndSend(sender);
+            new MessageBuilder(Lang.COMMAND_LISTS_LIST_ENTRY).koth(koth).buildAndSend(sender);
         }
     }
 

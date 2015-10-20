@@ -7,7 +7,6 @@ import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.IPerm;
-import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
 public class CommandStart implements ICommand {
@@ -15,7 +14,7 @@ public class CommandStart implements ICommand {
     @Override
     public void run(CommandSender sender, String[] args) {
         if (args.length < 1) {
-            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE + "/koth start <name> [time] [maxRunTime] [lootAmount]").build());
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth start <name> [time] [maxRunTime] [lootAmount]");
         }
         String koth = args[0];
         int runTime = 15;
@@ -27,17 +26,17 @@ public class CommandStart implements ICommand {
 
                 if (args.length > 2) {
                     maxRunTime = Integer.parseInt(args[2]);
-
-                    if (args.length > 3) {
-                        amount = Integer.parseInt(args[3]);
-                    }
+                }
+                
+                if (args.length > 3) {
+                    amount = Integer.parseInt(args[3]);
                 }
             }
             catch (NumberFormatException e) {
-                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE + "/koth start <name> [time] [maxRunTime] [lootAmount]").build());
+                throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth start <name> [time] [maxRunTime] [lootAmount]");
             }
         }
-        KothHandler.startKoth(koth, runTime * 60, maxRunTime, amount, false);
+        KothHandler.startKoth(koth, runTime * 60, maxRunTime, amount, null, false);
 
     }
 

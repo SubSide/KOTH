@@ -10,11 +10,7 @@ public class AreaNotExistException extends CommandMessageException {
      */
     private static final long serialVersionUID = 7000103830855773310L;
 
-    public AreaNotExistException(){
-        super(new MessageBuilder(Lang.AREA_ERROR_NOTEXIST).build());
-    }
-    
     public AreaNotExistException(String area){
-        super(new MessageBuilder(Lang.AREA_ERROR_NOTEXIST).area(area).build());
+        super(new MessageBuilder(Lang.AREA_ERROR_NOTEXIST).area(area));
     }
 }

@@ -19,13 +19,24 @@ public class Loot {
     private @Getter String name;
     
     public Loot(String name){
-        inventory = Bukkit.createInventory(null, 54, name);
+        inventory = Bukkit.createInventory(null, 54, getTitle(name));
+        this.name = name;
+    }
+    
+    public static String getTitle(String name){
+        String title = new MessageBuilder(Lang.COMMAND_LOOT_CHEST_TITLE).loot(name).build()[0];
+        if (title.length() > 32) title = title.substring(0, 32);
+        return title;
+    }
+    
+    public static String getKothLootTitle(String koth){
+        String title = new MessageBuilder(Lang.KOTH_PLAYING_LOOT_CHEST).koth(koth).build()[0];
+        if (title.length() > 32) title = title.substring(0, 32);
+        return title;
     }
     
     public Inventory getInventory(String koth){
-        String title = new MessageBuilder(Lang.KOTH_PLAYING_LOOT_CHEST).koth(koth).build()[0];
-        if (title.length() > 32) title = title.substring(0, 32);
-        Inventory inv = Bukkit.createInventory(null, 54, title);
+        Inventory inv = Bukkit.createInventory(null, 54, getKothLootTitle(koth));
         inv.setContents(inventory.getContents());
         return inv;
     }
@@ -34,7 +45,11 @@ public class Loot {
         Loot loot = new Loot((String)obj.get("name"));
         JSONObject lootItems = (JSONObject)obj.get("items");
         for(Object key : lootItems.keySet()){
-            loot.inventory.setItem((int)key, Utils.itemFrom64((String)lootItems.get(key)));
+            try {
+                loot.inventory.setItem(Integer.parseInt((String)key), Utils.itemFrom64((String)lootItems.get(key)));
+            } catch(Exception e){
+                e.printStackTrace();
+            }
         }
         return loot;
     }

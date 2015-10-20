@@ -17,8 +17,6 @@ import subside.plugins.koth.utils.Utils;
 
 public class Lang {
 
-	public static String[] PREFIX = new String[]{"&2[KOTH] &a"};
-
     public static String[] KOTH_PLAYING_WON = new String[]{"&aThe koth %koth% ended! %player% won!"};
     public static String[] KOTH_PLAYING_WON_DROPPING_ITEMS = new String[]{"&aCouldn't place all items in your inventory! It's on the floor!"};
     public static String[] KOTH_PLAYING_WON_CAPPER = new String[]{"&aThe koth %koth% ended! You won!"};
@@ -44,27 +42,36 @@ public class Lang {
     public static String[] LOOT_ERROR_NOTEXIST = new String[]{"&aThe loot %loot% doesn't exist!"};
 	
 
+    public static String[] COMMAND_GLOBAL_PREFIX = new String[]{"&2[KOTH] &a"};
 	public static String[] COMMAND_GLOBAL_ONLYFROMINGAME = new String[]{"&aThis command can only be executed from ingame!"};
-    public static String[] COMMAND_GLOBAL_USAGE = new String[]{"Usage: "};
+    public static String[] COMMAND_GLOBAL_USAGE = new String[]{"&2Usage: &a"};
     public static String[] COMMAND_GLOBAL_NO_PERMISSION = new String[]{"&cYou have no permission to use this command!"};
     public static String[] COMMAND_GLOBAL_WESELECT = new String[]{"&aYou need to select an koth with worldedit!"};
     public static String[] COMMAND_GLOBAL_HELP_TITLE = new String[]{"&8========> &2%title% &8<========"};
     public static String[] COMMAND_GLOBAL_HELP_INFO = new String[]{"&a%command% &7%command_info%"};
-	
-	public static String[] COMMAND_RELOAD_RELOAD = new String[]{"&aReload complete"};
+
+    public static String[] COMMAND_RELOAD_RELOAD = new String[]{"&aKoth &2>> &aReload complete"};
+
+    public static String[] COMMAND_TELEPORT_TELEPORTING = new String[]{"&aTeleporting to %koth%!"};
+    public static String[] COMMAND_TELEPORT_TELEPORTING_AREA = new String[]{"&aTeleporting to %koth%, area %area%!"};
+    public static String[] COMMAND_TELEPORT_NOAREAS = new String[]{"&aThis koth doesn't have any areas!"};
 
     public static String[] COMMAND_LISTS_EDITOR_AREA_TITLE = new String[]{"&8========> &2KoTH area list &8<========"};
-    public static String[] COMMAND_LISTS_EDITOR_AREA_ENTRY = new String[]{"&a%area% - &7%x% %z%"};
+    public static String[] COMMAND_LISTS_EDITOR_AREA_ENTRY = new String[]{"&a%area% - (&7%x%, %z%)"};
     public static String[] COMMAND_LISTS_LIST_TITLE = new String[]{"&8========> &2Available KoTHs &8<========"};
-    public static String[] COMMAND_LISTS_LIST_ENTRY = new String[]{"- &a%koth%"};
+    public static String[] COMMAND_LISTS_LIST_ENTRY = new String[]{"&7- &a%koth%"};
     public static String[] COMMAND_LISTS_LOOT_TITLE = new String[]{"&8========> &2Available Loot chests &8<========"};
-    public static String[] COMMAND_LISTS_LOOT_ENTRY = new String[]{"- &a%loot%"};
+    public static String[] COMMAND_LISTS_LOOT_ENTRY = new String[]{"&7- &a%loot%"};
 
     public static String[] COMMAND_LOOT_CREATE = new String[]{ "&aLoot succesfully created!"};
     public static String[] COMMAND_LOOT_OPENING = new String[]{ "&aOpening %loot%."};
     public static String[] COMMAND_LOOT_REMOVE = new String[]{ "&aSuccesfully removed the loot!"};
-    
+    public static String[] COMMAND_LOOT_CHEST_TITLE = new String[]{ "&1&l%loot%s &8&lloot"};
 
+    public static String[] COMMAND_INFO_TITLE_KOTH = new String[]{"&8========> &2%koth% koth info &8<========"};
+    public static String[] COMMAND_INFO_TITLE_LOOT = new String[]{"&8========> &2%loot% loot info &8<========"};
+    public static String[] COMMAND_INFO_TITLE_SCHEDULE = new String[]{"&8========> &2#%id% schedule info &8<========"};
+    public static String[] COMMAND_INFO_COLORS = new String[]{"&2", "&a"};
     
 
     public static String[] COMMAND_EDITOR_AREA_ADDED = new String[]{"&aYou succesfully added the area!"};
@@ -80,23 +87,23 @@ public class Lang {
 	public static String[] COMMAND_KOTH_REMOVED = new String[]{"&aYou've successfully removed the koth %koth%!"};
 	public static String[] COMMAND_KOTH_ALREADYEXISTS = new String[]{"&aThe koth %koth% already exists!"};
 
-	public static String[] COMMAND_SCHEDULE_CREATED = new String[]{"&aYou have created a schedule for %koth% on %day% at %time% (Length: %length% minutes)!"};
+	public static String[] COMMAND_SCHEDULE_CREATED = new String[]{"&aYou have created a schedule for %koth% on %day% at %time% (Capture time: %capturetime% minutes)!"};
 	public static String[] COMMAND_SCHEDULE_NOVALIDDAY = new String[]{"&aThis is not a valid day! (monday, tuesday etc)"};
 	public static String[] COMMAND_SCHEDULE_REMOVED = new String[]{"&aThe schedule for %koth% is removed."};
 	public static String[] COMMAND_SCHEDULE_NOTEXIST = new String[]{"&aThis schedule doesn't exist! (Check /koth schedule list for numbers)"};
 	public static String[] COMMAND_SCHEDULE_REMOVENOID = new String[]{"&aThe ID must be a number! (Shown in /koth schedule list)"};
 	public static String[] COMMAND_SCHEDULE_EMPTY = new String[]{"&aThe server owner did not schedule any Koths!"};
+    public static String[] COMMAND_SCHEDULE_NOTANUMBER = new String[]{"&aThis is not a valid number!"};
 
 	public static String[] COMMAND_SCHEDULE_LIST_CURRENTDATETIME = new String[]{"&aCurrent date: %date%"};
 	public static String[] COMMAND_SCHEDULE_LIST_DAY = new String[]{"&8========> &2%day% &8<========"};
 	public static String[] COMMAND_SCHEDULE_LIST_ENTRY = new String[]{"&a%koth% at %time%"};
 	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME = new String[]{"&aCurrent date: %date%"};
 	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_DAY = new String[]{"&8========> &2%day% &8<========"};
-	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_ENTRY = new String[]{"&a(#%id%) %koth% at %time% with length %length%"};
+	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_ENTRY = new String[]{"&a(#%id%) %koth% at %time% with a capture time of %capturetime%"};
 	public static String[] COMMAND_SCHEDULE_ADMIN_EMPTY = new String[]{"&aThe schedule list is currently empty!"};
 
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_KOTH = new String[]{"&aYou changed the koth for #%id% to %koth"};
-    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_NONUMBER = new String[]{"&aThis is not a valid number!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_NOVALIDDAY = new String[]{"&aThis is not a valid day! (monday, tuesday etc)"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_RUNTIME = new String[]{"&aYou changed the runtime for #%id%!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_DAY = new String[]{"&aYou changed the day for #%id%!"};
@@ -179,22 +186,27 @@ public class Lang {
 				    String[] fieldName = field.getName().split("_", 3);
 				    JSONObject obj2 = new JSONObject();
 				    if(obj.containsKey(fieldName[0])){
-				        obj2.get(fieldName[0]);
+				        obj2 = (JSONObject)obj.get(fieldName[0]);
 				    }
 				    
 				    JSONObject obj3 = new JSONObject();
 				    if(obj2.containsKey(fieldName[1])){
-				        obj2.get(fieldName[1]);
+				        obj3 = (JSONObject)obj2.get(fieldName[1]);
 				    }
 				    
 				    
 				    String[] strObj = (String[])field.get(null);
 				    if(strObj.length > 1){
-	                    obj3.put(field.getName(), field.get(null));
+				        JSONArray obj4 = new JSONArray();
+				        String[] fieldObj = (String[])field.get(null);
+				        for(String str : fieldObj){
+				            obj4.add(str);
+				        }
+	                    obj3.put(fieldName[2], obj4);
 				    } else if(strObj.length == 1) {
-				        obj3.put(field.getName(), strObj[0]);
+				        obj3.put(fieldName[2], strObj[0]);
 				    } else {
-				        obj3.put(field.getName(), new String[]{});
+				        obj3.put(fieldName[2], new String[]{});
 				    }
 				    
 				    obj2.put(fieldName[1], obj3);
@@ -216,6 +228,8 @@ public class Lang {
 				file.close();
 			}
 		}
-		catch (Exception e) {}
+		catch (Exception e) {
+		    e.printStackTrace();
+		}
 	}
 }

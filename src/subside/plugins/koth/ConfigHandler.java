@@ -22,6 +22,7 @@ public class ConfigHandler {
 	private @Getter int minimumPlayersNeeded = 0;
 	private @Getter List<String> helpCommand = null;
     private @Getter boolean useOldScoreboard = false;
+    private @Getter String defaultLoot = "";
 	private @Getter int knockTime = 0;
 	private @Getter int preBroadcast = 0;
 	private @Getter static ConfigHandler cfgHandler;
@@ -41,6 +42,7 @@ public class ConfigHandler {
 		removeLootAfterSeconds = cfg.getInt("remove-lootchest-after");
 		minimumPlayersNeeded = cfg.getInt("minimum-players-needed");
 		dropLootOnRemoval = cfg.getBoolean("drop-loot-on-removal");
+		defaultLoot = cfg.getString("default-loot");
 		helpCommand = cfg.getStringList("helpcommand");
 		preBroadcast = cfg.getInt("pre-broadcast");
 		useOldScoreboard = cfg.getBoolean("use-old-scoreboard");

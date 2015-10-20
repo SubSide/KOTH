@@ -10,11 +10,7 @@ public class KothNotExistException extends CommandMessageException {
 	 */
 	private static final long serialVersionUID = 5151644382896622615L;
 
-	public KothNotExistException(){
-		super(new MessageBuilder(Lang.KOTH_ERROR_NOTEXIST).build());
-	}
-	
 	public KothNotExistException(String koth){
-		super(new MessageBuilder(Lang.KOTH_ERROR_NOTEXIST).koth(koth).build());
+		super(new MessageBuilder(Lang.KOTH_ERROR_NOTEXIST).koth(koth));
 	}
 }

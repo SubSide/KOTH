@@ -3,7 +3,7 @@ package subside.plugins.koth.utils;
 import org.bukkit.command.CommandSender;
 
 public enum Perm implements IPerm {
-	LIST("list"), LOOT2("loot"), SCHEDULE2("schedule"), INFO("info"), HELP("help");
+	LIST("list"), LOOT("loot"), SCHEDULE("schedule"), VERSION("version"), HELP("help");
 	
 	private String perm;
 	
@@ -16,8 +16,15 @@ public enum Perm implements IPerm {
 	}
 	
 	
+	public enum ALLOW implements IPerm {
+	    ALLOW;
+        public boolean has(CommandSender sender){
+            return true;
+        }
+	}
+	
 	public enum Admin implements IPerm {
-	    CREATE("create"), EDIT("edit"), REMOVE("remove"), BYPASS("bypass"), HELP("help"), LOOT("loot"), RELOAD("reload"), SCHEDULE("schedule");
+	    TP("tp"), CREATE("create"), INFO("info"), EDIT("edit"), REMOVE("remove"), BYPASS("bypass"), HELP("help"), LOOT("loot"), RELOAD("reload"), SCHEDULE("schedule");
 	    
 	    private String perm;
 	    Admin(String perm){

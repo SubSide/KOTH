@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.exceptions.CommandMessageException;
-import subside.plugins.koth.utils.MessageBuilder;
 
 public class CommandHandler implements CommandExecutor {
 
@@ -30,18 +29,30 @@ public class CommandHandler implements CommandExecutor {
         commands.add(new CommandEnd());
         commands.add(new CommandSchedule());
         commands.add(new CommandRemove());
+        commands.add(new CommandVersion());
+        commands.add(new CommandAsMember());
         commands.add(new CommandInfo());
-
+        commands.add(new CommandTp());
+        
         fallback = new CommandHelp();
         commands.add(fallback);
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
         try {
+            if(args.length < 1){
+                if(fallback.getPermission().has(sender)){
+                    fallback.run(sender, args);
+                } else {
+                    throw new CommandMessageException(Lang.COMMAND_GLOBAL_NO_PERMISSION);
+                }
+                return true;
+            }
+            
             String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
             for (ICommand command : commands) {
                 for (String com : command.getCommands()) {
-                    if (!com.equalsIgnoreCase(cmd.getName())) {
+                    if (!com.equalsIgnoreCase(args[0])) {
                         continue;
                     }
     
@@ -56,7 +67,7 @@ public class CommandHandler implements CommandExecutor {
             if(fallback.getPermission().has(sender)){
                 fallback.run(sender, newArgs);
             } else {
-                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_NO_PERMISSION).build());
+                throw new CommandMessageException(Lang.COMMAND_GLOBAL_NO_PERMISSION);
             }
         } catch(CommandMessageException e){
             for(String msg : e.getMsg()){

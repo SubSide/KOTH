@@ -31,8 +31,8 @@ schedule-timezone: "Europe/Amsterdam"
 # You can turn it on if you like, see how it goes, and can always turn it off if lag occurs
 use-playermoveevent: false
 
-# one-for-all creates a single loot chest for all the koths (disabled on default)
-one-for-all: false
+# the default loot that the plugin should use.
+default-loot: ""
 
 # Randomize loot will make it so it will randomly generate the loot for you
 # If you don't want this (You want all the items to be given in the chest) You should put this to false
@@ -88,7 +88,7 @@ use-scoreboard: true
 use-old-scoreboard: false
 
 scoreboard:
-  title: "&a&l%area%"
+  title: "&a&l%koth%"
   contents:
     - "&6&lTime Left:"
     - "&9%minutes_left%:%seconds_left%"

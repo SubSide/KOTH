@@ -37,10 +37,10 @@ class ScoreboardHandler {
 		Koth koth = rKoth.getKoth();
 		String player = wKoth.get().getCappingPlayer();
 
-		scoreboard.setTitle(new MessageBuilder(titleLoader).maxTime(rKoth.getMaxRunTime()).koth(koth.getName()).player(player).time(rKoth.getTimeObject()).build()[0]);
+		scoreboard.setTitle(new MessageBuilder(titleLoader).maxTime(rKoth.getMaxRunTime()).koth(koth).player(player).time(rKoth.getTimeObject()).build()[0]);
 
 		for (int x = 0; x < text.length; x++) {
-			scoreboard.setScore(x, new MessageBuilder(text[x]).maxTime(rKoth.getMaxRunTime()).koth(koth.getName()).player(player).time(rKoth.getTimeObject()).build()[0]);
+			scoreboard.setScore(x, new MessageBuilder(text[x]).maxTime(rKoth.getMaxRunTime()).koth(koth).player(player).time(rKoth.getTimeObject()).build()[0]);
 
 		}
 		/*

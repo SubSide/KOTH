@@ -7,9 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.adapter.Loot;
 import subside.plugins.koth.commands.CommandHandler;
 import subside.plugins.koth.loaders.KothLoader;
+import subside.plugins.koth.loaders.LootLoader;
 import subside.plugins.koth.loaders.ScheduleLoader;
 import subside.plugins.koth.scoreboard.SBManager;
 
@@ -37,6 +40,7 @@ public class KothPlugin extends JavaPlugin {
 	    new ConfigHandler(this.getConfig());
         Lang.load(this);
         KothLoader.load();
+        LootLoader.load();
         ScheduleLoader.load();
         
         HandlerList.unregisterAll(this);
@@ -61,7 +65,18 @@ public class KothPlugin extends JavaPlugin {
 		SBManager.getManager().clearAll();
 		
         for(Player player : Bukkit.getOnlinePlayers()){
-            player.closeInventory();
+            String title = player.getOpenInventory().getTitle();
+            for(Loot loot : KothHandler.getLoots()){
+                if(loot.getInventory().getTitle().equalsIgnoreCase(title)){
+                    player.closeInventory();
+                }
+            }
+            
+            for(Koth koth : KothHandler.getAvailableKoths()){
+                if(Loot.getKothLootTitle(koth.getName()).equalsIgnoreCase(title)){
+                    player.closeInventory();
+                }
+            }
         }
 	}
 }

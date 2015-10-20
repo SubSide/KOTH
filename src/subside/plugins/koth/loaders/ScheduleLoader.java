@@ -46,7 +46,7 @@ public class ScheduleLoader {
 
 		}
 		catch (Exception e) {
-		    KothPlugin.getPlugin().getLogger().warning("///// KOTH FILE NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
+		    KothPlugin.getPlugin().getLogger().warning("///// SCHEDULE FILE NOT FOUND, EMPTY OR NOT CORRECTLY SET UP ////");
 
 			e.printStackTrace();
 		}

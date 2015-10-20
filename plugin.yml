@@ -20,7 +20,7 @@ permissions:
       koth.list: true
       koth.loot: true
       koth.schedule: true
-      koth.info: true
+      koth.version: true
   koth.help:
     description: Gives the player permissions to /koth (help)
     default: true
@@ -33,8 +33,8 @@ permissions:
   koth.schedule:
     description: Gives the player permissions to /koth schedule
     default: true
-  koth.info:
-    description: Gives the player permissions to /koth info
+  koth.version:
+    description: Gives the player permissions to /koth version
     default: true
 
   koth.admin:
@@ -48,6 +48,8 @@ permissions:
       koth.admin.loot: true
       koth.admin.reload: true
       koth.admin.schedule: true
+      koth.admin.info: true
+      koth.admin.tp: true
   koth.admin.create:
     description: Gives the player permissions to create koths
     default: op
@@ -66,11 +68,21 @@ permissions:
   koth.admin.loot:
     description: Gives the player permissions to edit the loot chest
     default: op
+    children:
+      koth.loot: true
   koth.admin.reload:
     description: Gives the player permissions to reload the plugin
     default: op
   koth.admin.schedule:
     description: Gives the player permissions to schedule koths
+    default: op
+    children:
+      koth.schedule: true
+  koth.admin.info:
+    description: Gives the player permissions to show info about koths
+    default: op
+  koth.admin.tp:
+    description: Gives the player permissions to tp to koths
     default: op
 
   koth.control:
