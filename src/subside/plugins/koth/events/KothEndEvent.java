@@ -1,34 +1,27 @@
 package subside.plugins.koth.events;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import subside.plugins.koth.adapter.Koth;
 
+/**
+ * @author Thomas "SubSide" van den Bulk
+ *
+ */
 public class KothEndEvent extends Event implements IEvent {
-    private String winner;
-    private boolean createChest;
+    private @Getter String winner;
+    private @Getter @Setter boolean creatingChest;
     private @Getter Koth koth;
     
     
     public KothEndEvent(Koth koth, String capper){
         this.koth = koth;
         this.winner = capper;
-        this.createChest = true;
-    }
-    
-    public String getPlayerCapping(){
-        return winner;
-    }
-    
-    public boolean isCreatingChest(){
-        return createChest;
-    }
-    
-    public void setChestCreation(boolean shouldCreate){
-        createChest = shouldCreate;
+        this.creatingChest = true;
     }
     
 

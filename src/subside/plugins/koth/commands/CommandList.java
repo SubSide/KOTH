@@ -13,7 +13,7 @@ public class CommandList implements ICommand {
     @Override
     public void run(CommandSender sender, String[] args) {
         new MessageBuilder(Lang.COMMAND_LISTS_LIST_TITLE).buildAndSend(sender);
-        for (Koth koth : KothHandler.getAvailableKoths()) {
+        for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
             new MessageBuilder(Lang.COMMAND_LISTS_LIST_ENTRY).koth(koth).buildAndSend(sender);
         }
     }

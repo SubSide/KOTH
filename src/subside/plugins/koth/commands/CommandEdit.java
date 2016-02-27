@@ -1,11 +1,14 @@
 package subside.plugins.koth.commands;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.sk89q.worldedit.bukkit.selections.Selection;
 
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
@@ -21,8 +24,6 @@ import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
-
-import com.sk89q.worldedit.bukkit.selections.Selection;
 
 public class CommandEdit implements ICommand {
 
@@ -42,7 +43,7 @@ public class CommandEdit implements ICommand {
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> rename <name>").commandInfo("Rename a koth").build());
             return;
         }
-        Koth koth = KothHandler.getKoth(args[0]);
+        Koth koth = KothHandler.getInstance().getKoth(args[0]);
         if (koth == null) {
             throw new KothNotExistException(args[0]);
         }
@@ -66,9 +67,10 @@ public class CommandEdit implements ICommand {
 
     private void name(CommandSender sender, String[] args, Koth koth){
         if(args.length < 1){
-            new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> name <name>");
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> rename <name>");
         }
         koth.setName(args[0]);
+        KothLoader.save();
         throw new CommandMessageException(Lang.COMMAND_EDITOR_NAME_CHANGE);
     }
     
@@ -78,7 +80,7 @@ public class CommandEdit implements ICommand {
                 Selection selection = KothPlugin.getWorldEdit().getSelection((Player) sender);
                 if (selection != null) {
                     if(args.length < 2){
-                        new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> area create <name>");
+                        throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> area create <name>");
                     }
                     Location min = selection.getMinimumPoint();
                     Location max = selection.getMaximumPoint();
@@ -105,7 +107,7 @@ public class CommandEdit implements ICommand {
                     throw new CommandMessageException(Lang.COMMAND_GLOBAL_WESELECT);
                 }
                 if(args.length < 2){
-                    new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> area edit <name>");
+                    throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> area edit <name>");
                 }
                 Location min = selection.getMinimumPoint();
                 Location max = selection.getMaximumPoint();
@@ -118,6 +120,9 @@ public class CommandEdit implements ICommand {
                 KothLoader.save();
                 throw new CommandMessageException(Lang.COMMAND_EDITOR_AREA_EDITED);
             } else if (args[0].equalsIgnoreCase("remove")){
+                if(args.length < 2){
+                    throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> area edit <name>");
+                }
                 Area area = koth.getArea(args[1]);
                 if(area == null){
                     throw new AreaNotExistException(args[1]);
@@ -135,11 +140,15 @@ public class CommandEdit implements ICommand {
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> area remove <area>").commandInfo("removes an area").build());
     }
     
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({
+            "deprecation"
+    })
     private void loot(CommandSender sender, String[] args, Koth koth){
+        Player player = (Player)sender;
         if(args.length > 0){
             if(args[0].equalsIgnoreCase("setpos")){
-                Block block = ((Player)sender).getTargetBlock(null, 8);
+                Block block = player.getTargetBlock((HashSet<Byte>)null, 8);
+                
                 if(block == null){
                     throw new CommandMessageException(Lang.COMMAND_EDITOR_LOOT_SETNOBLOCK);
                 }
@@ -148,9 +157,10 @@ public class CommandEdit implements ICommand {
                 throw new CommandMessageException(Lang.COMMAND_EDITOR_LOOT_POSITION_SET);
             } else if(args[0].equalsIgnoreCase("link")){
                 if(args.length < 2){
-                    new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> loot link <loot>");
+                    throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> loot link <loot>");
                 }
                 koth.setLoot(args[1]);
+                KothLoader.save();
                 throw new CommandMessageException(Lang.COMMAND_EDITOR_LOOT_LINK);
             }
         }

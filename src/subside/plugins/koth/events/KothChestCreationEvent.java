@@ -10,6 +10,10 @@ import org.bukkit.inventory.ItemStack;
 
 import subside.plugins.koth.adapter.Koth;
 
+/**
+ * @author Thomas "SubSide" van den Bulk
+ *
+ */
 public class KothChestCreationEvent extends Event implements IEvent, Cancellable {
     private boolean isCancelled;
     private @Getter Koth koth;

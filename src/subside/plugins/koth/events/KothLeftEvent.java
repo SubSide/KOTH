@@ -1,6 +1,7 @@
 package subside.plugins.koth.events;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -8,29 +9,21 @@ import org.bukkit.event.HandlerList;
 
 import subside.plugins.koth.adapter.Koth;
 
+/**
+ * @author Thomas "SubSide" van den Bulk
+ *
+ */
 public class KothLeftEvent extends Event implements IEvent, Cancellable {
-    private String capper;
+    private @Getter String capper;
     private boolean isCancelled;
     private @Getter int amountSecondsCapped;
-    private String nextCapper;
+    private @Getter @Setter String nextCapper;
     private @Getter Koth koth;
     
     public KothLeftEvent(Koth koth, String capper, int amountSecondsCapped){
         this.koth = koth;
         this.capper = capper;
         this.amountSecondsCapped = amountSecondsCapped;
-    }
-    
-    public String getPlayerCapping(){
-        return capper;
-    }
-    
-    public String getNextCapper(){
-        return nextCapper;
-    }
-    
-    public void setNextCapper(String nextCapper){
-        this.nextCapper = nextCapper;
     }
     
 

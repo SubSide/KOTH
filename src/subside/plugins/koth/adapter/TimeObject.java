@@ -1,5 +1,9 @@
 package subside.plugins.koth.adapter;
 
+/**
+ * @author Thomas "SubSide" van den Bulk
+ *
+ */
 public class TimeObject {
     private int captureTime;
     private int timeCapped;
@@ -17,8 +21,6 @@ public class TimeObject {
         return String.format("%02d", getMinutesLeft())+":"+String.format("%02d", getSecondsLeft());
     }
     
-    
-    // Cap time
     public int getSecondsCapped(){
         return timeCapped%60;
     }

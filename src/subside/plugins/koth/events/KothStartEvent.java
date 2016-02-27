@@ -9,25 +9,24 @@ import org.bukkit.event.HandlerList;
 
 import subside.plugins.koth.adapter.Koth;
 
+/**
+ * @author Thomas "SubSide" van den Bulk
+ *
+ */
 public class KothStartEvent extends Event implements IEvent, Cancellable {
     private @Getter @Setter int captureTime;
     private @Getter @Setter int maxLength;
     private @Getter Koth koth;
-    private boolean isScheduled;
+    private @Getter boolean scheduled;
     
     private boolean isCancelled;
     
-    public KothStartEvent(Koth koth, int captureTime, int maxLength, boolean isScheduled){
+    public KothStartEvent(Koth koth, int captureTime, int maxLength, boolean scheduled){
         this.koth = koth;
         this.captureTime = captureTime;
         this.maxLength = maxLength;
-        this.isScheduled = isScheduled;
+        this.scheduled = scheduled;
     }
-    
-    public boolean isScheduled(){
-        return isScheduled;
-    }
-
     private static final HandlerList handlers = new HandlerList();
 
     @Override

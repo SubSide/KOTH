@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.adapter.Area;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
@@ -60,7 +61,7 @@ public class MessageBuilder {
     }
 
     public MessageBuilder koth(String koth) {
-        Koth kth = KothHandler.getKoth(koth);
+        Koth kth = KothHandler.getInstance().getKoth(koth);
         if (kth != null) {
             koth(kth);
         } else {
@@ -106,6 +107,11 @@ public class MessageBuilder {
     public MessageBuilder player(String player) {
         excluder = player;
         if (player == null) player = "None";
+        if (ConfigHandler.getCfgHandler().getGlobal().isUseFancyPlayerName()){
+            if(Bukkit.getPlayer(player) != null){
+                player = Bukkit.getPlayer(player).getDisplayName();
+            }
+        }
         message.replaceAll("%player%", player);
         return this;
     }
@@ -179,7 +185,9 @@ public class MessageBuilder {
             }
 
             for (int x = 0; x < msg.length; x++) {
-                player.sendMessage(msg[x]);
+                if(!msg[x].equalsIgnoreCase("")){
+                    player.sendMessage(msg[x]);
+                }
             }
         }
 
@@ -188,7 +196,9 @@ public class MessageBuilder {
     public void buildAndSend(CommandSender player) {
         String[] msg = build();
         for (int x = 0; x < msg.length; x++) {
-            player.sendMessage(msg[x]);
+            if(!msg[x].equalsIgnoreCase("")){
+                player.sendMessage(msg[x]);
+            }
         }
     }
 

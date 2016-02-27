@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.Loot;
 import subside.plugins.koth.exceptions.CommandMessageException;
@@ -19,17 +18,17 @@ public class CommandReload implements ICommand {
     public void run(CommandSender sender, String[] args) {
         for(Player player : Bukkit.getOnlinePlayers()){
             String title = player.getOpenInventory().getTitle();
-            for(Loot loot : KothHandler.getLoots()){
+            for(Loot loot : KothHandler.getInstance().getLoots()){
                 if(loot.getInventory().getTitle().equalsIgnoreCase(title)){
                     player.closeInventory();
                 }
             }
             
-            for(Koth koth : KothHandler.getAvailableKoths()){
-                if(Loot.getKothLootTitle(koth.getName()).equalsIgnoreCase(title)){
-                    player.closeInventory();
-                }
-            }
+//            for(Koth koth : KothHandler.getInstance().getAvailableKoths()){
+//                if(Loot.getKothLootTitle(koth.getName()).equalsIgnoreCase(title)){
+//                    player.closeInventory();
+//                }
+//            }
         }
         
         

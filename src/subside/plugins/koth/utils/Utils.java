@@ -88,6 +88,32 @@ public class Utils {
         return obj;
     }
     
+    public static int convertTime(String time){
+        int t = 0;
+        if(time.contains(":")){
+            String[] split = time.split(":");
+            if(split.length > 2){
+                try {
+                    t = Integer.parseInt(split[0])*60*60+Integer.parseInt(split[1])*60+Integer.parseInt(split[2]);
+                } catch(Exception e){
+                }
+            } else {
+                try {
+                    t = Integer.parseInt(split[0])*60+Integer.parseInt(split[1]);
+                } catch(Exception e){
+                }
+            }
+        } else {
+            try {
+                t = Integer.parseInt(time)*60;
+            } catch(Exception e){
+                
+            }
+        }
+        
+        return t;
+    }
+    
     public static Location getLocFromObject(JSONObject loc) {
         return new Location(Bukkit.getWorld((String)loc.get("world")), (int)(long)loc.get("x"), (int)(long)loc.get("y"), (int)(long)loc.get("z"));
     }

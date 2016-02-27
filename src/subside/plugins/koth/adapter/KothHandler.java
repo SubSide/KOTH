@@ -1,18 +1,19 @@
 package subside.plugins.koth.adapter;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
-import lombok.Getter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import lombok.Getter;
+import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.adapter.RunningKoth.EndReason;
 import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
@@ -22,19 +23,37 @@ import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.scoreboard.SBManager;
 
+/**
+ * @author Thomas "SubSide" van den Bulk
+ *
+ */
 public class KothHandler {
-    private static @Getter List<RunningKoth> runningKoths = new ArrayList<>();
-    private static @Getter List<Koth> availableKoths = new ArrayList<>();
-    private static @Getter List<Loot> loots = new ArrayList<>();
+    private static @Getter KothHandler instance;
+    
+    private @Getter List<RunningKoth> runningKoths;
+    private @Getter List<Koth> availableKoths;
+    private @Getter List<Loot> loots;
+    private @Getter GamemodeRegistry gamemodeRegistry;
+    
+    public KothHandler(){
+        instance = this;
+        runningKoths = new ArrayList<>();
+        availableKoths = new ArrayList<>();
+        loots = new ArrayList<>();
+        
+        gamemodeRegistry = new GamemodeRegistry();
+        gamemodeRegistry.register("classic", KothClassic.class);
+        gamemodeRegistry.register("conquest", KothConquest.class);
+    }
 
     @Deprecated
-    public static void update() {
+    public void update() {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
                 it.next().update();
             }
-            if (ConfigHandler.getCfgHandler().isUseScoreboard()) {
+            if (ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()) {
                 SBManager.getManager().update();
             }
             ScheduleHandler.getInstance().tick();
@@ -42,74 +61,84 @@ public class KothHandler {
     }
 
     @Deprecated
-    public static void handleMoveEvent(Player player) {
+    public void handleMoveEvent(Player player) {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
-                RunningKoth koth = it.next();
-                if (koth.getCappingPlayer() == null) continue;
-                if (koth.getCappingPlayer().equalsIgnoreCase(player.getName())) {
-                    koth.checkPlayerCapping();
-                }
+                it.next().checkPlayerCapping(player);
             }
         }
     }
 
-    public static WeakReference<RunningKoth> getRunningKoth() {
+    /** Gets a the currently running KoTH
+     * 
+     * @return          the currently running KoTH, null if none is running.
+     */
+    public RunningKoth getRunningKoth() {
         synchronized (runningKoths) {
             if (runningKoths.size() > 0) {
-                return new WeakReference<RunningKoth>(runningKoths.get(0));
+                return runningKoths.get(0);
             } else {
-                return new WeakReference<RunningKoth>(null);
+                return null;
             }
         }
     }
     
-    public static void startKoth(Schedule schedule){
-        startKoth(schedule.getKoth(), schedule.getCaptureTime()*60, schedule.getMaxRunTime(), schedule.getLootAmount(), schedule.getLootChest(), true);
+    @Deprecated
+    public void startKoth(Schedule schedule){
+        StartParams params = new StartParams(schedule.getKoth());
+        params.setCaptureTime(schedule.getCaptureTime()*60);
+        params.setMaxRunTime(schedule.getMaxRunTime());
+        params.setLootAmount(schedule.getLootAmount());
+        params.setLootChest(schedule.getLootChest());
+        params.setScheduled(true);
+        
+        startKoth(params);
     }
+    
 
-    public static void startKoth(Koth koth, int captureTime, int maxRunTime, int lootAmount, String lootChest, boolean isScheduled) throws KothAlreadyRunningException {
+    /** Start a certain KoTH
+     * 
+     * @param koth              The KoTH to run
+     * @param captureTime       The captureTime
+     * @param maxRunTime        The maximum time this KoTH can run (-1 for unlimited time)
+     * @param lootAmount        The amount of loot that should spawn (-1 for default config settings)
+     * @param lootChest         The lootchest it should use (null for default config settings)
+     * @param isScheduled       This is used to see if it should obey stuff like minimumPlayers
+     */
+    @SuppressWarnings("deprecation")
+    public void startKoth(StartParams params) {
         synchronized (runningKoths) {
             for (RunningKoth rKoth : runningKoths) {
-                if (rKoth.getKoth() == koth) {
-                    throw new KothAlreadyRunningException(koth.getName());
+                if (rKoth.getKoth() == params.getKoth()) {
+                    throw new KothAlreadyRunningException(params.getKoth().getName());
                 }
             }
-            KothStartEvent event = new KothStartEvent(koth, captureTime, maxRunTime, isScheduled);
+            KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled());
 
-            if (isScheduled && Bukkit.getOnlinePlayers().size() < ConfigHandler.getCfgHandler().getMinimumPlayersNeeded()) {
+            if (params.isScheduled() && Bukkit.getOnlinePlayers().size() < ConfigHandler.getCfgHandler().getKoth().getMinimumPlayersNeeded()) {
                 event.setCancelled(true);
             }
 
             Bukkit.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
-                RunningKoth rKoth = new RunningKoth(koth, event.getCaptureTime(), event.getMaxLength(), lootAmount, lootChest);
+                RunningKoth rKoth = this.getGamemodeRegistry().createGame(params.getGamemode());
+                rKoth.init(params);
                 runningKoths.add(rKoth);
             }
         }
 
     }
 
-    public static void startKoth(String name, int captureTime, int maxRunTime, int lootAmount, String lootChest, boolean isScheduled) {
-        String kth = name;
-        if (kth.equalsIgnoreCase("random")) {
-            if (availableKoths.size() > 0) {
-                kth = availableKoths.get(new Random().nextInt(availableKoths.size())).getName();
-            }
-        }
 
-        for (Koth koth : availableKoths) {
-            if (koth.getName().equalsIgnoreCase(name)) {
-                startKoth(koth, captureTime, maxRunTime, lootAmount, lootChest, isScheduled);
-                return;
-            }
-        }
-        throw new KothNotExistException(name);
-    }
-
-    public static void createKoth(String name, Location min, Location max) {
+    /** Create a new KoTH
+     * 
+     * @param name              The KoTH name
+     * @param min               The first location
+     * @param max               The max position
+     */
+    public void createKoth(String name, Location min, Location max) {
         if (getKoth(name) == null && !name.equalsIgnoreCase("random")) {
             Koth koth = new Koth(name);
             koth.getAreas().add(new Area(name, min, max));
@@ -120,7 +149,12 @@ public class KothHandler {
         }
     }
 
-    public static void removeKoth(String name) {
+
+    /** Remove a certain KoTH
+     * 
+     * @param koth              The KoTH to remove
+     */
+    public void removeKoth(String name) {
         Koth koth = getKoth(name);
         if (koth == null) {
             throw new KothNotExistException(name);
@@ -129,8 +163,15 @@ public class KothHandler {
         availableKoths.remove(koth);
         KothLoader.save();
     }
-    
-    public static Loot getLoot(String name){
+
+
+    /** Get a loot by name
+     * 
+     * @param name      The name of the loot chest
+     * @return          The loot object
+     */
+    public Loot getLoot(String name){
+        if(name == null) return null;
         for(Loot loot : loots){
             if(loot.getName().equalsIgnoreCase(name)){
                 return loot;
@@ -139,7 +180,12 @@ public class KothHandler {
         return null;
     }
 
-    public static Koth getKoth(String name) {
+    /** Get a KoTH by name
+     * 
+     * @param name      The name of the KoTH
+     * @return          The KoTH object
+     */
+    public Koth getKoth(String name) {
         for (Koth koth : availableKoths) {
             if (koth.getName().equalsIgnoreCase(name)) {
                 return koth;
@@ -148,7 +194,10 @@ public class KothHandler {
         return null;
     }
 
-    public static void stopAllKoths() {
+    /** Stop all running koths
+     * 
+     */
+    public void stopAllKoths() {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
@@ -160,41 +209,85 @@ public class KothHandler {
         SBManager.getManager().clearAll();
     }
 
-    public static void stopKoth(String name) {
+    @Deprecated
+    public void remove(RunningKoth koth){
+        synchronized (runningKoths) {
+            runningKoths.remove(koth);
+        }
+    }
+    
+    /** Stop a specific koth
+     * 
+     * @param name      Stop a KoTH by a certain name
+     */
+    public void stopKoth(String name) {
+        Iterator<RunningKoth> it = runningKoths.iterator();
+        while (it.hasNext()) {
+            RunningKoth koth = it.next();
+            if (koth.getKoth().getName().equalsIgnoreCase(name)) {
+                koth.endKoth(EndReason.FORCED);
+            }
+        }
+    }
+
+
+    /** Gracefully ends all running KoTHs
+     * 
+     */
+    public void endAllKoths() {
+        synchronized (runningKoths) {
+            Iterator<RunningKoth> it = runningKoths.iterator();
+            while (it.hasNext()) {
+                it.next().endKoth(EndReason.GRACEFUL);
+            }
+        }
+    }
+
+    /** Gracefully ends a certain KoTH
+     * 
+     * @param name      The name of the KoTH to end
+     */
+    public void endKoth(String name) {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
                 RunningKoth koth = it.next();
                 if (koth.getKoth().getName().equalsIgnoreCase(name)) {
-                    it.remove();
-                    SBManager.getManager().clearAll();
+                    koth.endKoth(EndReason.GRACEFUL);
                     return;
                 }
             }
             throw new KothNotExistException(name);
         }
     }
-
-    public static void endAllKoths() {
-        synchronized (runningKoths) {
-            Iterator<RunningKoth> it = runningKoths.iterator();
-            while (it.hasNext()) {
-                it.next().quickEnd();
-            }
+    
+    public class GamemodeRegistry {
+        private @Getter HashMap<String, Class<? extends RunningKoth>> gamemodes;
+        private @Getter String currentMode;
+        
+        public GamemodeRegistry(){
+            gamemodes = new HashMap<>();
+            currentMode = "classic";
         }
-    }
-
-    public static void endKoth(String name) {
-        synchronized (runningKoths) {
-            Iterator<RunningKoth> it = runningKoths.iterator();
-            while (it.hasNext()) {
-                RunningKoth koth = it.next();
-                if (koth.getKoth().getName().equalsIgnoreCase(name)) {
-                    koth.quickEnd();
-                    return;
+        
+        public void register(String name, Class<? extends RunningKoth> clazz){
+            gamemodes.put(name, clazz);
+        }
+        
+        public RunningKoth createGame(){
+            return createGame(currentMode);
+        }
+        
+        public RunningKoth createGame(String gamemode){
+            if(gamemodes.containsKey(gamemode)){
+                try {
+                    return gamemodes.get(gamemode).newInstance();
+                }
+                catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
                 }
             }
-            throw new KothNotExistException(name);
+            return null;
         }
     }
 }

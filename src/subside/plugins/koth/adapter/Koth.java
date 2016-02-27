@@ -1,6 +1,7 @@
 package subside.plugins.koth.adapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +27,10 @@ import subside.plugins.koth.events.KothChestCreationEvent;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Utils;
 
+/**
+ * @author Thomas "SubSide" van den Bulk
+ *
+ */
 public class Koth {
     private @Getter @Setter String name;
     private @Getter @Setter Location lootPos = null;
@@ -36,14 +41,24 @@ public class Koth {
     public Koth(String name) {
         this.name = name;
     }
-    
+
+    /** Returns the loot that should be used for the chest.<br />
+     *  Will return the default config setting if no loot has been set.
+     * 
+     * @return          the loot chest that should be used to create the chest
+     */
     public String getLoot(){
         if(loot != null && !loot.equalsIgnoreCase("")){
             return loot;
         }
-        return ConfigHandler.getCfgHandler().getDefaultLoot();
+        return ConfigHandler.getCfgHandler().getLoot().getDefaultLoot();
     }
     
+
+    /** Get the middle of the KoTH
+     * 
+     * @return          the middle of the koth
+     */
     public Location getMiddle(){
         if(areas.size() > 0){
             return areas.get(0).getMiddle();
@@ -51,30 +66,67 @@ public class Koth {
         return new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
     }
 
+
+    /** Change the Last winner of this KoTH
+     * 
+     * @param player    The new winner
+     */
     public void setLastWinner(String player) {
         lastWinner = player;
     }
 
+
+    /** Get the last winner of this KoTH
+     * 
+     * @return          the last winner of the KoTH
+     */
     public String getLastWinner() {
         return lastWinner == null ? "" : lastWinner;
     }
-    
+
+    /** Checks if the player is inside any area of the KoTH
+     * 
+     * @param player    OfflinePlayer to check
+     * @return          true if player is in any KoTH area
+     */
     public boolean isInArea(OfflinePlayer oPlayer){
+        if (!oPlayer.isOnline()) {
+            return false;
+        }
+        Player player = oPlayer.getPlayer();
+        if (player == null) {
+            return false;
+        }
+
+        if (player.isDead()) {
+            return false;
+        }
+        
         for(Area area : areas){
-            if(area.isInArea(oPlayer)){
+            if(area.isInArea(player)){
                 return true;
             }
         }
         return false;
     }
 
+
+    /** Creates the loot chest
+     * 
+     * @param lootAmount        The amount of loot that should be created
+     * @param lootChest         The lootChest to use
+     */
     public void createLootChest(int lootAmount, String lootChest) {
         try {
             ItemStack[] lt;
-            if(lootChest == null){
-                lt = KothHandler.getLoot(getLoot()).getInventory(name).getContents();
-            } else {
-                lt = KothHandler.getLoot(lootChest).getInventory(name).getContents();
+            try {
+                if(lootChest == null){
+                    lt = KothHandler.getInstance().getLoot(getLoot()).getInventory().getContents();
+                } else {
+                    lt = KothHandler.getInstance().getLoot(lootChest).getInventory().getContents();
+                }
+            } catch(Exception e){
+                lt = KothHandler.getInstance().getLoot(ConfigHandler.getCfgHandler().getLoot().getDefaultLoot()).getInventory().getContents();
             }
 
             List<ItemStack> usableLoot = new ArrayList<>();
@@ -85,8 +137,8 @@ public class Koth {
             }
             if (usableLoot.size() < 1) return;
 
-            Inventory inv = Bukkit.createInventory(null, 27);
-            if (ConfigHandler.getCfgHandler().isRandomizeLoot()) {
+            Inventory inv = Bukkit.createInventory(null, 54);
+            if (ConfigHandler.getCfgHandler().getLoot().isRandomizeLoot()) {
                 for (int x = 0; x < lootAmount; x++) {
                     if (usableLoot.size() < 1) {
                         break;
@@ -94,12 +146,12 @@ public class Koth {
 
                     // UseItemsMultipleTimes
                     ItemStack uLoot = usableLoot.get(new Random().nextInt(usableLoot.size()));
-                    if (!ConfigHandler.getCfgHandler().isUseItemsMultipleTimes()) {
+                    if (!ConfigHandler.getCfgHandler().getLoot().isUseItemsMultipleTimes()) {
                         usableLoot.remove(uLoot);
                     }
 
                     // Randomize amount of loot or not?
-                    if (ConfigHandler.getCfgHandler().isRandomizeAmountLoot()) {
+                    if (ConfigHandler.getCfgHandler().getLoot().isRandomizeStackSize()) {
                         int amount = uLoot.getAmount();
                         ItemStack stack = uLoot.clone();
                         stack.setAmount(new Random().nextInt(amount) + 1);
@@ -114,7 +166,7 @@ public class Koth {
                 }
             }
 
-            if (ConfigHandler.getCfgHandler().isInstantLoot()) {
+            if (ConfigHandler.getCfgHandler().getLoot().isInstantLoot()) {
                 Player player = Bukkit.getPlayer(this.lastWinner);
                 if (player != null) {
                     List<ItemStack> dropItems = new ArrayList<>();
@@ -151,9 +203,9 @@ public class Koth {
                 }
 
                 Chest chest = (Chest) lootPos.getBlock().getState();
-                chest.getInventory().setContents(inv.getContents());
+                chest.getInventory().setContents(Arrays.copyOf(inv.getContents(), 27));
 
-                if (ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() < 1) {
+                if (ConfigHandler.getCfgHandler().getLoot().getRemoveLootAfterSeconds() < 1) {
                     return;
                 }
 
@@ -162,7 +214,7 @@ public class Koth {
                     public void run() {
                         removeLootChest();
                     }
-                }, ConfigHandler.getCfgHandler().getRemoveLootAfterSeconds() * 20);
+                }, ConfigHandler.getCfgHandler().getLoot().getRemoveLootAfterSeconds() * 20);
 
             }
 
@@ -172,6 +224,9 @@ public class Koth {
         }
     }
 
+    /** Removes the lootchest
+     * 
+     */
     public void removeLootChest() {
         final Koth koth = this;
         Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
@@ -184,7 +239,7 @@ public class Koth {
                     return;
                 }
 
-                if (!ConfigHandler.getCfgHandler().isDropLootOnRemoval()) {
+                if (!ConfigHandler.getCfgHandler().getLoot().isDropLootOnRemoval()) {
                     if (koth.getLootPos().getBlock().getState() instanceof Chest) {
                         Chest chest = (Chest) koth.getLootPos().getBlock().getState();
                         Inventory inv = chest.getInventory();
@@ -198,7 +253,12 @@ public class Koth {
         });
 
     }
-    
+
+    /** Gets an area by name
+     * 
+     * @param area      The area name
+     * @return          The area object
+     */
     public Area getArea(String ar){
         for(Area area : areas){
             if(area.getName().equalsIgnoreCase(ar)){
@@ -212,7 +272,8 @@ public class Koth {
 //    private @Getter @Setter Location lootPos = null;
 //    private String lastWinner;
 //    private @Getter List<Area> areas = new ArrayList<>();
-    
+
+    @Deprecated
     public static Koth load(JSONObject obj){
         Koth koth = new Koth((String)obj.get("name")); //name
         
@@ -240,7 +301,8 @@ public class Koth {
         
         return koth;
     }
-    
+
+    @Deprecated
     @SuppressWarnings("unchecked")
     public JSONObject save(){
         JSONObject obj = new JSONObject();

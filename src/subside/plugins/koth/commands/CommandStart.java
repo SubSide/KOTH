@@ -2,12 +2,13 @@ package subside.plugins.koth.commands;
 
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.adapter.StartParams;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.Perm;
+import subside.plugins.koth.utils.Utils;
 
 public class CommandStart implements ICommand {
 
@@ -16,27 +17,24 @@ public class CommandStart implements ICommand {
         if (args.length < 1) {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth start <name> [time] [maxRunTime] [lootAmount]");
         }
-        String koth = args[0];
-        int runTime = 15;
-        int maxRunTime = -1;
-        int amount = ConfigHandler.getCfgHandler().getLootAmount();
+        StartParams params = new StartParams(args[0]);
         if (args.length > 1) {
             try {
-                runTime = Integer.parseInt(args[1]);
+                params.setCaptureTime(Utils.convertTime(args[1]));
 
                 if (args.length > 2) {
-                    maxRunTime = Integer.parseInt(args[2]);
+                    params.setMaxRunTime(Integer.parseInt(args[2]));
                 }
                 
                 if (args.length > 3) {
-                    amount = Integer.parseInt(args[3]);
+                    params.setLootAmount(Integer.parseInt(args[3]));
                 }
             }
             catch (NumberFormatException e) {
                 throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth start <name> [time] [maxRunTime] [lootAmount]");
             }
         }
-        KothHandler.startKoth(koth, runTime * 60, maxRunTime, amount, null, false);
+        KothHandler.getInstance().startKoth(params);
 
     }
 

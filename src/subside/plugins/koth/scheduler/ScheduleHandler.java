@@ -38,14 +38,14 @@ public class ScheduleHandler {
     }
 
     public String removeId(int id) {
-        Schedule sched = schedules.get(id);
-        if (sched == null) {
+        if (schedules.get(id) == null) {
             return null;
         }
+        String koth = schedules.get(id).getKoth();
 
         schedules.remove(id);
         ScheduleLoader.save();
-        return sched.getKoth();
+        return koth;
     }
 
     public void tick() {

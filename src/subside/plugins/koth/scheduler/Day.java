@@ -32,7 +32,7 @@ public enum Day {
     private long getStartOfWeek(){
         if(startOfWeek <= 0){
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getTimeZone()));
+            calendar.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getGlobal().getTimeZone()));
             calendar.setFirstDayOfWeek(Calendar.MONDAY);
             calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.clear(Calendar.MINUTE);

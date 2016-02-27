@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" additionalparam=" -link https://hub.spigotmc.org/javadocs/spigot/" author="true" classpath="C:\Users\Thomas\Downloads\lombok.jar;C:\Users\Thomas\Downloads\WorldEdit.jar;C:\Users\Thomas\.m2\repository\org\spigotmc\spigot-api\1.8-R0.1-SNAPSHOT\spigot-api-1.8-R0.1-SNAPSHOT.jar;C:\Users\Thomas\Downloads\spigot.jar" destdir="C:\xampp\htdocs\koth\developers" doctitle="King of The Hill - Developers API" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="subside.plugins.koth.events,subside.plugins.koth.adapter" source="1.7" sourcepath="src" splitindex="true" use="true" version="true"/>
+    </target>
+</project>

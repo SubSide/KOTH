@@ -18,10 +18,11 @@ import subside.plugins.koth.utils.Utils;
 
 public class LootLoader {
     
+    @SuppressWarnings("deprecation")
     public static void load() {
         KothPlugin plugin = KothPlugin.getPlugin();
         try {
-            KothHandler.getLoots().clear();
+            KothHandler.getInstance().getLoots().clear();
             if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "loot.json").exists()) {
                 save();
                 return;
@@ -34,7 +35,7 @@ public class LootLoader {
                 Iterator<?> it = koths.iterator();
                 while(it.hasNext()){
                     try {
-                        KothHandler.getLoots().add(Loot.load((JSONObject)it.next()));
+                        KothHandler.getInstance().getLoots().add(Loot.load((JSONObject)it.next()));
                     } catch(Exception e){
                         KothPlugin.getPlugin().getLogger().severe("////////////////");
                         KothPlugin.getPlugin().getLogger().severe("Error loading loot!");
@@ -52,7 +53,9 @@ public class LootLoader {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({
+            "unchecked", "deprecation"
+    })
     public static void save() {
         KothPlugin plugin = KothPlugin.getPlugin();
         try {
@@ -63,7 +66,7 @@ public class LootLoader {
             }
 
             JSONArray obj = new JSONArray();
-            for (Loot loot : KothHandler.getLoots()) {
+            for (Loot loot : KothHandler.getInstance().getLoots()) {
                 obj.add(loot.save());
             }
             FileOutputStream fileStream = new FileOutputStream(new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "loot.json"));

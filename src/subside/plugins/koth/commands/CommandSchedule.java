@@ -33,7 +33,7 @@ public class CommandSchedule implements ICommand {
         if (args.length > 0) {
             String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
             if (args[0].equalsIgnoreCase("create")) {
-                create(sender, newArgs);
+                pre_create(sender, newArgs);
             } else if (args[0].equalsIgnoreCase("remove")) {
                 remove(sender, newArgs);
             } else if (args[0].equalsIgnoreCase("list")) {
@@ -54,7 +54,7 @@ public class CommandSchedule implements ICommand {
         List<Schedule> schedules = ScheduleHandler.getInstance().getSchedules();
         List<String> list = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getTimeZone()));
+        sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getGlobal().getTimeZone()));
         list.add(" ");
         list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_CURRENTDATETIME).date(sdf.format(new Date())).buildArray());
         for (Day day : Day.values()) {
@@ -75,20 +75,42 @@ public class CommandSchedule implements ICommand {
         sender.sendMessage(list.toArray(new String[list.size()]));
     }
 
+    private void pre_create(CommandSender sender, String[] args){
+        if (args.length < 2) {
+            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth schedule create <koth> <day|(daily)> <time> [capturetime] [maxruntime] [lootamount] [lootchest]"));
+        }
+        
+        if(args[1].equalsIgnoreCase("daily")){
+            for(Day day : Day.values()){
+                args[1] = day.getDay();
+                System.out.println(args[1]);
+                try {
+                    create(sender, args);
+                } catch(CommandMessageException e){
+                    for(String msg : e.getMsg()){
+                        sender.sendMessage(msg);
+                    }
+                }
+            }
+        } else {
+            create(sender, args);
+        }
+    }
+    
     private void create(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE + "/koth schedule create <koth> <day> <time> [capturetime] [maxruntime] [lootamount]").build());
+            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth schedule create <koth> <day|(daily)> <time> [capturetime] [maxruntime] [lootamount] [lootchest]"));
         }
         
         Day day = Day.getDay(args[1].toUpperCase());
         if (day == null) {
-            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_NOVALIDDAY).build());
+            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_NOVALIDDAY));
         }
         Schedule schedule = new Schedule(args[0], day, args[2]);
         
         int captureTime = 15;
         int maxRunTime = -1;
-        int lootAmount = ConfigHandler.getCfgHandler().getLootAmount();
+        int lootAmount = ConfigHandler.getCfgHandler().getLoot().getLootAmount();
         String lootChest = null;
         try {
             if (args.length > 3) {
@@ -104,7 +126,13 @@ public class CommandSchedule implements ICommand {
             }
         }
         catch (Exception e) {
-            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_NOTANUMBER).build());
+            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_NOTANUMBER));
+        }
+        
+        if (args.length > 6) {
+            if(!args[6].equalsIgnoreCase("0")){
+                lootChest = args[6];
+            }
         }
         
         schedule.setMaxRunTime(maxRunTime);
@@ -114,7 +142,7 @@ public class CommandSchedule implements ICommand {
 
         ScheduleHandler.getInstance().getSchedules().add(schedule);
         ScheduleLoader.save();
-        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_CREATED).koth(args[0]).lootAmount(lootAmount).day(day.getDay()).time(args[2]).captureTime(captureTime).build());
+        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_CREATED).koth(args[0]).lootAmount(lootAmount).day(day.getDay()).time(args[2]).captureTime(captureTime));
 
     }
 
@@ -124,11 +152,10 @@ public class CommandSchedule implements ICommand {
         }
         try {
             String kth = ScheduleHandler.getInstance().removeId(Integer.parseInt(args[0]));
-            if (kth != null) {
-                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_REMOVED).koth(kth));
-            } else {
+            if (kth == null) {
                 throw new CommandMessageException(Lang.COMMAND_SCHEDULE_NOTEXIST);
             }
+            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_REMOVED).koth(kth));
         }
         catch (NumberFormatException e) {
             throw new CommandMessageException(Lang.COMMAND_SCHEDULE_REMOVENOID);
@@ -142,7 +169,7 @@ public class CommandSchedule implements ICommand {
         List<Schedule> schedules = ScheduleHandler.getInstance().getSchedules();
         List<String> list = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getTimeZone()));
+        sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getGlobal().getTimeZone()));
         list.add(" ");
         list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME).date(sdf.format(new Date())).buildArray());
         for (Day day : Day.values()) {
@@ -179,17 +206,17 @@ public class CommandSchedule implements ICommand {
                 schedule.setKoth(args[2]);
                 ScheduleLoader.save();
                 throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_EDITOR_CHANGE_KOTH).koth(args[2]).id(id));
-            } else if (args[1].equalsIgnoreCase("runtime")) { // change runtime
-                int runTime;
+            } else if (args[1].equalsIgnoreCase("capturetime")) { // change capturetime
+                int captureTime;
                 try {
-                    runTime = Integer.parseInt(args[2]);
+                    captureTime = Integer.parseInt(args[2]);
                 }
                 catch (Exception e) {
                     throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_NOTANUMBER).id(id));
                 }
-                schedule.setCaptureTime(runTime);
+                schedule.setCaptureTime(captureTime);
                 ScheduleLoader.save();
-                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_EDITOR_CHANGE_RUNTIME).id(id));
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_EDITOR_CHANGE_CAPTURETIME).id(id));
             } else if (args[1].equalsIgnoreCase("day")) { // change day
                 Day day = Day.getDay(args[2]);
                 if (day == null) {
@@ -233,30 +260,23 @@ public class CommandSchedule implements ICommand {
                     schedule.setLootChest(args[2]);
                 }
                 ScheduleLoader.save();
-                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_EDITOR_CHANGE_LOOTAMOUNT).id(id));
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_EDITOR_CHANGE_LOOT).id(id));
             }
         }
-        sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).build());
+        sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Scheddule editor").build());
         sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> koth <kothname>").commandInfo("change the koth").build());
-        sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> runtime <runtime>").commandInfo("change the runtime").build());
         sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> day <day>").commandInfo("change the day").build());
         sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> time <time>").commandInfo("change the time (e.g. 4:32AM)").build());
+        sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> capturetime <capturetime>").commandInfo("change the capturetime").build());
         sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> maxruntime <maxruntime>").commandInfo("change the maxruntime").build());
-        sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> loot <loot>").commandInfo("change the loot chest (0 to clear)").build());
         sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> lootamount <amount>").commandInfo("change the loot amount").build());
+        sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> loot <loot>").commandInfo("change the loot chest (0 to clear)").build());
 
     }
 
-    // private @Getter String koth;
-    // private @Getter int runTime;
-    // private @Getter Day day;
-    // private @Getter String time;
-    // private @Getter int maxRunTime;
-    // private @Getter int lootAmount;
-
     private void help(CommandSender sender, String[] args) {
         Utils.sendMsg(sender, 
-                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).build(), 
+                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Schedule editor").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule create").commandInfo("schedule a koth").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit").commandInfo("Edit an existing schedule").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule remove <ID>").commandInfo("removes an existing schedule").build(), 

@@ -27,7 +27,7 @@ public class CommandTp implements ICommand {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth tp <koth> [area]");
         }
 
-        Koth koth = KothHandler.getKoth(args[0]);
+        Koth koth = KothHandler.getInstance().getKoth(args[0]);
         if (koth == null) {
             throw new KothNotExistException(args[0]);
         }

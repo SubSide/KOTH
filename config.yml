@@ -1,98 +1,44 @@
-# For everything (Except ingame command changes), a reload is required.
-#
-# Available placeholders (this is also used for the Lang.json),
-# Note that not all placeholders are available for every message.
-#
-# %area% - The area for this message
-# %player% - The player capping the area
-# %world% - The world where the area is running
-# %minutes% - The amount of minutes that this area is running
-# %seconds% - The amount of seconds that this area is running
-# %minutes_left% - The amount of minutes left for this area
-# %seconds_left% - The amount of seconds left for this area
-# %x% - X coordinate for the area
-# %y% - Y coordinate for the area
-# %z% - Z coordinate for the area
-# %day% - Day of the schedule
-# %time% - The time of the schedule
-# %length% - The length of the area
-# %id% - Schedule ID
-# %date% - The current date
-# %command% - This is the command for the help menu
-# %command_info% - This is the description of the command for help menu
-# %maxtime% - The maximal time in minutes the koth will run
+# Find all the information you need at http://dev.thomasvdbulk.nl/KoTH/
 
 # To grab your own timezone go to: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-schedule-timezone: "Europe/Amsterdam"
 
-# The use-playermoveevent feature, when true, will use the PlayerMoveEvent (suprise!)
-# This means that it will check if the player left the KOTH every single time the player moves
-# This will end up with a VERY smooth koth experience, but is discouraged as again, it will trigger every time a player moves.
-# You can turn it on if you like, see how it goes, and can always turn it off if lag occurs
-use-playermoveevent: false
+global:
+  schedule-timezone: "Europe/Amsterdam"
+  use-playermoveevent: false
+  pre-broadcast: 0
+  helpcommand:
+    - "&8========> &2Koth &8<========"
+    - "&a/koth list &7Shows all available koths"
+    - "&a/koth loot &7Shows the loot for the upcoming koth"
+    - "&a/koth schedule &7Shows the schedule for koths"
 
-# the default loot that the plugin should use.
-default-loot: ""
+loot:
+  default: ""
+  randomize: true
+  default-amount: 5
+  randomize-amount: false
+  can-use-same-items: true
+  remove-after: 0
+  drop-on-removal: false
+  give-instantly: false
 
-# Randomize loot will make it so it will randomly generate the loot for you
-# If you don't want this (You want all the items to be given in the chest) You should put this to false
-randomize-loot: true
-
-# This is the amount of loot that will randomly be selected from the loot chest.
-amount-of-loot: 5
-
-# Setting the knock time to something higher than 0 will make the koth "freeze" for that amount of seconds
-# This means that when someone gets knocked off the koth, it will take a moment before it can be capped again. This is NOT channel time.
-# This can be used to stop the spam messages in the chat.
-knockTime: 0
-
-# The randomize-amount-of-loot now chooses a random amount of loot of the stack you given.
-randomize-amount-of-loot: false
-
-# can-use-same-items is for if it can use the same item multiple times.
-can-use-same-items: true
-
-# remove-lootchest-after will remove the loot chest after this amount of seconds
-# do note that if the server gets reloaded/restarted that this (might) not be the case!
-# 0 to disable this
-remove-lootchest-after: 0
-
-# drop-loot-on-removal makes it so when the loot chest gets removed, it drops the loot instead
-# of it just disappearing. default is false
-drop-loot-on-removal: false
-
-# minimum-players-needed is what it says, the minimum amount of players needed for a KoTH to start.
-minimum-players-needed: 0
-
-# instant-loot should be put to true if you want the winner to immediately get all items instead of in a chest
-# This can be very useful for crate keys and such.
-# Putting this to true means that no chest will spawn!
-instant-loot: false
-
-# The help menu (that players see)
-helpcommand:
-  - "&8========> &2Koth &8<========"
-  - "&a/koth list &7Shows all available koths"
-  - "&a/koth loot &7Shows the loot for the upcoming koth"
-  - "&a/koth schedule &7Shows the schedule for koths"
-
-
-# broadcast X amount of minutes before a scheduled koth starts (0 disables it)
-pre-broadcast: 0
-
-# use-scoreboard should speak for itself, put this on false to disable the scoreboard.
-use-scoreboard: true
-
-# use-old-scoreboard is for if you have problems with the scoreboard not showing up
-# keep in mind that this one does not try to be compatible with any other scoreboard plugin
-use-old-scoreboard: false
+koth:
+  knockTime: 0
+  minimum-players: 0
 
 scoreboard:
-  title: "&a&l%koth%"
-  contents:
-    - "&6&lTime Left:"
-    - "&9%minutes_left%:%seconds_left%"
-    - " "
-    - "&6&lCoords:"
-    - "&cX: &e%x%"
-    - "&cZ: &e%z%"
+  use-scoreboard: true
+  use-old-scoreboard: false
+  scoreboard:
+    title: "&a&l%koth%"
+    contents:
+      - "&6&lTime Left:"
+      - "&9%minutes_left%:%seconds_left%"
+      - " "
+      - "&6&lCoords:"
+      - "&cX: &e%x%"
+      - "&cZ: &e%z%"
+
+factions:
+  enable: false
+  shouldCapAllAreas: false

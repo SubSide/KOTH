@@ -14,10 +14,10 @@ public class CommandStop implements ICommand {
     @Override
     public void run(CommandSender sender, String[] args) {
         if (args.length > 0) {
-            KothHandler.stopKoth(args[0]);
+            KothHandler.getInstance().stopKoth(args[0]);
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_TERMINATE_SPECIFIC_KOTH).koth(args[0]));
         } else {
-            KothHandler.stopAllKoths();
+            KothHandler.getInstance().stopAllKoths();
             throw new CommandMessageException(Lang.COMMAND_TERMINATE_ALL_KOTHS);
         }
     }

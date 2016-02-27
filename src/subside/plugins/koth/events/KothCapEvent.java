@@ -11,6 +11,10 @@ import org.bukkit.event.HandlerList;
 
 import subside.plugins.koth.adapter.Koth;
 
+/**
+ * @author Thomas "SubSide" van den Bulk
+ *
+ */
 public class KothCapEvent extends Event implements IEvent, Cancellable {
     private String nextCapper;
     private @Getter List<Player> playersInArea;
@@ -22,11 +26,19 @@ public class KothCapEvent extends Event implements IEvent, Cancellable {
         this.playersInArea = playersInArea;
         this.nextCapper = nextCapper;
     }
-    
+
+    /** Get the next player that will cap this KoTH
+     * 
+     * @return          The next player that will cap this KoTH
+     */
     public String getNextPlayerCapping(){
         return nextCapper;
     }
-    
+
+    /** The next player that will cap this KoTH
+     * 
+     * @param name      The next player that will cap this KoTH
+     */
     public void setNextPlayerCapping(String nextCapper){
         this.nextCapper = nextCapper;
     }

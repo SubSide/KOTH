@@ -17,6 +17,7 @@ public class CommandHelp implements ICommand {
     public void run(CommandSender sender, String[] args) {
         if (!Perm.Admin.HELP.has(sender)) {
             asMember(sender, args);
+            return;
         }
 
         List<String> list = new ArrayList<>();
@@ -26,7 +27,7 @@ public class CommandHelp implements ICommand {
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth asmember").commandInfo("Shows the help menu as a normal player").buildArray());
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth version").commandInfo("Shows the version of this plugin").buildArray());
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth reload").commandInfo("Reloads the plugin").buildArray());
-        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth tp <koth> [area]").commandInfo("teleport to an koth (area)").buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth tp <koth> [area]").commandInfo("teleport to a koth (area)").buildArray());
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info").commandInfo("info about various things (helpful!)").buildArray());
         list.add("");
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH Control Commands").buildArray());
@@ -46,14 +47,15 @@ public class CommandHelp implements ICommand {
     }
 
     public static void asMember(CommandSender sender, String[] args) {
-        List<String> list = ConfigHandler.getCfgHandler().getHelpCommand();
+        List<String> list = ConfigHandler.getCfgHandler().getGlobal().getHelpCommand();
         List<String> list2 = new ArrayList<>();
         for (String hlp : list) {
             MessageBuilder mB = new MessageBuilder(hlp);
             try {
-                mB.koth(KothHandler.getRunningKoth().get().getKoth());
-                mB.time(KothHandler.getRunningKoth().get().getTimeObject());
-                mB.player(KothHandler.getRunningKoth().get().getCappingPlayer());
+                mB.koth(KothHandler.getInstance().getRunningKoth().getKoth());
+                mB.time(KothHandler.getInstance().getRunningKoth().getTimeObject());
+                //mB.player(KothHandler.getInstance().getRunningKoth().getCappingPlayer());
+                //TODO
             }
             catch (Exception e) {
                 mB.koth("None").time("00:00").player("None");

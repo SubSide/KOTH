@@ -17,7 +17,7 @@ import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.Loot;
 import subside.plugins.koth.events.KothOpenChestEvent;
-import subside.plugins.koth.loaders.KothLoader;
+import subside.plugins.koth.loaders.LootLoader;
 import subside.plugins.koth.utils.Perm;
 
 public class EventListener implements Listener {
@@ -33,7 +33,7 @@ public class EventListener implements Listener {
 
         Chest chest = (Chest) e.getInventory().getHolder();
         Location loc = chest.getLocation();
-        for (Koth koth : KothHandler.getAvailableKoths()) {
+        for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
             Location vec = koth.getLootPos();
             if (vec == null) continue;
 
@@ -59,7 +59,7 @@ public class EventListener implements Listener {
         if (Perm.Admin.BYPASS.has((Player) e.getPlayer())) return;
 
         Location loc = e.getBlock().getLocation();
-        for (Koth koth : KothHandler.getAvailableKoths()) {
+        for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
             Location vec = koth.getLootPos();
             if (vec == null) continue;
             if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
@@ -73,7 +73,7 @@ public class EventListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent e) {
         if (Perm.Admin.BYPASS.has((Player) e.getPlayer())) return;
         Location loc = e.getBlock().getLocation();
-        for (Koth koth : KothHandler.getAvailableKoths()) {
+        for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
             Location vec = koth.getLootPos();
             if (vec == null) continue;
             if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
@@ -84,10 +84,19 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInventoryChange(InventoryClickEvent event) {
-        for (Koth koth : KothHandler.getAvailableKoths()) {
-            if (event.getInventory().getTitle().equals(Loot.getKothLootTitle(koth.getName()))) {
+//        for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
+//            if (event.getInventory().getTitle().equals(Loot.getKothLootTitle(koth.getName()))) {
+//                event.setCancelled(true);
+//                return;
+//            }
+//        }
+        if(!(event.getWhoClicked() instanceof Player) || Perm.Admin.LOOT.has((Player)event.getWhoClicked())){
+            return;
+        }
+        
+        for(Loot loot : KothHandler.getInstance().getLoots()){
+            if(event.getInventory().equals(loot.getInventory())){
                 event.setCancelled(true);
-                return;
             }
         }
 
@@ -99,11 +108,9 @@ public class EventListener implements Listener {
             return;
         }
         
-        for (Loot loot : KothHandler.getLoots()) {
-            System.out.println(loot);
+        for (Loot loot : KothHandler.getInstance().getLoots()) {
             if (event.getInventory().equals(loot.getInventory())) {
-                System.out.println("test!");
-                KothLoader.save();
+                LootLoader.save();
                 return;
             }
         }

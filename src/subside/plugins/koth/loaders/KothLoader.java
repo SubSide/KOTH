@@ -18,10 +18,11 @@ import subside.plugins.koth.utils.Utils;
 
 public class KothLoader {
 	
-	public static void load() {
+	@SuppressWarnings("deprecation")
+    public static void load() {
 		KothPlugin plugin = KothPlugin.getPlugin();
 		try {
-			KothHandler.getAvailableKoths().clear();
+			KothHandler.getInstance().getAvailableKoths().clear();
 			if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "koths.json").exists()) {
 				save();
 				return;
@@ -34,7 +35,7 @@ public class KothLoader {
 				Iterator<?> it = koths.iterator();
 				while(it.hasNext()){
 					try {
-						KothHandler.getAvailableKoths().add(Koth.load((JSONObject)it.next()));
+						KothHandler.getInstance().getAvailableKoths().add(Koth.load((JSONObject)it.next()));
 					} catch(Exception e){
 					    KothPlugin.getPlugin().getLogger().severe("////////////////");
 					    KothPlugin.getPlugin().getLogger().severe("Error loading koth!");
@@ -52,7 +53,9 @@ public class KothLoader {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({
+            "unchecked", "deprecation"
+    })
 	public static void save() {
 		KothPlugin plugin = KothPlugin.getPlugin();
 		try {
@@ -63,7 +66,7 @@ public class KothLoader {
 			}
 
 			JSONArray obj = new JSONArray();
-			for (Koth koth : KothHandler.getAvailableKoths()) {
+			for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
 				obj.add(koth.save());
 			}
 			FileOutputStream fileStream = new FileOutputStream(new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "koths.json"));

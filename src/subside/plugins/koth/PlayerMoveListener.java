@@ -10,6 +10,6 @@ public class PlayerMoveListener implements Listener {
 	@SuppressWarnings("deprecation")
     @EventHandler
 	public void onPlayerMove(PlayerMoveEvent event){
-		KothHandler.handleMoveEvent(event.getPlayer());
+		KothHandler.getInstance().handleMoveEvent(event.getPlayer());
 	}
 }

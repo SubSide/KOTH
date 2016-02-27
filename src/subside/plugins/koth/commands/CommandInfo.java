@@ -43,12 +43,14 @@ public class CommandInfo implements ICommand {
                 kothInfo(sender, newArgs);
             } else if(args[0].equalsIgnoreCase("loot")){
                 lootInfo(sender, newArgs);
+            } else if(args[0].equalsIgnoreCase("schedule")){
+                scheduleInfo(sender, newArgs);
             } else {
                 Utils.sendMsg(sender, 
                         new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH editor").build(), 
                         new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info koth <koth>").commandInfo("Info about a koth").build(), 
                         new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info loot <loot>").commandInfo("Info about a loot chest").build(), 
-                        new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info schedule <schedule>").commandInfo("Info about a schedule").build());
+                        new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info schedule <ID>").commandInfo("Info about a schedule").build());
             }
             
         } else if (Perm.VERSION.has(sender)) {
@@ -65,7 +67,7 @@ public class CommandInfo implements ICommand {
     }
     
     public void kothInfo(CommandSender sender, String[] args){
-        Koth koth = KothHandler.getKoth(args[0]);
+        Koth koth = KothHandler.getInstance().getKoth(args[0]);
         if (koth == null) {
             throw new KothNotExistException(args[0]);
         }
@@ -140,7 +142,7 @@ public class CommandInfo implements ICommand {
     }
     
     public void lootInfo(CommandSender sender, String[] args){
-        Loot loot = KothHandler.getLoot(args[0]);
+        Loot loot = KothHandler.getInstance().getLoot(args[0]);
         if (loot == null) {
             throw new LootNotExistException(args[0]);
         }
@@ -163,7 +165,7 @@ public class CommandInfo implements ICommand {
 
 
         String linkedKoths = "";
-        for(Koth koth : KothHandler.getAvailableKoths()){
+        for(Koth koth : KothHandler.getInstance().getAvailableKoths()){
             if(loot.getName().equalsIgnoreCase(koth.getLoot())){
                 linkedKoths += koth.getName()+", ";
             }
@@ -205,6 +207,60 @@ public class CommandInfo implements ICommand {
         list.add(" ");
         list.addAll(new MessageBuilder(C1+"Schedules linked:").buildArray());
         list.addAll(new MessageBuilder(C2+linkedSchedules).buildArray());
+        sender.sendMessage(list.toArray(new String[list.size()]));
+        
+    }
+    
+
+    
+    public void scheduleInfo(CommandSender sender, String[] args){
+        Schedule sched;
+        try {
+            sched = ScheduleHandler.getInstance().getSchedules().get(Integer.parseInt(args[0]));
+        } catch(NumberFormatException e){
+            throw new CommandMessageException(Lang.COMMAND_SCHEDULE_NOTANUMBER);
+        } catch(IndexOutOfBoundsException f){
+            throw new CommandMessageException(Lang.COMMAND_SCHEDULE_NOTEXIST);
+        }
+        
+        String C1 = "&2";
+        String C2 = "&a";
+        if(Lang.COMMAND_INFO_COLORS.length > 1){
+            C1 = Lang.COMMAND_INFO_COLORS[0];
+            C2 = Lang.COMMAND_INFO_COLORS[1];
+        }
+        
+        String id = "#"+args[0];
+        String day = sched.getDay().getDay();
+        String time = sched.getTime();
+        String linkedKoth = sched.getKoth();
+
+        String lootChest = (sched.getLootChest()==null)?("None (Inherited)"):(sched.getLootChest());
+        String lootAmount = sched.getLootAmount()+" items";
+        
+        String captureTime = sched.getCaptureTime()+" minutes";
+        String maxRunTime = sched.getMaxRunTime()+" minutes";
+        
+        if(sched.getMaxRunTime() == -1){
+            maxRunTime = "Unlimited";
+        }
+        
+        
+        List<String> list = new ArrayList<>();
+        list.add(" ");
+        list.addAll(new MessageBuilder(Lang.COMMAND_INFO_TITLE_SCHEDULE).id(Integer.parseInt(args[0])).buildArray());
+        list.addAll(new MessageBuilder(C1+"ID: "+C2+id).buildArray());
+        list.addAll(new MessageBuilder(C1+"Day: "+C2+day).buildArray());
+        list.addAll(new MessageBuilder(C1+"Time: "+C2+time).buildArray());
+        list.addAll(new MessageBuilder(C1+"KoTH: "+C2+linkedKoth).buildArray());
+
+        list.add(" ");
+        list.addAll(new MessageBuilder(C1+"Using loot: "+C2+lootChest).buildArray());
+        list.addAll(new MessageBuilder(C1+"With: "+lootAmount+" items").buildArray());
+        
+        list.add(" ");
+        list.addAll(new MessageBuilder(C1+"Capture time: "+C2+captureTime).buildArray());
+        list.addAll(new MessageBuilder(C1+"Max runtime: "+C2+maxRunTime).buildArray());
         sender.sendMessage(list.toArray(new String[list.size()]));
         
     }

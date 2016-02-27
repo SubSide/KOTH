@@ -39,18 +39,21 @@ public class Schedule {
         nextEventMillis = eventTime;
     }
 
+    @SuppressWarnings("deprecation")
     public void tick() {
-        if (ConfigHandler.getCfgHandler().getPreBroadcast() != 0) {
-            if (isBroadcasted && System.currentTimeMillis() + 1000 * 60 * ConfigHandler.getCfgHandler().getPreBroadcast() > nextEventMillis) {
-                isBroadcasted = true;
-                new MessageBuilder(Lang.KOTH_PLAYING_PRE_BROADCAST).maxTime(maxRunTime).captureTime(captureTime).lootAmount(lootAmount).koth(koth).buildAndBroadcast();
+        if (ConfigHandler.getCfgHandler().getGlobal().getPreBroadcast() != 0) {
+            if(!isBroadcasted){
+                if (System.currentTimeMillis() + 1000 * 60 * ConfigHandler.getCfgHandler().getGlobal().getPreBroadcast() > nextEventMillis) {
+                    isBroadcasted = true;
+                    new MessageBuilder(Lang.KOTH_PLAYING_PRE_BROADCAST).maxTime(maxRunTime).captureTime(captureTime).lootAmount(lootAmount).koth(koth).buildAndBroadcast();
+                }
             }
         }
 
         if (System.currentTimeMillis() > nextEventMillis) {
             setNextEventTime();
             isBroadcasted = false;
-            KothHandler.startKoth(this);
+            KothHandler.getInstance().startKoth(this);
         }
     }
 
@@ -62,21 +65,21 @@ public class Schedule {
         return nextEventMillis;
     }
 
-    public static Schedule load(JSONObject obj) {
+    public static Schedule load(JSONObject obj, Day tDay) {
         String tKoth = (String) obj.get("koth"); // koth
-        Day tDay = Day.getDay((String) obj.get("day")); // day
+        //Day tDay = Day.getDay((String) obj.get("day")); // day
         String tTime = (String) obj.get("time"); // time
         Schedule schedule = new Schedule(tKoth, tDay, tTime);
-        if (obj.containsKey("runTime")) {
-            schedule.setCaptureTime((int) obj.get("captureTime")); // runTime
+        if (obj.containsKey("captureTime")) {
+            schedule.setCaptureTime(Integer.parseInt(obj.get("captureTime")+"")); // runTime
         }
 
         if (obj.containsKey("maxRunTime")) {
-            schedule.setMaxRunTime((int) obj.get("maxRunTime")); // maxRunTime
+            schedule.setMaxRunTime(Integer.parseInt(obj.get("maxRunTime")+"")); // maxRunTime
         }
 
         if (obj.containsKey("lootAmount")) {
-            schedule.setLootAmount((int) obj.get("lootAmount")); // lootAmount
+            schedule.setLootAmount(Integer.parseInt(obj.get("lootAmount")+"")); // lootAmount
         }
 
         if (obj.containsKey("lootChest")) {
@@ -91,7 +94,7 @@ public class Schedule {
     public JSONObject save() {
         JSONObject obj = new JSONObject();
         obj.put("koth", this.koth); // koth
-        obj.put("day", this.day.getDay()); // day
+        //obj.put("day", this.day.getDay()); // day
         obj.put("time", this.time); // time
 
         if (captureTime != -1) {
@@ -102,7 +105,7 @@ public class Schedule {
             obj.put("maxRunTime", this.maxRunTime); // maxRunTime
         }
 
-        if (lootAmount != -1) {
+        if (lootAmount != -1 || lootAmount == ConfigHandler.getCfgHandler().getLoot().getLootAmount()) {
             obj.put("lootAmount", this.lootAmount); // lootAmount
         }
 

@@ -17,7 +17,7 @@ public class CommandRemove implements ICommand {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth remove <name>");
         }
         
-        KothHandler.removeKoth(args[0]);
+        KothHandler.getInstance().removeKoth(args[0]);
         throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_REMOVED).koth(args[0]));
 
     }

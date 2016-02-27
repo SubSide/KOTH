@@ -9,6 +9,10 @@ import org.bukkit.event.HandlerList;
 
 import subside.plugins.koth.adapter.Koth;
 
+/**
+ * @author Thomas "SubSide" van den Bulk
+ *
+ */
 public class KothOpenChestEvent extends Event implements IEvent, Cancellable {
 
     private @Getter Player player;

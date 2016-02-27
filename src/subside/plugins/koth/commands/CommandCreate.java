@@ -25,7 +25,7 @@ public class CommandCreate implements ICommand {
         if (args.length < 1) {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth create <name>");
         }
-        if (KothHandler.getKoth(args[0]) != null) {
+        if (KothHandler.getInstance().getKoth(args[0]) != null) {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_ALREADYEXISTS).koth(args[0]));
         }
 
@@ -34,7 +34,7 @@ public class CommandCreate implements ICommand {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_WESELECT);
         }
         
-        KothHandler.createKoth(args[0], sel.getMinimumPoint(), sel.getMaximumPoint());
+        KothHandler.getInstance().createKoth(args[0], sel.getMinimumPoint(), sel.getMaximumPoint());
         throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_CREATED).koth(args[0]));
     }
 

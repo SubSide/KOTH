@@ -1,9 +1,10 @@
 package subside.plugins.koth;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -25,6 +26,7 @@ public class Lang {
     public static String[] KOTH_PLAYING_PLAYERCAP_CAPPER = new String[]{"&aYou have started capping %koth%!"};
     public static String[] KOTH_PLAYING_CAPTIME = new String[]{"&a%player% is capping the koth! %minutes_left%:%seconds_left% left!"};
     public static String[] KOTH_PLAYING_CAPTIME_CAPPER = new String[]{"&aYou are capping the koth! %minutes_left%:%seconds_left% left!"};
+    public static String[] KOTH_PLAYING_NOT_CAPPING = new String[]{"&aThere is nobody capping the KoTH right now! (X: %x%, Z:%z%)" };
     public static String[] KOTH_PLAYING_LEFT = new String[]{"&a%player% left the koth!"};
     public static String[] KOTH_PLAYING_LEFT_CAPPER = new String[]{"&aYou left the koth!"};
 	public static String[] KOTH_PLAYING_LOOT_CHEST = new String[]{"&1&l%koth%s &8&lloot"};
@@ -57,13 +59,14 @@ public class Lang {
     public static String[] COMMAND_TELEPORT_NOAREAS = new String[]{"&aThis koth doesn't have any areas!"};
 
     public static String[] COMMAND_LISTS_EDITOR_AREA_TITLE = new String[]{"&8========> &2KoTH area list &8<========"};
-    public static String[] COMMAND_LISTS_EDITOR_AREA_ENTRY = new String[]{"&a%area% - (&7%x%, %z%)"};
+    public static String[] COMMAND_LISTS_EDITOR_AREA_ENTRY = new String[]{"&a%area% &7- (%x%, %z%)"};
     public static String[] COMMAND_LISTS_LIST_TITLE = new String[]{"&8========> &2Available KoTHs &8<========"};
     public static String[] COMMAND_LISTS_LIST_ENTRY = new String[]{"&7- &a%koth%"};
     public static String[] COMMAND_LISTS_LOOT_TITLE = new String[]{"&8========> &2Available Loot chests &8<========"};
     public static String[] COMMAND_LISTS_LOOT_ENTRY = new String[]{"&7- &a%loot%"};
 
     public static String[] COMMAND_LOOT_CREATE = new String[]{ "&aLoot succesfully created!"};
+    public static String[] COMMAND_LOOT_RENAME = new String[]{ "&aLoot succesfully renamed!"};
     public static String[] COMMAND_LOOT_OPENING = new String[]{ "&aOpening %loot%."};
     public static String[] COMMAND_LOOT_REMOVE = new String[]{ "&aSuccesfully removed the loot!"};
     public static String[] COMMAND_LOOT_CHEST_TITLE = new String[]{ "&1&l%loot%s &8&lloot"};
@@ -105,11 +108,12 @@ public class Lang {
 
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_KOTH = new String[]{"&aYou changed the koth for #%id% to %koth"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_NOVALIDDAY = new String[]{"&aThis is not a valid day! (monday, tuesday etc)"};
-    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_RUNTIME = new String[]{"&aYou changed the runtime for #%id%!"};
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_CAPTURETIME = new String[]{"&aYou changed the runtime for #%id%!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_DAY = new String[]{"&aYou changed the day for #%id%!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_TIME = new String[]{"&aYou changed the time for #%id%!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_MAXRUNTIME = new String[]{"&aYou changed the max runtime for #%id%!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_LOOTAMOUNT = new String[]{"&aYou changed the loot amount for #%id%!"};
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_LOOT = new String[]{"&aYou changed the loot for #%id%!"};
 	
 	public static String[] COMMAND_TERMINATE_SPECIFIC_KOTH = new String[]{"&aYou have terminated %koth%!"};
 	public static String[] COMMAND_TERMINATE_ALL_KOTHS = new String[]{"&aYou have terminated all koths!"};
@@ -123,8 +127,8 @@ public class Lang {
 				return;
 			}
 			JSONParser parser = new JSONParser();
-			Object obj = parser.parse(new FileReader(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json"));
-
+			//Object obj = parser.parse(new FileReader(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json"));
+			Object obj = parser.parse(new InputStreamReader(new FileInputStream(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json"), "UTF-8"));
 			JSONObject jsonObject2 = (JSONObject) obj;
 
 			Field[] fields = Lang.class.getFields();

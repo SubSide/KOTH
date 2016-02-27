@@ -1,8 +1,7 @@
 package subside.plugins.koth.scoreboard;
 
-import java.lang.ref.WeakReference;
-
 import subside.plugins.koth.adapter.Koth;
+import subside.plugins.koth.adapter.KothClassic;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.RunningKoth;
 import subside.plugins.koth.utils.MessageBuilder;
@@ -22,10 +21,13 @@ class ScoreboardHandler {
 	}
 
 	static void updateScoreboard() {
-		WeakReference<RunningKoth> wKoth = KothHandler.getRunningKoth();
-		if (wKoth.get() == null) {
+	    RunningKoth rKoth2 = KothHandler.getInstance().getRunningKoth();
+		if (!(rKoth2 instanceof KothClassic)) {
 			return;
 		}
+		
+		KothClassic rKoth = (KothClassic)rKoth2;
+		
 		
 		if(!scoreboard.isInitialized()){
 		    scoreboard.init(new String[textLoader.length]);
@@ -33,9 +35,8 @@ class ScoreboardHandler {
 		
 		String[] text = textLoader.clone();
 
-		RunningKoth rKoth = wKoth.get();
 		Koth koth = rKoth.getKoth();
-		String player = wKoth.get().getCappingPlayer();
+		String player = rKoth.getCappingPlayer();
 
 		scoreboard.setTitle(new MessageBuilder(titleLoader).maxTime(rKoth.getMaxRunTime()).koth(koth).player(player).time(rKoth.getTimeObject()).build()[0]);
 
