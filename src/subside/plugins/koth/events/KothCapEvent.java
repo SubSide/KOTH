@@ -2,45 +2,36 @@ package subside.plugins.koth.events;
 
 import java.util.List;
 
-import lombok.Getter;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import lombok.Getter;
+import lombok.Setter;
+import subside.plugins.koth.adapter.Capable;
 import subside.plugins.koth.adapter.Koth;
+import subside.plugins.koth.adapter.RunningKoth;
+import subside.plugins.koth.adapter.captypes.Capper;
 
 /**
  * @author Thomas "SubSide" van den Bulk
  *
  */
 public class KothCapEvent extends Event implements IEvent, Cancellable {
-    private String nextCapper;
+    private @Getter @Setter Capper nextCapper;
     private @Getter List<Player> playersInArea;
     private boolean isCancelled;
+    private @Getter RunningKoth runningKoth;
     private @Getter Koth koth;
+    private @Getter Capable captureZone;
     
-    public KothCapEvent(Koth koth, List<Player> playersInArea, String nextCapper){
-        this.koth = koth;
+    public KothCapEvent(RunningKoth runningKoth, Capable captureZone, List<Player> playersInArea, Capper nextCapper){
+        this.runningKoth = runningKoth;
+        this.koth = this.runningKoth.getKoth();
         this.playersInArea = playersInArea;
         this.nextCapper = nextCapper;
-    }
-
-    /** Get the next player that will cap this KoTH
-     * 
-     * @return          The next player that will cap this KoTH
-     */
-    public String getNextPlayerCapping(){
-        return nextCapper;
-    }
-
-    /** The next player that will cap this KoTH
-     * 
-     * @param name      The next player that will cap this KoTH
-     */
-    public void setNextPlayerCapping(String nextCapper){
-        this.nextCapper = nextCapper;
+        this.captureZone = captureZone;
     }
 
     @Override

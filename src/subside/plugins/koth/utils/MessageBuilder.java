@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.adapter.Area;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
@@ -104,15 +103,16 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder player(String player) {
-        excluder = player;
-        if (player == null) player = "None";
-        if (ConfigHandler.getCfgHandler().getGlobal().isUseFancyPlayerName()){
-            if(Bukkit.getPlayer(player) != null){
-                player = Bukkit.getPlayer(player).getDisplayName();
-            }
-        }
-        message.replaceAll("%player%", player);
+    public MessageBuilder capper(String capper) {
+//        excluder = capper;
+        if (capper == null) capper = "None";
+//        if (ConfigHandler.getCfgHandler().getGlobal().isUseFancyPlayerName()){
+//            if(Bukkit.getPlayer(capper) != null){
+//                capper = Bukkit.getPlayer(capper).getDisplayName();
+//            }
+//        }
+        // TODO
+        message.replaceAll("%capper%", capper);
         return this;
     }
 

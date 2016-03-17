@@ -1,18 +1,18 @@
 package subside.plugins.koth.adapter;
 
-import lombok.Getter;
-
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
+import lombok.Getter;
 import subside.plugins.koth.utils.Utils;
 
 /**
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class Area {
+public class Area implements Capable {
 
     private @Getter String name;
     private @Getter Location min;
@@ -66,7 +66,16 @@ public class Area {
      * @param player    Player to check
      * @return          true if player is in the area
      */
-    public boolean isInArea(Player player) {
+    public boolean isInArea(OfflinePlayer oPlayer) {
+        if(oPlayer == null || !oPlayer.isOnline() || oPlayer.getPlayer() == null) {
+            return false;
+        }
+        Player player = oPlayer.getPlayer();
+
+        if (player.isDead()) {
+            return false;
+        }
+        
         if (player.getWorld() != min.getWorld()) {
             return false;
         }

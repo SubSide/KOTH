@@ -41,7 +41,7 @@ public class EventListener implements Listener {
 
                 KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
                 event.setCancelled(false);
-                if (!koth.getLastWinner().equalsIgnoreCase(e.getPlayer().getName()) && !Perm.Admin.BYPASS.has((Player) e.getPlayer())) {
+                if (!koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer()) && !Perm.Admin.BYPASS.has((Player) e.getPlayer())) {
                     event.setCancelled(true);
                 }
                 Bukkit.getServer().getPluginManager().callEvent(event);

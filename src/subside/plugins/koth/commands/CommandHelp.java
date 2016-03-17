@@ -58,7 +58,7 @@ public class CommandHelp implements ICommand {
                 //TODO
             }
             catch (Exception e) {
-                mB.koth("None").time("00:00").player("None");
+                mB.koth("None").time("00:00").capper("None");
             }
             list2.addAll(mB.buildArray());
         }

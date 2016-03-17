@@ -6,9 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,9 +17,12 @@ import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import lombok.Getter;
+import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
+import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.events.KothChestCreationEvent;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Utils;
@@ -31,11 +31,11 @@ import subside.plugins.koth.utils.Utils;
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class Koth {
+public class Koth implements Capable {
     private @Getter @Setter String name;
     private @Getter @Setter Location lootPos = null;
     private @Setter String loot = null;
-    private String lastWinner;
+    private Capper lastWinner;
     private @Getter List<Area> areas = new ArrayList<>();
 
     public Koth(String name) {
@@ -71,8 +71,8 @@ public class Koth {
      * 
      * @param player    The new winner
      */
-    public void setLastWinner(String player) {
-        lastWinner = player;
+    public void setLastWinner(Capper capper) {
+        lastWinner = capper;
     }
 
 
@@ -80,8 +80,8 @@ public class Koth {
      * 
      * @return          the last winner of the KoTH
      */
-    public String getLastWinner() {
-        return lastWinner == null ? "" : lastWinner;
+    public Capper getLastWinner() {
+        return lastWinner;
     }
 
     /** Checks if the player is inside any area of the KoTH
@@ -89,14 +89,12 @@ public class Koth {
      * @param player    OfflinePlayer to check
      * @return          true if player is in any KoTH area
      */
+    @Override
     public boolean isInArea(OfflinePlayer oPlayer){
-        if (!oPlayer.isOnline()) {
+        if(oPlayer == null || !oPlayer.isOnline() || oPlayer.getPlayer() == null) {
             return false;
         }
         Player player = oPlayer.getPlayer();
-        if (player == null) {
-            return false;
-        }
 
         if (player.isDead()) {
             return false;
@@ -167,7 +165,10 @@ public class Koth {
             }
 
             if (ConfigHandler.getCfgHandler().getLoot().isInstantLoot()) {
-                Player player = Bukkit.getPlayer(this.lastWinner);
+                List<Player> players = this.lastWinner.getAvailablePlayers(this);
+                Player player = players.get(new Random().nextInt(players.size()));
+                
+                
                 if (player != null) {
                     List<ItemStack> dropItems = new ArrayList<>();
                     for (ItemStack is : inv.getContents()) {
@@ -278,7 +279,7 @@ public class Koth {
         Koth koth = new Koth((String)obj.get("name")); //name
         
         if(obj.containsKey("lastWinner")){
-            koth.lastWinner = (String)obj.get("lastWinner"); //lastwinner
+            koth.lastWinner = Capper.load((JSONObject)obj.get("lastWinner")); //lastwinner
         }
         
         if(obj.containsKey("loot")){
@@ -309,7 +310,7 @@ public class Koth {
         obj.put("name", this.name); //name
         
         if(this.lastWinner != null){
-            obj.put("lastWinner", this.lastWinner); //lastwinner
+            obj.put("lastWinner", this.lastWinner.save()); //lastwinner
         }
         
         if(this.lootPos != null || (this.loot != null && !this.loot.equalsIgnoreCase(""))){

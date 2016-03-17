@@ -1,6 +1,7 @@
 package subside.plugins.koth;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -8,11 +9,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 import lombok.Getter;
+import subside.plugins.koth.adapter.KothClassic;
+import subside.plugins.koth.adapter.KothConquest;
 import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.adapter.KothHandler.CapEntityRegistry;
+import subside.plugins.koth.adapter.KothHandler.GamemodeRegistry;
 import subside.plugins.koth.adapter.Loot;
+import subside.plugins.koth.adapter.captypes.CappingFaction;
+import subside.plugins.koth.adapter.captypes.CappingFactionUUID;
+import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.commands.CommandHandler;
-import subside.plugins.koth.faction.EventListenerNormal;
-import subside.plugins.koth.faction.EventListenerUUID;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.loaders.LootLoader;
 import subside.plugins.koth.loaders.ScheduleLoader;
@@ -21,27 +27,46 @@ import subside.plugins.koth.scoreboard.SBManager;
 public class KothPlugin extends JavaPlugin {
 	private @Getter static KothPlugin plugin;
 	private @Getter static WorldEditPlugin worldEdit;
-
+	
+	@Override
+	public void onLoad(){
+        plugin = this;
+        new KothHandler();
+        this.saveDefaultConfig();
+        this.reloadConfig();
+        new ConfigHandler(this.getConfig());
+        Lang.load(this);
+        register();
+	}
+	
 	@Override
 	public void onEnable() {
-		plugin = this;
-
 		worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
 		getCommand("koth").setExecutor(new CommandHandler(this));
-		init();
-		
+        init();
 	}
+
+    
+    public void register(){
+        // Registering the Gamemodes
+        GamemodeRegistry gR = KothHandler.getInstance().getGamemodeRegistry();
+        gR.register("classic", KothClassic.class);
+        
+        if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
+            gR.register("conquest", KothConquest.class);
+        }
+        
+        // Registering the capture entities
+        CapEntityRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
+        cER.registerCaptureType("player", CappingPlayer.class);
+        if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
+            cER.registerCaptureType("faction", CappingFaction.class);
+            cER.registerCaptureType("factionuuid", CappingFactionUUID.class);
+        }
+    }
 
     @SuppressWarnings("deprecation")
 	public void init(){
-        KothHandler.getInstance().stopAllKoths();
-        this.saveDefaultConfig();
-        this.reloadConfig();
-	    new ConfigHandler(this.getConfig());
-        Lang.load(this);
-        KothLoader.load();
-        LootLoader.load();
-        ScheduleLoader.load();
         
         HandlerList.unregisterAll(this);
         Bukkit.getScheduler().cancelTasks(this);
@@ -54,16 +79,21 @@ public class KothPlugin extends JavaPlugin {
                 KothHandler.getInstance().update();
             }
         }, 20, 20);
+        
 
-        if (ConfigHandler.getCfgHandler().getGlobal().isUsePlayerMoveEvent()) {
-            getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
+        if(ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()){
+            ConfigurationSection section = ConfigHandler.getCfgHandler().getScoreboard().getSection();
+            SBManager.getManager().load(ConfigHandler.getCfgHandler().getScoreboard().isUseOldScoreboard(), section.getString("scoreboard.title"), section.getStringList("scoreboard.contents").toArray(new String[section.getStringList("scoreboard.contents").size()]));
         }
         
-        if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
-            hook2Factions();
-        }
-	}
+        // LOADING
 
+        KothHandler.getInstance().stopAllKoths();
+        KothLoader.load();
+        LootLoader.load();
+        ScheduleLoader.load();
+    }
+    
 	@Override
 	public void onDisable() {
 		SBManager.getManager().clearAll();
@@ -83,23 +113,5 @@ public class KothPlugin extends JavaPlugin {
 //            }
         }
 	}
-	
-
-    
-    private void hook2Factions() {
-        if(!Bukkit.getPluginManager().isPluginEnabled("Factions")){
-            this.getLogger().severe("Factions plugin not found! Could not hook in to the plugin!");
-            return;
-        }
-        boolean shouldCapAll= getConfig().getBoolean("shouldCapAllAreas");
-        try {
-            Class.forName("com.massivecraft.factions.entity.FactionColl");
-            this.getServer().getPluginManager().registerEvents(new EventListenerNormal(shouldCapAll), this);
-        } catch(ClassNotFoundException e){
-            this.getServer().getPluginManager().registerEvents(new EventListenerUUID(shouldCapAll), this);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
     
 }

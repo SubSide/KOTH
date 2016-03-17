@@ -1,19 +1,21 @@
 package subside.plugins.koth.adapter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+
+import com.google.common.collect.Lists;
 
 import lombok.Getter;
-import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.adapter.RunningKoth.EndReason;
+import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
@@ -34,6 +36,7 @@ public class KothHandler {
     private @Getter List<Koth> availableKoths;
     private @Getter List<Loot> loots;
     private @Getter GamemodeRegistry gamemodeRegistry;
+    private @Getter CapEntityRegistry capEntityRegistry;
     
     public KothHandler(){
         instance = this;
@@ -42,8 +45,7 @@ public class KothHandler {
         loots = new ArrayList<>();
         
         gamemodeRegistry = new GamemodeRegistry();
-        gamemodeRegistry.register("classic", KothClassic.class);
-        gamemodeRegistry.register("conquest", KothConquest.class);
+        capEntityRegistry = new CapEntityRegistry();
     }
 
     @Deprecated
@@ -57,16 +59,6 @@ public class KothHandler {
                 SBManager.getManager().update();
             }
             ScheduleHandler.getInstance().tick();
-        }
-    }
-
-    @Deprecated
-    public void handleMoveEvent(Player player) {
-        synchronized (runningKoths) {
-            Iterator<RunningKoth> it = runningKoths.iterator();
-            while (it.hasNext()) {
-                it.next().checkPlayerCapping(player);
-            }
         }
     }
 
@@ -116,7 +108,7 @@ public class KothHandler {
             }
             KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled());
 
-            if (params.isScheduled() && Bukkit.getOnlinePlayers().size() < ConfigHandler.getCfgHandler().getKoth().getMinimumPlayersNeeded()) {
+            if (params.isScheduled() && Lists.newArrayList(Bukkit.getOnlinePlayers()).size() < ConfigHandler.getCfgHandler().getKoth().getMinimumPlayersNeeded()) {
                 event.setCancelled(true);
             }
 
@@ -288,6 +280,29 @@ public class KothHandler {
                 }
             }
             return null;
+        }
+    }
+    
+    public class CapEntityRegistry {
+        private @Getter Map<String, Class<? extends Capper>> captureTypes = new HashMap<>();
+
+        public CapEntityRegistry(){
+            captureTypes = new HashMap<>();
+        }
+        
+        public void registerCaptureType(String captureTypeIdentifier, Class<? extends Capper> clazz){
+            captureTypes.put(captureTypeIdentifier, clazz);
+        }
+        
+        public Capper getCapperFromType(String captureTypeIdentifier, String objectUniqueId){
+            if(!captureTypes.containsKey(captureTypeIdentifier)){
+                return null;
+            }
+            try {
+                return (Capper)captureTypes.get(captureTypeIdentifier).getDeclaredMethod("getFromUniqueName", String.class).invoke(null, objectUniqueId);
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                return null;
+            }
         }
     }
 }

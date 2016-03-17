@@ -6,7 +6,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import lombok.Getter;
-import subside.plugins.koth.scoreboard.SBManager;
 
 public class ConfigHandler {
     private @Getter static ConfigHandler cfgHandler;
@@ -79,14 +78,16 @@ public class ConfigHandler {
 	public class Scoreboard {
 	    private @Getter boolean useScoreboard = true;
 	    private @Getter boolean useOldScoreboard = false;
+	    private ConfigurationSection section;
 	    
 	    public Scoreboard(ConfigurationSection section){
 	        useScoreboard = section.getBoolean("use-scoreboard");
 	        useOldScoreboard = section.getBoolean("use-old-scoreboard");
+	        this.section = section;
+	    }
 	    
-	        if(useScoreboard){
-	            SBManager.getManager().load(useOldScoreboard, section.getString("scoreboard.title"), section.getStringList("scoreboard.contents").toArray(new String[section.getStringList("scoreboard.contents").size()]));
-	        }
+	    public ConfigurationSection getSection(){
+	        return section;
 	    }
 	}
 	

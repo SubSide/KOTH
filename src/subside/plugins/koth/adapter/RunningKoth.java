@@ -1,6 +1,6 @@
 package subside.plugins.koth.adapter;
 
-import org.bukkit.entity.Player;
+import subside.plugins.koth.utils.MessageBuilder;
 
 /**
  * @author Thomas "SubSide" van den Bulk
@@ -33,10 +33,11 @@ public interface RunningKoth {
      */
     public String getLootChest();
     
-    @Deprecated
-    public void checkPlayerCapping();
-    @Deprecated
-    public void checkPlayerCapping(Player player);
+    /** Add data to the MessageBuilder
+     * 
+     * @return
+     */
+    public MessageBuilder fillMessageBuilder(MessageBuilder mB);
 
     @Deprecated
     public void update();
