@@ -11,16 +11,21 @@ import subside.plugins.koth.adapter.Capable;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.exceptions.NoCompatibleCapperException;
 
-public class CappingFactionUUID extends Capper implements CappingFaction {
-    private com.massivecraft.factions.Faction faction;
+public class CappingFactionNormal extends Capper implements CappingFaction {
+private com.massivecraft.factions.entity.Faction faction;
     
-    public CappingFactionUUID(com.massivecraft.factions.Faction faction){
+    public CappingFactionNormal(com.massivecraft.factions.entity.Faction faction){
         this.faction = faction;
+    }
+    
+    @Override
+    public boolean isInOrEqualTo(OfflinePlayer oPlayer){
+        return com.massivecraft.factions.entity.MPlayerColl.get().get(oPlayer).getFactionId().equals(faction.getId());
     }
 
     @Override
     public String getUniqueClassIdentifier(){
-        return "factionuuid";
+        return "faction";
     }
     
     @Override
@@ -29,40 +34,31 @@ public class CappingFactionUUID extends Capper implements CappingFaction {
     }
     
     @Override
-    public boolean isInOrEqualTo(OfflinePlayer oPlayer){
-        return com.massivecraft.factions.FPlayers.getInstance().getByOfflinePlayer(oPlayer).getFactionId().equals(faction.getId());
-    }
-    
-    @Override
     public String getName(){
-        return faction.getTag();
+        return faction.getName();
     }
     
-    public CappingFactionUUID(List<Player> playerList2){
+    public CappingFactionNormal(List<Player> playerList2){
         List<Player> playerList = new ArrayList<Player>(playerList2);
         Collections.shuffle(playerList);
         for(Player player : playerList){
-            com.massivecraft.factions.Faction fac = com.massivecraft.factions.FPlayers.getInstance().getByPlayer(player).getFaction();
+            com.massivecraft.factions.entity.Faction fac = com.massivecraft.factions.entity.MPlayerColl.get().get(player).getFaction();
             if(fac.isNormal()){
                 faction = fac;
                 break;
             }
         }
-
         if(faction == null){
         	throw new NoCompatibleCapperException();
         }
     }
-
-    public com.massivecraft.factions.Faction getObject(){
+    
+    public com.massivecraft.factions.entity.Faction getObject(){
         return faction;
     }
-    
+
     @Override
     public boolean areaCheck(Capable cap) {
-    	if(faction == null)
-    		return false;
-    	
         for(Player player : faction.getOnlinePlayers()){
             if(cap.isInArea(player)){
                 return true;
@@ -92,6 +88,6 @@ public class CappingFactionUUID extends Capper implements CappingFaction {
     
 
     public static Capper getFromUniqueName(String name){
-        return new CappingFactionUUID(com.massivecraft.factions.Factions.getInstance().getFactionById(name));
+        return new CappingFactionNormal(com.massivecraft.factions.entity.FactionColl.get().get(name));
     }
 }

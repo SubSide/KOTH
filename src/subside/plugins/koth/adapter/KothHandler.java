@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import com.google.common.collect.Lists;
 
 import lombok.Getter;
+import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.adapter.RunningKoth.EndReason;
 import subside.plugins.koth.adapter.captypes.Capper;
@@ -259,7 +260,7 @@ public class KothHandler {
     
     public class GamemodeRegistry {
         private @Getter HashMap<String, Class<? extends RunningKoth>> gamemodes;
-        private @Getter String currentMode;
+        private @Getter @Setter String currentMode;
         
         public GamemodeRegistry(){
             gamemodes = new HashMap<>();

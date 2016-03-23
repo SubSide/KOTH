@@ -2,16 +2,13 @@ package subside.plugins.koth.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.Faction;
-
 import lombok.Getter;
 import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.adapter.captypes.CappingFaction;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
@@ -38,7 +35,7 @@ public class KothConquest implements RunningKoth {
         fScores = new ArrayList<>();
         
         for(Area area : koth.getAreas()){
-            areas.add(new ConquestArea(area));
+            areas.add(new ConquestArea(this, area));
         }
     }
 
@@ -80,7 +77,7 @@ public class KothConquest implements RunningKoth {
     }
     
     
-    public FactionScore getFactionScore(Faction faction){
+    public FactionScore getFactionScore(CappingFaction faction){
         for(FactionScore score : fScores){
             if(score.getFaction() == faction){
                 return score;
@@ -96,54 +93,36 @@ public class KothConquest implements RunningKoth {
     
     public class ConquestArea {
         private @Getter Area area;
-        private @Getter FactionScore fScore;
-        ConquestArea(Area area){
+        private @Getter CapInfo capInfo;
+        ConquestArea(KothConquest kC, Area area){
             this.area = area;
+            this.capInfo = new CapInfo(kC, area, true);
         }
         
         @Deprecated
         public void update(){
-            if(fScore != null){
-                boolean isInArea = false;
-                for(Player fPlayer : fScore.getFaction().getOnlinePlayers()){
-                    if(area.isInArea(fPlayer)){
-                        isInArea = true;
-                        break;
+            	capInfo.update();
+            	if(capInfo.getCapper() != null){
+            		getFactionScore((CappingFaction)capInfo.getCapper()).addPoint();
+            	} else {
+        			List<Player> insideArea = new ArrayList<>();
+            		for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (area.isInArea(player)) {
+                            insideArea.add(player);
+                        }
                     }
-                }
-                
-                if(!isInArea){
-                    fScore = null;
-                    return;
-                }
-                
-                fScore.addPoint();
-                
-                
-            } else {
-                List<Player> insideArea = new ArrayList<>();
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    Faction f = FPlayers.getInstance().getByPlayer(player).getFaction();
-                    if(f.isSafeZone() || f.isWarZone() || f.isWilderness()){
+                    if (insideArea.size() < 1) {
                         return;
                     }
-                    if (area.isInArea(player)) {
-                        insideArea.add(player);
-                    }
-                }
-                if (insideArea.size() < 1) {
-                    return;
-                }
-                
-                fScore = getFactionScore(FPlayers.getInstance().getByPlayer(insideArea.get(new Random().nextInt(insideArea.size()))).getFaction());
-            }
+                    capInfo.setCapper(capInfo.getRandomCapper(insideArea));
+            	}
         }
     }
     
     public class FactionScore {
-        private @Getter Faction faction;
+        private @Getter CappingFaction faction;
         private @Getter int score;
-        FactionScore(Faction faction){
+        FactionScore(CappingFaction faction){
             this.faction = faction;
             this.score = 0;
         }
@@ -157,6 +136,7 @@ public class KothConquest implements RunningKoth {
     }
     
     public MessageBuilder fillMessageBuilder(MessageBuilder mB){
-        return mB.maxTime(maxRunTime).time(getTimeObject()).koth(koth);
+    	// TODO
+        return mB.maxTime(maxRunTime).koth(koth);
     }
 }

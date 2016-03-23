@@ -10,11 +10,12 @@ import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
-import subside.plugins.koth.adapter.captypes.CappingFaction;
+import subside.plugins.koth.adapter.captypes.CappingFactionNormal;
 import subside.plugins.koth.adapter.captypes.CappingFactionUUID;
 import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
+import subside.plugins.koth.exceptions.NoCompatibleCapperException;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class CapInfo {
@@ -46,9 +47,11 @@ public class CapInfo {
         
         try {
             Class.forName("com.massivecraft.factions.entity.FactionColl");
-            return new CappingFaction(playerList);
+            return new CappingFactionNormal(playerList);
         } catch(ClassNotFoundException e){
             return new CappingFactionUUID(playerList);
+        } catch(NoCompatibleCapperException e){
+        	return null;
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -59,7 +62,7 @@ public class CapInfo {
      * 
      */
     public void update(){
-        if(capper != null){
+        if(capper != null && capper.getObject() != null){
             if(capper.areaCheck(captureZone)){
                 timeCapped++;
                 return;
@@ -88,9 +91,10 @@ public class CapInfo {
                 capper = event.getNextCapper();
             }   
         } else {
+        	capper = null;
             List<Player> insideArea = new ArrayList<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (runningKoth.getKoth().isInArea(player)) {
+                if (captureZone.isInArea(player)) {
                     insideArea.add(player);
                 }
             }
@@ -99,8 +103,11 @@ public class CapInfo {
             }
             
             
-
-            KothCapEvent event = new KothCapEvent(runningKoth, captureZone, insideArea, getRandomCapper(insideArea));
+            Capper capper = getRandomCapper(insideArea);
+            if(capper == null)
+            	return;
+            
+            KothCapEvent event = new KothCapEvent(runningKoth, captureZone, insideArea, capper);
             Bukkit.getServer().getPluginManager().callEvent(event);
 
             if (event.isCancelled()) {
@@ -117,7 +124,7 @@ public class CapInfo {
     }
     
     public String getName(){
-    	if(capper != null){
+    	if(capper != null && capper.getObject() != null){
     		return capper.getName();
     	} else {
     		return "None";

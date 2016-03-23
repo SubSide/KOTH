@@ -15,7 +15,7 @@ import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.KothHandler.CapEntityRegistry;
 import subside.plugins.koth.adapter.KothHandler.GamemodeRegistry;
 import subside.plugins.koth.adapter.Loot;
-import subside.plugins.koth.adapter.captypes.CappingFaction;
+import subside.plugins.koth.adapter.captypes.CappingFactionNormal;
 import subside.plugins.koth.adapter.captypes.CappingFactionUUID;
 import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.commands.CommandHandler;
@@ -60,7 +60,7 @@ public class KothPlugin extends JavaPlugin {
         CapEntityRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
         cER.registerCaptureType("player", CappingPlayer.class);
         if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
-            cER.registerCaptureType("faction", CappingFaction.class);
+            cER.registerCaptureType("faction", CappingFactionNormal.class);
             cER.registerCaptureType("factionuuid", CappingFactionUUID.class);
         }
     }

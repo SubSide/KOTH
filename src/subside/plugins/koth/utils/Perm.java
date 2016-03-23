@@ -24,7 +24,7 @@ public enum Perm implements IPerm {
 	}
 	
 	public enum Admin implements IPerm {
-	    TP("tp"), CREATE("create"), INFO("info"), EDIT("edit"), REMOVE("remove"), BYPASS("bypass"), HELP("help"), LOOT("loot"), RELOAD("reload"), SCHEDULE("schedule");
+	    TP("tp"), CREATE("create"), INFO("info"), MODE("mode"), EDIT("edit"), REMOVE("remove"), BYPASS("bypass"), HELP("help"), LOOT("loot"), RELOAD("reload"), SCHEDULE("schedule");
 	    
 	    private String perm;
 	    Admin(String perm){
