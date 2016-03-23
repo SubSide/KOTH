@@ -34,6 +34,8 @@ public class CommandHelp implements ICommand {
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth start <koth>").commandInfo("Starts a certain koth").buildArray());
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth stop [koth]").commandInfo("Stops a (specific) koth").buildArray());
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth end [koth]").commandInfo("Gracefully ends a (specific) koth").buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth mode [mode]").commandInfo("change the gamemode").buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth change").commandInfo("Gives control over a running koth").buildArray());
         list.add("");
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH Editor Commands").buildArray());
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth create <koth>").commandInfo("creates a new koth").buildArray());

@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import lombok.Getter;
+import lombok.Setter;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.adapter.captypes.CappingFaction;
 import subside.plugins.koth.utils.MessageBuilder;
@@ -126,7 +127,7 @@ public class KothConquest implements RunningKoth {
     
     public class FactionScore {
         private @Getter CappingFaction faction;
-        private @Getter int score;
+        private @Getter @Setter int score;
         FactionScore(CappingFaction faction){
             this.faction = faction;
             this.score = 0;
