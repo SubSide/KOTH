@@ -20,7 +20,7 @@ public class KothConquest implements RunningKoth {
     private @Getter String lootChest;
 
     private @Getter int maxRunTime;
-    private @Getter int maxScore;
+    private @Getter int maxScore = 100; // TODO
     
     private @Getter List<ConquestArea> areas;
     private @Getter List<FactionScore> fScores;
@@ -53,7 +53,12 @@ public class KothConquest implements RunningKoth {
         for(ConquestArea cArea : areas){
             cArea.update();
         }
-        
+        // TODO
+        System.out.println();
+        for(FactionScore fScore : fScores){
+        	System.out.println(fScore.getFaction().getName()+" "+fScore.getScore());
+        }
+        System.out.println();
         // TODO
     }
 
@@ -79,7 +84,7 @@ public class KothConquest implements RunningKoth {
     
     public FactionScore getFactionScore(CappingFaction faction){
         for(FactionScore score : fScores){
-            if(score.getFaction() == faction){
+            if(score.getFaction().getObject().equals(faction.getObject())){
                 return score;
             }
         }
@@ -96,7 +101,7 @@ public class KothConquest implements RunningKoth {
         private @Getter CapInfo capInfo;
         ConquestArea(KothConquest kC, Area area){
             this.area = area;
-            this.capInfo = new CapInfo(kC, area, true);
+            this.capInfo = new CapInfo(kC, area, true, false);
         }
         
         @Deprecated
@@ -130,7 +135,7 @@ public class KothConquest implements RunningKoth {
         public void addPoint(){
             score++;
             if(score >= maxScore){
-                // TODO
+                System.out.println("GG");
             }
         }
     }

@@ -26,11 +26,21 @@ public class CapInfo {
     private @Getter RunningKoth runningKoth;
     private @Getter Capable captureZone;
     private @Getter boolean useFactions;
+    private boolean sendMessages;
     
-    public CapInfo(RunningKoth runningKoth, Capable captureZone, boolean useFactions){
+    public CapInfo(RunningKoth runningKoth, Capable captureZone, boolean useFactions, boolean sendMessages){
         this.runningKoth = runningKoth;
         this.captureZone = captureZone;
         this.useFactions = useFactions;
+        this.sendMessages = sendMessages;
+    }
+    
+    public CapInfo(RunningKoth runningKoth, Capable captureZone, boolean useFactions){
+    	this(runningKoth, captureZone, false, true);
+    }
+    
+    public CapInfo(RunningKoth runningKoth, Capable captureZone){
+    	this(runningKoth, captureZone, false);
     }
     
     /* Override this if you want to have more control over the capturing
@@ -82,8 +92,8 @@ public class CapInfo {
 //                if (pCapper.isOnline()) {
 //                    new MessageBuilder(Lang.KOTH_PLAYING_LEFT_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(pCapper.getName()).koth(koth).buildAndSend(pCapper.getPlayer());
 //                }
-
-                runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_LEFT)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
+            	if(sendMessages)
+            		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_LEFT)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
                 capper = null;
                 timeCapped = 0;
             } else {
@@ -91,7 +101,6 @@ public class CapInfo {
                 capper = event.getNextCapper();
             }   
         } else {
-        	capper = null;
             List<Player> insideArea = new ArrayList<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (captureZone.isInArea(player)) {
@@ -106,7 +115,6 @@ public class CapInfo {
             Capper capper = getRandomCapper(insideArea);
             if(capper == null)
             	return;
-            
             KothCapEvent event = new KothCapEvent(runningKoth, captureZone, insideArea, capper);
             Bukkit.getServer().getPluginManager().callEvent(event);
 
@@ -114,8 +122,10 @@ public class CapInfo {
                 return;
             }
 
-            capper = event.getNextCapper();
-            runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
+            this.capper = event.getNextCapper();
+            
+        	if(sendMessages)
+        		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
 //            if (Bukkit.getPlayer(cappingPlayer) != null) {
 //                new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP_CAPPER).maxTime(maxRunTime).capper(cappingPlayer).koth(koth).time(getTimeObject()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
 //            }
