@@ -37,6 +37,7 @@ public class Lang {
 	public static String[] KOTH_ERROR_ALREADYRUNNING = new String[]{"&aThe koth %koth% is already running!"};
     public static String[] KOTH_ERROR_ALREADYEXISTS = new String[]{"&aThe koth %koth% already exists!"};
 	public static String[] KOTH_ERROR_NOTEXIST = new String[]{"&aThe koth %koth% doesn't exist!"};
+	public static String[] KOTH_ERROR_NO_COMPATIBLE_CAPPER = new String[]{"This is not a compatible player!" };
 
     public static String[] AREA_ERROR_ALREADYEXISTS = new String[]{"&aThe area %area% already exists!"};
     public static String[] AREA_ERROR_NOTEXIST = new String[]{"&aThe area %area% doesn't exist!"};
@@ -76,6 +77,12 @@ public class Lang {
     public static String[] COMMAND_INFO_TITLE_SCHEDULE = new String[]{"&8========> &2#%id% schedule info &8<========"};
     public static String[] COMMAND_INFO_COLORS = new String[]{"&2", "&a"};
     
+
+    public static String[] COMMAND_MODE_LIST_TITLE = new String[]{"&8========> &2Available Gamemodes &8<========"};
+    public static String[] COMMAND_MODE_LIST_ENTRY = new String[]{"&7- &7%gamemode%"};
+    public static String[] COMMAND_MODE_CHANGED = new String[]{"&aYou succesfully changed the gamemode to: %gamemode%"};
+    public static String[] COMMAND_MODE_NOT_EXIST= new String[]{"&aNo such gamemode exists!"};
+    		
 
     public static String[] COMMAND_EDITOR_AREA_ADDED = new String[]{"&aYou succesfully added the area!"};
     public static String[] COMMAND_EDITOR_AREA_EDITED = new String[]{"&aYou succesfully edited the area!"};

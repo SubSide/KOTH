@@ -17,6 +17,7 @@ public class StartParams {
         private @Getter @Setter boolean isScheduled = false;
         
         public StartParams(String kth){
+        	gamemode = KothHandler.getInstance().getGamemodeRegistry().getCurrentMode();
             if (kth.equalsIgnoreCase("random")) {
                 if (KothHandler.getInstance().getAvailableKoths().size() > 0) {
                     kth = KothHandler.getInstance().getAvailableKoths().get(new Random().nextInt(KothHandler.getInstance().getAvailableKoths().size())).getName();

@@ -98,6 +98,11 @@ public class MessageBuilder {
         return this;
     }
     
+    public MessageBuilder gamemode(String gamemode){
+        message.replaceAll("%gamemode%", gamemode);
+        return this;
+    }
+    
     public MessageBuilder title(String title){
         message.replaceAll("%title%", title);
         return this;

@@ -84,7 +84,7 @@ public class CommandInfo implements ICommand {
         Location lootLoc= koth.getLootPos();
         
         String name = koth.getName();
-        String lastWinner = koth.getLastWinner().getName();
+        String lastWinner = (koth.getLastWinner()!=null)?(koth.getLastWinner().getName()):("None");
         lastWinner = (lastWinner != null && !lastWinner.equalsIgnoreCase(""))?lastWinner:"None";
         String location = "("+loc.getWorld().getName()+", "+loc.getBlockX()+", "+loc.getBlockY()+", "+loc.getBlockZ()+")";
         
