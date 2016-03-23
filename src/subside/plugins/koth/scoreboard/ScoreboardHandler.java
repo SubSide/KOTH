@@ -36,7 +36,7 @@ class ScoreboardHandler {
 		String[] text = textLoader.clone();
 
 		Koth koth = rKoth.getKoth();
-		String player = rKoth.getCapInfo().getCapper().getName();
+		String player = rKoth.getCapInfo().getName();
 
 		scoreboard.setTitle(new MessageBuilder(titleLoader).maxTime(rKoth.getMaxRunTime()).koth(koth).capper(player).time(rKoth.getTimeObject()).build()[0]);
 

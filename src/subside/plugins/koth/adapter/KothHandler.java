@@ -205,6 +205,10 @@ public class KothHandler {
     public void remove(RunningKoth koth){
         synchronized (runningKoths) {
             runningKoths.remove(koth);
+
+            if(runningKoths.size() < 1){
+            	SBManager.getManager().clearAll();
+            }
         }
     }
     

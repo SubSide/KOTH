@@ -9,7 +9,7 @@ import subside.plugins.koth.exceptions.KothNotExistException;
 
 public class StartParams {
         private @Getter @Setter Koth koth;
-        private @Getter @Setter String gamemode;
+        private @Getter @Setter String gamemode = "classic";
         private @Getter @Setter int captureTime = 15*60;
         private @Getter @Setter int maxRunTime = -1;
         private @Getter @Setter int lootAmount = ConfigHandler.getCfgHandler().getLoot().getLootAmount();

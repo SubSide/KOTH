@@ -80,6 +80,7 @@ public class CapInfo {
 //                    new MessageBuilder(Lang.KOTH_PLAYING_LEFT_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(pCapper.getName()).koth(koth).buildAndSend(pCapper.getPlayer());
 //                }
 
+                runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_LEFT)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
                 capper = null;
                 timeCapped = 0;
             } else {
@@ -107,11 +108,19 @@ public class CapInfo {
             }
 
             capper = event.getNextCapper();
-            runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP)).shouldExcludePlayer().buildAndBroadcast();
+            runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
 //            if (Bukkit.getPlayer(cappingPlayer) != null) {
 //                new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP_CAPPER).maxTime(maxRunTime).capper(cappingPlayer).koth(koth).time(getTimeObject()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
 //            }
             // TODO
         }
+    }
+    
+    public String getName(){
+    	if(capper != null){
+    		return capper.getName();
+    	} else {
+    		return "None";
+    	}
     }
 }

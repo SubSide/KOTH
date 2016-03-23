@@ -18,16 +18,16 @@ import subside.plugins.koth.utils.Utils;
 
 public class Lang {
 
-    public static String[] KOTH_PLAYING_WON = new String[]{"&aThe koth %koth% ended! %player% won!"};
+    public static String[] KOTH_PLAYING_WON = new String[]{"&aThe koth %koth% ended! %capper% won!"};
     public static String[] KOTH_PLAYING_WON_DROPPING_ITEMS = new String[]{"&aCouldn't place all items in your inventory! It's on the floor!"};
     public static String[] KOTH_PLAYING_WON_CAPPER = new String[]{"&aThe koth %koth% ended! You won!"};
     public static String[] KOTH_PLAYING_STARTING = new String[]{"&aThe koth %koth% has begun!"};
-    public static String[] KOTH_PLAYING_PLAYERCAP = new String[]{"&a%player% has started to cap %koth%!"};
-    public static String[] KOTH_PLAYING_PLAYERCAP_CAPPER = new String[]{"&aYou have started capping %koth%!"};
-    public static String[] KOTH_PLAYING_CAPTIME = new String[]{"&a%player% is capping the koth! %minutes_left%:%seconds_left% left!"};
+    public static String[] KOTH_PLAYING_CAP_START = new String[]{"&a%capper% has started to cap %koth%!"};
+    public static String[] KOTH_PLAYING_CAP_START_CAPPER = new String[]{"&aYou have started capping %koth%!"};
+    public static String[] KOTH_PLAYING_CAPTIME = new String[]{"&a%capper% is capping the koth! %minutes_left%:%seconds_left% left!"};
     public static String[] KOTH_PLAYING_CAPTIME_CAPPER = new String[]{"&aYou are capping the koth! %minutes_left%:%seconds_left% left!"};
     public static String[] KOTH_PLAYING_NOT_CAPPING = new String[]{"&aThere is nobody capping the KoTH right now! (X: %x%, Z:%z%)" };
-    public static String[] KOTH_PLAYING_LEFT = new String[]{"&a%player% left the koth!"};
+    public static String[] KOTH_PLAYING_LEFT = new String[]{"&a%capper% left the koth!"};
     public static String[] KOTH_PLAYING_LEFT_CAPPER = new String[]{"&aYou left the koth!"};
 	public static String[] KOTH_PLAYING_LOOT_CHEST = new String[]{"&1&l%koth%s &8&lloot"};
     public static String[] KOTH_PLAYING_TIME_UP = new String[]{"&aAfter %maxtime% minute noone capped the KoTH! Event is over!"};

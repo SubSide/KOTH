@@ -16,7 +16,7 @@ import subside.plugins.koth.adapter.TimeObject;
 
 public class MessageBuilder {
     StrObj message;
-    String excluder;
+    String excluder = "";
     boolean shouldExclude;
 
     private class StrObj {
