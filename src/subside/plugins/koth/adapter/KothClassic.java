@@ -104,7 +104,7 @@ public class KothClassic implements RunningKoth {
         if (capInfo.getCapper() != null) {
             timeNotCapped = 0;
             if (capInfo.getTimeCapped() < captureTime) {
-                if (capInfo.getTimeCapped() % 30 == 0) {
+                if (capInfo.getTimeCapped() % 30 == 0 && capInfo.getTimeCapped() != 0) {
                     new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).shouldExcludePlayer().buildAndBroadcast();
 //                    if (Bukkit.getPlayer(cappingPlayer) != null) {
 //                        new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).capper(cappingPlayer).koth(koth).buildAndSend(Bukkit.getPlayer(cappingPlayer));
