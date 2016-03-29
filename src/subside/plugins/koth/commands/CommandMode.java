@@ -1,5 +1,7 @@
 package subside.plugins.koth.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.command.CommandSender;
 
 import subside.plugins.koth.Lang;
@@ -12,21 +14,41 @@ public class CommandMode implements ICommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
-    	if(args.length > 0){
-    		if(KothHandler.getInstance().getGamemodeRegistry().getGamemodes().containsKey(args[0])){
-    			KothHandler.getInstance().getGamemodeRegistry().setCurrentMode(args[0]);
-        		new MessageBuilder(Lang.COMMAND_MODE_CHANGED).gamemode(args[0]).buildAndSend(sender);
-    		} else {
-        		new MessageBuilder(Lang.COMMAND_MODE_NOT_EXIST).gamemode(args[0]).buildAndSend(sender);
-    		}
-    	} else {
-    		new MessageBuilder(Lang.COMMAND_MODE_LIST_TITLE).buildAndSend(sender);
-
-    		for(String gamemode : KothHandler.getInstance().getGamemodeRegistry().getGamemodes().keySet()){
-	    		new MessageBuilder(Lang.COMMAND_MODE_LIST_ENTRY).gamemode(gamemode).buildAndSend(sender);
-    		}
-    	}
+        if(args.length > 0){
+            String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
+            if(args[0].equalsIgnoreCase("gamemode")){
+                gameMode(sender, newArgs);
+                return;
+            } else if(args[0].equalsIgnoreCase("captureType")) {
+            }
+        }
         
+        // TODO show help
+    }
+    
+    public void capureType(CommandSender sender, String[] args){
+        if(args.length > 0){
+            
+        } else {
+            // TODO show list with available capture types
+        }
+    }
+
+    public void gameMode(CommandSender sender, String[] args) {
+        if (args.length > 0) {
+            if (KothHandler.getInstance().getGamemodeRegistry().getGamemodes().containsKey(args[0])) {
+                KothHandler.getInstance().getGamemodeRegistry().setCurrentMode(args[0]);
+                new MessageBuilder(Lang.COMMAND_MODE_CHANGED).gamemode(args[0]).buildAndSend(sender);
+            } else {
+                new MessageBuilder(Lang.COMMAND_MODE_NOT_EXIST).gamemode(args[0]).buildAndSend(sender);
+            }
+        } else {
+            new MessageBuilder(Lang.COMMAND_MODE_LIST_TITLE).buildAndSend(sender);
+
+            for (String gamemode : KothHandler.getInstance().getGamemodeRegistry().getGamemodes().keySet()) {
+                new MessageBuilder(Lang.COMMAND_MODE_LIST_ENTRY).gamemode(gamemode).buildAndSend(sender);
+            }
+        }
     }
 
     @Override
@@ -36,8 +58,8 @@ public class CommandMode implements ICommand {
 
     @Override
     public String[] getCommands() {
-        return new String[]{
-        		"mode"
+        return new String[] {
+                "mode"
         };
     }
 

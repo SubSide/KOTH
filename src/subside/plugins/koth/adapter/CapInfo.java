@@ -10,9 +10,6 @@ import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
-import subside.plugins.koth.adapter.captypes.CappingFactionNormal;
-import subside.plugins.koth.adapter.captypes.CappingFactionUUID;
-import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
 import subside.plugins.koth.exceptions.NoCompatibleCapperException;
@@ -20,27 +17,35 @@ import subside.plugins.koth.utils.MessageBuilder;
 
 public class CapInfo {
     
+    private static @Getter List<Class<? extends Capper>> capTypes = new ArrayList<>();
+    
+    public static void registerCapType(){
+        
+    }
+    
+    
+    
     private @Getter @Setter int timeCapped;
     
     private @Getter @Setter Capper capper;
     private @Getter RunningKoth runningKoth;
     private @Getter Capable captureZone;
-    private @Getter boolean useFactions;
+    private @Getter Class<?> ofType;
     private boolean sendMessages;
     
-    public CapInfo(RunningKoth runningKoth, Capable captureZone, boolean useFactions, boolean sendMessages){
+    public CapInfo(RunningKoth runningKoth, Capable captureZone, Class<?> ofType, boolean sendMessages){
         this.runningKoth = runningKoth;
         this.captureZone = captureZone;
-        this.useFactions = useFactions;
+        this.ofType = ofType;
         this.sendMessages = sendMessages;
     }
     
-    public CapInfo(RunningKoth runningKoth, Capable captureZone, boolean useFactions){
-    	this(runningKoth, captureZone, false, true);
+    public CapInfo(RunningKoth runningKoth, Capable captureZone, Class<?> ofType){
+    	this(runningKoth, captureZone, ofType, true);
     }
     
     public CapInfo(RunningKoth runningKoth, Capable captureZone){
-    	this(runningKoth, captureZone, false);
+    	this(runningKoth, captureZone, null);
     }
     
     /* Override this if you want to have more control over the capturing
@@ -53,18 +58,18 @@ public class CapInfo {
      * 
      */
     public Capper getRandomCapper(List<Player> playerList){
-        if(!useFactions) return new CappingPlayer(playerList);
-        
         try {
-            Class.forName("com.massivecraft.factions.entity.FactionColl");
-            return new CappingFactionNormal(playerList);
-        } catch(ClassNotFoundException e){
-            return new CappingFactionUUID(playerList);
+            for(Class<? extends Capper> clazz : KothHandler.getInstance().getCapEntityRegistry().getCaptureTypes().values()){
+                if(clazz.isInstance(ofType)){
+                    return clazz.getDeclaredConstructor(List.class).newInstance(playerList);
+                }
+            }
         } catch(NoCompatibleCapperException e){
-        	return null;
+            return null;
         } catch(Exception e){
             e.printStackTrace();
         }
+        
         return null;
     }
     

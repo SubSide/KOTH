@@ -11,7 +11,7 @@ import subside.plugins.koth.adapter.Capable;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.exceptions.NoCompatibleCapperException;
 
-public class CappingFactionNormal extends Capper implements CappingFaction {
+public class CappingFactionNormal extends CappingFaction {
 private com.massivecraft.factions.entity.Faction faction;
     
     public CappingFactionNormal(com.massivecraft.factions.entity.Faction faction){
