@@ -62,6 +62,7 @@ public class KothPlugin extends JavaPlugin {
         cER.getCaptureTypes().clear();
         
         cER.registerCaptureType("player", CappingPlayer.class);
+        cER.setPreferedClass(CappingPlayer.class);
         if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
             try {
                 Class.forName("com.massivecraft.factions.entity.FactionColl");
