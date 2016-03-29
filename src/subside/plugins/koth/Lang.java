@@ -79,9 +79,14 @@ public class Lang {
     
 
     public static String[] COMMAND_MODE_LIST_TITLE = new String[]{"&8========> &2Available Gamemodes &8<========"};
-    public static String[] COMMAND_MODE_LIST_ENTRY = new String[]{"&7- &7%gamemode%"};
-    public static String[] COMMAND_MODE_CHANGED = new String[]{"&aYou succesfully changed the gamemode to: %gamemode%"};
-    public static String[] COMMAND_MODE_NOT_EXIST= new String[]{"&aNo such gamemode exists!"};
+    public static String[] COMMAND_MODE_LIST_ENTRY = new String[]{"&7- &7%entry%"};
+    public static String[] COMMAND_MODE_CHANGED = new String[]{"&aYou succesfully changed the gamemode to: %entry%"};
+    public static String[] COMMAND_MODE_NOT_EXIST = new String[]{"&aNo such gamemode exists!"};
+
+    public static String[] COMMAND_ENTITY_LIST_TITLE = new String[]{"&8========> &2Available Capture Entites &8<========"};
+    public static String[] COMMAND_ENTITY_LIST_ENTRY = new String[]{"&7- &7%entry%"};
+    public static String[] COMMAND_ENTITY_CHANGED = new String[]{"&aYou succesfully changed the gamemode to: %entry%"};
+    public static String[] COMMAND_ENTITY_NOT_EXIST = new String[]{"&aNo such capture entity exists!"};
     		
 
     public static String[] COMMAND_EDITOR_AREA_ADDED = new String[]{"&aYou succesfully added the area!"};

@@ -292,7 +292,7 @@ public class KothHandler {
     
     public class CapEntityRegistry {
         private @Getter Map<String, Class<? extends Capper>> captureTypes = new HashMap<>();
-        private @Getter Class<? extends Capper> preferedClazz; // TODO
+        private @Getter @Setter Class<? extends Capper> preferedClass; // TODO
 
         public CapEntityRegistry(){
             captureTypes = new HashMap<>();

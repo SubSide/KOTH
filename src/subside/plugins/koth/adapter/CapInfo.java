@@ -54,11 +54,11 @@ public class CapInfo {
     	this(runningKoth, captureZone, null);
     }
     
-    /* Override this if you want to have more control over the capturing
-     * 
-     */
-    public void onCapture(){
-    }
+//    /* Override this if you want to have more control over the capturing
+//     * 
+//     */
+//    public void onCapture(){
+//    }
     
     /* Override this if you want to use a different type of capper
      * 
