@@ -102,7 +102,7 @@ public class KothConquest implements RunningKoth {
         private @Getter CapInfo capInfo;
         ConquestArea(KothConquest kC, Area area){
             this.area = area;
-            this.capInfo = new CapInfo(kC, area, true, false);
+            this.capInfo = new CapInfo(kC, area, CappingFaction.class, false);
         }
         
         @Deprecated
