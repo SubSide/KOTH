@@ -50,6 +50,7 @@ public class KothPlugin extends JavaPlugin {
     public void register(){
         // Registering the Gamemodes
         GamemodeRegistry gR = KothHandler.getInstance().getGamemodeRegistry();
+        gR.getGamemodes().clear();
         gR.register("classic", KothClassic.class);
         
         if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
@@ -58,10 +59,18 @@ public class KothPlugin extends JavaPlugin {
         
         // Registering the capture entities
         CapEntityRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
+        cER.getCaptureTypes().clear();
+        
         cER.registerCaptureType("player", CappingPlayer.class);
         if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
-            cER.registerCaptureType("faction", CappingFactionNormal.class);
-            cER.registerCaptureType("factionuuid", CappingFactionUUID.class);
+            try {
+                Class.forName("com.massivecraft.factions.entity.FactionColl");
+                cER.registerCaptureType("faction", CappingFactionNormal.class);
+            } catch(ClassNotFoundException e){
+                cER.registerCaptureType("factionuuid", CappingFactionUUID.class);
+            } catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
 

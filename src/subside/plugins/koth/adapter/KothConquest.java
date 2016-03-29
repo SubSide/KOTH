@@ -21,7 +21,7 @@ public class KothConquest implements RunningKoth {
     private @Getter String lootChest;
 
     private @Getter int maxRunTime;
-    private @Getter int maxScore = 100; // TODO
+    private @Getter int maxPoints = 100; // TODO
     
     private @Getter List<ConquestArea> areas;
     private @Getter List<FactionScore> fScores;
@@ -57,7 +57,7 @@ public class KothConquest implements RunningKoth {
         // TODO
         System.out.println();
         for(FactionScore fScore : fScores){
-        	System.out.println(fScore.getFaction().getName()+" "+fScore.getScore());
+        	System.out.println(fScore.getFaction().getName()+" "+fScore.getPoints());
         }
         System.out.println();
         // TODO
@@ -127,15 +127,15 @@ public class KothConquest implements RunningKoth {
     
     public class FactionScore {
         private @Getter CappingFaction faction;
-        private @Getter @Setter int score;
+        private @Getter @Setter int points;
         FactionScore(CappingFaction faction){
             this.faction = faction;
-            this.score = 0;
+            this.points = 0;
         }
         
         public void addPoint(){
-            score++;
-            if(score >= maxScore){
+            points++;
+            if(points >= maxPoints){
                 System.out.println("GG");
             }
         }

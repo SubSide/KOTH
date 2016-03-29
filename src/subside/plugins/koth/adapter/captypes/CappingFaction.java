@@ -8,12 +8,12 @@ import org.bukkit.entity.Player;
 import subside.plugins.koth.adapter.Capable;
 import subside.plugins.koth.adapter.Koth;
 
-public interface CappingFaction {
-	public String getUniqueClassIdentifier();
-    public String getUniqueObjectIdentifier();
-    public boolean isInOrEqualTo(OfflinePlayer oPlayer);
-    public String getName();
-    public Object getObject();
-    public boolean areaCheck(Capable cap);
-    public List<Player> getAvailablePlayers(Koth koth);
+public abstract class CappingFaction extends Capper {
+	public abstract String getUniqueClassIdentifier();
+    public abstract String getUniqueObjectIdentifier();
+    public abstract boolean isInOrEqualTo(OfflinePlayer oPlayer);
+    public abstract String getName();
+    public abstract Object getObject();
+    public abstract boolean areaCheck(Capable cap);
+    public abstract List<Player> getAvailablePlayers(Koth koth);
 }
