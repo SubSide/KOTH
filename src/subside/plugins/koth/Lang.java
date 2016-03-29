@@ -36,8 +36,10 @@ public class Lang {
 	
 	public static String[] KOTH_ERROR_ALREADYRUNNING = new String[]{"&aThe koth %koth% is already running!"};
     public static String[] KOTH_ERROR_ALREADYEXISTS = new String[]{"&aThe koth %koth% already exists!"};
-	public static String[] KOTH_ERROR_NOTEXIST = new String[]{"&aThe koth %koth% doesn't exist!"};
+    public static String[] KOTH_ERROR_NONE_RUNNING = new String[]{"&aThe currently no koth running!"};
+    public static String[] KOTH_ERROR_NOTEXIST = new String[]{"&aThe koth %koth% doesn't exist!"};
 	public static String[] KOTH_ERROR_NO_COMPATIBLE_CAPPER = new String[]{"This is not a compatible player!" };
+    public static String[] KOTH_ERROR_NOT_COMPATIBLE = new String[]{"&aThe current koth is not compatible!"};
 
     public static String[] AREA_ERROR_ALREADYEXISTS = new String[]{"&aThe area %area% already exists!"};
     public static String[] AREA_ERROR_NOTEXIST = new String[]{"&aThe area %area% doesn't exist!"};
@@ -71,6 +73,12 @@ public class Lang {
     public static String[] COMMAND_LOOT_OPENING = new String[]{ "&aOpening %loot%."};
     public static String[] COMMAND_LOOT_REMOVE = new String[]{ "&aSuccesfully removed the loot!"};
     public static String[] COMMAND_LOOT_CHEST_TITLE = new String[]{ "&1&l%loot%s &8&lloot"};
+    
+
+    public static String[] COMMAND_CHANGE_POINTS_SET = new String[]{ "&aPoints of the faction %entry% succesfully set!" };
+    public static String[] COMMAND_CHANGE_POINTS_NOTANUMBER = new String[]{ "&aThis is not a number!" };
+    public static String[] COMMAND_CHANGE_POINTS_FACTION_NOT_FOUND = new String[]{ "&aCan't find a faction with this name!" };
+    
 
     public static String[] COMMAND_INFO_TITLE_KOTH = new String[]{"&8========> &2%koth% koth info &8<========"};
     public static String[] COMMAND_INFO_TITLE_LOOT = new String[]{"&8========> &2%loot% loot info &8<========"};

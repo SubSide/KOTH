@@ -13,7 +13,6 @@ import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
-import subside.plugins.koth.exceptions.NoCompatibleCapperException;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class CapInfo {

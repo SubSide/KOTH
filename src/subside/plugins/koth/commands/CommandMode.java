@@ -10,6 +10,7 @@ import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.KothHandler.CapEntityRegistry;
 import subside.plugins.koth.adapter.KothHandler.GamemodeRegistry;
+import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
@@ -41,9 +42,10 @@ public class CommandMode implements ICommand {
         if(args.length > 0){
             if(cER.getCaptureTypes().containsKey(args[0].toLowerCase())){
                 cER.setPreferedClass(cER.getCaptureTypes().get(args[0].toLowerCase()));
-                new MessageBuilder(Lang.COMMAND_ENTITY_CHANGED).entry(args[0]).buildAndSend(sender);
+
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_ENTITY_CHANGED).entry(args[0]));
             } else {
-                new MessageBuilder(Lang.COMMAND_ENTITY_NOT_EXIST).entry(args[0]).buildAndSend(sender);
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_ENTITY_NOT_EXIST).entry(args[0]));
             }
         } else {
             new MessageBuilder(Lang.COMMAND_ENTITY_LIST_TITLE).buildAndSend(sender);
@@ -59,9 +61,9 @@ public class CommandMode implements ICommand {
         if (args.length > 0) {
             if (gR.getGamemodes().containsKey(args[0].toLowerCase())) {
                 gR.setCurrentMode(args[0]);
-                new MessageBuilder(Lang.COMMAND_MODE_CHANGED).entry(args[0]).buildAndSend(sender);
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_MODE_CHANGED).entry(args[0]));
             } else {
-                new MessageBuilder(Lang.COMMAND_MODE_NOT_EXIST).entry(args[0]).buildAndSend(sender);
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_MODE_NOT_EXIST).entry(args[0]));
             }
         } else {
             new MessageBuilder(Lang.COMMAND_MODE_LIST_TITLE).buildAndSend(sender);
