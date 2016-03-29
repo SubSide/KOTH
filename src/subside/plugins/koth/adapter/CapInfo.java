@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
 import subside.plugins.koth.exceptions.NoCompatibleCapperException;
@@ -30,17 +31,22 @@ public class CapInfo {
     private @Getter @Setter Capper capper;
     private @Getter RunningKoth runningKoth;
     private @Getter Capable captureZone;
-    private @Getter Class<?> ofType;
+    private @Getter Class<? extends Capper> ofType;
     private boolean sendMessages;
     
-    public CapInfo(RunningKoth runningKoth, Capable captureZone, Class<?> ofType, boolean sendMessages){
+    public CapInfo(RunningKoth runningKoth, Capable captureZone, Class<? extends Capper> ofType, boolean sendMessages){
         this.runningKoth = runningKoth;
         this.captureZone = captureZone;
-        this.ofType = ofType;
         this.sendMessages = sendMessages;
+        
+        if(ofType != null){
+            this.ofType = ofType;
+        } else {
+            this.ofType = CappingPlayer.class;
+        }
     }
     
-    public CapInfo(RunningKoth runningKoth, Capable captureZone, Class<?> ofType){
+    public CapInfo(RunningKoth runningKoth, Capable captureZone, Class<? extends Capper> ofType){
     	this(runningKoth, captureZone, ofType, true);
     }
     
@@ -58,19 +64,7 @@ public class CapInfo {
      * 
      */
     public Capper getRandomCapper(List<Player> playerList){
-        try {
-            for(Class<? extends Capper> clazz : KothHandler.getInstance().getCapEntityRegistry().getCaptureTypes().values()){
-                if(clazz.isInstance(ofType)){
-                    return clazz.getDeclaredConstructor(List.class).newInstance(playerList);
-                }
-            }
-        } catch(NoCompatibleCapperException e){
-            return null;
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        
-        return null;
+        return KothHandler.getInstance().getCapEntityRegistry().getCapper(ofType, playerList);
     }
     
     /* Returns true if capper is still on field
