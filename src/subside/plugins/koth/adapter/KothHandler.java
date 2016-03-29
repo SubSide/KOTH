@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import com.google.common.collect.Lists;
 
@@ -21,6 +22,7 @@ import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothNotExistException;
+import subside.plugins.koth.exceptions.NoCompatibleCapperException;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
@@ -309,6 +311,23 @@ public class KothHandler {
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 return null;
             }
+        }
+        
+
+        public Capper getCapper(Class<? extends Capper> capperClazz, List<Player> players){
+            try {
+                for(Class<? extends Capper> clazz : getCaptureTypes().values()){
+                    if(clazz.isInstance(capperClazz)){
+                        return clazz.getDeclaredConstructor(List.class).newInstance(players);
+                    }
+                }
+            } catch(NoCompatibleCapperException e){
+                return null;
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            
+            return null;
         }
     }
 }

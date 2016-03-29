@@ -35,7 +35,7 @@ public class KothClassic implements RunningKoth {
         this.lootAmount = params.getLootAmount();
         
         this.timeNotCapped = 0;
-        this.capInfo = new CapInfo(this, this.koth, ConfigHandler.getCfgHandler().getFactions().isUseFactions());
+        this.capInfo = new CapInfo(this, this.koth);
         this.maxRunTime = maxRunTime * 60;
         koth.removeLootChest();
         koth.setLastWinner(null);
