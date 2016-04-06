@@ -167,10 +167,6 @@ public class Lang {
         	                            field.set(null, new String[]{(String)strObj});
         						    } else {
         						        JSONArray strArray = (JSONArray)strObj;
-        //						        String[] strArray2 = new String[strArray.size()];
-        //						        for(Object strObj2 : strArray){
-        //						            strArray2[]
-        //						        }
         	                            field.set(null, strArray.toArray(new String[strArray.size()]));
         						    }
         						}
