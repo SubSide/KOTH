@@ -26,7 +26,7 @@ import subside.plugins.koth.exceptions.NoCompatibleCapperException;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
-import subside.plugins.koth.scoreboard.SBManager;
+import subside.plugins.koth.scoreboard.ScoreboardManager;
 
 /**
  * @author Thomas "SubSide" van den Bulk
@@ -59,7 +59,7 @@ public class KothHandler {
                 it.next().update();
             }
             if (ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()) {
-                SBManager.getManager().update();
+                ScoreboardManager.getInstance().update();
             }
             ScheduleHandler.getInstance().tick();
         }
@@ -201,7 +201,7 @@ public class KothHandler {
             }
         }
 
-        SBManager.getManager().clearAll();
+        ScoreboardManager.getInstance().destroy();
     }
 
     @Deprecated
@@ -210,7 +210,7 @@ public class KothHandler {
             runningKoths.remove(koth);
 
             if(runningKoths.size() < 1){
-            	SBManager.getManager().clearAll();
+                ScoreboardManager.getInstance().destroy();
             }
         }
     }
@@ -292,7 +292,7 @@ public class KothHandler {
     
     public class CapEntityRegistry {
         private @Getter Map<String, Class<? extends Capper>> captureTypes = new HashMap<>();
-        private @Getter @Setter Class<? extends Capper> preferedClass; // TODO
+        private @Getter @Setter Class<? extends Capper> preferedClass;
 
         public CapEntityRegistry(){
             captureTypes = new HashMap<>();
@@ -317,7 +317,7 @@ public class KothHandler {
         public Capper getCapper(Class<? extends Capper> capperClazz, List<Player> players){
             try {
                 for(Class<? extends Capper> clazz : getCaptureTypes().values()){
-                    if(clazz.isInstance(capperClazz)){
+                    if(capperClazz.isAssignableFrom(clazz)){
                         return clazz.getDeclaredConstructor(List.class).newInstance(players);
                     }
                 }

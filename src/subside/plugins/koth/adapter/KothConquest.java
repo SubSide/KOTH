@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.adapter.captypes.CappingFaction;
+import subside.plugins.koth.scoreboard.ConquestScoreboard;
+import subside.plugins.koth.scoreboard.ScoreboardManager;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
@@ -25,6 +27,8 @@ public class KothConquest implements RunningKoth {
     
     private @Getter List<ConquestArea> areas;
     private @Getter List<FactionScore> fScores;
+    private ConquestScoreboard scoreboard;
+    private int runTime;
 
 
     @Override
@@ -38,6 +42,8 @@ public class KothConquest implements RunningKoth {
         for(Area area : koth.getAreas()){
             areas.add(new ConquestArea(this, area));
         }
+        
+        scoreboard = (ConquestScoreboard)ScoreboardManager.getInstance().loadScoreboard("conquest", this);
     }
 
     /** Get the TimeObject for the running KoTH
@@ -51,15 +57,10 @@ public class KothConquest implements RunningKoth {
     
     @Deprecated
     public void update() {
+        runTime++;
         for(ConquestArea cArea : areas){
             cArea.update();
         }
-        // TODO
-        System.out.println();
-        for(FactionScore fScore : fScores){
-        	System.out.println(fScore.getFaction().getName()+" "+fScore.getPoints());
-        }
-        System.out.println();
         // TODO
     }
 
@@ -125,19 +126,36 @@ public class KothConquest implements RunningKoth {
         }
     }
     
-    public class FactionScore {
+    public class FactionScore implements Comparable<FactionScore> {
         private @Getter CappingFaction faction;
         private @Getter @Setter int points;
+        private int updateTime = 0;
+        private int holdingTime = 0;
         FactionScore(CappingFaction faction){
             this.faction = faction;
             this.points = 0;
         }
         
         public void addPoint(){
-            points++;
-            if(points >= maxPoints){
-                System.out.println("GG");
+            holdingTime++;
+            updateTime++;
+            if(updateTime == runTime){
+                if(holdingTime % 30 == 0){
+                    points++;
+                    scoreboard.getSbObject().setFactionScore(faction.getName(), points);
+                    if(points >= maxPoints){
+                        Bukkit.broadcastMessage("GG");
+                    }
+                }
+            } else {
+                holdingTime = 0;
+                updateTime = runTime;
             }
+        }
+
+        @Override
+        public int compareTo(FactionScore fScore) {
+            return fScore.points - this.points;
         }
     }
     

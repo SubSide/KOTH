@@ -10,21 +10,11 @@ import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
-import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class CapInfo {
-    
-    private static @Getter List<Class<? extends Capper>> capTypes = new ArrayList<>();
-    
-    public static void registerCapType(){
-        
-    }
-    
-    
-    
     private @Getter @Setter int timeCapped;
     
     private @Getter @Setter Capper capper;
@@ -41,7 +31,7 @@ public class CapInfo {
         if(ofType != null){
             this.ofType = ofType;
         } else {
-            this.ofType = CappingPlayer.class;
+            this.ofType = KothHandler.getInstance().getCapEntityRegistry().getPreferedClass();
         }
     }
     

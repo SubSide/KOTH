@@ -29,7 +29,16 @@ koth:
 scoreboard:
   use-scoreboard: true
   use-old-scoreboard: false
-  scoreboard:
+  default:
+    title: "&a&l%koth%"
+    contents:
+      - "&6&lTime Left:"
+      - "&9%minutes_left%:%seconds_left%"
+      - " "
+      - "&6&lCoords:"
+      - "&cX: &e%x%"
+      - "&cZ: &e%z%"
+  conquest:
     title: "&a&l%koth%"
     contents:
       - "&6&lTime Left:"

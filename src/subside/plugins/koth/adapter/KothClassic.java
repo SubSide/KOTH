@@ -7,6 +7,7 @@ import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.events.KothEndEvent;
+import subside.plugins.koth.scoreboard.ScoreboardManager;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
@@ -40,6 +41,8 @@ public class KothClassic implements RunningKoth {
         koth.removeLootChest();
         koth.setLastWinner(null);
         new MessageBuilder(Lang.KOTH_PLAYING_STARTING).maxTime(maxRunTime).time(getTimeObject()).koth(koth).buildAndBroadcast();
+        
+        ScoreboardManager.getInstance().loadScoreboard("default", this);
     }
 
     /**
@@ -128,6 +131,6 @@ public class KothClassic implements RunningKoth {
     }
     
     public MessageBuilder fillMessageBuilder(MessageBuilder mB){
-        return mB.maxTime(maxRunTime).time(getTimeObject()).koth(koth);
+        return mB.maxTime(maxRunTime).time(getTimeObject()).capper(getCapInfo().getName()).koth(koth);
     }
 }
