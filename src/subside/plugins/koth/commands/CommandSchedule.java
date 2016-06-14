@@ -292,7 +292,8 @@ public class CommandSchedule implements ICommand {
     @Override
     public String[] getCommands() {
         return new String[] {
-            "schedule"
+            "schedule",
+            "time"
         };
     }
 

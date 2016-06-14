@@ -56,11 +56,11 @@ public class KothClassic implements RunningKoth {
     public void endKoth(EndReason reason) {
         if (reason == EndReason.WON || reason == EndReason.GRACEFUL) {
             if (capInfo.getCapper() != null) {
-                new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).shouldExcludePlayer().buildAndBroadcast();
+                new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth)/*.shouldExcludePlayer()*/.buildAndBroadcast();
 //                if (Bukkit.getPlayer(cappingPlayer) != null) {
 //                    new MessageBuilder(Lang.KOTH_PLAYING_WON_CAPPER).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(Bukkit.getPlayer(cappingPlayer));
 //                }
-                // TODO
+                // TO-DO
 
                 KothEndEvent event = new KothEndEvent(koth, capInfo.getCapper());
                 Bukkit.getServer().getPluginManager().callEvent(event);
@@ -108,11 +108,11 @@ public class KothClassic implements RunningKoth {
             timeNotCapped = 0;
             if (capInfo.getTimeCapped() < captureTime) {
                 if (capInfo.getTimeCapped() % 30 == 0 && capInfo.getTimeCapped() != 0) {
-                    new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).shouldExcludePlayer().buildAndBroadcast();
+                    new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth)/*.shouldExcludePlayer()*/.buildAndBroadcast();
 //                    if (Bukkit.getPlayer(cappingPlayer) != null) {
 //                        new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).capper(cappingPlayer).koth(koth).buildAndSend(Bukkit.getPlayer(cappingPlayer));
 //                    }
-                    // TODO
+                    // TO-DO
                 }
             } else {
                 endKoth(EndReason.WON);

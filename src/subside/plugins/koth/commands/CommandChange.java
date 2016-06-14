@@ -74,7 +74,7 @@ public class CommandChange implements ICommand {
                 for (FactionScore fScore : kothCQ.getFScores()) {
                     if (fScore.getFaction().getName().equalsIgnoreCase(args[1])) {
                         try {
-                            fScore.setPoints(Integer.parseInt(args[2])); // TODO check integer
+                            fScore.setPoints(Integer.parseInt(args[2]));
                             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_SET).entry(fScore.getFaction().getName()));
                         } catch(Exception e){
                             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_NOTANUMBER));

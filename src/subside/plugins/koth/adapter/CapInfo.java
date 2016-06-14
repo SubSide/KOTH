@@ -113,11 +113,11 @@ public class CapInfo {
             this.capper = event.getNextCapper();
             
         	if(sendMessages)
-        		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
+        		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName())/*.shouldExcludePlayer()*/.buildAndBroadcast();
 //            if (Bukkit.getPlayer(cappingPlayer) != null) {
 //                new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP_CAPPER).maxTime(maxRunTime).capper(cappingPlayer).koth(koth).time(getTimeObject()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
 //            }
-            // TODO
+            // TO-DO
         }
     }
     

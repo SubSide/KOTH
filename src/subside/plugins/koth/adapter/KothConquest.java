@@ -33,7 +33,6 @@ public class KothConquest implements RunningKoth {
 
     @Override
     public void init(StartParams params) {
-        // TODO
         this.koth = params.getKoth();
         
         areas = new ArrayList<>();
@@ -61,7 +60,6 @@ public class KothConquest implements RunningKoth {
         for(ConquestArea cArea : areas){
             cArea.update();
         }
-        // TODO
     }
 
     @Override
@@ -160,7 +158,6 @@ public class KothConquest implements RunningKoth {
     }
     
     public MessageBuilder fillMessageBuilder(MessageBuilder mB){
-    	// TODO
         return mB.maxTime(maxRunTime).koth(koth);
     }
 }
