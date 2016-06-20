@@ -42,21 +42,17 @@ public class CapInfo {
     public CapInfo(RunningKoth runningKoth, Capable captureZone){
     	this(runningKoth, captureZone, null);
     }
+
     
-//    /* Override this if you want to have more control over the capturing
-//     * 
-//     */
-//    public void onCapture(){
-//    }
-    
-    /* Override this if you want to use a different type of capper
-     * 
+    /** Override this if you want to use a different type of capper
+     * @param playerList a list of players to choose from
+     * @return the correct capper type
      */
     public Capper getRandomCapper(List<Player> playerList){
         return KothHandler.getInstance().getCapEntityRegistry().getCapper(ofType, playerList);
     }
     
-    /* Returns true if capper is still on field
+    /** Gets updated every single tick
      * 
      */
     public void update(){
@@ -121,6 +117,9 @@ public class CapInfo {
         }
     }
     
+    /**
+     * @return the name of the object (Playername for players, Factionname for factions)
+     */
     public String getName(){
     	if(capper != null && capper.getObject() != null){
     		return capper.getName();

@@ -45,8 +45,12 @@ public class EventListener implements Listener {
                     event.setCancelled(true);
                 }
                 Bukkit.getServer().getPluginManager().callEvent(event);
-
-                e.setCancelled(event.isCancelled());
+                if(!event.isCancelled()){
+                    e.setCancelled(false);
+                    return;
+                }
+                
+                e.setCancelled(true);
 
             }
 

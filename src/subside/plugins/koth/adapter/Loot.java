@@ -36,18 +36,6 @@ public class Loot {
         if (title.length() > 32) title = title.substring(0, 32);
         return title;
     }
-    
-//    public static String getKothLootTitle(String koth){
-//        String title = new MessageBuilder(Lang.KOTH_PLAYING_LOOT_CHEST).koth(koth).build()[0];
-//        if (title.length() > 32) title = title.substring(0, 32);
-//        return title;
-//    }
-//    
-//    public Inventory getInventory(String koth){
-//        Inventory inv = Bukkit.createInventory(null, 54, getKothLootTitle(koth));
-//        inv.setContents(inventory.getContents());
-//        return inv;
-//    }
 
     @Deprecated
     public static Loot load(JSONObject obj) {
