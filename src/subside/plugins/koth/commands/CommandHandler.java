@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.utils.Utils;
 
 public class CommandHandler implements CommandExecutor {
 
@@ -35,6 +36,7 @@ public class CommandHandler implements CommandExecutor {
         commands.add(new CommandTp());
         commands.add(new CommandMode());
         commands.add(new CommandChange());
+        commands.add(new CommandIgnore());
         
         fallback = new CommandHelp();
         commands.add(fallback);
@@ -72,9 +74,7 @@ public class CommandHandler implements CommandExecutor {
                 throw new CommandMessageException(Lang.COMMAND_GLOBAL_NO_PERMISSION);
             }
         } catch(CommandMessageException e){
-            for(String msg : e.getMsg()){
-                sender.sendMessage(msg);
-            }
+            Utils.sendMsg(sender, (Object[])e.getMsg());
         }
 
         return true;

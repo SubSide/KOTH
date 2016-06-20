@@ -88,7 +88,7 @@ public class CommandSchedule implements ICommand {
                     create(sender, args);
                 } catch(CommandMessageException e){
                     for(String msg : e.getMsg()){
-                        sender.sendMessage(msg);
+                        Utils.sendMsg(sender, msg);
                     }
                 }
             }

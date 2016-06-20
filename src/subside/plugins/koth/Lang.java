@@ -55,6 +55,9 @@ public class Lang {
     public static String[] COMMAND_GLOBAL_HELP_TITLE = new String[]{"&8========> &2%title% &8<========"};
     public static String[] COMMAND_GLOBAL_HELP_INFO = new String[]{"&a%command% &7%command_info%"};
 
+    public static String[] COMMAND_IGNORE_START = new String[]{ "&aChat messages from &2KoTH &aare now ignored." };
+    public static String[] COMMAND_IGNORE_STOP = new String[]{ "&aChat messages from &2KoTH &aare now shown." };
+
     public static String[] COMMAND_RELOAD_RELOAD = new String[]{"&aKoth &2>> &aReload complete"};
 
     public static String[] COMMAND_TELEPORT_TELEPORTING = new String[]{"&aTeleporting to %koth%!"};

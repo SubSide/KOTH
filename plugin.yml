@@ -21,8 +21,12 @@ permissions:
       koth.loot: true
       koth.schedule: true
       koth.version: true
+      koth.ignore: true
   koth.help:
     description: Gives the player permissions to /koth (help)
+    default: true
+  koth.ignore:
+    description: Allows you to ignore the chat messages
     default: true
   koth.list:
     description: Gives the player permissions to /koth list

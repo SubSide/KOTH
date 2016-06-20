@@ -191,7 +191,7 @@ public class MessageBuilder {
 
             for (int x = 0; x < msg.length; x++) {
                 if(!msg[x].equalsIgnoreCase("")){
-                    player.sendMessage(msg[x]);
+                    Utils.sendMsg(player, msg[x]);
                 }
             }
         }
@@ -199,12 +199,7 @@ public class MessageBuilder {
     }
 
     public void buildAndSend(CommandSender player) {
-        String[] msg = build();
-        for (int x = 0; x < msg.length; x++) {
-            if(!msg[x].equalsIgnoreCase("")){
-                player.sendMessage(msg[x]);
-            }
-        }
+        Utils.sendMsg(player, (Object[])build());
     }
 
     public String[] build() {
