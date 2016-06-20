@@ -34,24 +34,27 @@ public class EventListener implements Listener {
         Chest chest = (Chest) e.getInventory().getHolder();
         Location loc = chest.getLocation();
         for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
-            Location vec = koth.getLootPos();
-            if (vec == null) continue;
-
-            if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
-
-                KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
-                event.setCancelled(false);
-                if (!koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer()) && !Perm.Admin.BYPASS.has((Player) e.getPlayer())) {
-                    event.setCancelled(true);
+            try {
+                Location vec = koth.getLootPos();
+                if (vec == null) continue;
+    
+                if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
+    
+                    KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
+                    event.setCancelled(false);
+                    if ((koth.getLastWinner() == null || !koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer())) && !Perm.Admin.BYPASS.has((Player) e.getPlayer())) {
+                        event.setCancelled(true);
+                    }
+                    Bukkit.getServer().getPluginManager().callEvent(event);
+                    if(!event.isCancelled()){
+                        e.setCancelled(false);
+                        return;
+                    }
+                    
+                    e.setCancelled(true);
                 }
-                Bukkit.getServer().getPluginManager().callEvent(event);
-                if(!event.isCancelled()){
-                    e.setCancelled(false);
-                    return;
-                }
-                
-                e.setCancelled(true);
-
+            } catch(Exception ex){
+                ex.printStackTrace();
             }
 
         }
