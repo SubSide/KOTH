@@ -30,14 +30,27 @@ public class KothPlugin extends JavaPlugin {
 	private @Getter static KothPlugin plugin;
 	private @Getter static WorldEditPlugin worldEdit;
 	
+	
+	// Loaded on server startup (Not to be confused with enable)
+	//
+	// I added this to onLoad so other plugins can hook easier into the plugin
+	// if they want to register their own entities and such.
 	@Override
 	public void onLoad(){
         plugin = this;
+        
+        // Initialize the KoTH main class
         new KothHandler();
+        
+        // load configs
         this.saveDefaultConfig();
         this.reloadConfig();
         new ConfigHandler(this.getConfig());
+        
+        // Load the lang.json
         Lang.load(this);
+        
+        // Register the gamemodes, entities, and scoreboards
         register();
 	}
 	
@@ -50,27 +63,32 @@ public class KothPlugin extends JavaPlugin {
 
     
     public void register(){
-        // Registering the Gamemodes
+        // Registering the Gamemodes //
         GamemodeRegistry gR = KothHandler.getInstance().getGamemodeRegistry();
+        
         gR.getGamemodes().clear();
         gR.register("classic", KothClassic.class);
         
         if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
+            // Add conquest if factions is enabled in the config
             gR.register("conquest", KothConquest.class);
         }
         
-        // Registering the capture entities
+        // Registering the capture entities //
         CapEntityRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
         cER.getCaptureTypes().clear();
         
+        // Add the player entity
         cER.registerCaptureType("player", CappingPlayer.class);
         cER.setPreferedClass(CappingPlayer.class);
         if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
             try {
+                // If this class is not found it means that Factions is not in the server
                 Class.forName("com.massivecraft.factions.entity.FactionColl");
                 cER.registerCaptureType("faction", CappingFactionNormal.class);
                 cER.setPreferedClass(CappingFactionNormal.class);
             } catch(ClassNotFoundException e){
+                // So if the class is not found, we add FactionsUUID instead
                 cER.registerCaptureType("factionuuid", CappingFactionUUID.class);;
                 cER.setPreferedClass(CappingFactionUUID.class);
             } catch(Exception e){
@@ -79,7 +97,7 @@ public class KothPlugin extends JavaPlugin {
         }
         
 
-
+        // Registering the scoreboards //
         new ScoreboardManager();
         if(ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()){
             if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
@@ -95,16 +113,19 @@ public class KothPlugin extends JavaPlugin {
 
     @SuppressWarnings("deprecation")
 	public void init(){
-        
+        // Remove all previous event handlers
         HandlerList.unregisterAll(this);
+        // Remove all previous schedulings
         Bukkit.getScheduler().cancelTasks(this);
         
+        // Register all events
         getServer().getPluginManager().registerEvents(new EventListener(), this);
-        
+        // Register scoreboard events (PlayerJoin, playerQuit for setting and removing the scoreboard)
         if(ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()){
             getServer().getPluginManager().registerEvents(ScoreboardManager.getInstance(), this);
         }
         
+        // Add a repeating ASYNC scheduler for the KothHandler
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
             public void run() {
                 KothHandler.getInstance().update();
@@ -112,8 +133,7 @@ public class KothPlugin extends JavaPlugin {
         }, 20, 20);
         
         
-        // LOADING
-
+        // All the standard loading
         KothHandler.getInstance().stopAllKoths();
         KothLoader.load();
         LootLoader.load();
@@ -122,21 +142,19 @@ public class KothPlugin extends JavaPlugin {
     
 	@Override
 	public void onDisable() {
+	    // Remove the scoreboard from all the players
 		ScoreboardManager.getInstance().destroy();
 		
+		// Make sure that nobody is viewing a loot chest
+		// This is important because otherwise people could take stuff out of the viewing loot chest
         for(Player player : Bukkit.getOnlinePlayers()){
             String title = player.getOpenInventory().getTitle();
             for(Loot loot : KothHandler.getInstance().getLoots()){
                 if(loot.getInventory().getTitle().equalsIgnoreCase(title)){
                     player.closeInventory();
+                    break; // No need to close the players inventory more than once!
                 }
             }
-            
-//            for(Koth koth : KothHandler.getInstance().getAvailableKoths()){
-//                if(Loot.getKothLootTitle(koth.getName()).equalsIgnoreCase(title)){
-//                    player.closeInventory();
-//                }
-//            }
         }
 	}
     

@@ -1,6 +1,7 @@
 package subside.plugins.koth.adapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -9,7 +10,9 @@ import org.bukkit.entity.Player;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.CappingFaction;
+import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.scoreboard.ConquestScoreboard;
 import subside.plugins.koth.scoreboard.ScoreboardManager;
 import subside.plugins.koth.utils.MessageBuilder;
@@ -21,6 +24,7 @@ import subside.plugins.koth.utils.MessageBuilder;
 public class KothConquest implements RunningKoth {
     private @Getter Koth koth;
     private @Getter String lootChest;
+    private @Getter int lootAmount;
 
     private @Getter int maxRunTime;
     private @Getter int maxPoints = 100; // TODO
@@ -34,6 +38,7 @@ public class KothConquest implements RunningKoth {
     @Override
     public void init(StartParams params) {
         this.koth = params.getKoth();
+        this.lootAmount = params.getLootAmount();
         
         areas = new ArrayList<>();
         fScores = new ArrayList<>();
@@ -65,7 +70,28 @@ public class KothConquest implements RunningKoth {
     @Override
     public void endKoth(EndReason reason) {
         if (reason == EndReason.WON || reason == EndReason.GRACEFUL) {
-            // TODO
+            Arrays.sort(fScores.toArray());
+            CappingFaction faction = fScores.get(fScores.size()-1).getFaction();
+            
+            if (faction != null) {
+                new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).capper(faction.getName()).koth(koth)/*.shouldExcludePlayer()*/.buildAndBroadcast();
+//                if (Bukkit.getPlayer(cappingPlayer) != null) {
+//                    new MessageBuilder(Lang.KOTH_PLAYING_WON_CAPPER).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(Bukkit.getPlayer(cappingPlayer));
+//                }
+                // TO-DO
+
+                KothEndEvent event = new KothEndEvent(koth, faction);
+                Bukkit.getServer().getPluginManager().callEvent(event);
+
+                koth.setLastWinner(faction);
+                if (event.isCreatingChest()) {
+                    Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
+                        public void run() {
+                            koth.createLootChest(lootAmount, lootChest);
+                        }
+                    });
+                }
+            }
         } else if (reason == EndReason.TIMEUP) {
             // TODO
         }

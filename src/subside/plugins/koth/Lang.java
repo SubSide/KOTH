@@ -24,13 +24,13 @@ public class Lang {
     public static String[] KOTH_PLAYING_STARTING = new String[]{"&aThe koth %koth% has begun!"};
     public static String[] KOTH_PLAYING_CAP_START = new String[]{"&a%capper% has started to cap %koth%!"};
     public static String[] KOTH_PLAYING_CAP_START_CAPPER = new String[]{"&aYou have started capping %koth%!"};
-    public static String[] KOTH_PLAYING_CAPTIME = new String[]{"&a%capper% is capping the koth! %minutes_left%:%seconds_left% left!"};
-    public static String[] KOTH_PLAYING_CAPTIME_CAPPER = new String[]{"&aYou are capping the koth! %minutes_left%:%seconds_left% left!"};
+    public static String[] KOTH_PLAYING_CAPTIME = new String[]{"&a%capper% is capping the koth! %ml%:%sl% left!"};
+    public static String[] KOTH_PLAYING_CAPTIME_CAPPER = new String[]{"&aYou are capping the koth! %ml%:%sl% left!"};
     public static String[] KOTH_PLAYING_NOT_CAPPING = new String[]{"&aThere is nobody capping the KoTH right now! (X: %x%, Z:%z%)" };
     public static String[] KOTH_PLAYING_LEFT = new String[]{"&a%capper% left the koth!"};
     public static String[] KOTH_PLAYING_LEFT_CAPPER = new String[]{"&aYou left the koth!"};
 	public static String[] KOTH_PLAYING_LOOT_CHEST = new String[]{"&1&l%koth%s &8&lloot"};
-    public static String[] KOTH_PLAYING_TIME_UP = new String[]{"&aAfter %maxtime% minute noone capped the KoTH! Event is over!"};
+    public static String[] KOTH_PLAYING_TIME_UP = new String[]{"&aAfter %mt% minute noone capped the KoTH! Event is over!"};
     
     public static String[] KOTH_PLAYING_PRE_BROADCAST = new String[]{"&aThe koth %koth% will start in 30 minutes!"};
 	
@@ -113,7 +113,7 @@ public class Lang {
 	public static String[] COMMAND_KOTH_REMOVED = new String[]{"&aYou've successfully removed the koth %koth%!"};
 	public static String[] COMMAND_KOTH_ALREADYEXISTS = new String[]{"&aThe koth %koth% already exists!"};
 
-	public static String[] COMMAND_SCHEDULE_CREATED = new String[]{"&aYou have created a schedule for %koth% on %day% at %time% (Capture time: %capturetime% minutes)!"};
+	public static String[] COMMAND_SCHEDULE_CREATED = new String[]{"&aYou have created a schedule for %koth% on %day% at %time% (Capture time: %ct% minutes)!"};
 	public static String[] COMMAND_SCHEDULE_NOVALIDDAY = new String[]{"&aThis is not a valid day! (monday, tuesday etc)"};
 	public static String[] COMMAND_SCHEDULE_REMOVED = new String[]{"&aThe schedule for %koth% is removed."};
 	public static String[] COMMAND_SCHEDULE_NOTEXIST = new String[]{"&aThis schedule doesn't exist! (Check /koth schedule list for numbers)"};
@@ -126,7 +126,7 @@ public class Lang {
 	public static String[] COMMAND_SCHEDULE_LIST_ENTRY = new String[]{"&a%koth% at %time%"};
 	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME = new String[]{"&aCurrent date: %date%"};
 	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_DAY = new String[]{"&8========> &2%day% &8<========"};
-	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_ENTRY = new String[]{"&a(#%id%) %koth% at %time% with a capture time of %capturetime%"};
+	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_ENTRY = new String[]{"&a(#%id%) %koth% at %time% with a capture time of %ct%"};
 	public static String[] COMMAND_SCHEDULE_ADMIN_EMPTY = new String[]{"&aThe schedule list is currently empty!"};
 
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_KOTH = new String[]{"&aYou changed the koth for #%id% to %koth"};
@@ -157,25 +157,36 @@ public class Lang {
 			Field[] fields = Lang.class.getFields();
 			for (Field field : fields) {
 				try {
-					if (Modifier.isStatic(field.getModifiers())) {
-					    String[] fieldName = field.getName().split("_", 3);
-					    if(jsonObject2.containsKey(fieldName[0])){
-					        JSONObject jsonObject3 = (JSONObject)jsonObject2.get(fieldName[0]);
-					        if(jsonObject3.containsKey(fieldName[1])){
-					            JSONObject jsonObject = (JSONObject)jsonObject3.get(fieldName[1]);
-        						if(jsonObject.containsKey(fieldName[2])){
-        						    Object strObj = jsonObject.get(fieldName[2]);
-        						    
-        						    if(strObj instanceof String){
-        	                            field.set(null, new String[]{(String)strObj});
-        						    } else {
-        						        JSONArray strArray = (JSONArray)strObj;
-        	                            field.set(null, strArray.toArray(new String[strArray.size()]));
-        						    }
-        						}
-					        }
-					    }
-					}
+					if (!Modifier.isStatic(field.getModifiers()))
+					    continue;
+					
+					// This is just to check if it is able to find the JSON Object in the file //
+				    String[] fieldName = field.getName().split("_", 3);
+				    if(!jsonObject2.containsKey(fieldName[0]))
+				        continue;
+				    
+				    JSONObject jsonObject3 = (JSONObject)jsonObject2.get(fieldName[0]);
+				    if(!jsonObject3.containsKey(fieldName[1]))
+			            continue;
+				    
+			        JSONObject jsonObject = (JSONObject)jsonObject3.get(fieldName[1]);
+					if(!jsonObject.containsKey(fieldName[2]))
+			            continue;
+			        
+				    Object strObj = jsonObject.get(fieldName[2]);
+				    // //
+				    
+				    
+				    if(strObj instanceof String){
+                        field.set(null, new String[]{(String)strObj});
+				    } else {
+				        JSONArray strArray = (JSONArray)strObj;
+                        field.set(null, strArray.toArray(new String[strArray.size()]));
+				    }
+					
+			        
+				    
+					
 				}
 				catch (Exception e) {
 					e.printStackTrace();
@@ -205,36 +216,39 @@ public class Lang {
 
 			Field[] fields = Lang.class.getFields();
 			for (Field field : fields) {
-				if (Modifier.isStatic(field.getModifiers())) {
-				    String[] fieldName = field.getName().split("_", 3);
-				    JSONObject obj2 = new JSONObject();
-				    if(obj.containsKey(fieldName[0])){
-				        obj2 = (JSONObject)obj.get(fieldName[0]);
-				    }
-				    
-				    JSONObject obj3 = new JSONObject();
-				    if(obj2.containsKey(fieldName[1])){
-				        obj3 = (JSONObject)obj2.get(fieldName[1]);
-				    }
-				    
-				    
-				    String[] strObj = (String[])field.get(null);
-				    if(strObj.length > 1){
-				        JSONArray obj4 = new JSONArray();
-				        String[] fieldObj = (String[])field.get(null);
-				        for(String str : fieldObj){
-				            obj4.add(str);
-				        }
-	                    obj3.put(fieldName[2], obj4);
-				    } else if(strObj.length == 1) {
-				        obj3.put(fieldName[2], strObj[0]);
-				    } else {
-				        obj3.put(fieldName[2], new String[]{});
-				    }
-				    
-				    obj2.put(fieldName[1], obj3);
-				    obj.put(fieldName[0], obj2);
+				if (!Modifier.isStatic(field.getModifiers())) {
+				    continue;
 				}
+				
+			    String[] fieldName = field.getName().split("_", 3);
+			    JSONObject obj2 = new JSONObject();
+			    if(obj.containsKey(fieldName[0])){
+			        obj2 = (JSONObject)obj.get(fieldName[0]);
+			    }
+			    
+			    JSONObject obj3 = new JSONObject();
+			    if(obj2.containsKey(fieldName[1])){
+			        obj3 = (JSONObject)obj2.get(fieldName[1]);
+			    }
+			    
+			    
+			    String[] strObj = (String[])field.get(null);
+			    if(strObj.length > 1){
+			        JSONArray obj4 = new JSONArray();
+			        String[] fieldObj = (String[])field.get(null);
+			        for(String str : fieldObj){
+			            obj4.add(str);
+			        }
+                    obj3.put(fieldName[2], obj4);
+			    } else if(strObj.length == 1) {
+			        obj3.put(fieldName[2], strObj[0]);
+			    } else {
+			        obj3.put(fieldName[2], new String[]{});
+			    }
+			    
+			    obj2.put(fieldName[1], obj3);
+			    obj.put(fieldName[0], obj2);
+				
 			}
 
 			FileOutputStream fileStream = new FileOutputStream(new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json"));
