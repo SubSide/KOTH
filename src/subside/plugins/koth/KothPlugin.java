@@ -79,9 +79,9 @@ public class KothPlugin extends JavaPlugin {
         }
         
 
-        
+
+        new ScoreboardManager();
         if(ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()){
-            new ScoreboardManager();
             if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
                 ScoreboardManager.getInstance().registerScoreboard("conquest", ConquestScoreboard.class);
             }

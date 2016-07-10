@@ -31,7 +31,7 @@ public class ScoreboardManager implements Listener {
     }
     
     public AbstractScoreboard loadScoreboard(String name, RunningKoth koth){
-        if(currentScoreboard != null){
+        if(currentScoreboard != null || !ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()){
             return null;
         }
         try {
