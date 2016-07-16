@@ -33,7 +33,7 @@ scoreboard:
     title: "&a&l%koth%"
     contents:
       - "&6&lTime Left:"
-      - "&9%minutes_left%:%seconds_left%"
+      - "&9%ml%:%sl%"
       - " "
       - "&6&lCoords:"
       - "&cX: &e%x%"
@@ -42,7 +42,7 @@ scoreboard:
     title: "&a&l%koth%"
     contents:
       - "&6&lTime Left:"
-      - "&9%minutes_left%:%seconds_left%"
+      - "&9%ml%:%sl%"
       - " "
       - "&6&lCoords:"
       - "&cX: &e%x%"
