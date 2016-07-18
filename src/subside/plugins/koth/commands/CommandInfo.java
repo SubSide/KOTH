@@ -88,12 +88,11 @@ public class CommandInfo implements ICommand {
         lastWinner = (lastWinner != null && !lastWinner.equalsIgnoreCase(""))?lastWinner:"None";
         String location = "("+loc.getWorld().getName()+", "+loc.getBlockX()+", "+loc.getBlockY()+", "+loc.getBlockZ()+")";
         
-        String linkedLoot = "None";
+        String linkedLoot = (koth.getLoot() != null)?koth.getLoot():"None";
+        
         String lootLocation = "(?, ?, ?)";
-        if(koth.getLoot() != null){
-            linkedLoot = koth.getLoot();
+        if(lootLoc != null)
             lootLocation = "("+lootLoc.getWorld().getName()+", "+lootLoc.getBlockX()+", "+lootLoc.getBlockY()+", "+lootLoc.getBlockZ()+")";
-        }
         
         String areas = "";
         for(Area area : koth.getAreas()){
