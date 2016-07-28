@@ -28,6 +28,9 @@ public class MessageBuilder {
             } else {
                 this.message = message.clone();
             }
+            
+            // static calls
+            replaceAll("%ttn%", TimeObject.getTimeTillNextEvent());
         }
 
         protected StrObj replaceAll(String search, String replace) {

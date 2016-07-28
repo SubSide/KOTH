@@ -1,5 +1,8 @@
 package subside.plugins.koth.adapter;
 
+import subside.plugins.koth.scheduler.Schedule;
+import subside.plugins.koth.scheduler.ScheduleHandler;
+
 /**
  * @author Thomas "SubSide" van den Bulk
  *
@@ -55,5 +58,32 @@ public class TimeObject {
     
     public int getLengthInSeconds(){
         return captureTime;
+    }
+    
+    
+    // Time till next event (static)
+    public static String getTimeTillNextEvent(){
+        if(KothHandler.getInstance().getRunningKoth() != null){
+            return "00:00:00";
+        }
+        
+        Schedule schedule = ScheduleHandler.getInstance().getNextEvent();
+        if(schedule == null){
+            return "--:--:--";
+        }
+        
+        long timeTillNext = schedule.getNextEvent() - System.currentTimeMillis();
+        
+        long secs = timeTillNext%60;
+        timeTillNext /= 60;
+        
+        long mins = timeTillNext%60;
+        timeTillNext /= 60;
+        
+        long hours = timeTillNext;
+        
+        String time = String.format("%02d", hours)+":"+String.format("%02d", mins)+":"+String.format("%02d", secs);
+        
+        return time;
     }
 }
