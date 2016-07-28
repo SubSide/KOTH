@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import lombok.Getter;
+import subside.plugins.koth.hooks.plugins.VanishHook;
 
 public class HookManager {
     private static @Getter HookManager hookManager;
@@ -27,6 +28,7 @@ public class HookManager {
     
     public boolean canCap(Player player){
         for(IHook hook : hooks){
+            if(!hook.isEnabled()) continue;
             if(!hook.canCap(player)) return false;
         }
         

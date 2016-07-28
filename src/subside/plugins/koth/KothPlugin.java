@@ -43,9 +43,6 @@ public class KothPlugin extends JavaPlugin {
         // Initialize the KoTH main class
         new KothHandler();
         
-        // Load all the hooks
-        new HookManager();
-        
         // load configs
         this.saveDefaultConfig();
         this.reloadConfig();
@@ -63,6 +60,9 @@ public class KothPlugin extends JavaPlugin {
 		worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
 		getCommand("koth").setExecutor(new CommandHandler(this));
         init();
+        
+        // Load all the hooks
+        new HookManager();
 	}
 
     

@@ -148,6 +148,10 @@ public class Utils {
         return t;
     }
     
+    public static void log(String log){
+        KothPlugin.getPlugin().getLogger().info("KoTH - "+log);
+    }
+    
     public static Location getLocFromObject(JSONObject loc) {
         return new Location(Bukkit.getWorld((String)loc.get("world")), (int)(long)loc.get("x"), (int)(long)loc.get("y"), (int)(long)loc.get("z"));
     }
