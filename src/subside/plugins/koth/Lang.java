@@ -116,7 +116,8 @@ public class Lang {
 	public static String[] COMMAND_SCHEDULE_CREATED = new String[]{"&aYou have created a schedule for %koth% on %day% at %time% (Capture time: %ct% minutes)!"};
 	public static String[] COMMAND_SCHEDULE_NOVALIDDAY = new String[]{"&aThis is not a valid day! (monday, tuesday etc)"};
 	public static String[] COMMAND_SCHEDULE_REMOVED = new String[]{"&aThe schedule for %koth% is removed."};
-	public static String[] COMMAND_SCHEDULE_NOTEXIST = new String[]{"&aThis schedule doesn't exist! (Check /koth schedule list for numbers)"};
+    public static String[] COMMAND_SCHEDULE_NOTEXIST = new String[]{"&aThis schedule doesn't exist! (Check /koth schedule list for numbers)"};
+    public static String[] COMMAND_SCHEDULE_CLEARED = new String[]{"&aThe schedule list has been cleared!"};
 	public static String[] COMMAND_SCHEDULE_REMOVENOID = new String[]{"&aThe ID must be a number! (Shown in /koth schedule list)"};
 	public static String[] COMMAND_SCHEDULE_EMPTY = new String[]{"&aThe server owner did not schedule any Koths!"};
     public static String[] COMMAND_SCHEDULE_NOTANUMBER = new String[]{"&aThis is not a valid number!"};

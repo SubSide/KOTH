@@ -42,12 +42,20 @@ public class CommandSchedule implements ICommand {
                 edit(sender, newArgs);
             } else if (args[0].equalsIgnoreCase("asmember")) {
                 asMember(sender, newArgs);
+            } else if (args[0].equalsIgnoreCase("clear")) {
+                clear(sender, newArgs);
             } else {
                 help(sender, newArgs);
             }
         } else {
             help(sender, args);
         }
+    }
+    
+    private void clear (CommandSender sender, String[] args) {
+        ScheduleHandler.getInstance().getSchedules().clear();
+        ScheduleLoader.save();
+        throw new CommandMessageException(Lang.COMMAND_SCHEDULE_CLEARED);
     }
 
     private void asMember(CommandSender sender, String[] args) {
@@ -153,6 +161,7 @@ public class CommandSchedule implements ICommand {
         if (args.length < 1) {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth schedule remove <ID>");
         }
+        
         try {
             String kth = ScheduleHandler.getInstance().removeId(Integer.parseInt(args[0]));
             if (kth == null) {
@@ -284,7 +293,8 @@ public class CommandSchedule implements ICommand {
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit").commandInfo("Edit an existing schedule").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule remove <ID>").commandInfo("removes an existing schedule").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule list").commandInfo("shows the ID's of the schedule").build(), 
-                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule asmember").commandInfo("shows the schedule as member").build());
+                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule asmember").commandInfo("shows the schedule as member").build(),
+                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule clear").commandInfo("clear the complete schedule list").build());
     }
 
     @Override
