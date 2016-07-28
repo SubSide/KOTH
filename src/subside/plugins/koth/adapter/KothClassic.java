@@ -6,6 +6,7 @@ import lombok.Getter;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
+import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.scoreboard.ScoreboardManager;
 import subside.plugins.koth.utils.MessageBuilder;
@@ -42,7 +43,18 @@ public class KothClassic implements RunningKoth {
         koth.setLastWinner(null);
         new MessageBuilder(Lang.KOTH_PLAYING_STARTING).maxTime(maxRunTime).time(getTimeObject()).koth(koth).buildAndBroadcast();
         
-        ScoreboardManager.getInstance().loadScoreboard("default", this);
+        final KothClassic thiz = this;
+        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable(){
+            @Override
+            public void run() {
+                ScoreboardManager.getInstance().loadScoreboard("default", thiz);
+            }    
+        });
+    }
+    
+    @Override
+    public Capper getCapper(){
+        return getCapInfo().getCapper();
     }
 
     /**

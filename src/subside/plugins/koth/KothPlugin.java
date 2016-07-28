@@ -18,6 +18,7 @@ import subside.plugins.koth.adapter.captypes.CappingFactionNormal;
 import subside.plugins.koth.adapter.captypes.CappingFactionUUID;
 import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.commands.CommandHandler;
+import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.loaders.LootLoader;
 import subside.plugins.koth.loaders.ScheduleLoader;
@@ -41,6 +42,9 @@ public class KothPlugin extends JavaPlugin {
         
         // Initialize the KoTH main class
         new KothHandler();
+        
+        // Load all the hooks
+        new HookManager();
         
         // load configs
         this.saveDefaultConfig();
@@ -89,7 +93,7 @@ public class KothPlugin extends JavaPlugin {
                 cER.setPreferedClass(CappingFactionNormal.class);
             } catch(ClassNotFoundException e){
                 // So if the class is not found, we add FactionsUUID instead
-                cER.registerCaptureType("factionuuid", CappingFactionUUID.class);;
+                cER.registerCaptureType("factionuuid", CappingFactionUUID.class);
                 cER.setPreferedClass(CappingFactionUUID.class);
             } catch(Exception e){
                 e.printStackTrace();
@@ -117,6 +121,13 @@ public class KothPlugin extends JavaPlugin {
         HandlerList.unregisterAll(this);
         // Remove all previous schedulings
         Bukkit.getScheduler().cancelTasks(this);
+        
+        // reload configs
+        this.reloadConfig();
+        new ConfigHandler(this.getConfig());
+        
+        // reload the lang.json
+        Lang.load(this);
         
         // Register all events
         getServer().getPluginManager().registerEvents(new EventListener(), this);

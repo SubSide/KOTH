@@ -22,6 +22,9 @@ loot:
   drop-on-removal: false
   give-instantly: false
 
+hooks:
+  vanishnopacket: true
+
 koth:
   knockTime: 0
   minimum-players: 0

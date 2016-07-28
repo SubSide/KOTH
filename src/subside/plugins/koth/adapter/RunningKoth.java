@@ -1,5 +1,6 @@
 package subside.plugins.koth.adapter;
 
+import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
@@ -26,6 +27,12 @@ public interface RunningKoth {
      * @return          The KoTH object
      */
     public Koth getKoth();
+    
+    /** Get the current capper of the KoTH (this is for API reasons)
+     * 
+     * @return          The current capper
+     */
+    public Capper getCapper();
     
     /** Get the lootchest for the KoTH that is currently running
      * 

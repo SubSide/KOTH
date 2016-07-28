@@ -12,6 +12,7 @@ import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
+import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class CapInfo {
@@ -88,7 +89,9 @@ public class CapInfo {
             List<Player> insideArea = new ArrayList<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (captureZone.isInArea(player)) {
-                    insideArea.add(player);
+                    if(HookManager.getHookManager().canCap(player)) {
+                        insideArea.add(player);
+                    }
                 }
             }
             if (insideArea.size() < 1) {

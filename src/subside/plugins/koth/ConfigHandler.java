@@ -15,6 +15,7 @@ public class ConfigHandler {
 	private @Getter Koth koth;
 	private @Getter Scoreboard scoreboard;
 	private @Getter Factions factions;
+	private @Getter Hooks hooks;
 	
 	public ConfigHandler(FileConfiguration cfg){
 		cfgHandler = this;
@@ -24,6 +25,7 @@ public class ConfigHandler {
 		koth = new Koth(cfg.getConfigurationSection("koth"));
 		scoreboard = new Scoreboard(cfg.getConfigurationSection("scoreboard"));
 		factions = new Factions(cfg.getConfigurationSection("factions"));
+		hooks = new Hooks(cfg.getConfigurationSection("hooks"));
 	}
 	
 	public class Global {
@@ -39,6 +41,14 @@ public class ConfigHandler {
 	        preBroadcast = section.getInt("pre-broadcast");
 	        helpCommand = section.getStringList("helpcommand");
 	        useFancyPlayerName = section.getBoolean("fancyplayername");
+	    }
+	}
+	
+	public class Hooks {
+	    private @Getter boolean vanishNoPacket = false;
+	    
+	    public Hooks(ConfigurationSection section){
+	        vanishNoPacket = section.getBoolean("vanishnopacket");
 	    }
 	}
 	
