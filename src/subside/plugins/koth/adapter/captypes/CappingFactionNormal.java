@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import subside.plugins.koth.adapter.Capable;
 import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.exceptions.NoCompatibleCapperException;
 import subside.plugins.koth.hooks.HookManager;
 
 public class CappingFactionNormal extends CappingFaction {
@@ -48,9 +47,6 @@ private com.massivecraft.factions.entity.Faction faction;
                 faction = fac;
                 break;
             }
-        }
-        if(faction == null){
-        	throw new NoCompatibleCapperException();
         }
     }
     

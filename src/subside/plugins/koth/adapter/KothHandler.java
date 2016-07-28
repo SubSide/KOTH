@@ -22,7 +22,6 @@ import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothNotExistException;
-import subside.plugins.koth.exceptions.NoCompatibleCapperException;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
@@ -318,11 +317,13 @@ public class KothHandler {
             try {
                 for(Class<? extends Capper> clazz : getCaptureTypes().values()){
                     if(capperClazz.isAssignableFrom(clazz)){
-                        return clazz.getDeclaredConstructor(List.class).newInstance(players);
+                        Capper capper =  clazz.getDeclaredConstructor(List.class).newInstance(players);
+                        if(capper.getObject() == null){
+                            return null;
+                        }
+                        return capper;
                     }
                 }
-            } catch(NoCompatibleCapperException e){
-                return null;
             } catch(Exception e){
                 e.printStackTrace();
             }
