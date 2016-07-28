@@ -54,6 +54,19 @@ public class Koth implements Capable {
         return ConfigHandler.getCfgHandler().getLoot().getDefaultLoot();
     }
     
+    /** Is the current KoTH running?
+     * 
+     * @return          true if the KoTH is running
+     */
+    public boolean isRunning(){
+        for(RunningKoth rKoth : KothHandler.getInstance().getRunningKoths()){
+            if(rKoth.getKoth() == this){
+                return true;
+            }
+        }
+        return false;
+    }
+    
 
     /** Get the middle of the KoTH
      * 

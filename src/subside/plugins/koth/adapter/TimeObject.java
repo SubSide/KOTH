@@ -63,11 +63,16 @@ public class TimeObject {
     
     // Time till next event (static)
     public static String getTimeTillNextEvent(){
-        if(KothHandler.getInstance().getRunningKoth() != null){
-            return "00:00:00";
-        }
+        if(KothHandler.getInstance().getRunningKoth() != null) return "--:--:--";
         
-        Schedule schedule = ScheduleHandler.getInstance().getNextEvent();
+        return getTimeTillNextEvent(ScheduleHandler.getInstance().getNextEvent());
+    }
+    
+    public static String getTimeTillNextEvent(Koth koth){
+        return getTimeTillNextEvent(ScheduleHandler.getInstance().getNextEvent(koth));
+    }
+    
+    public static String getTimeTillNextEvent(Schedule schedule){
         if(schedule == null){
             return "--:--:--";
         }
