@@ -73,6 +73,7 @@ public class TimeObject {
         }
         
         long timeTillNext = schedule.getNextEvent() - System.currentTimeMillis();
+        timeTillNext /= 1000;
         
         long secs = timeTillNext%60;
         timeTillNext /= 60;
