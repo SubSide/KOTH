@@ -80,33 +80,36 @@ public class CommandSchedule implements ICommand {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth schedule create <koth> <day|(daily)> <time> [capturetime] [maxruntime] [lootamount] [lootchest]"));
         }
         
+        String[] days = args[1].split(",");
         if(args[1].equalsIgnoreCase("daily")){
-            for(Day day : Day.values()){
-                args[1] = day.getDay();
-                System.out.println(args[1]);
+            days = new String[] {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+            
+        }
+        String[] times = args[2].split(",");
+        
+        for(String day : days){
+            for(String time : times){
                 try {
-                    create(sender, args);
+                    create(sender, args, day, time);
                 } catch(CommandMessageException e){
                     for(String msg : e.getMsg()){
                         Utils.sendMsg(sender, msg);
                     }
                 }
             }
-        } else {
-            create(sender, args);
         }
     }
     
-    private void create(CommandSender sender, String[] args) {
+    private void create(CommandSender sender, String[] args, String pDay, String pTime) {
         if (args.length < 2) {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth schedule create <koth> <day|(daily)> <time> [capturetime] [maxruntime] [lootamount] [lootchest]"));
         }
         
-        Day day = Day.getDay(args[1].toUpperCase());
+        Day day = Day.getDay(pDay);
         if (day == null) {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_NOVALIDDAY));
         }
-        Schedule schedule = new Schedule(args[0], day, args[2]);
+        Schedule schedule = new Schedule(args[0], day, pTime);
         
         int captureTime = 15;
         int maxRunTime = -1;
@@ -142,7 +145,7 @@ public class CommandSchedule implements ICommand {
 
         ScheduleHandler.getInstance().getSchedules().add(schedule);
         ScheduleLoader.save();
-        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_CREATED).koth(args[0]).lootAmount(lootAmount).day(day.getDay()).time(args[2]).captureTime(captureTime));
+        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_CREATED).koth(args[0]).lootAmount(lootAmount).day(day.getDay()).time(pTime).captureTime(captureTime));
 
     }
 
