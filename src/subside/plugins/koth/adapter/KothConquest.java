@@ -12,7 +12,7 @@ import lombok.Setter;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
-import subside.plugins.koth.adapter.captypes.CappingFaction;
+import subside.plugins.koth.adapter.captypes.CappingGroup;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.scoreboard.ConquestScoreboard;
 import subside.plugins.koth.scoreboard.ScoreboardManager;
@@ -88,7 +88,7 @@ public class KothConquest implements RunningKoth {
     public void endKoth(EndReason reason) {
         if (reason == EndReason.WON || reason == EndReason.GRACEFUL) {
             Arrays.sort(fScores.toArray());
-            CappingFaction faction = fScores.get(fScores.size()-1).getFaction();
+            CappingGroup faction = fScores.get(fScores.size()-1).getFaction();
             
             if (faction != null) {
                 new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).capper(faction.getName()).koth(koth)/*.shouldExcludePlayer()*/.buildAndBroadcast();
@@ -125,7 +125,7 @@ public class KothConquest implements RunningKoth {
     }
     
     
-    public FactionScore getFactionScore(CappingFaction faction){
+    public FactionScore getFactionScore(CappingGroup faction){
         for(FactionScore score : fScores){
             if(score.getFaction().getObject().equals(faction.getObject())){
                 return score;
@@ -144,14 +144,14 @@ public class KothConquest implements RunningKoth {
         private @Getter CapInfo capInfo;
         ConquestArea(KothConquest kC, Area area){
             this.area = area;
-            this.capInfo = new CapInfo(kC, area, CappingFaction.class, false);
+            this.capInfo = new CapInfo(kC, area, CappingGroup.class, false);
         }
         
         @Deprecated
         public void update(){
             	capInfo.update();
             	if(capInfo.getCapper() != null){
-            		getFactionScore((CappingFaction)capInfo.getCapper()).addPoint();
+            		getFactionScore((CappingGroup)capInfo.getCapper()).addPoint();
             	} else {
         			List<Player> insideArea = new ArrayList<>();
             		for (Player player : Bukkit.getOnlinePlayers()) {
@@ -168,11 +168,11 @@ public class KothConquest implements RunningKoth {
     }
     
     public class FactionScore implements Comparable<FactionScore> {
-        private @Getter CappingFaction faction;
+        private @Getter CappingGroup faction;
         private @Getter @Setter int points;
         private int updateTime = 0;
         private int holdingTime = 0;
-        FactionScore(CappingFaction faction){
+        FactionScore(CappingGroup faction){
             this.faction = faction;
             this.points = 0;
         }

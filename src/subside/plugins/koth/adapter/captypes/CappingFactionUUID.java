@@ -7,14 +7,18 @@ import java.util.List;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.Factions;
+
 import subside.plugins.koth.adapter.Capable;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.hooks.HookManager;
 
-public class CappingFactionUUID extends CappingFaction {
-    private com.massivecraft.factions.Faction faction;
+public class CappingFactionUUID extends CappingGroup {
+    private Faction faction;
     
-    public CappingFactionUUID(com.massivecraft.factions.Faction faction){
+    public CappingFactionUUID(Faction faction){
         this.faction = faction;
     }
 
@@ -30,7 +34,7 @@ public class CappingFactionUUID extends CappingFaction {
     
     @Override
     public boolean isInOrEqualTo(OfflinePlayer oPlayer){
-        return com.massivecraft.factions.FPlayers.getInstance().getByOfflinePlayer(oPlayer).getFactionId().equals(faction.getId());
+        return FPlayers.getInstance().getByOfflinePlayer(oPlayer).getFactionId().equals(faction.getId());
     }
     
     @Override
@@ -42,7 +46,7 @@ public class CappingFactionUUID extends CappingFaction {
         List<Player> playerList = new ArrayList<Player>(playerList2);
         Collections.shuffle(playerList);
         for(Player player : playerList){
-            com.massivecraft.factions.Faction fac = com.massivecraft.factions.FPlayers.getInstance().getByPlayer(player).getFaction();
+            Faction fac = FPlayers.getInstance().getByPlayer(player).getFaction();
             if(fac.isNormal()){
                 faction = fac;
                 break;
@@ -50,7 +54,7 @@ public class CappingFactionUUID extends CappingFaction {
         }
     }
 
-    public com.massivecraft.factions.Faction getObject(){
+    public Faction getObject(){
         return faction;
     }
     
@@ -88,6 +92,6 @@ public class CappingFactionUUID extends CappingFaction {
     
 
     public static Capper getFromUniqueName(String name){
-        return new CappingFactionUUID(com.massivecraft.factions.Factions.getInstance().getFactionById(name));
+        return new CappingFactionUUID(Factions.getInstance().getFactionById(name));
     }
 }

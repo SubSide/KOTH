@@ -7,20 +7,24 @@ import java.util.List;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import com.massivecraft.factions.entity.Faction;
+import com.massivecraft.factions.entity.FactionColl;
+import com.massivecraft.factions.entity.MPlayerColl;
+
 import subside.plugins.koth.adapter.Capable;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.hooks.HookManager;
 
-public class CappingFactionNormal extends CappingFaction {
-private com.massivecraft.factions.entity.Faction faction;
+public class CappingFactionNormal extends CappingGroup {
+private Faction faction;
     
-    public CappingFactionNormal(com.massivecraft.factions.entity.Faction faction){
+    public CappingFactionNormal(Faction faction){
         this.faction = faction;
     }
     
     @Override
     public boolean isInOrEqualTo(OfflinePlayer oPlayer){
-        return com.massivecraft.factions.entity.MPlayerColl.get().get(oPlayer).getFactionId().equals(faction.getId());
+        return MPlayerColl.get().get(oPlayer).getFactionId().equals(faction.getId());
     }
 
     @Override
@@ -42,7 +46,7 @@ private com.massivecraft.factions.entity.Faction faction;
         List<Player> playerList = new ArrayList<Player>(playerList2);
         Collections.shuffle(playerList);
         for(Player player : playerList){
-            com.massivecraft.factions.entity.Faction fac = com.massivecraft.factions.entity.MPlayerColl.get().get(player).getFaction();
+            Faction fac = MPlayerColl.get().get(player).getFaction();
             if(fac.isNormal()){
                 faction = fac;
                 break;
@@ -50,7 +54,7 @@ private com.massivecraft.factions.entity.Faction faction;
         }
     }
     
-    public com.massivecraft.factions.entity.Faction getObject(){
+    public Faction getObject(){
         return faction;
     }
 
@@ -85,6 +89,6 @@ private com.massivecraft.factions.entity.Faction faction;
     
 
     public static Capper getFromUniqueName(String name){
-        return new CappingFactionNormal(com.massivecraft.factions.entity.FactionColl.get().get(name));
+        return new CappingFactionNormal(FactionColl.get().get(name));
     }
 }

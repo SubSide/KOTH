@@ -86,7 +86,12 @@ public class DefaultScoreboard extends AbstractScoreboard {
             
             if(teams.size() <= x ||teams.get(x) == null){
                 while(teams.size() <= x){
-                    teams.add(scoreboard.registerNewTeam("Kteam"+teams.size()));
+                    String teamName = "Kteam"+teams.size();
+                    if(scoreboard.getTeam(teamName) != null){
+                        teams.add(scoreboard.getTeam(teamName));
+                    } else {
+                        teams.add(scoreboard.registerNewTeam(teamName));
+                    }
                 }
                 teams.get(x).addEntry(ChatColor.values()[x].toString());
                 

@@ -16,6 +16,7 @@ import subside.plugins.koth.adapter.KothHandler.GamemodeRegistry;
 import subside.plugins.koth.adapter.Loot;
 import subside.plugins.koth.adapter.captypes.CappingFactionNormal;
 import subside.plugins.koth.adapter.captypes.CappingFactionUUID;
+import subside.plugins.koth.adapter.captypes.CappingKingdom;
 import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.commands.CommandHandler;
 import subside.plugins.koth.hooks.HookManager;
@@ -73,7 +74,7 @@ public class KothPlugin extends JavaPlugin {
         gR.getGamemodes().clear();
         gR.register("classic", KothClassic.class);
         
-        if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
+        if(ConfigHandler.getCfgHandler().getHooks().isFactions()){
             // Add conquest if factions is enabled in the config
             gR.register("conquest", KothConquest.class);
         }
@@ -85,7 +86,7 @@ public class KothPlugin extends JavaPlugin {
         // Add the player entity
         cER.registerCaptureType("player", CappingPlayer.class);
         cER.setPreferedClass(CappingPlayer.class);
-        if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
+        if(ConfigHandler.getCfgHandler().getHooks().isFactions() && getServer().getPluginManager().getPlugin("Factions") != null){
             try {
                 // If this class is not found it means that Factions is not in the server
                 Class.forName("com.massivecraft.factions.entity.FactionColl");
@@ -100,11 +101,16 @@ public class KothPlugin extends JavaPlugin {
             }
         }
         
+        if(ConfigHandler.getCfgHandler().getHooks().isKingdoms() && getServer().getPluginManager().getPlugin("Kingdoms") != null){
+            cER.registerCaptureType("kingdoms", CappingKingdom.class);
+            cER.setPreferedClass(CappingKingdom.class);
+        }
+        
 
         // Registering the scoreboards //
         new ScoreboardManager();
         if(ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()){
-            if(ConfigHandler.getCfgHandler().getFactions().isUseFactions()){
+            if(ConfigHandler.getCfgHandler().getHooks().isFactions()){
                 ScoreboardManager.getInstance().registerScoreboard("conquest", ConquestScoreboard.class);
             }
             if(ConfigHandler.getCfgHandler().getScoreboard().isUseOldScoreboard()){

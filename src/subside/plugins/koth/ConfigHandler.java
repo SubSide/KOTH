@@ -14,7 +14,6 @@ public class ConfigHandler {
 	private @Getter Loot loot;
 	private @Getter Koth koth;
 	private @Getter Scoreboard scoreboard;
-	private @Getter Factions factions;
 	private @Getter Hooks hooks;
 	
 	public ConfigHandler(FileConfiguration cfg){
@@ -24,12 +23,12 @@ public class ConfigHandler {
 		loot = new Loot(cfg.getConfigurationSection("loot"));
 		koth = new Koth(cfg.getConfigurationSection("koth"));
 		scoreboard = new Scoreboard(cfg.getConfigurationSection("scoreboard"));
-		factions = new Factions(cfg.getConfigurationSection("factions"));
 		hooks = new Hooks(cfg.getConfigurationSection("hooks"));
 	}
 	
 	public class Global {
 	    private @Getter String timeZone = "Europe/Amsterdam";
+	    private @Getter int minuteOffset = 0;
 	    private @Getter boolean usePlayerMoveEvent = false;
 	    private @Getter int preBroadcast = 0;
 	    private @Getter List<String> helpCommand = null;
@@ -37,6 +36,7 @@ public class ConfigHandler {
 	    
 	    public Global(ConfigurationSection section){
 	        timeZone = section.getString("schedule-timezone");
+            minuteOffset = section.getInt("minuteoffset");
 	        usePlayerMoveEvent = section.getBoolean("use-playermoveevent");
 	        preBroadcast = section.getInt("pre-broadcast");
 	        helpCommand = section.getStringList("helpcommand");
@@ -45,10 +45,14 @@ public class ConfigHandler {
 	}
 	
 	public class Hooks {
-	    private @Getter boolean vanishNoPacket = false;
+	    private @Getter boolean vanishNoPacket = true;
+	    private @Getter boolean factions = true;
+	    private @Getter boolean kingdoms = true;
 	    
 	    public Hooks(ConfigurationSection section){
-	        vanishNoPacket = section.getBoolean("vanishnopacket");
+            vanishNoPacket = section.getBoolean("vanishnopacket");
+            vanishNoPacket = section.getBoolean("factions");
+            vanishNoPacket = section.getBoolean("kingdoms");
 	    }
 	}
 	
@@ -98,16 +102,6 @@ public class ConfigHandler {
 	    
 	    public ConfigurationSection getSection(){
 	        return section;
-	    }
-	}
-	
-	public class Factions {
-	    private @Getter boolean useFactions = false;
-	    private @Getter boolean shouldCapAllAreas = false;
-	    
-	    public Factions(ConfigurationSection section){
-	        useFactions = section.getBoolean("enable");
-	        shouldCapAllAreas = section.getBoolean("shouldCapAllAreas");
 	    }
 	}
 }

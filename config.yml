@@ -4,6 +4,7 @@
 
 global:
   schedule-timezone: "Europe/Amsterdam"
+  minuteoffset: 0
   use-playermoveevent: false
   pre-broadcast: 0
   helpcommand:
@@ -24,6 +25,8 @@ loot:
 
 hooks:
   vanishnopacket: true
+  factions: true
+  kingdoms: true
 
 koth:
   knockTime: 0
@@ -50,7 +53,3 @@ scoreboard:
       - "&6&lCoords:"
       - "&cX: &e%x%"
       - "&cZ: &e%z%"
-
-factions:
-  enable: false
-  shouldCapAllAreas: false

@@ -69,6 +69,8 @@ public class TimeObject {
     }
     
     public static String getTimeTillNextEvent(Koth koth){
+        if(koth.isRunning()) return "00:00:00";
+        
         return getTimeTillNextEvent(ScheduleHandler.getInstance().getNextEvent(koth));
     }
     

@@ -63,8 +63,9 @@ public class CommandSchedule implements ICommand {
         List<String> list = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getGlobal().getTimeZone()));
+       
         list.add(" ");
-        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_CURRENTDATETIME).date(sdf.format(new Date())).buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_CURRENTDATETIME).date(sdf.format(new Date(System.currentTimeMillis() + ConfigHandler.getCfgHandler().getGlobal().getMinuteOffset()*60*1000))).buildArray());
         for (Day day : Day.values()) {
             List<String> subList = new ArrayList<>();
             for (Schedule sched : schedules) {
@@ -183,7 +184,7 @@ public class CommandSchedule implements ICommand {
         SimpleDateFormat sdf = new SimpleDateFormat();
         sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getGlobal().getTimeZone()));
         list.add(" ");
-        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME).date(sdf.format(new Date())).buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME).date(sdf.format(new Date(System.currentTimeMillis() + ConfigHandler.getCfgHandler().getGlobal().getMinuteOffset()*60*1000))).buildArray());
         for (Day day : Day.values()) {
             List<String> subList = new ArrayList<>();
             for (Schedule sched : schedules) {
