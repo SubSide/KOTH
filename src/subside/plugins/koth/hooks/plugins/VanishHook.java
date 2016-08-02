@@ -8,10 +8,10 @@ import org.kitteh.vanish.VanishPlugin;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.hooks.IHook;
+import subside.plugins.koth.hooks.AbstractHook;
 import subside.plugins.koth.utils.Utils;
 
-public class VanishHook implements IHook {
+public class VanishHook extends AbstractHook {
     private @Getter @Setter boolean enabled = false;
     private VanishManager vanishManager;
     

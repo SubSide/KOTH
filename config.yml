@@ -27,6 +27,11 @@ hooks:
   vanishnopacket: true
   factions: true
   kingdoms: true
+  featherboard:
+    enabled: false
+    board: "koth"
+    range: 100 # -1 to disable it
+    rangemargin: 5
 
 koth:
   knockTime: 0

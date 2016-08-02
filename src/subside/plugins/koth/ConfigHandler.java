@@ -48,11 +48,28 @@ public class ConfigHandler {
 	    private @Getter boolean vanishNoPacket = true;
 	    private @Getter boolean factions = true;
 	    private @Getter boolean kingdoms = true;
+	    private @Getter Featherboard featherboard;
 	    
 	    public Hooks(ConfigurationSection section){
             vanishNoPacket = section.getBoolean("vanishnopacket");
-            vanishNoPacket = section.getBoolean("factions");
-            vanishNoPacket = section.getBoolean("kingdoms");
+            factions = section.getBoolean("factions");
+            kingdoms = section.getBoolean("kingdoms");
+            featherboard = new Featherboard(section.getConfigurationSection("featherboard"));
+	    }
+	    
+	    public class Featherboard {
+	        private @Getter boolean enabled = false;
+	        private @Getter int range = 100;
+	        private @Getter int rangeMargin = 5;
+	        private @Getter String board = "KoTH";
+	        
+	        public Featherboard(ConfigurationSection section){
+	            enabled = section.getBoolean("enabled");
+	            range = section.getInt("range");
+	            rangeMargin = section.getInt("rangemargin");
+	            board = section.getString("board");
+	        }
+	        
 	    }
 	}
 	

@@ -22,6 +22,7 @@ import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothNotExistException;
+import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
@@ -61,6 +62,7 @@ public class KothHandler {
                 ScoreboardManager.getInstance().update();
             }
             ScheduleHandler.getInstance().tick();
+            HookManager.getHookManager().tick();
         }
     }
 
