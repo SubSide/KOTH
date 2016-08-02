@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import lombok.Getter;
 import subside.plugins.koth.ConfigHandler;
@@ -65,10 +67,32 @@ public class FeatherboardHook extends AbstractHook implements Listener {
         }
     }
     
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event){
+        inRange.remove(event.getPlayer());
+    }
+
+    
+    @EventHandler
+    public void onPlayerKick(PlayerKickEvent event){
+        inRange.remove(event.getPlayer());
+    }
+    
     
     @Override
     public void tick(){
-        if(!isEnabled() || koth == null) return;
+        if(!isEnabled()) return;
+        
+        if(koth == null || !koth.isRunning()){
+
+            for(OfflinePlayer player : inRange){
+                if(player.isOnline())
+                    resetBoard(player.getPlayer(), board);
+            }
+            inRange.clear();
+            koth = null;
+            return;
+        }
         
         for(Player player: Bukkit.getOnlinePlayers()){
             if(!inRange.contains(player)){
