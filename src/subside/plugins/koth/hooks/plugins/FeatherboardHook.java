@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -95,13 +96,14 @@ public class FeatherboardHook extends AbstractHook implements Listener {
         }
         
         for(Player player: Bukkit.getOnlinePlayers()){
+            Location loc = koth.getMiddle();
             if(!inRange.contains(player)){
-                if(koth.getMiddle().distance(player.getLocation()) <= range-rangeMargin){
+                if(loc.getWorld() == player.getLocation().getWorld() && loc.distance(player.getLocation()) <= range-rangeMargin){
                     inRange.add(player);
                     setBoard(player, board);
                 }
             } else {
-                if(koth.getMiddle().distance(player.getLocation()) >= range+rangeMargin){
+                if(loc.getWorld() != player.getLocation().getWorld() || loc.distance(player.getLocation()) >= range+rangeMargin){
                     inRange.remove(player);
                     resetBoard(player, board);
                 }
