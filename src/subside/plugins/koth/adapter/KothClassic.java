@@ -73,23 +73,23 @@ public class KothClassic implements RunningKoth {
 //                    new MessageBuilder(Lang.KOTH_PLAYING_WON_CAPPER).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(Bukkit.getPlayer(cappingPlayer));
 //                }
                 // TO-DO
-
-                KothEndEvent event = new KothEndEvent(koth, capInfo.getCapper());
-                Bukkit.getServer().getPluginManager().callEvent(event);
-
-                koth.setLastWinner(capInfo.getCapper());
-                if (event.isCreatingChest()) {
-                    Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
-                        public void run() {
-                            koth.createLootChest(lootAmount, lootChest);
-                        }
-                    });
-                }
             }
         } else if (reason == EndReason.TIMEUP) {
             new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP).maxTime(maxRunTime).koth(koth).buildAndBroadcast();
         }
 
+
+        KothEndEvent event = new KothEndEvent(koth, capInfo.getCapper(), reason);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+
+        koth.setLastWinner(capInfo.getCapper());
+        if (event.isCreatingChest()) {
+            Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
+                public void run() {
+                    koth.createLootChest(lootAmount, lootChest);
+                }
+            });
+        }
         
         
         final KothClassic thisObj = this;

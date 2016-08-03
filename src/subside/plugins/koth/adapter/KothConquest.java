@@ -86,9 +86,9 @@ public class KothConquest implements RunningKoth {
 
     @Override
     public void endKoth(EndReason reason) {
+        Arrays.sort(fScores.toArray());
+        CappingGroup faction = fScores.get(fScores.size()-1).getFaction();
         if (reason == EndReason.WON || reason == EndReason.GRACEFUL) {
-            Arrays.sort(fScores.toArray());
-            CappingGroup faction = fScores.get(fScores.size()-1).getFaction();
             
             if (faction != null) {
                 new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).capper(faction.getName()).koth(koth)/*.shouldExcludePlayer()*/.buildAndBroadcast();
@@ -96,23 +96,23 @@ public class KothConquest implements RunningKoth {
 //                    new MessageBuilder(Lang.KOTH_PLAYING_WON_CAPPER).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(Bukkit.getPlayer(cappingPlayer));
 //                }
                 // TO-DO
-
-                KothEndEvent event = new KothEndEvent(koth, faction);
-                Bukkit.getServer().getPluginManager().callEvent(event);
-
-                koth.setLastWinner(faction);
-                if (event.isCreatingChest()) {
-                    Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
-                        public void run() {
-                            koth.createLootChest(lootAmount, lootChest);
-                        }
-                    });
-                }
             }
         } else if (reason == EndReason.TIMEUP) {
             // TODO
         }
 
+
+        KothEndEvent event = new KothEndEvent(koth, faction, reason);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+
+        koth.setLastWinner(faction);
+        if (event.isCreatingChest()) {
+            Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
+                public void run() {
+                    koth.createLootChest(lootAmount, lootChest);
+                }
+            });
+        }
         
         
         final RunningKoth thisObj = this;
