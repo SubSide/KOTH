@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import lombok.Getter;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.ConfigHandler.Hooks.Featherboard;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.events.KothStartEvent;
@@ -112,12 +113,22 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     }
 
     
-    public void setBoard(Player player, String board){
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb show "+player.getName()+" "+board);
+    public void setBoard(final Player player, final String board){
+        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable(){
+            @Override
+            public void run() {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb show "+player.getName()+" "+board);
+            }
+        });
     }
     
-    public void resetBoard(Player player, String board){
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb hide "+player.getName()+" "+board);
+    public void resetBoard(final Player player, final String board){
+        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable(){
+            @Override
+            public void run() {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb hide "+player.getName()+" "+board);
+            }
+        });
     }
     
 }
