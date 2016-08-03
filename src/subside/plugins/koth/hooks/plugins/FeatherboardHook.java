@@ -48,6 +48,12 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onKothStart(KothStartEvent event){
         koth = event.getKoth();
+        if(range < 0){
+            for(Player player : Bukkit.getOnlinePlayers()){
+                inRange.add(player);
+                setBoard(player, board);
+            }
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -63,6 +69,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event){
+        if(!isEnabled() || koth == null) return;
         if(range < 0){
             inRange.add(event.getPlayer());
             setBoard(event.getPlayer(), board);
@@ -83,7 +90,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     
     @Override
     public void tick(){
-        if(!isEnabled()) return;
+        if(!isEnabled() || range < 0) return;
         
         if(koth == null || !koth.isRunning()){
 
@@ -114,21 +121,21 @@ public class FeatherboardHook extends AbstractHook implements Listener {
 
     
     public void setBoard(final Player player, final String board){
-        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable(){
+        Bukkit.getScheduler().runTaskLater(KothPlugin.getPlugin(), new Runnable(){
             @Override
             public void run() {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb show "+player.getName()+" "+board);
             }
-        });
+        }, 1);
     }
     
     public void resetBoard(final Player player, final String board){
-        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable(){
+        Bukkit.getScheduler().runTaskLater(KothPlugin.getPlugin(), new Runnable(){
             @Override
             public void run() {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb hide "+player.getName()+" "+board);
             }
-        });
+        }, 1);
     }
     
 }
