@@ -197,8 +197,7 @@ public class KothHandler {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
-                it.next();
-                it.remove();
+                it.next().endKoth(EndReason.FORCED);
             }
         }
 

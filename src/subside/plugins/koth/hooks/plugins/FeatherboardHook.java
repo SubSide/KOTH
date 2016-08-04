@@ -56,7 +56,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onKothEnd(KothEndEvent event){
         if(!isEnabled() || koth == null) return;
         

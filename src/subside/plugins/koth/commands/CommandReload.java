@@ -31,8 +31,14 @@ public class CommandReload implements ICommand {
 //            }
         }
         
+        KothHandler.getInstance().stopAllKoths();
         
-        KothPlugin.getPlugin().init();
+        Bukkit.getScheduler().runTaskLater(KothPlugin.getPlugin(), new Runnable(){
+            @Override
+            public void run() {
+                KothPlugin.getPlugin().init();
+            }
+        }, 1);
         throw new CommandMessageException(Lang.COMMAND_RELOAD_RELOAD);
     }
 

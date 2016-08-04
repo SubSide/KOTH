@@ -61,9 +61,6 @@ public class KothPlugin extends JavaPlugin {
 		worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
 		getCommand("koth").setExecutor(new CommandHandler(this));
         init();
-        
-        // Load all the hooks
-        new HookManager();
 	}
 
     
@@ -149,6 +146,8 @@ public class KothPlugin extends JavaPlugin {
             }
         }, 20, 20);
         
+        // Load all the hooks
+        new HookManager();
         
         // All the standard loading
         KothHandler.getInstance().stopAllKoths();
