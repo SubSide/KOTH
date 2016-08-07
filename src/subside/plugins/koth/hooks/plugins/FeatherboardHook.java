@@ -21,6 +21,7 @@ import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.hooks.AbstractHook;
+import subside.plugins.koth.utils.Utils;
 
 public class FeatherboardHook extends AbstractHook implements Listener {
     private @Getter boolean enabled = false;
@@ -43,6 +44,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
                 board = fbHook.getBoard();
             }
         }
+        Utils.log("Featherboard hook: "+(enabled?"Enabled":"Disabled"));
     }
     
     @EventHandler(ignoreCancelled = true)
@@ -124,7 +126,8 @@ public class FeatherboardHook extends AbstractHook implements Listener {
         Bukkit.getScheduler().runTaskLater(KothPlugin.getPlugin(), new Runnable(){
             @Override
             public void run() {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb show "+player.getName()+" "+board);
+                be.maximvdw.featherboard.api.FeatherBoardAPI.showScoreboard(player, board);
+                //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb show "+player.getName()+" "+board);
             }
         }, 1);
     }
@@ -133,7 +136,8 @@ public class FeatherboardHook extends AbstractHook implements Listener {
         Bukkit.getScheduler().runTaskLater(KothPlugin.getPlugin(), new Runnable(){
             @Override
             public void run() {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb hide "+player.getName()+" "+board);
+                be.maximvdw.featherboard.api.FeatherBoardAPI.resetDefaultScoreboard(player);
+                //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb hide "+player.getName()+" "+board);
             }
         }, 1);
     }
