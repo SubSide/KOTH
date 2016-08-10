@@ -136,6 +136,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
         Bukkit.getScheduler().runTaskLater(KothPlugin.getPlugin(), new Runnable(){
             @Override
             public void run() {
+                be.maximvdw.featherboard.api.FeatherBoardAPI.removeScoreboardOverride(player, board);
                 be.maximvdw.featherboard.api.FeatherBoardAPI.resetDefaultScoreboard(player);
                 //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fb hide "+player.getName()+" "+board);
             }
