@@ -32,6 +32,8 @@ public class Lang {
 	public static String[] KOTH_PLAYING_LOOT_CHEST = new String[]{"&1&l%koth%s &8&lloot"};
     public static String[] KOTH_PLAYING_TIME_UP = new String[]{"&aAfter %mt% minute noone capped the KoTH! Event is over!"};
     
+    public static String[] HOOKS_PLACEHOLDERAPI_NOONECAPPING = new String[]{ "No One" };
+    
     public static String[] KOTH_PLAYING_PRE_BROADCAST = new String[]{"&aThe koth %koth% will start in 30 minutes!"};
 	
 	public static String[] KOTH_ERROR_ALREADYRUNNING = new String[]{"&aThe koth %koth% is already running!"};

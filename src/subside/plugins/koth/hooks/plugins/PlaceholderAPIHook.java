@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import me.clip.placeholderapi.external.EZPlaceholderHook;
+import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.RunningKoth;
@@ -11,7 +12,7 @@ import subside.plugins.koth.adapter.TimeObject;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 
 /**
-* Made in colaboration with F64_Rx <3
+* Made in collaboration with F64_Rx <3
 */
 public class PlaceholderAPIHook extends EZPlaceholderHook {
 
@@ -101,7 +102,7 @@ public class PlaceholderAPIHook extends EZPlaceholderHook {
         if (identifier.equals(prefix+"time_lengthinseconds")) return "" + rKoth.getTimeObject().getLengthInSeconds();
         
         if (identifier.equals(prefix+"currentcapper")) {
-            if (rKoth.getCapper() == null) return "No One";
+            if (rKoth.getCapper() == null) return Lang.HOOKS_PLACEHOLDERAPI_NOONECAPPING[0];
             return rKoth.getCapper().getName();
         }
         
