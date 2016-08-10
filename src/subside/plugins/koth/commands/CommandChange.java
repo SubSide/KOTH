@@ -45,8 +45,8 @@ public class CommandChange implements ICommand {
     public void help(CommandSender sender){
         List<String> list = new ArrayList<>();
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Running game manager").buildArray());
-        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth time").commandInfo("Command to change the time").buildArray());
-        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth points").commandInfo("Manage the points").buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth change time").commandInfo("Command to change the time").buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth change points").commandInfo("Manage the points").buildArray());
         sender.sendMessage(list.toArray(new String[list.size()]));
     }
     

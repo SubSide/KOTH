@@ -30,7 +30,7 @@ public class CommandInfo implements ICommand {
     public void run(CommandSender sender, String[] args) {
         if (Perm.Admin.INFO.has(sender)) {
             if (args.length < 2) {
-                Utils.sendMsg(sender, 
+                Utils.sendMessage(sender, true,
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH editor").build(), 
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info koth <koth>").commandInfo("Info about a koth").build(), 
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info loot <loot>").commandInfo("Info about a loot chest").build(), 
@@ -46,7 +46,7 @@ public class CommandInfo implements ICommand {
             } else if(args[0].equalsIgnoreCase("schedule")){
                 scheduleInfo(sender, newArgs);
             } else {
-                Utils.sendMsg(sender, 
+                Utils.sendMessage(sender, true,
                         new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH editor").build(), 
                         new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info koth <koth>").commandInfo("Info about a koth").build(), 
                         new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info loot <loot>").commandInfo("Info about a loot chest").build(), 

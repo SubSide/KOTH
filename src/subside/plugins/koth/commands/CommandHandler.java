@@ -74,7 +74,7 @@ public class CommandHandler implements CommandExecutor {
                 throw new CommandMessageException(Lang.COMMAND_GLOBAL_NO_PERMISSION);
             }
         } catch(CommandMessageException e){
-            Utils.sendMsg(sender, (Object[])e.getMsg());
+            Utils.sendMessage(sender, true, (Object[])e.getMsg());
         }
 
         return true;

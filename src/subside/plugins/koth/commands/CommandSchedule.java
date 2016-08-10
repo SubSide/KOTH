@@ -102,7 +102,7 @@ public class CommandSchedule implements ICommand {
                     create(sender, args, day, time);
                 } catch(CommandMessageException e){
                     for(String msg : e.getMsg()){
-                        Utils.sendMsg(sender, msg);
+                        Utils.sendMessage(sender, true, msg);
                     }
                 }
             }
@@ -124,6 +124,7 @@ public class CommandSchedule implements ICommand {
         int maxRunTime = -1;
         int lootAmount = ConfigHandler.getCfgHandler().getLoot().getLootAmount();
         String lootChest = null;
+        String entityType = null;
         try {
             if (args.length > 3) {
                 captureTime = Integer.parseInt(args[3]);
@@ -147,10 +148,17 @@ public class CommandSchedule implements ICommand {
             }
         }
         
+        if(args.length > 7){
+            if(!args[7].equalsIgnoreCase("0")){
+                entityType = args[7];
+            }
+        }
+        
         schedule.setMaxRunTime(maxRunTime);
         schedule.setCaptureTime(captureTime);
         schedule.setLootAmount(lootAmount);
         schedule.setLootChest(lootChest);
+        schedule.setEntityType(entityType);
 
         ScheduleHandler.getInstance().getSchedules().add(schedule);
         ScheduleLoader.save();

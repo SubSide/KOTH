@@ -7,6 +7,7 @@ global:
   minuteoffset: 0
   use-playermoveevent: false
   pre-broadcast: 0
+  nocap-broadcast-interval: 30
   helpcommand:
     - "&8========> &2Koth &8<========"
     - "&a/koth list &7Shows all available koths"

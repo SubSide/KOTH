@@ -87,6 +87,7 @@ public class KothHandler {
         params.setMaxRunTime(schedule.getMaxRunTime());
         params.setLootAmount(schedule.getLootAmount());
         params.setLootChest(schedule.getLootChest());
+        params.setEntityType(schedule.getEntityType());
         params.setScheduled(true);
         
         startKoth(params);
@@ -100,6 +101,7 @@ public class KothHandler {
      * @param maxRunTime        The maximum time this KoTH can run (-1 for unlimited time)
      * @param lootAmount        The amount of loot that should spawn (-1 for default config settings)
      * @param lootChest         The lootchest it should use (null for default config settings)
+     * @param entityType        The entity type that should be able to cap the KoTH (Players, Factions etc.)
      * @param isScheduled       This is used to see if it should obey stuff like minimumPlayers
      */
     @SuppressWarnings("deprecation")
@@ -110,7 +112,7 @@ public class KothHandler {
                     throw new KothAlreadyRunningException(params.getKoth().getName());
                 }
             }
-            KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled());
+            KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled(), params.getEntityType());
 
             if (params.isScheduled() && Lists.newArrayList(Bukkit.getOnlinePlayers()).size() < ConfigHandler.getCfgHandler().getKoth().getMinimumPlayersNeeded()) {
                 event.setCancelled(true);
@@ -300,6 +302,10 @@ public class KothHandler {
         
         public void registerCaptureType(String captureTypeIdentifier, Class<? extends Capper> clazz){
             captureTypes.put(captureTypeIdentifier, clazz);
+        }
+        
+        public Class<? extends Capper> getCaptureClass(String name){
+            return captureTypes.get(name);
         }
         
         public Capper getCapperFromType(String captureTypeIdentifier, String objectUniqueId){

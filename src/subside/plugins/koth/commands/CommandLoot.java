@@ -37,7 +37,7 @@ public class CommandLoot implements ICommand {
         }
         
         if (args.length < 1) {
-            Utils.sendMsg(player, 
+            Utils.sendMessage(player, true,
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Loot editor").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot create <loot>").commandInfo("Create loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot edit <loot>").commandInfo("Edit loot chest").build(),  
@@ -61,7 +61,7 @@ public class CommandLoot implements ICommand {
         } else if(args[0].equalsIgnoreCase("asmember")){
             asMember(sender, newArgs);
         } else {
-            Utils.sendMsg(player, 
+            Utils.sendMessage(player, true,
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Loot editor").build(),
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot create <loot>").commandInfo("Create loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot edit <loot>").commandInfo("Edit loot chest").build(),  

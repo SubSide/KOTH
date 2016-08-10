@@ -18,14 +18,16 @@ public class KothStartEvent extends Event implements IEvent, Cancellable {
     private @Getter @Setter int maxLength;
     private @Getter Koth koth;
     private @Getter boolean scheduled;
+    private @Getter @Setter String entityType;
     
     private boolean isCancelled;
     
-    public KothStartEvent(Koth koth, int captureTime, int maxLength, boolean scheduled){
+    public KothStartEvent(Koth koth, int captureTime, int maxLength, boolean scheduled, String entityType){
         this.koth = koth;
         this.captureTime = captureTime;
         this.maxLength = maxLength;
         this.scheduled = scheduled;
+        this.entityType = entityType;
     }
     private static final HandlerList handlers = new HandlerList();
 

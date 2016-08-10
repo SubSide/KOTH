@@ -15,6 +15,7 @@ public class StartParams {
         private @Getter @Setter int lootAmount = ConfigHandler.getCfgHandler().getLoot().getLootAmount();
         private @Setter String lootChest = null;
         private @Getter @Setter boolean isScheduled = false;
+        private @Getter @Setter String entityType = null;
         
         public String getLootChest(){
             if(lootChest != null) return null;

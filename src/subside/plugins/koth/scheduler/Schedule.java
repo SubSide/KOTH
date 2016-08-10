@@ -19,6 +19,7 @@ public class Schedule {
     private @Getter @Setter int maxRunTime = -1;
     private @Getter @Setter int lootAmount = -1;
     private @Getter @Setter String lootChest;
+    private @Getter @Setter String entityType;
 
     private @Getter boolean isBroadcasted = false;
 
@@ -85,6 +86,10 @@ public class Schedule {
         if (obj.containsKey("lootChest")) {
             schedule.setLootChest((String) obj.get("lootChest")); // lootChest
         }
+        
+        if(obj.containsKey("entityType")){
+            schedule.setEntityType((String) obj.get("entityType"));
+        }
 
         return schedule;
 
@@ -111,6 +116,10 @@ public class Schedule {
 
         if (lootChest != null) {
             obj.put("lootChest", this.lootChest); // lootChest
+        }
+        
+        if(entityType != null){
+            obj.put("entityType", this.entityType);
         }
 
         return obj;

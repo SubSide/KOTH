@@ -60,24 +60,27 @@ public class Utils {
 		}
 		
 	}
-	
-	
-	@SuppressWarnings("unchecked")
-    public static void sendMsg(CommandSender player, Object... args){
-	    if(player instanceof Player && Utils.isIgnoring((Player)player))
-	        return;
-	    
-	    for(Object obj : args){
-	        if(obj instanceof String){
+
+    @SuppressWarnings("unchecked")
+	public static void sendMessage(CommandSender player, boolean priority, Object ...args){
+	    if(player instanceof Player && Utils.isIgnoring((Player)player) && !priority)
+            return;
+        
+        for(Object obj : args){
+            if(obj instanceof String){
                 player.sendMessage((String)obj);
             } else if(obj instanceof String[]){
-	            player.sendMessage((String[])obj);
-	        } else if(obj instanceof List<?>){
-	            for(String str : ((List<String>)obj)){
-	                player.sendMessage(str);
-	            }
-	        }
-	    }
+                player.sendMessage((String[])obj);
+            } else if(obj instanceof List<?>){
+                for(String str : ((List<String>)obj)){
+                    player.sendMessage(str);
+                }
+            }
+        }
+	}
+	
+    public static void sendMsg(CommandSender player, Object... args){
+	    sendMessage(player, false, args);
 	}
 
 

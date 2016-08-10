@@ -37,7 +37,7 @@ public class KothClassic implements RunningKoth {
         this.lootAmount = params.getLootAmount();
         
         this.timeNotCapped = 0;
-        this.capInfo = new CapInfo(this, this.koth);
+        this.capInfo = new CapInfo(this, this.koth, KothHandler.getInstance().getCapEntityRegistry().getCaptureClass(params.getEntityType()));
         this.maxRunTime = maxRunTime * 60;
         koth.removeLootChest();
         koth.setLastWinner(null);
@@ -132,7 +132,7 @@ public class KothClassic implements RunningKoth {
             return;
         }
 
-        if (timeNotCapped % 30 == 0) {
+        if (timeNotCapped % ConfigHandler.getCfgHandler().getGlobal().getNoCapBroadcastInterval() == 0) {
             new MessageBuilder(Lang.KOTH_PLAYING_NOT_CAPPING).maxTime(maxRunTime).time(getTimeObject()).koth(koth).buildAndBroadcast();
         }
 

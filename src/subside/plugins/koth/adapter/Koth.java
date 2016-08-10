@@ -54,17 +54,26 @@ public class Koth implements Capable {
         return ConfigHandler.getCfgHandler().getLoot().getDefaultLoot();
     }
     
+    /** Return a RunningKoth linked to this KoTH if there is running one
+     * 
+     * @return          the RunningKoth linked to this KoTH, null if none
+     */
+    public RunningKoth getRunningKoth(){
+        for(RunningKoth rKoth : KothHandler.getInstance().getRunningKoths()){
+            if(rKoth.getKoth() == this){
+                return rKoth;
+            }
+        }
+        return null;
+    }
+    
+    
     /** Is the current KoTH running?
      * 
      * @return          true if the KoTH is running
      */
     public boolean isRunning(){
-        for(RunningKoth rKoth : KothHandler.getInstance().getRunningKoths()){
-            if(rKoth.getKoth() == this){
-                return true;
-            }
-        }
-        return false;
+        return getRunningKoth() != null;
     }
     
 
