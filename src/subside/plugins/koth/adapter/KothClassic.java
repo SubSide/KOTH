@@ -86,7 +86,7 @@ public class KothClassic implements RunningKoth {
         if (event.isCreatingChest()) {
             Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
                 public void run() {
-                    koth.createLootChest(lootAmount, lootChest);
+                    koth.triggerLoot(lootAmount, lootChest);
                 }
             });
         }

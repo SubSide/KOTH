@@ -129,25 +129,35 @@ public class Koth implements Capable {
         }
         return false;
     }
+    
+    public Loot getLootChest(String lootChest){
+        Loot loot = KothHandler.getInstance().getLoot((lootChest == null)?getLoot():lootChest);
+        
+        if(loot == null){
+            loot = KothHandler.getInstance().getLoot(ConfigHandler.getCfgHandler().getLoot().getDefaultLoot()); 
+        }
+        
+        return loot;
+    }
 
-
-    /** Creates the loot chest
+    /** Creates the loot chest and trigger the commands
      * 
      * @param lootAmount        The amount of loot that should be created
      * @param lootChest         The lootChest to use
      */
-    public void createLootChest(int lootAmount, String lootChest) {
+    public void triggerLoot(int lootAmount, String lootChst) {
         try {
-            ItemStack[] lt;
-            try {
-                if(lootChest == null){
-                    lt = KothHandler.getInstance().getLoot(getLoot()).getInventory().getContents();
-                } else {
-                    lt = KothHandler.getInstance().getLoot(lootChest).getInventory().getContents();
-                }
-            } catch(Exception e){
-                lt = KothHandler.getInstance().getLoot(ConfigHandler.getCfgHandler().getLoot().getDefaultLoot()).getInventory().getContents();
+            Loot lootChest = getLootChest(lootChst);
+            
+            if(lootChest == null) return;
+            
+            lootChest.triggerCommands(this, this.lastWinner);
+            
+            if(lootChest.getInventory().getContents().length < 1){
+                return;
             }
+            
+            ItemStack[] lt = lootChest.getInventory().getContents();
 
             List<ItemStack> usableLoot = new ArrayList<>();
             for (ItemStack stack : lt) {

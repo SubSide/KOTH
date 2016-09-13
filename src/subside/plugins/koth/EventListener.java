@@ -91,12 +91,6 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInventoryChange(InventoryClickEvent event) {
-//        for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
-//            if (event.getInventory().getTitle().equals(Loot.getKothLootTitle(koth.getName()))) {
-//                event.setCancelled(true);
-//                return;
-//            }
-//        }
         if(!(event.getWhoClicked() instanceof Player) || Perm.Admin.LOOT.has((Player)event.getWhoClicked())){
             return;
         }

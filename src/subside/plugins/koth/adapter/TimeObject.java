@@ -1,5 +1,6 @@
 package subside.plugins.koth.adapter;
 
+import subside.plugins.koth.Lang;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 
@@ -69,14 +70,15 @@ public class TimeObject {
     }
     
     public static String getTimeTillNextEvent(Koth koth){
-        if(koth.isRunning()) return "00:00:00";
+        if(koth.isRunning()) getTimeTillNextEvent((Schedule)null);
         
         return getTimeTillNextEvent(ScheduleHandler.getInstance().getNextEvent(koth));
     }
     
     public static String getTimeTillNextEvent(Schedule schedule){
+        String ret = Lang.HOOKS_PLACEHOLDERAPI_TIMETILL[0];
         if(schedule == null){
-            return "--:--:--";
+            return ret.replaceAll("%h%", "-").replaceAll("%m%", "-").replaceAll("%s%", "-").replaceAll("%hh%", "-").replaceAll("%mm%", "-").replaceAll("%ss%", "-");
         }
         
         long timeTillNext = schedule.getNextEvent() - System.currentTimeMillis();
@@ -89,9 +91,9 @@ public class TimeObject {
         timeTillNext /= 60;
         
         long hours = timeTillNext;
-        
-        String time = String.format("%02d", hours)+":"+String.format("%02d", mins)+":"+String.format("%02d", secs);
-        
-        return time;
+
+        ret = ret.replaceAll("%hh%", String.format("%02d", hours)).replaceAll("%mm%", String.format("%02d", mins)).replaceAll("%ss%", String.format("%02d", secs));
+        ret = ret.replaceAll("%h%", ""+hours).replaceAll("%m%", ""+mins).replaceAll("%s%", ""+secs);
+        return ret;
     }
 }

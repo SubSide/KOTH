@@ -33,6 +33,7 @@ public class Lang {
     public static String[] KOTH_PLAYING_TIME_UP = new String[]{"&aAfter %mt% minute noone capped the KoTH! Event is over!"};
     
     public static String[] HOOKS_PLACEHOLDERAPI_NOONECAPPING = new String[]{ "No One" };
+    public static String[] HOOKS_PLACEHOLDERAPI_TIMETILL = new String[]{ "%hh%:%mm%:%ss%" };
     
     public static String[] KOTH_PLAYING_PRE_BROADCAST = new String[]{"&aThe koth %koth% will start in 30 minutes!"};
 	
@@ -72,12 +73,16 @@ public class Lang {
     public static String[] COMMAND_LISTS_LIST_ENTRY = new String[]{"&7- &a%koth%"};
     public static String[] COMMAND_LISTS_LOOT_TITLE = new String[]{"&8========> &2Available Loot chests &8<========"};
     public static String[] COMMAND_LISTS_LOOT_ENTRY = new String[]{"&7- &a%loot%"};
+    public static String[] COMMAND_LISTS_LOOT_CMD_TITLE = new String[] { "&8========> &2Loot command list &8<========" };
+    public static String[] COMMAND_LISTS_LOOT_CMD_ENTRY = new String[]{"&7- &a%command%"};
 
     public static String[] COMMAND_LOOT_CREATE = new String[]{ "&aLoot succesfully created!"};
     public static String[] COMMAND_LOOT_RENAME = new String[]{ "&aLoot succesfully renamed!"};
     public static String[] COMMAND_LOOT_OPENING = new String[]{ "&aOpening %loot%."};
     public static String[] COMMAND_LOOT_REMOVE = new String[]{ "&aSuccesfully removed the loot!"};
-    public static String[] COMMAND_LOOT_CHEST_TITLE = new String[]{ "&1&l%loot%s &8&lloot"};
+    public static String[] COMMAND_LOOT_CHEST_TITLE = new String[]{ "&1%loot%s &8&lloot"};
+    public static String[] COMMAND_LOOT_CMD_CREATED = new String[]{ "&aLoot command succesfully added!" };
+    public static String[] COMMAND_LOOT_CMD_REMOVED = new String[]{ "&aLoot command succesfully removed!" };
     
 
     public static String[] COMMAND_CHANGE_POINTS_SET = new String[]{ "&aPoints of the faction %entry% succesfully set!" };
