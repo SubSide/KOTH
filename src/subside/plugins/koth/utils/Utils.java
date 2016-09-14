@@ -3,20 +3,54 @@ package subside.plugins.koth.utils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.json.simple.JSONObject;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 
 public class Utils {
+    static String KOTH_IGNORE_KEY = "KOTH_IGNORING";
+    
+    
+    /** Returns if the player has enabled the ignore feature in KoTH
+     * 
+     * @param player the player to check
+     * @return true if the player wants to ignore all messages
+     */
+    public static boolean isIgnoring(Player player){
+        return player.hasMetadata(KOTH_IGNORE_KEY);
+    }
+    
+    /** Toggles the ignore state of the player
+     * 
+     * @param player the player to toggle ignore for
+     * @return true if the player is now ignoring the messages
+     */
+    public static boolean toggleIgnoring(Player player){
+        if(player.hasMetadata(KOTH_IGNORE_KEY)){
+            player.removeMetadata(KOTH_IGNORE_KEY, KothPlugin.getPlugin());
+            return false;
+        } else {
+            player.setMetadata(KOTH_IGNORE_KEY, new FixedMetadataValue(KothPlugin.getPlugin(), true));
+            return true;
+        }
+    }
+    
+    
 	public static void msg(CommandSender sender, String msg){
 		new MessageBuilder(Lang.COMMAND_GLOBAL_PREFIX+msg).buildAndSend(sender);
 	}
@@ -29,21 +63,27 @@ public class Utils {
 		}
 		
 	}
-	
-	
-	@SuppressWarnings("unchecked")
-    public static void sendMsg(CommandSender player, Object... args){
-	    for(Object obj : args){
-	        if(obj instanceof String){
+
+    @SuppressWarnings("unchecked")
+	public static void sendMessage(CommandSender player, boolean priority, Object ...args){
+	    if(player instanceof Player && Utils.isIgnoring((Player)player) && !priority)
+            return;
+        
+        for(Object obj : args){
+            if(obj instanceof String){
                 player.sendMessage((String)obj);
             } else if(obj instanceof String[]){
-	            player.sendMessage((String[])obj);
-	        } else if(obj instanceof List<?>){
-	            for(String str : ((List<String>)obj)){
-	                player.sendMessage(str);
-	            }
-	        }
-	    }
+                player.sendMessage((String[])obj);
+            } else if(obj instanceof List<?>){
+                for(String str : ((List<String>)obj)){
+                    player.sendMessage(str);
+                }
+            }
+        }
+	}
+	
+    public static void sendMsg(CommandSender player, Object... args){
+	    sendMessage(player, false, args);
 	}
 
 
@@ -112,6 +152,19 @@ public class Utils {
         }
         
         return t;
+    }
+    
+    public static void log(String log){
+        KothPlugin.getPlugin().getLogger().info("KoTH - "+log);
+    }
+    
+    public static String parseDate(long millis){
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        return sdf.format(new Date(millis));
+    }
+    
+    public static String parseCurrentDate(){
+        return parseDate(System.currentTimeMillis() + ConfigHandler.getCfgHandler().getGlobal().getMinuteOffset()*60*1000);
     }
     
     public static Location getLocFromObject(JSONObject loc) {

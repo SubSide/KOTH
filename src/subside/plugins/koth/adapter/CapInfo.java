@@ -10,21 +10,12 @@ import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
-import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
+import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class CapInfo {
-    
-    private static @Getter List<Class<? extends Capper>> capTypes = new ArrayList<>();
-    
-    public static void registerCapType(){
-        
-    }
-    
-    
-    
     private @Getter @Setter int timeCapped;
     
     private @Getter @Setter Capper capper;
@@ -41,7 +32,7 @@ public class CapInfo {
         if(ofType != null){
             this.ofType = ofType;
         } else {
-            this.ofType = CappingPlayer.class;
+            this.ofType = KothHandler.getInstance().getCapEntityRegistry().getPreferedClass();
         }
     }
     
@@ -52,21 +43,17 @@ public class CapInfo {
     public CapInfo(RunningKoth runningKoth, Capable captureZone){
     	this(runningKoth, captureZone, null);
     }
+
     
-//    /* Override this if you want to have more control over the capturing
-//     * 
-//     */
-//    public void onCapture(){
-//    }
-    
-    /* Override this if you want to use a different type of capper
-     * 
+    /** Override this if you want to use a different type of capper
+     * @param playerList a list of players to choose from
+     * @return the correct capper type
      */
     public Capper getRandomCapper(List<Player> playerList){
         return KothHandler.getInstance().getCapEntityRegistry().getCapper(ofType, playerList);
     }
     
-    /* Returns true if capper is still on field
+    /** Gets updated every single tick
      * 
      */
     public void update(){
@@ -102,7 +89,9 @@ public class CapInfo {
             List<Player> insideArea = new ArrayList<>();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (captureZone.isInArea(player)) {
-                    insideArea.add(player);
+                    if(HookManager.getHookManager().canCap(player)) {
+                        insideArea.add(player);
+                    }
                 }
             }
             if (insideArea.size() < 1) {
@@ -123,14 +112,17 @@ public class CapInfo {
             this.capper = event.getNextCapper();
             
         	if(sendMessages)
-        		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
+        		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName())/*.shouldExcludePlayer()*/.buildAndBroadcast();
 //            if (Bukkit.getPlayer(cappingPlayer) != null) {
 //                new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP_CAPPER).maxTime(maxRunTime).capper(cappingPlayer).koth(koth).time(getTimeObject()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
 //            }
-            // TODO
+            // TO-DO
         }
     }
     
+    /**
+     * @return the name of the object (Playername for players, Factionname for factions)
+     */
     public String getName(){
     	if(capper != null && capper.getObject() != null){
     		return capper.getName();

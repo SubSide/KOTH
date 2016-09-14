@@ -1,12 +1,10 @@
 package subside.plugins.koth.commands;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import subside.plugins.koth.ConfigHandler;
@@ -42,6 +40,10 @@ public class CommandSchedule implements ICommand {
                 edit(sender, newArgs);
             } else if (args[0].equalsIgnoreCase("asmember")) {
                 asMember(sender, newArgs);
+            } else if (args[0].equalsIgnoreCase("clear")) {
+                clear(sender, newArgs);
+            } else if (args[0].equalsIgnoreCase("debug")) {
+                debug(sender, newArgs);
             } else {
                 help(sender, newArgs);
             }
@@ -49,14 +51,28 @@ public class CommandSchedule implements ICommand {
             help(sender, args);
         }
     }
+    
+    private void debug (CommandSender sender, String[] args){
+        List<Schedule> schedules = ScheduleHandler.getInstance().getSchedules();
+        
+        for (Schedule schedule : schedules) {
+            long time = (schedule.getNextEvent()- System.currentTimeMillis())/1000;
+            sender.sendMessage(ChatColor.DARK_GREEN+"KoTH: "+ChatColor.GREEN+schedule.getKoth()+ChatColor.DARK_GREEN+" ID: "+ChatColor.GREEN+schedules.indexOf(schedule)+ChatColor.DARK_GREEN+" startsin: "+ChatColor.GREEN+time+"secs");
+        }
+    }
+    
+    private void clear (CommandSender sender, String[] args) {
+        ScheduleHandler.getInstance().getSchedules().clear();
+        ScheduleLoader.save();
+        throw new CommandMessageException(Lang.COMMAND_SCHEDULE_CLEARED);
+    }
 
     private void asMember(CommandSender sender, String[] args) {
         List<Schedule> schedules = ScheduleHandler.getInstance().getSchedules();
         List<String> list = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getGlobal().getTimeZone()));
+       
         list.add(" ");
-        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_CURRENTDATETIME).date(sdf.format(new Date())).buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_CURRENTDATETIME).date(Utils.parseCurrentDate()).buildArray());
         for (Day day : Day.values()) {
             List<String> subList = new ArrayList<>();
             for (Schedule sched : schedules) {
@@ -80,38 +96,42 @@ public class CommandSchedule implements ICommand {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth schedule create <koth> <day|(daily)> <time> [capturetime] [maxruntime] [lootamount] [lootchest]"));
         }
         
+        String[] days = args[1].split(",");
         if(args[1].equalsIgnoreCase("daily")){
-            for(Day day : Day.values()){
-                args[1] = day.getDay();
-                System.out.println(args[1]);
+            days = new String[] {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+            
+        }
+        String[] times = args[2].split(",");
+        
+        for(String day : days){
+            for(String time : times){
                 try {
-                    create(sender, args);
+                    create(sender, args, day, time);
                 } catch(CommandMessageException e){
                     for(String msg : e.getMsg()){
-                        sender.sendMessage(msg);
+                        Utils.sendMessage(sender, true, msg);
                     }
                 }
             }
-        } else {
-            create(sender, args);
         }
     }
     
-    private void create(CommandSender sender, String[] args) {
+    private void create(CommandSender sender, String[] args, String pDay, String pTime) {
         if (args.length < 2) {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth schedule create <koth> <day|(daily)> <time> [capturetime] [maxruntime] [lootamount] [lootchest]"));
         }
         
-        Day day = Day.getDay(args[1].toUpperCase());
+        Day day = Day.getDay(pDay);
         if (day == null) {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_NOVALIDDAY));
         }
-        Schedule schedule = new Schedule(args[0], day, args[2]);
+        Schedule schedule = new Schedule(args[0], day, pTime);
         
         int captureTime = 15;
         int maxRunTime = -1;
         int lootAmount = ConfigHandler.getCfgHandler().getLoot().getLootAmount();
         String lootChest = null;
+        String entityType = null;
         try {
             if (args.length > 3) {
                 captureTime = Integer.parseInt(args[3]);
@@ -135,14 +155,21 @@ public class CommandSchedule implements ICommand {
             }
         }
         
+        if(args.length > 7){
+            if(!args[7].equalsIgnoreCase("0")){
+                entityType = args[7];
+            }
+        }
+        
         schedule.setMaxRunTime(maxRunTime);
         schedule.setCaptureTime(captureTime);
         schedule.setLootAmount(lootAmount);
         schedule.setLootChest(lootChest);
+        schedule.setEntityType(entityType);
 
         ScheduleHandler.getInstance().getSchedules().add(schedule);
         ScheduleLoader.save();
-        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_CREATED).koth(args[0]).lootAmount(lootAmount).day(day.getDay()).time(args[2]).captureTime(captureTime));
+        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_CREATED).koth(args[0]).lootAmount(lootAmount).day(day.getDay()).time(pTime).captureTime(captureTime));
 
     }
 
@@ -150,6 +177,7 @@ public class CommandSchedule implements ICommand {
         if (args.length < 1) {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth schedule remove <ID>");
         }
+        
         try {
             String kth = ScheduleHandler.getInstance().removeId(Integer.parseInt(args[0]));
             if (kth == null) {
@@ -168,10 +196,9 @@ public class CommandSchedule implements ICommand {
     private void admin_list(CommandSender sender, String[] args) {
         List<Schedule> schedules = ScheduleHandler.getInstance().getSchedules();
         List<String> list = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        sdf.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getGlobal().getTimeZone()));
+        
         list.add(" ");
-        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME).date(sdf.format(new Date())).buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME).date(Utils.parseCurrentDate()).buildArray());
         for (Day day : Day.values()) {
             List<String> subList = new ArrayList<>();
             for (Schedule sched : schedules) {
@@ -281,7 +308,9 @@ public class CommandSchedule implements ICommand {
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit").commandInfo("Edit an existing schedule").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule remove <ID>").commandInfo("removes an existing schedule").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule list").commandInfo("shows the ID's of the schedule").build(), 
-                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule asmember").commandInfo("shows the schedule as member").build());
+                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule asmember").commandInfo("shows the schedule as member").build(),
+                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule clear").commandInfo("clear the complete schedule list").build(),
+                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule debug").commandInfo("debug info").build());
     }
 
     @Override
@@ -292,7 +321,8 @@ public class CommandSchedule implements ICommand {
     @Override
     public String[] getCommands() {
         return new String[] {
-            "schedule"
+            "schedule",
+            "time"
         };
     }
 

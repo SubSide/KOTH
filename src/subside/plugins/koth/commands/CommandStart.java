@@ -15,7 +15,7 @@ public class CommandStart implements ICommand {
     @Override
     public void run(CommandSender sender, String[] args) {
         if (args.length < 1) {
-            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth start <name> [time] [maxRunTime] [lootAmount]");
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth start <name> [time] [maxRunTime] [lootAmount] [entitytype]");
         }
         StartParams params = new StartParams(args[0]);
         if (args.length > 1) {
@@ -28,6 +28,10 @@ public class CommandStart implements ICommand {
                 
                 if (args.length > 3) {
                     params.setLootAmount(Integer.parseInt(args[3]));
+                }
+                
+                if(args.length > 4){
+                    params.setEntityType(args[4]);
                 }
             }
             catch (NumberFormatException e) {

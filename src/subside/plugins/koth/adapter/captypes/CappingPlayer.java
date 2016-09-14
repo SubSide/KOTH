@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.adapter.Capable;
 import subside.plugins.koth.adapter.Koth;
+import subside.plugins.koth.hooks.HookManager;
 
 public class CappingPlayer extends Capper {
     private OfflinePlayer player;
@@ -51,7 +52,7 @@ public class CappingPlayer extends Capper {
     
     @Override
     public boolean areaCheck(Capable cap){
-        if(cap.isInArea(player)){
+        if(cap.isInArea(player) && HookManager.getHookManager().canCap(player.getPlayer())){
             return true;
         }
         

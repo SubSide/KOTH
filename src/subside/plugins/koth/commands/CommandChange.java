@@ -45,8 +45,8 @@ public class CommandChange implements ICommand {
     public void help(CommandSender sender){
         List<String> list = new ArrayList<>();
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Running game manager").buildArray());
-        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth time").commandInfo("Command to change the time").buildArray());
-        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth points").commandInfo("Manage the points").buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth change time").commandInfo("Command to change the time").buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth change points").commandInfo("Manage the points").buildArray());
         sender.sendMessage(list.toArray(new String[list.size()]));
     }
     
@@ -61,7 +61,13 @@ public class CommandChange implements ICommand {
 
     public void points(CommandSender sender, String[] args, RunningKoth rKoth) {
         if (args.length < 1) {
-            // TODO
+            List<String> list = new ArrayList<>();
+            list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Change points").buildArray());
+            list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth change points set <faction> <points>").commandInfo("Set the points of a faction").buildArray());
+            list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth change points add <faction> <points>").commandInfo("Add points to a faction").buildArray());
+            list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth change points del <faction> <points>").commandInfo("remove points from a faction").buildArray());
+            list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth change points reset <faction>").commandInfo("reset points of a faction").buildArray());
+            sender.sendMessage(list.toArray(new String[list.size()]));    
             return;
         }
 
@@ -74,7 +80,70 @@ public class CommandChange implements ICommand {
                 for (FactionScore fScore : kothCQ.getFScores()) {
                     if (fScore.getFaction().getName().equalsIgnoreCase(args[1])) {
                         try {
-                            fScore.setPoints(Integer.parseInt(args[2])); // TODO check integer
+                            fScore.setPoints(Integer.parseInt(args[2]));
+                            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_SET).entry(fScore.getFaction().getName()));
+                        } catch(Exception e){
+                            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_NOTANUMBER));
+                        }
+                    }
+                }
+
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_FACTION_NOT_FOUND));
+            } else {
+                throw new CommandMessageException(Lang.KOTH_ERROR_NOT_COMPATIBLE);
+            }
+        } else if(args[0].equalsIgnoreCase("add")){
+            if (args.length < 3) {
+                throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth change points add <faction> <points>");
+            }
+            if (rKoth instanceof KothConquest) {
+                KothConquest kothCQ = (KothConquest) rKoth;
+                for (FactionScore fScore : kothCQ.getFScores()) {
+                    if (fScore.getFaction().getName().equalsIgnoreCase(args[1])) {
+                        try {
+                            fScore.setPoints(fScore.getPoints()+Integer.parseInt(args[2]));
+                            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_SET).entry(fScore.getFaction().getName()));
+                        } catch(Exception e){
+                            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_NOTANUMBER));
+                        }
+                    }
+                }
+
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_FACTION_NOT_FOUND));
+            } else {
+                throw new CommandMessageException(Lang.KOTH_ERROR_NOT_COMPATIBLE);
+            }
+        } else if(args[0].equalsIgnoreCase("del")){
+            if (args.length < 3) {
+                throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth change points set <faction> <points>");
+            }
+            if (rKoth instanceof KothConquest) {
+                KothConquest kothCQ = (KothConquest) rKoth;
+                for (FactionScore fScore : kothCQ.getFScores()) {
+                    if (fScore.getFaction().getName().equalsIgnoreCase(args[1])) {
+                        try {
+                            fScore.setPoints(fScore.getPoints()-Integer.parseInt(args[2]));
+                            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_SET).entry(fScore.getFaction().getName()));
+                        } catch(Exception e){
+                            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_NOTANUMBER));
+                        }
+                    }
+                }
+
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_FACTION_NOT_FOUND));
+            } else {
+                throw new CommandMessageException(Lang.KOTH_ERROR_NOT_COMPATIBLE);
+            }
+        } else if(args[0].equalsIgnoreCase("reset")){
+            if (args.length < 3) {
+                throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth change points set <faction> <points>");
+            }
+            if (rKoth instanceof KothConquest) {
+                KothConquest kothCQ = (KothConquest) rKoth;
+                for (FactionScore fScore : kothCQ.getFScores()) {
+                    if (fScore.getFaction().getName().equalsIgnoreCase(args[1])) {
+                        try {
+                            fScore.setPoints(0);
                             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_SET).entry(fScore.getFaction().getName()));
                         } catch(Exception e){
                             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_CHANGE_POINTS_NOTANUMBER));

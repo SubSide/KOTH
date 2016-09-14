@@ -36,7 +36,7 @@ public class CommandEdit implements ICommand {
         Player player = (Player) sender;
 
         if (args.length < 2) {
-            Utils.sendMsg(player, 
+            Utils.sendMessage(player, true,
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH editor").build(), 
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> area").commandInfo("Area commands").build(), 
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> loot").commandInfo("Loot commands").build(), 
@@ -56,7 +56,7 @@ public class CommandEdit implements ICommand {
         } else if(args[1].equalsIgnoreCase("rename")){
             name(sender, newArgs, koth);
         } else {
-            Utils.sendMsg(player, 
+            Utils.sendMessage(player, true,
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH editor").build(), 
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> area").commandInfo("Area commands").build(), 
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> loot").commandInfo("Loot commands").build(), 
@@ -132,7 +132,7 @@ public class CommandEdit implements ICommand {
                 throw new CommandMessageException(Lang.COMMAND_EDITOR_AREA_DELETED);
             }
         }
-        Utils.sendMsg(sender, 
+        Utils.sendMessage(sender, true,
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Area commands").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> area create <name>").commandInfo("create an area").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> area edit <area>").commandInfo("re-sets an area").build(), 
@@ -165,7 +165,7 @@ public class CommandEdit implements ICommand {
             }
         }
 
-        Utils.sendMsg(sender, 
+        Utils.sendMessage(sender, true,
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("loot commands").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> loot setpos").commandInfo("sets the position to the block looking at").build(), 
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> loot link <loot>").commandInfo("links a loot chest").build());

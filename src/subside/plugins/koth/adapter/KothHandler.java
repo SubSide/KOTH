@@ -22,11 +22,11 @@ import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothNotExistException;
-import subside.plugins.koth.exceptions.NoCompatibleCapperException;
+import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
-import subside.plugins.koth.scoreboard.SBManager;
+import subside.plugins.koth.scoreboard.ScoreboardManager;
 
 /**
  * @author Thomas "SubSide" van den Bulk
@@ -59,9 +59,10 @@ public class KothHandler {
                 it.next().update();
             }
             if (ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()) {
-                SBManager.getManager().update();
+                ScoreboardManager.getInstance().update();
             }
             ScheduleHandler.getInstance().tick();
+            HookManager.getHookManager().tick();
         }
     }
 
@@ -86,6 +87,7 @@ public class KothHandler {
         params.setMaxRunTime(schedule.getMaxRunTime());
         params.setLootAmount(schedule.getLootAmount());
         params.setLootChest(schedule.getLootChest());
+        params.setEntityType(schedule.getEntityType());
         params.setScheduled(true);
         
         startKoth(params);
@@ -99,6 +101,7 @@ public class KothHandler {
      * @param maxRunTime        The maximum time this KoTH can run (-1 for unlimited time)
      * @param lootAmount        The amount of loot that should spawn (-1 for default config settings)
      * @param lootChest         The lootchest it should use (null for default config settings)
+     * @param entityType        The entity type that should be able to cap the KoTH (Players, Factions etc.)
      * @param isScheduled       This is used to see if it should obey stuff like minimumPlayers
      */
     @SuppressWarnings("deprecation")
@@ -109,7 +112,7 @@ public class KothHandler {
                     throw new KothAlreadyRunningException(params.getKoth().getName());
                 }
             }
-            KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled());
+            KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled(), params.getEntityType());
 
             if (params.isScheduled() && Lists.newArrayList(Bukkit.getOnlinePlayers()).size() < ConfigHandler.getCfgHandler().getKoth().getMinimumPlayersNeeded()) {
                 event.setCancelled(true);
@@ -196,12 +199,11 @@ public class KothHandler {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
-                it.next();
-                it.remove();
+                it.next().endKoth(EndReason.FORCED);
             }
         }
 
-        SBManager.getManager().clearAll();
+        ScoreboardManager.getInstance().destroy();
     }
 
     @Deprecated
@@ -210,7 +212,7 @@ public class KothHandler {
             runningKoths.remove(koth);
 
             if(runningKoths.size() < 1){
-            	SBManager.getManager().clearAll();
+                ScoreboardManager.getInstance().destroy();
             }
         }
     }
@@ -292,7 +294,7 @@ public class KothHandler {
     
     public class CapEntityRegistry {
         private @Getter Map<String, Class<? extends Capper>> captureTypes = new HashMap<>();
-        private @Getter @Setter Class<? extends Capper> preferedClass; // TODO
+        private @Getter @Setter Class<? extends Capper> preferedClass;
 
         public CapEntityRegistry(){
             captureTypes = new HashMap<>();
@@ -300,6 +302,10 @@ public class KothHandler {
         
         public void registerCaptureType(String captureTypeIdentifier, Class<? extends Capper> clazz){
             captureTypes.put(captureTypeIdentifier, clazz);
+        }
+        
+        public Class<? extends Capper> getCaptureClass(String name){
+            return captureTypes.get(name);
         }
         
         public Capper getCapperFromType(String captureTypeIdentifier, String objectUniqueId){
@@ -317,12 +323,14 @@ public class KothHandler {
         public Capper getCapper(Class<? extends Capper> capperClazz, List<Player> players){
             try {
                 for(Class<? extends Capper> clazz : getCaptureTypes().values()){
-                    if(clazz.isInstance(capperClazz)){
-                        return clazz.getDeclaredConstructor(List.class).newInstance(players);
+                    if(capperClazz.isAssignableFrom(clazz)){
+                        Capper capper =  clazz.getDeclaredConstructor(List.class).newInstance(players);
+                        if(capper.getObject() == null){
+                            return null;
+                        }
+                        return capper;
                     }
                 }
-            } catch(NoCompatibleCapperException e){
-                return null;
             } catch(Exception e){
                 e.printStackTrace();
             }

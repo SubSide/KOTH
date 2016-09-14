@@ -28,6 +28,9 @@ public class MessageBuilder {
             } else {
                 this.message = message.clone();
             }
+            
+            // static calls
+            replaceAll("%ttn%", TimeObject.getTimeTillNextEvent());
         }
 
         protected StrObj replaceAll(String search, String replace) {
@@ -137,7 +140,7 @@ public class MessageBuilder {
     }
 
     public MessageBuilder captureTime(int captureTime) {
-        message.replaceAll("%capturetime%", "" + captureTime);
+        message.replaceAll("%ct%", "" + captureTime);
         return this;
     }
 
@@ -152,16 +155,16 @@ public class MessageBuilder {
     }
 
     public MessageBuilder time(TimeObject tO) {
-        message.replaceAll("%minutes%", String.format("%02d", tO.getMinutesCapped()));
-        message.replaceAll("%seconds%", String.format("%02d", tO.getSecondsCapped()));
-        message.replaceAll("%minutes_left%", String.format("%02d", tO.getMinutesLeft()));
-        message.replaceAll("%seconds_left%", String.format("%02d", tO.getSecondsLeft()));
+        message.replaceAll("%m%", String.format("%02d", tO.getMinutesCapped()));
+        message.replaceAll("%s%", String.format("%02d", tO.getSecondsCapped()));
+        message.replaceAll("%ml%", String.format("%02d", tO.getMinutesLeft()));
+        message.replaceAll("%sl%", String.format("%02d", tO.getSecondsLeft()));
 
         return this;
     }
 
     public MessageBuilder maxTime(int maxTime) {
-        message.replaceAll("%maxtime%", "" + ((int) maxTime / 60));
+        message.replaceAll("%mt%", "" + ((int) maxTime / 60));
         return this;
     }
 
@@ -191,7 +194,7 @@ public class MessageBuilder {
 
             for (int x = 0; x < msg.length; x++) {
                 if(!msg[x].equalsIgnoreCase("")){
-                    player.sendMessage(msg[x]);
+                    Utils.sendMsg(player, msg[x]);
                 }
             }
         }
@@ -199,12 +202,7 @@ public class MessageBuilder {
     }
 
     public void buildAndSend(CommandSender player) {
-        String[] msg = build();
-        for (int x = 0; x < msg.length; x++) {
-            if(!msg[x].equalsIgnoreCase("")){
-                player.sendMessage(msg[x]);
-            }
-        }
+        Utils.sendMsg(player, (Object[])build());
     }
 
     public String[] build() {

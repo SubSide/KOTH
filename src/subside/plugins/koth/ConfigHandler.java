@@ -14,7 +14,7 @@ public class ConfigHandler {
 	private @Getter Loot loot;
 	private @Getter Koth koth;
 	private @Getter Scoreboard scoreboard;
-	private @Getter Factions factions;
+	private @Getter Hooks hooks;
 	
 	public ConfigHandler(FileConfiguration cfg){
 		cfgHandler = this;
@@ -23,22 +23,59 @@ public class ConfigHandler {
 		loot = new Loot(cfg.getConfigurationSection("loot"));
 		koth = new Koth(cfg.getConfigurationSection("koth"));
 		scoreboard = new Scoreboard(cfg.getConfigurationSection("scoreboard"));
-		factions = new Factions(cfg.getConfigurationSection("factions"));
+		hooks = new Hooks(cfg.getConfigurationSection("hooks"));
 	}
 	
 	public class Global {
 	    private @Getter String timeZone = "Europe/Amsterdam";
+        private @Getter int minuteOffset = 0;
+        private @Getter int startWeekMinuteOffset = 0;
 	    private @Getter boolean usePlayerMoveEvent = false;
 	    private @Getter int preBroadcast = 0;
+	    private @Getter int noCapBroadcastInterval = 30;
 	    private @Getter List<String> helpCommand = null;
 	    private @Getter boolean useFancyPlayerName = false;
+	    private @Getter boolean debug = false;
 	    
 	    public Global(ConfigurationSection section){
 	        timeZone = section.getString("schedule-timezone");
+            minuteOffset = section.getInt("minuteoffset");
+            startWeekMinuteOffset = section.getInt("startweekminuteoffset");
 	        usePlayerMoveEvent = section.getBoolean("use-playermoveevent");
 	        preBroadcast = section.getInt("pre-broadcast");
+	        noCapBroadcastInterval = section.getInt("nocap-broadcast-interval");
 	        helpCommand = section.getStringList("helpcommand");
 	        useFancyPlayerName = section.getBoolean("fancyplayername");
+	        debug = section.getBoolean("debug");
+	    }
+	}
+	
+	public class Hooks {
+	    private @Getter boolean vanishNoPacket = true;
+	    private @Getter boolean factions = true;
+	    private @Getter boolean kingdoms = true;
+	    private @Getter Featherboard featherboard;
+	    
+	    public Hooks(ConfigurationSection section){
+            vanishNoPacket = section.getBoolean("vanishnopacket");
+            factions = section.getBoolean("factions");
+            kingdoms = section.getBoolean("kingdoms");
+            featherboard = new Featherboard(section.getConfigurationSection("featherboard"));
+	    }
+	    
+	    public class Featherboard {
+	        private @Getter boolean enabled = false;
+	        private @Getter int range = 100;
+	        private @Getter int rangeMargin = 5;
+	        private @Getter String board = "KoTH";
+	        
+	        public Featherboard(ConfigurationSection section){
+	            enabled = section.getBoolean("enabled");
+	            range = section.getInt("range");
+	            rangeMargin = section.getInt("rangemargin");
+	            board = section.getString("board");
+	        }
+	        
 	    }
 	}
 	
@@ -88,16 +125,6 @@ public class ConfigHandler {
 	    
 	    public ConfigurationSection getSection(){
 	        return section;
-	    }
-	}
-	
-	public class Factions {
-	    private @Getter boolean useFactions = false;
-	    private @Getter boolean shouldCapAllAreas = false;
-	    
-	    public Factions(ConfigurationSection section){
-	        useFactions = section.getBoolean("enable");
-	        shouldCapAllAreas = section.getBoolean("shouldCapAllAreas");
 	    }
 	}
 }

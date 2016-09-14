@@ -30,7 +30,7 @@ public class CommandInfo implements ICommand {
     public void run(CommandSender sender, String[] args) {
         if (Perm.Admin.INFO.has(sender)) {
             if (args.length < 2) {
-                Utils.sendMsg(sender, 
+                Utils.sendMessage(sender, true,
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH editor").build(), 
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info koth <koth>").commandInfo("Info about a koth").build(), 
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info loot <loot>").commandInfo("Info about a loot chest").build(), 
@@ -46,7 +46,7 @@ public class CommandInfo implements ICommand {
             } else if(args[0].equalsIgnoreCase("schedule")){
                 scheduleInfo(sender, newArgs);
             } else {
-                Utils.sendMsg(sender, 
+                Utils.sendMessage(sender, true,
                         new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH editor").build(), 
                         new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info koth <koth>").commandInfo("Info about a koth").build(), 
                         new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info loot <loot>").commandInfo("Info about a loot chest").build(), 
@@ -88,9 +88,11 @@ public class CommandInfo implements ICommand {
         lastWinner = (lastWinner != null && !lastWinner.equalsIgnoreCase(""))?lastWinner:"None";
         String location = "("+loc.getWorld().getName()+", "+loc.getBlockX()+", "+loc.getBlockY()+", "+loc.getBlockZ()+")";
         
-        String linkedLoot = koth.getLoot();
-        linkedLoot = (linkedLoot != null && !linkedLoot.equalsIgnoreCase(""))?linkedLoot:"None";
-        String lootLocation = "("+lootLoc.getWorld().getName()+", "+lootLoc.getBlockX()+", "+lootLoc.getBlockY()+", "+lootLoc.getBlockZ()+")";
+        String linkedLoot = (koth.getLoot() != null)?koth.getLoot():"None";
+        
+        String lootLocation = "(?, ?, ?)";
+        if(lootLoc != null)
+            lootLocation = "("+lootLoc.getWorld().getName()+", "+lootLoc.getBlockX()+", "+lootLoc.getBlockY()+", "+lootLoc.getBlockZ()+")";
         
         String areas = "";
         for(Area area : koth.getAreas()){

@@ -13,8 +13,14 @@ public class StartParams {
         private @Getter @Setter int captureTime = 15*60;
         private @Getter @Setter int maxRunTime = -1;
         private @Getter @Setter int lootAmount = ConfigHandler.getCfgHandler().getLoot().getLootAmount();
-        private @Getter @Setter String lootChest = null;
+        private @Setter String lootChest = null;
         private @Getter @Setter boolean isScheduled = false;
+        private @Getter @Setter String entityType = null;
+        
+        public String getLootChest(){
+            if(lootChest != null) return null;
+            return koth.getLoot();
+        }
         
         public StartParams(String kth){
         	gamemode = KothHandler.getInstance().getGamemodeRegistry().getCurrentMode();

@@ -3,9 +3,13 @@
 # To grab your own timezone go to: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 global:
+  debug: false
   schedule-timezone: "Europe/Amsterdam"
+  minuteoffset: 0
+  startweekminuteoffset: 0
   use-playermoveevent: false
   pre-broadcast: 0
+  nocap-broadcast-interval: 30
   helpcommand:
     - "&8========> &2Koth &8<========"
     - "&a/koth list &7Shows all available koths"
@@ -22,6 +26,16 @@ loot:
   drop-on-removal: false
   give-instantly: false
 
+hooks:
+  vanishnopacket: true
+  factions: true
+  kingdoms: true
+  featherboard:
+    enabled: false
+    board: "koth"
+    range: 100 # -1 to disable it
+    rangemargin: 5
+
 koth:
   knockTime: 0
   minimum-players: 0
@@ -29,16 +43,21 @@ koth:
 scoreboard:
   use-scoreboard: true
   use-old-scoreboard: false
-  scoreboard:
+  default:
     title: "&a&l%koth%"
     contents:
       - "&6&lTime Left:"
-      - "&9%minutes_left%:%seconds_left%"
+      - "&9%ml%:%sl%"
       - " "
       - "&6&lCoords:"
       - "&cX: &e%x%"
       - "&cZ: &e%z%"
-
-factions:
-  enable: false
-  shouldCapAllAreas: false
+  conquest:
+    title: "&a&l%koth%"
+    contents:
+      - "&6&lTime Left:"
+      - "&9%ml%:%sl%"
+      - " "
+      - "&6&lCoords:"
+      - "&cX: &e%x%"
+      - "&cZ: &e%z%"

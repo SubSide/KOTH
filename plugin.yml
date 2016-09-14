@@ -1,8 +1,8 @@
 name: KoTH
 main: subside.plugins.koth.KothPlugin
-version: 1.2.2 BETA
+version: 1.3.3
 author: SubSide
-softdepend: [Multiverse-Core]
+softdepend: [Multiverse-Core, Factions, Kingdoms, PlaceholderAPI]
 commands:
   koth:
     description: Gives access to koth
@@ -21,8 +21,12 @@ permissions:
       koth.loot: true
       koth.schedule: true
       koth.version: true
+      koth.ignore: true
   koth.help:
     description: Gives the player permissions to /koth (help)
+    default: true
+  koth.ignore:
+    description: Allows you to ignore the chat messages
     default: true
   koth.list:
     description: Gives the player permissions to /koth list
@@ -61,7 +65,7 @@ permissions:
     default: op
   koth.admin.bypass:
     description: Gives the player permissions to bypass chest protection
-    default: op
+    default: false
   koth.admin.help:
     description: Gives the player permissions to the full help menu
     default: op

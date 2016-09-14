@@ -34,20 +34,27 @@ public class EventListener implements Listener {
         Chest chest = (Chest) e.getInventory().getHolder();
         Location loc = chest.getLocation();
         for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
-            Location vec = koth.getLootPos();
-            if (vec == null) continue;
-
-            if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
-
+            try {
+                Location vec = koth.getLootPos();
+                if (vec == null || loc.getWorld() != vec.getWorld() || loc.getBlockX() != vec.getBlockX() || loc.getBlockY() != vec.getBlockY() || loc.getBlockZ() != vec.getBlockZ())
+                    continue;
+    
                 KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
                 event.setCancelled(false);
-                if (!koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer()) && !Perm.Admin.BYPASS.has((Player) e.getPlayer())) {
+                if ((koth.getLastWinner() == null || !koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer())) && !Perm.Admin.BYPASS.has((Player) e.getPlayer())) {
                     event.setCancelled(true);
                 }
+                
                 Bukkit.getServer().getPluginManager().callEvent(event);
-
-                e.setCancelled(event.isCancelled());
-
+                if(!event.isCancelled()){
+                    e.setCancelled(false);
+                    return;
+                }
+                
+                e.setCancelled(true);
+            
+            } catch(Exception ex){
+                ex.printStackTrace();
             }
 
         }
@@ -84,12 +91,6 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInventoryChange(InventoryClickEvent event) {
-//        for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
-//            if (event.getInventory().getTitle().equals(Loot.getKothLootTitle(koth.getName()))) {
-//                event.setCancelled(true);
-//                return;
-//            }
-//        }
         if(!(event.getWhoClicked() instanceof Player) || Perm.Admin.LOOT.has((Player)event.getWhoClicked())){
             return;
         }

@@ -9,6 +9,7 @@ import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.utils.MessageBuilder;
+import subside.plugins.koth.utils.Utils;
 
 public class Schedule {
     private long nextEventMillis;
@@ -19,6 +20,7 @@ public class Schedule {
     private @Getter @Setter int maxRunTime = -1;
     private @Getter @Setter int lootAmount = -1;
     private @Getter @Setter String lootChest;
+    private @Getter @Setter String entityType;
 
     private @Getter boolean isBroadcasted = false;
 
@@ -37,6 +39,10 @@ public class Schedule {
             eventTime += 7 * 24 * 60 * 60 * 1000;
         }
         nextEventMillis = eventTime;
+        
+        if(ConfigHandler.getCfgHandler().getGlobal().isDebug()){
+            Utils.log("Schedule created for: "+day+" "+time+" "+nextEventMillis);
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -85,6 +91,10 @@ public class Schedule {
         if (obj.containsKey("lootChest")) {
             schedule.setLootChest((String) obj.get("lootChest")); // lootChest
         }
+        
+        if(obj.containsKey("entityType")){
+            schedule.setEntityType((String) obj.get("entityType"));
+        }
 
         return schedule;
 
@@ -111,6 +121,10 @@ public class Schedule {
 
         if (lootChest != null) {
             obj.put("lootChest", this.lootChest); // lootChest
+        }
+        
+        if(entityType != null){
+            obj.put("entityType", this.entityType);
         }
 
         return obj;
