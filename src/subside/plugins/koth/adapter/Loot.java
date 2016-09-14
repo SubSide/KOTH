@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import lombok.Setter;
+import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.utils.MessageBuilder;
@@ -51,6 +52,10 @@ public class Loot {
     }
     
     public void triggerCommands(Koth koth, Capper capper){
+        if(!ConfigHandler.getCfgHandler().getLoot().isCmdEnabled()){
+            return;
+        }
+        
         for(String command : commands){
             List<Player> players = capper.getAvailablePlayers(koth);
             if(command.contains("%player%")){

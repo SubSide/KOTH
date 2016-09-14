@@ -89,6 +89,11 @@ public class ConfigHandler {
 	    private @Getter long removeLootAfterSeconds = 0;
 	    private @Getter boolean dropLootOnRemoval = false;
 	    private @Getter boolean instantLoot = false;
+
+        private @Getter boolean cmdEnabled = false;
+        private @Getter boolean cmdIngame = false;
+        private @Getter boolean cmdNeedOp = true;
+	    
 	    
 	    public Loot(ConfigurationSection section){
 	        defaultLoot = section.getString("default");
@@ -99,6 +104,10 @@ public class ConfigHandler {
 	        removeLootAfterSeconds = section.getInt("remove-after");
 	        dropLootOnRemoval = section.getBoolean("drop-on-removal");
 	        instantLoot = section.getBoolean("give-instantly");
+
+            cmdEnabled = section.getBoolean("commands.enabled");
+            cmdNeedOp = section.getBoolean("commands.needop");
+            cmdIngame = section.getBoolean("commands.changeingame");
 	    }
 	}
 	
