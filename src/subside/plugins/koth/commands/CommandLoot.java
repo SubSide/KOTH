@@ -43,6 +43,7 @@ public class CommandLoot implements ICommand {
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot create <loot>").commandInfo("Create loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot edit <loot>").commandInfo("Edit loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot remove <loot>").commandInfo("Remove loot chest").build(),
+                    new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot>").commandInfo("Access loot commands").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot list").commandInfo("List loot chests").build(),
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot asmember").commandInfo("Shows what members would see").build());
             return;
@@ -61,13 +62,16 @@ public class CommandLoot implements ICommand {
             rename(sender, newArgs);
         } else if(args[0].equalsIgnoreCase("asmember")){
             asMember(sender, newArgs);
+        } else if(args[0].equalsIgnoreCase("cmd")){
+            commands(sender, newArgs);
         } else {
             Utils.sendMessage(player, true,
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Loot editor").build(),
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot create <loot>").commandInfo("Create loot chest").build(),  
-                    new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot edit <loot> (commands)").commandInfo("Edit loot chest").build(),  
+                    new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot edit <loot>").commandInfo("Edit loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot remove <loot>").commandInfo("Remove loot chest").build(),
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot rename <loot> <newname>").commandInfo("Remove loot chest").build(),
+                    new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot>").commandInfo("Access loot commands").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot list").commandInfo("List loot chests").build(),
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot asmember").commandInfo("Shows what members would see").build());
         }
@@ -153,11 +157,6 @@ public class CommandLoot implements ICommand {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth loot edit <loot> (commands)");
         }
         
-        if(args.length > 1 && args[1].equalsIgnoreCase("cmd")){
-            commands(sender, args[0], Arrays.copyOfRange(args, 2, args.length));
-            return;
-        }
-        
         Loot loot = KothHandler.getInstance().getLoot(args[0]);
         if(loot == null){
             throw new LootNotExistException(args[0]);
@@ -168,46 +167,52 @@ public class CommandLoot implements ICommand {
         throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_OPENING).loot(loot.getName()));
     }
     
-    private void commands(CommandSender sender, String lootName, String[] args){
-        if(args.length > 0){
+    private void commands(CommandSender sender, String[] args){
+        if(args.length < 2){
             Utils.sendMessage(sender, true,
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Loot editor").build(),
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> add <command>").commandInfo("Add a command").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> list").commandInfo("Show a list of commands").build(),  
-                    new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> del <id>").commandInfo("Remove a command").build());
+                    new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> remove <id>").commandInfo("Remove a command").build());
         return;
         }
+        String lootName = args[0];
 
         Loot loot = KothHandler.getInstance().getLoot(lootName);
         if(loot == null){
-            return;
+            throw new CommandMessageException(new MessageBuilder(Lang.LOOT_ERROR_NOTEXIST).loot(lootName));
         }
                 
-        if(args[0].equalsIgnoreCase("add")){
-            if(args.length < 2)
+        if(args[1].equalsIgnoreCase("add")){
+            if(args.length < 3)
                 throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth loot cmd <loot> add <command>");
             
-            loot.getCommands().add(String.join(" ", args));
+            loot.getCommands().add(String.join(" ", Arrays.copyOfRange(args, 2, args.length)));
             LootLoader.save();
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_CREATED).loot(lootName));
-        } else if(args[0].equalsIgnoreCase("del")){
+        } else if(args[1].equalsIgnoreCase("remove")){
             if(args.length < 2)
-                throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth loot cmd <loot> add <command>");
-            loot.getCommands().remove(args[1]);
-            LootLoader.save();
-            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_CREATED).loot(lootName));
-        } else if(args[0].equalsIgnoreCase("list")){
+                throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth loot cmd <loot> remove <id>");
+            try {
+                int id = Integer.parseInt(args[2]);
+                loot.getCommands().remove(id);
+                LootLoader.save();
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_REMOVED).loot(lootName).id(id));
+            } catch(NumberFormatException e){
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_NOTANUMBER));
+            }
+        } else if(args[1].equalsIgnoreCase("list")){
             new MessageBuilder(Lang.COMMAND_LISTS_LOOT_CMD_TITLE).buildAndSend(sender);
             List<String> cmds = loot.getCommands();
-            for (int x = 0; x < KothHandler.getInstance().getLoots().size(); x++) {
-                new MessageBuilder(Lang.COMMAND_LISTS_LOOT_CMD_ENTRY).id(x).command(cmds.get(x)).buildAndSend(sender);
+            for (String cmd : cmds) {
+                new MessageBuilder(Lang.COMMAND_LISTS_LOOT_CMD_ENTRY).id(cmds.indexOf(cmd)).command(cmd).buildAndSend(sender);
             }
         } else {
             Utils.sendMessage(sender, true,
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Loot editor").build(),
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> add").commandInfo("Create loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> list").commandInfo("Edit loot chest").build(),  
-                    new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> del").commandInfo("Remove loot chest").build());
+                    new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> remove <id>").commandInfo("Remove loot chest").build());
             return;
         }
     }

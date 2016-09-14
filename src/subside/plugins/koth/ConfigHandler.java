@@ -28,21 +28,25 @@ public class ConfigHandler {
 	
 	public class Global {
 	    private @Getter String timeZone = "Europe/Amsterdam";
-	    private @Getter int minuteOffset = 0;
+        private @Getter int minuteOffset = 0;
+        private @Getter int startWeekMinuteOffset = 0;
 	    private @Getter boolean usePlayerMoveEvent = false;
 	    private @Getter int preBroadcast = 0;
 	    private @Getter int noCapBroadcastInterval = 30;
 	    private @Getter List<String> helpCommand = null;
 	    private @Getter boolean useFancyPlayerName = false;
+	    private @Getter boolean debug = false;
 	    
 	    public Global(ConfigurationSection section){
 	        timeZone = section.getString("schedule-timezone");
             minuteOffset = section.getInt("minuteoffset");
+            startWeekMinuteOffset = section.getInt("startweekminuteoffset");
 	        usePlayerMoveEvent = section.getBoolean("use-playermoveevent");
 	        preBroadcast = section.getInt("pre-broadcast");
 	        noCapBroadcastInterval = section.getInt("nocap-broadcast-interval");
 	        helpCommand = section.getStringList("helpcommand");
 	        useFancyPlayerName = section.getBoolean("fancyplayername");
+	        debug = section.getBoolean("debug");
 	    }
 	}
 	

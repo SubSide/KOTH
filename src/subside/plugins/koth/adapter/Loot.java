@@ -57,9 +57,10 @@ public class Loot {
                 for(Player player : players){
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%player%", player.getName()));
                 }
-            }
-            if(command.contains("%faction%")){
+            } else if(command.contains("%faction%")){
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%faction%", capper.getName()));
+            } else {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
             }
         }
     }
@@ -78,13 +79,15 @@ public class Loot {
             }
         }
         
-        JSONArray commands = (JSONArray)obj.get("commands");
-        Iterator<?> it = commands.iterator();
-        while(it.hasNext()){
-            try {
-                loot.commands.add((String)it.next());
-            } catch(Exception e){
-                e.printStackTrace();
+        if(obj.containsKey("commands")){
+            JSONArray commands = (JSONArray)obj.get("commands");
+            Iterator<?> it = commands.iterator();
+            while(it.hasNext()){
+                try {
+                    loot.commands.add((String)it.next());
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         }
         

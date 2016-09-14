@@ -3,8 +3,10 @@
 # To grab your own timezone go to: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 global:
+  debug: false
   schedule-timezone: "Europe/Amsterdam"
   minuteoffset: 0
+  startweekminuteoffset: 0
   use-playermoveevent: false
   pre-broadcast: 0
   nocap-broadcast-interval: 30

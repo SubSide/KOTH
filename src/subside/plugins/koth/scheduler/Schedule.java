@@ -9,6 +9,7 @@ import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.utils.MessageBuilder;
+import subside.plugins.koth.utils.Utils;
 
 public class Schedule {
     private long nextEventMillis;
@@ -38,6 +39,10 @@ public class Schedule {
             eventTime += 7 * 24 * 60 * 60 * 1000;
         }
         nextEventMillis = eventTime;
+        
+        if(ConfigHandler.getCfgHandler().getGlobal().isDebug()){
+            Utils.log("Schedule created for: "+day+" "+time+" "+nextEventMillis);
+        }
     }
 
     @SuppressWarnings("deprecation")

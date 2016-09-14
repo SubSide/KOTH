@@ -3,6 +3,8 @@ package subside.plugins.koth.utils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -16,6 +18,7 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.json.simple.JSONObject;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 
@@ -153,6 +156,15 @@ public class Utils {
     
     public static void log(String log){
         KothPlugin.getPlugin().getLogger().info("KoTH - "+log);
+    }
+    
+    public static String parseDate(long millis){
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        return sdf.format(new Date(millis));
+    }
+    
+    public static String parseCurrentDate(){
+        return parseDate(System.currentTimeMillis() + ConfigHandler.getCfgHandler().getGlobal().getMinuteOffset()*60*1000);
     }
     
     public static Location getLocFromObject(JSONObject loc) {
