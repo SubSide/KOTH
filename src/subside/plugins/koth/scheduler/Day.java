@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.utils.Utils;
 
 public enum Day {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;
@@ -40,8 +41,12 @@ public enum Day {
             calendar.clear(Calendar.MILLISECOND);
     
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+            calendar.add(Calendar.MINUTE, ConfigHandler.getCfgHandler().getGlobal().getStartWeekMinuteOffset());
     
             startOfWeek = calendar.getTimeInMillis();
+            if(ConfigHandler.getCfgHandler().getGlobal().isDebug()){
+                Utils.log("Schedule start of week has been set to: "+Utils.parseDate(startOfWeek)+" ("+startOfWeek+")");
+            }
         }
         return startOfWeek;
     }
