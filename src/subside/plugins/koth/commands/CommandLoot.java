@@ -168,12 +168,23 @@ public class CommandLoot implements ICommand {
     }
     
     private void commands(CommandSender sender, String[] args){
+        if(!ConfigHandler.getCfgHandler().getLoot().isCmdIngame()){
+            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_INGAME_DISABLED));
+        }
+        
+        if(!sender.isOp() && ConfigHandler.getCfgHandler().getLoot().isCmdNeedOp()){
+            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_OPONLY));
+        }
+        
         if(args.length < 2){
             Utils.sendMessage(sender, true,
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Loot editor").build(),
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> add <command>").commandInfo("Add a command").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> list").commandInfo("Show a list of commands").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> remove <id>").commandInfo("Remove a command").build());
+            if(ConfigHandler.getCfgHandler().getLoot().isCmdEnabled()){
+                Utils.sendMessage(sender, true, "&cNote: commands are disabled in the config!");
+            }
         return;
         }
         String lootName = args[0];
@@ -213,6 +224,9 @@ public class CommandLoot implements ICommand {
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> add").commandInfo("Create loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> list").commandInfo("Edit loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> remove <id>").commandInfo("Remove loot chest").build());
+            if(ConfigHandler.getCfgHandler().getLoot().isCmdEnabled()){
+                Utils.sendMessage(sender, true, "&cNote: commands are disabled in the config!");
+            }
             return;
         }
     }

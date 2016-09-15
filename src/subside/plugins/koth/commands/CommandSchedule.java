@@ -92,7 +92,7 @@ public class CommandSchedule implements ICommand {
     }
 
     private void pre_create(CommandSender sender, String[] args){
-        if (args.length < 2) {
+        if (args.length < 3) {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth schedule create <koth> <day|(daily)> <time> [capturetime] [maxruntime] [lootamount] [lootchest]"));
         }
         
