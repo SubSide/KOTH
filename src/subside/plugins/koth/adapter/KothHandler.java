@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.RunningKoth.EndReason;
 import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.events.KothStartEvent;
@@ -27,6 +28,7 @@ import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.scoreboard.ScoreboardManager;
+import subside.plugins.koth.utils.MessageBuilder;
 
 /**
  * @author Thomas "SubSide" van den Bulk
@@ -114,8 +116,10 @@ public class KothHandler {
             }
             KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled(), params.getEntityType());
 
+            boolean minimumNotMet = false;
             if (params.isScheduled() && Lists.newArrayList(Bukkit.getOnlinePlayers()).size() < ConfigHandler.getCfgHandler().getKoth().getMinimumPlayersNeeded()) {
                 event.setCancelled(true);
+                minimumNotMet = true;
             }
 
             Bukkit.getServer().getPluginManager().callEvent(event);
@@ -124,6 +128,8 @@ public class KothHandler {
                 RunningKoth rKoth = this.getGamemodeRegistry().createGame(params.getGamemode());
                 rKoth.init(params);
                 runningKoths.add(rKoth);
+            } else if(minimumNotMet){
+                new MessageBuilder(Lang.KOTH_PLAYING_MINIMUM_PLAYERS_NOT_MET).buildAndBroadcast();
             }
         }
 
