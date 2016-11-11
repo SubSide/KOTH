@@ -1,0 +1,16 @@
+URGENT:
+
+
+HIGH:
+Implement third-party scoreboard for compatibility.
+
+
+MEDIUM:
+
+
+LOW:
+Add per-item chances for loot
+
+
+OPTIONAL:
+Continue working on new/improved KOTH gametype
