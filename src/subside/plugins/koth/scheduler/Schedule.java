@@ -1,13 +1,13 @@
 package subside.plugins.koth.scheduler;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.json.simple.JSONObject;
 
+import lombok.Getter;
+import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.exceptions.KothAlreadyRunningException;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Utils;
 
@@ -23,6 +23,8 @@ public class Schedule {
     private @Getter @Setter String entityType;
 
     private @Getter boolean isBroadcasted = false;
+    
+    private static final long WEEK = 7 * 24 * 60 * 60 * 1000;
 
     public Schedule(String koth, Day day, String time) {
         this.koth = koth;
@@ -33,10 +35,10 @@ public class Schedule {
     }
 
     public void calculateNextEvent() {
-        long eventTime = day.getDayStart() + Day.getTime(time);
+        long eventTime = day.getDayStart() + Day.getTime(time) - WEEK;
 
-        if (eventTime < System.currentTimeMillis()) {
-            eventTime += 7 * 24 * 60 * 60 * 1000;
+        while (eventTime < System.currentTimeMillis()) {
+            eventTime += WEEK;
         }
         nextEventMillis = eventTime;
         
@@ -59,12 +61,16 @@ public class Schedule {
         if (System.currentTimeMillis() > nextEventMillis) {
             setNextEventTime();
             isBroadcasted = false;
-            KothHandler.getInstance().startKoth(this);
+            try {
+                KothHandler.getInstance().startKoth(this);
+            } catch(KothAlreadyRunningException e){
+                Utils.log("Koth is already running");
+            }
         }
     }
 
     private void setNextEventTime() {
-        nextEventMillis += 1000 * 60 * 60 * 24 * 7;
+        nextEventMillis += WEEK;
     }
 
     public long getNextEvent() {
