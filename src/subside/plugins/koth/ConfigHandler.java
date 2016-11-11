@@ -34,7 +34,8 @@ public class ConfigHandler {
 	    private @Getter int preBroadcast = 0;
 	    private @Getter int noCapBroadcastInterval = 30;
 	    private @Getter List<String> helpCommand = null;
-	    private @Getter boolean useFancyPlayerName = false;
+        private @Getter boolean useFancyPlayerName = false;
+        private @Getter boolean multipleKothsAtOnce = true;
 	    private @Getter boolean debug = false;
 	    
 	    public Global(ConfigurationSection section){
@@ -45,7 +46,8 @@ public class ConfigHandler {
 	        preBroadcast = section.getInt("pre-broadcast");
 	        noCapBroadcastInterval = section.getInt("nocap-broadcast-interval");
 	        helpCommand = section.getStringList("helpcommand");
-	        useFancyPlayerName = section.getBoolean("fancyplayername");
+            useFancyPlayerName = section.getBoolean("fancyplayername");
+            multipleKothsAtOnce = section.getBoolean("multiplekothsatonce");
 	        debug = section.getBoolean("debug");
 	    }
 	}

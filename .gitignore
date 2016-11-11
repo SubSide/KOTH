@@ -49,3 +49,4 @@ Temporary Items
 *.gif
 *.css
 doc/package-list
+target/classes/META-INF/maven/KOTH/KOTH/pom.properties

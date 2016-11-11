@@ -4,6 +4,7 @@
 
 global:
   debug: false
+  multiplekothsatonce: true
   schedule-timezone: "Europe/Amsterdam"
   minuteoffset: 0
   startweekminuteoffset: 0

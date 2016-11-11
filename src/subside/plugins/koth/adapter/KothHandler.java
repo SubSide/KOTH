@@ -20,6 +20,7 @@ import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.RunningKoth.EndReason;
 import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.events.KothStartEvent;
+import subside.plugins.koth.exceptions.AnotherKothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothNotExistException;
@@ -115,7 +116,13 @@ public class KothHandler {
                 }
             }
             KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled(), params.getEntityType());
-
+            
+            boolean anotherAlreadyRunning = false;
+            if(KothHandler.getInstance().getRunningKoth() != null && !ConfigHandler.getCfgHandler().getGlobal().isMultipleKothsAtOnce()){
+                event.setCancelled(true);
+                anotherAlreadyRunning = true;
+            }
+            
             boolean minimumNotMet = false;
             if (params.isScheduled() && Lists.newArrayList(Bukkit.getOnlinePlayers()).size() < ConfigHandler.getCfgHandler().getKoth().getMinimumPlayersNeeded()) {
                 event.setCancelled(true);
@@ -128,7 +135,9 @@ public class KothHandler {
                 RunningKoth rKoth = this.getGamemodeRegistry().createGame(params.getGamemode());
                 rKoth.init(params);
                 runningKoths.add(rKoth);
-            } else if(minimumNotMet){
+            } else if(anotherAlreadyRunning) {
+                throw new AnotherKothAlreadyRunningException();
+            }else if(minimumNotMet){
                 new MessageBuilder(Lang.KOTH_PLAYING_MINIMUM_PLAYERS_NOT_MET).buildAndBroadcast();
             }
         }
