@@ -19,6 +19,7 @@ import subside.plugins.koth.adapter.Loot;
 import subside.plugins.koth.events.KothOpenChestEvent;
 import subside.plugins.koth.loaders.LootLoader;
 import subside.plugins.koth.utils.Perm;
+import subside.plugins.koth.utils.Utils;
 
 public class EventListener implements Listener {
     @EventHandler(ignoreCancelled = true)
@@ -40,9 +41,14 @@ public class EventListener implements Listener {
                     continue;
     
                 KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
-                event.setCancelled(false);
-                if ((koth.getLastWinner() == null || !koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer())) && !Perm.Admin.BYPASS.has((Player) e.getPlayer())) {
-                    event.setCancelled(true);
+                event.setCancelled(true);
+                try {
+                    if((koth.getLastWinner() != null && koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer())) || Perm.Admin.BYPASS.has((Player) e.getPlayer())){
+                        event.setCancelled(false);
+                    }
+                } catch(Exception f){
+                    Utils.log("Whoops, something went wrong, please contact the developer!");
+                    f.printStackTrace();
                 }
                 
                 Bukkit.getServer().getPluginManager().callEvent(event);
