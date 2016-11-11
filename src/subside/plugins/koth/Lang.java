@@ -37,8 +37,9 @@ public class Lang {
     public static String[] HOOKS_PLACEHOLDERAPI_TIMETILL = new String[]{ "%hh%:%mm%:%ss%" };
     
     public static String[] KOTH_PLAYING_PRE_BROADCAST = new String[]{"&aThe koth %koth% will start in 30 minutes!"};
-	
-	public static String[] KOTH_ERROR_ALREADYRUNNING = new String[]{"&aThe koth %koth% is already running!"};
+
+    public static String[] KOTH_ERROR_ALREADYRUNNING = new String[]{"&aThe koth %koth% is already running!"};
+    public static String[] KOTH_ERROR_ANOTHERALREADYRUNNING = new String[]{"&aThere is already a KoTH running!"};
     public static String[] KOTH_ERROR_ALREADYEXISTS = new String[]{"&aThe koth %koth% already exists!"};
     public static String[] KOTH_ERROR_NONE_RUNNING = new String[]{"&aThe currently no koth running!"};
     public static String[] KOTH_ERROR_NOTEXIST = new String[]{"&aThe koth %koth% doesn't exist!"};
