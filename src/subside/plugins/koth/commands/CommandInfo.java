@@ -14,6 +14,7 @@ import subside.plugins.koth.adapter.Area;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.Loot;
+import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.KothNotExistException;
 import subside.plugins.koth.exceptions.LootNotExistException;
@@ -243,8 +244,22 @@ public class CommandInfo implements ICommand {
         String captureTime = sched.getCaptureTime()+" minutes";
         String maxRunTime = sched.getMaxRunTime()+" minutes";
         
-        if(sched.getMaxRunTime() == -1){
-            maxRunTime = "Unlimited";
+        String captureType;
+        
+        if(sched.getEntityType() != null){
+            captureType = sched.getEntityType();
+            try {
+                Class<? extends Capper> clazz = KothHandler.getInstance().getCapEntityRegistry().getCaptureClass(sched.getEntityType());
+                captureType += " (Java class: "+clazz.getSimpleName()+")";
+            } catch(Exception e){
+                captureType += " (Invalid CaptureType)";
+            }
+            
+            if(sched.getMaxRunTime() == -1){
+                maxRunTime = "Unlimited";
+            }
+        } else {
+            captureType = "None (Inherited)";
         }
         
         
@@ -261,6 +276,7 @@ public class CommandInfo implements ICommand {
         list.addAll(new MessageBuilder(C1+"With: "+lootAmount+" items").buildArray());
         
         list.add(" ");
+        list.addAll(new MessageBuilder(C1+"Capturetype: "+C2+captureType).buildArray());
         list.addAll(new MessageBuilder(C1+"Capture time: "+C2+captureTime).buildArray());
         list.addAll(new MessageBuilder(C1+"Max runtime: "+C2+maxRunTime).buildArray());
         sender.sendMessage(list.toArray(new String[list.size()]));

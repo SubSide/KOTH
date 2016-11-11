@@ -146,6 +146,7 @@ public class Lang {
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_CAPTURETIME = new String[]{"&aYou changed the runtime for #%id%!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_DAY = new String[]{"&aYou changed the day for #%id%!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_TIME = new String[]{"&aYou changed the time for #%id%!"};
+    public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_ENTITYTYPE = new String[]{"&aYou changed the entitytype for #%id%!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_MAXRUNTIME = new String[]{"&aYou changed the max runtime for #%id%!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_LOOTAMOUNT = new String[]{"&aYou changed the loot amount for #%id%!"};
     public static String[] COMMAND_SCHEDULE_EDITOR_CHANGE_LOOT = new String[]{"&aYou changed the loot for #%id%!"};

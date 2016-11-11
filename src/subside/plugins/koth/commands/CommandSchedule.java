@@ -288,6 +288,10 @@ public class CommandSchedule implements ICommand {
                 }
                 ScheduleLoader.save();
                 throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_EDITOR_CHANGE_LOOT).id(id));
+            } else if (args[1].equalsIgnoreCase("entitytype")) { // change time
+                schedule.setEntityType(args[2]);
+                ScheduleLoader.save();
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_EDITOR_CHANGE_ENTITYTYPE).id(id));
             }
         }
         sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("Scheddule editor").build());
@@ -298,6 +302,7 @@ public class CommandSchedule implements ICommand {
         sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> maxruntime <maxruntime>").commandInfo("change the maxruntime").build());
         sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> lootamount <amount>").commandInfo("change the loot amount").build());
         sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> loot <loot>").commandInfo("change the loot chest (0 to clear)").build());
+        sender.sendMessage(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth schedule edit <ID> entitytype <entitytype>").commandInfo("change the entitytype").build());
 
     }
 
