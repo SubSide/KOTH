@@ -77,6 +77,7 @@ public class OldScoreboard extends AbstractScoreboard {
 
         public void setTitle(String ttl) {
             if (this.title != null) if (this.title.equals(ttl)) return;
+            ttl = chop(ttl);
             
             this.title = ttl;
             obj.setDisplayName(title);
@@ -84,6 +85,7 @@ public class OldScoreboard extends AbstractScoreboard {
         }
 
         public void setScore(int x, String scr) {
+            scr = chop(scr);
             teams[x].setPrefix(scr);
 
         }
