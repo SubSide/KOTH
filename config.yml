@@ -46,6 +46,7 @@ koth:
   minimum-players: 0
 
 scoreboard:
+  characterlimit: 16
   use-scoreboard: true
   use-old-scoreboard: false
   default:
