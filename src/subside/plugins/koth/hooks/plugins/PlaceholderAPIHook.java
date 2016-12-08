@@ -100,6 +100,8 @@ public class PlaceholderAPIHook extends EZPlaceholderHook {
         if (identifier.equals(prefix+"time_totalsecondscapped")) return "" + rKoth.getTimeObject().getTotalSecondsCapped();
         if (identifier.equals(prefix+"time_lengthinminutes")) return "" + rKoth.getTimeObject().getLengthInMinutes();
         if (identifier.equals(prefix+"time_lengthinseconds")) return "" + rKoth.getTimeObject().getLengthInSeconds();
+        if (identifier.equals(prefix+"time_percentagecapped")) return "" + rKoth.getTimeObject().getPercentageCapped();
+        if (identifier.equals(prefix+"time_percentageleft")) return "" + rKoth.getTimeObject().getPercentageLeft();
         
         if (identifier.equals(prefix+"currentcapper")) {
             if (rKoth.getCapper() == null) return Lang.HOOKS_PLACEHOLDERAPI_NOONECAPPING[0];
