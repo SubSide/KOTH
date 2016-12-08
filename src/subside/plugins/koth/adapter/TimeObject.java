@@ -36,6 +36,10 @@ public class TimeObject {
     public int getMinutesCapped(){
         return (int)(timeCapped/60);
     }
+
+    public int getPercentageCapped(){
+        return (int)(timeCapped/captureTime);
+    }
     
     
     // Captime left
@@ -49,6 +53,10 @@ public class TimeObject {
     
     public int getMinutesLeft(){
         return (captureTime - timeCapped) / 60;
+    }
+
+    public int getPercentageLeft(){
+        return (int)((captureTime-timeCapped)/captureTime);
     }
     
     
