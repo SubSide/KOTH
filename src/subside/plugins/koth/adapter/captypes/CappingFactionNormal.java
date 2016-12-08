@@ -24,7 +24,11 @@ private Faction faction;
     
     @Override
     public boolean isInOrEqualTo(OfflinePlayer oPlayer){
-        return MPlayerColl.get().get(oPlayer).getFactionId().equals(faction.getId());
+        try {
+            return MPlayerColl.get().get(oPlayer).getFactionId().equals(faction.getId());
+        } catch(Exception e){
+            return false;
+        }
     }
 
     @Override
