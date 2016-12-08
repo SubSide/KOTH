@@ -131,8 +131,8 @@ public class KothClassic implements RunningKoth {
             }
             return;
         }
-
-        if (timeNotCapped % ConfigHandler.getCfgHandler().getGlobal().getNoCapBroadcastInterval() == 0) {
+        
+        if(ConfigHandler.getCfgHandler().getGlobal().getNoCapBroadcastInterval() != 0 && timeNotCapped % ConfigHandler.getCfgHandler().getGlobal().getNoCapBroadcastInterval() == 0) {
             new MessageBuilder(Lang.KOTH_PLAYING_NOT_CAPPING).maxTime(maxRunTime).time(getTimeObject()).koth(koth).buildAndBroadcast();
         }
 
