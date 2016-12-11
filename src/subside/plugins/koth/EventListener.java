@@ -12,12 +12,15 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.Loot;
+import subside.plugins.koth.adapter.RunningKoth;
 import subside.plugins.koth.events.KothOpenChestEvent;
 import subside.plugins.koth.loaders.LootLoader;
+import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
@@ -122,5 +125,13 @@ public class EventListener implements Listener {
             }
         }
 
+    }
+    
+    @EventHandler(priority=EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event){
+        if(KothHandler.getInstance().getRunningKoth() != null){
+            RunningKoth koth = KothHandler.getInstance().getRunningKoth();
+            new MessageBuilder(Lang.KOTH_PLAYING_PLAYER_JOINING).koth(koth.getKoth()).buildAndSend(event.getPlayer());
+        }
     }
 }
