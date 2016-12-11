@@ -73,7 +73,7 @@ public class DefaultScoreboard extends AbstractScoreboard {
 
         public void setTitle(String ttl) {
             if (this.title != null) if (this.title.equals(ttl)) return;
-            ttl = chop(ttl);
+            ttl = chopTitle(ttl);
             
             this.title = ttl;
             obj.setDisplayName(title);
