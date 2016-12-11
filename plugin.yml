@@ -22,6 +22,7 @@ permissions:
       koth.schedule: true
       koth.version: true
       koth.ignore: true
+      koth.next: true
   koth.help:
     description: Gives the player permissions to /koth (help)
     default: true
@@ -39,6 +40,9 @@ permissions:
     default: true
   koth.version:
     description: Gives the player permissions to /koth version
+    default: true
+  koth.next:
+    description: Gives the player permissions to /koth next
     default: true
 
   koth.admin:

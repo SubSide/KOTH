@@ -156,6 +156,9 @@ public class Lang {
 	public static String[] COMMAND_TERMINATE_SPECIFIC_KOTH = new String[]{"&aYou have terminated %koth%!"};
 	public static String[] COMMAND_TERMINATE_ALL_KOTHS = new String[]{"&aYou have terminated all koths!"};
 
+    public static String[] COMMAND_NEXT_MESSAGE = new String[]{ "&aThe next KoTH \"%koth%\" will start in: %ttn%" };
+    public static String[] COMMAND_NEXT_NO_NEXT_FOUND = new String[]{ "&aThere are no scheduled KoTH's!" };
+
 	@SuppressWarnings("unchecked")
     public static void load(JavaPlugin plugin) {
 		try {

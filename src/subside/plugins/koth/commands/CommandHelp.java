@@ -29,6 +29,7 @@ public class CommandHelp implements ICommand {
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth reload").commandInfo("Reloads the plugin").buildArray());
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth tp <koth> [area]").commandInfo("teleport to a koth (area)").buildArray());
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth info").commandInfo("info about various things (helpful!)").buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth next").commandInfo("info about the next upcoming KoTH").buildArray());
         list.add("");
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("KoTH Control Commands").buildArray());
         list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth start <koth>").commandInfo("Starts a certain koth").buildArray());
