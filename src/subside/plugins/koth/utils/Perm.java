@@ -3,7 +3,7 @@ package subside.plugins.koth.utils;
 import org.bukkit.command.CommandSender;
 
 public enum Perm implements IPerm {
-	LIST("list"), LOOT("loot"), SCHEDULE("schedule"), VERSION("version"), HELP("help"), IGNORE("ignore");
+	LIST("list"), LOOT("loot"), NEXT("next"), SCHEDULE("schedule"), VERSION("version"), HELP("help"), IGNORE("ignore");
 	
 	private String perm;
 	
