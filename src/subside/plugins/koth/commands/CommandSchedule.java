@@ -74,6 +74,9 @@ public class CommandSchedule implements ICommand {
         list.add(" ");
         list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_CURRENTDATETIME).date(Utils.parseCurrentDate()).buildArray());
         for (Day day : Day.values()) {
+            if(ConfigHandler.getCfgHandler().getGlobal().isCurrentDayOnly() && day != Day.getCurrentDay())
+                continue;
+            
             List<String> subList = new ArrayList<>();
             for (Schedule sched : schedules) {
                 if (sched.getDay() == day) {
