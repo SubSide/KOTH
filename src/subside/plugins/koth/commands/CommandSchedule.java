@@ -80,7 +80,7 @@ public class CommandSchedule implements ICommand {
             List<String> subList = new ArrayList<>();
             for (Schedule sched : schedules) {
                 if (sched.getDay() == day) {
-                    subList.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_ENTRY).day(day.getDay()).lootAmount(sched.getLootAmount()).koth(sched.getKoth()).time(sched.getTime()).captureTime(sched.getCaptureTime()).buildArray());
+                    subList.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_ENTRY).day(day.getDay()).lootAmount(sched.getLootAmount()).koth(sched.getKoth()).timeTillNext(sched).time(sched.getTime()).captureTime(sched.getCaptureTime()).buildArray());
                 }
             }
             if (subList.size() > 0) {
