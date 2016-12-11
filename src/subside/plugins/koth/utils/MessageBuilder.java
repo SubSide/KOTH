@@ -13,6 +13,7 @@ import subside.plugins.koth.adapter.Area;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.TimeObject;
+import subside.plugins.koth.scheduler.Schedule;
 
 public class MessageBuilder {
     StrObj message;
@@ -28,9 +29,6 @@ public class MessageBuilder {
             } else {
                 this.message = message.clone();
             }
-            
-            // static calls
-            replaceAll("%ttn%", TimeObject.getTimeTillNextEvent());
         }
 
         protected StrObj replaceAll(String search, String replace) {
@@ -46,6 +44,10 @@ public class MessageBuilder {
         }
 
         protected String[] build() {
+            // Static calls //
+            replaceAll("%ttn%", TimeObject.getTimeTillNextEvent());
+            //
+            
             for (int x = 0; x < message.length; x++) {
                 message[x] = ChatColor.translateAlternateColorCodes('&', message[x]);
             }
@@ -141,6 +143,11 @@ public class MessageBuilder {
 
     public MessageBuilder captureTime(int captureTime) {
         message.replaceAll("%ct%", "" + captureTime);
+        return this;
+    }
+    
+    public MessageBuilder timeTillNext(Schedule schedule){
+        message.replaceAll("%ttn%", TimeObject.getTimeTillNextEvent(schedule));
         return this;
     }
 
