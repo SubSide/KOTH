@@ -42,6 +42,7 @@ hooks:
     rangemargin: 5
 
 koth:
+  default-capturetype: "player"
   knockTime: 0
   minimum-players: 0
 
