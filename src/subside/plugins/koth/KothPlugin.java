@@ -98,6 +98,9 @@ public class KothPlugin extends JavaPlugin {
             }
         }
         
+        cER.setPreferedClass(cER.getCaptureClass(ConfigHandler.getCfgHandler().getKoth().getDefaultCaptureType()));
+        
+        
         if(ConfigHandler.getCfgHandler().getHooks().isKingdoms() && getServer().getPluginManager().getPlugin("Kingdoms") != null){
             cER.registerCaptureType("kingdoms", CappingKingdom.class);
             cER.setPreferedClass(CappingKingdom.class);
