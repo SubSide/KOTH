@@ -47,6 +47,7 @@ koth:
 
 scoreboard:
   characterlimit: 16
+  charactertitlelimit: 16
   use-scoreboard: true
   use-old-scoreboard: false
   default:

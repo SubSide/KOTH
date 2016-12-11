@@ -124,13 +124,15 @@ public class ConfigHandler {
 	}
 	
 	public class Scoreboard {
-	    private @Getter int characterLimit = 16;
+        private @Getter int characterLimit = 16;
+        private @Getter int characterTitleLimit = 16;
 	    private @Getter boolean useScoreboard = true;
 	    private @Getter boolean useOldScoreboard = false;
 	    private ConfigurationSection section;
 	    
 	    public Scoreboard(ConfigurationSection section){
-	        characterLimit = section.getInt("characterlimit");
+            characterLimit = section.getInt("characterlimit");
+            characterLimit = section.getInt("charactertitlelimit");
 	        useScoreboard = section.getBoolean("use-scoreboard");
 	        useOldScoreboard = section.getBoolean("use-old-scoreboard");
 	        this.section = section;

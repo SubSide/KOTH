@@ -17,4 +17,9 @@ public abstract class AbstractScoreboard implements Listener {
         int maxLength = (str.length() < maxL)?str.length():maxL;
         return str.substring(0, maxLength);
     }
+    public String chopTitle(String str){
+        int maxL = ConfigHandler.getCfgHandler().getScoreboard().getCharacterTitleLimit();
+        int maxLength = (str.length() < maxL)?str.length():maxL;
+        return str.substring(0, maxLength);
+    }
 }
