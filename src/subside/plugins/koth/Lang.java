@@ -137,6 +137,7 @@ public class Lang {
 	public static String[] COMMAND_SCHEDULE_LIST_CURRENTDATETIME = new String[]{"&aCurrent date: %date%"};
 	public static String[] COMMAND_SCHEDULE_LIST_DAY = new String[]{"&8========> &2%day% &8<========"};
 	public static String[] COMMAND_SCHEDULE_LIST_ENTRY = new String[]{"&a%koth% at %time%"};
+	public static String[] COMMAND_SCHEDULE_LIST_BOTTOM = new String[]{""};
 	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME = new String[]{"&aCurrent date: %date%"};
 	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_DAY = new String[]{"&8========> &2%day% &8<========"};
 	public static String[] COMMAND_SCHEDULE_ADMIN_LIST_ENTRY = new String[]{"&a(#%id%) %koth% at %time% with a capture time of %ct%"};

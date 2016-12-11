@@ -92,6 +92,9 @@ public class CommandSchedule implements ICommand {
             throw new CommandMessageException(Lang.COMMAND_SCHEDULE_EMPTY);
         }
         sender.sendMessage(list.toArray(new String[list.size()]));
+        if(Lang.COMMAND_SCHEDULE_LIST_BOTTOM.length > 0 && !Lang.COMMAND_SCHEDULE_LIST_BOTTOM[0].equalsIgnoreCase("")){
+            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_BOTTOM));
+        }
     }
 
     private void pre_create(CommandSender sender, String[] args){
