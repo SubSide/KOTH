@@ -27,6 +27,7 @@ public class ConfigHandler {
 	}
 	
 	public class Global {
+	    private @Getter boolean currentDayOnly = false;
 	    private @Getter String timeZone = "Europe/Amsterdam";
         private @Getter int minuteOffset = 0;
         private @Getter int startWeekMinuteOffset = 0;
@@ -39,6 +40,7 @@ public class ConfigHandler {
 	    private @Getter boolean debug = false;
 	    
 	    public Global(ConfigurationSection section){
+	        currentDayOnly = section.getBoolean("schedule-show-current-day-only");
 	        timeZone = section.getString("schedule-timezone");
             minuteOffset = section.getInt("minuteoffset");
             startWeekMinuteOffset = section.getInt("startweekminuteoffset");

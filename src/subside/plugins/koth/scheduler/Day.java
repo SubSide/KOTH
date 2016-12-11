@@ -30,6 +30,29 @@ public enum Day {
         return null;
     }
     
+    public static Day getCurrentDay(){
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK); 
+
+        switch (day) {
+            case Calendar.MONDAY:
+                return Day.MONDAY;
+            case Calendar.TUESDAY:
+                return Day.TUESDAY;
+            case Calendar.WEDNESDAY:
+                return Day.WEDNESDAY;
+            case Calendar.THURSDAY:
+                return Day.THURSDAY;
+            case Calendar.FRIDAY:
+                return Day.FRIDAY;
+            case Calendar.SATURDAY:
+                return Day.SATURDAY;
+            case Calendar.SUNDAY:
+                return Day.SUNDAY;
+        }
+        return null;
+    }
+    
     private long getStartOfWeek(){
         if(startOfWeek <= 0){
             Calendar calendar = Calendar.getInstance();
