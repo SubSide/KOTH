@@ -14,6 +14,7 @@ import subside.plugins.koth.adapter.Area;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.Loot;
+import subside.plugins.koth.adapter.TimeObject;
 import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.KothNotExistException;
@@ -244,6 +245,8 @@ public class CommandInfo implements ICommand {
         String captureTime = sched.getCaptureTime()+" minutes";
         String maxRunTime = sched.getMaxRunTime()+" minutes";
         
+        String timeTillNext = TimeObject.getTimeTillNextEvent(sched);
+        
         String captureType;
         
         if(sched.getEntityType() != null){
@@ -279,6 +282,7 @@ public class CommandInfo implements ICommand {
         list.addAll(new MessageBuilder(C1+"Capturetype: "+C2+captureType).buildArray());
         list.addAll(new MessageBuilder(C1+"Capture time: "+C2+captureTime).buildArray());
         list.addAll(new MessageBuilder(C1+"Max runtime: "+C2+maxRunTime).buildArray());
+        list.addAll(new MessageBuilder(C1+"Starts in: "+C2+timeTillNext).buildArray());
         sender.sendMessage(list.toArray(new String[list.size()]));
         
     }
