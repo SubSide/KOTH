@@ -97,8 +97,8 @@ public class KothPlugin extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-        
-        cER.setPreferedClass(cER.getCaptureClass(ConfigHandler.getCfgHandler().getKoth().getDefaultCaptureType()));
+        if(cER.getCaptureClass(ConfigHandler.getCfgHandler().getKoth().getDefaultCaptureType()) != null)
+            cER.setPreferedClass(cER.getCaptureClass(ConfigHandler.getCfgHandler().getKoth().getDefaultCaptureType()));
         
         
         if(ConfigHandler.getCfgHandler().getHooks().isKingdoms() && getServer().getPluginManager().getPlugin("Kingdoms") != null){
