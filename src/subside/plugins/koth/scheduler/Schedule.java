@@ -8,10 +8,11 @@ import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
+import subside.plugins.koth.utils.JSONSerializable;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Utils;
 
-public class Schedule {
+public class Schedule implements JSONSerializable<Schedule> {
     private long nextEventMillis;
     private @Getter @Setter String koth;
     private @Getter @Setter int captureTime = 15;
@@ -42,16 +43,16 @@ public class Schedule {
         }
         nextEventMillis = eventTime;
         
-        if(ConfigHandler.getCfgHandler().getGlobal().isDebug()){
+        if(ConfigHandler.getInstance().getGlobal().isDebug()){
             Utils.log("Schedule created for: "+day+" "+time+" "+nextEventMillis);
         }
     }
 
     @SuppressWarnings("deprecation")
     public void tick() {
-        if (ConfigHandler.getCfgHandler().getGlobal().getPreBroadcast() != 0) {
+        if (ConfigHandler.getInstance().getGlobal().getPreBroadcast() != 0) {
             if(!isBroadcasted){
-                if (System.currentTimeMillis() + 1000 * 60 * ConfigHandler.getCfgHandler().getGlobal().getPreBroadcast() > nextEventMillis) {
+                if (System.currentTimeMillis() + 1000 * 60 * ConfigHandler.getInstance().getGlobal().getPreBroadcast() > nextEventMillis) {
                     isBroadcasted = true;
                     new MessageBuilder(Lang.KOTH_PLAYING_PRE_BROADCAST).maxTime(maxRunTime).captureTime(captureTime).lootAmount(lootAmount).koth(koth).buildAndBroadcast();
                 }
@@ -77,32 +78,33 @@ public class Schedule {
         return nextEventMillis;
     }
 
-    public static Schedule load(JSONObject obj, Day tDay) {
-        String tKoth = (String) obj.get("koth"); // koth
-        //Day tDay = Day.getDay((String) obj.get("day")); // day
-        String tTime = (String) obj.get("time"); // time
-        Schedule schedule = new Schedule(tKoth, tDay, tTime);
+    public Schedule load(JSONObject obj) {
+        this.koth =  (String) obj.get("koth"); // koth
+        this.day = Day.getDay((String)obj.get("day")); // day
+        this.time = (String) obj.get("time"); // time
+        
+        
         if (obj.containsKey("captureTime")) {
-            schedule.setCaptureTime(Integer.parseInt(obj.get("captureTime")+"")); // runTime
+            this.setCaptureTime(Integer.parseInt(obj.get("captureTime")+"")); // runTime
         }
 
         if (obj.containsKey("maxRunTime")) {
-            schedule.setMaxRunTime(Integer.parseInt(obj.get("maxRunTime")+"")); // maxRunTime
+            this.setMaxRunTime(Integer.parseInt(obj.get("maxRunTime")+"")); // maxRunTime
         }
 
         if (obj.containsKey("lootAmount")) {
-            schedule.setLootAmount(Integer.parseInt(obj.get("lootAmount")+"")); // lootAmount
+            this.setLootAmount(Integer.parseInt(obj.get("lootAmount")+"")); // lootAmount
         }
 
         if (obj.containsKey("lootChest")) {
-            schedule.setLootChest((String) obj.get("lootChest")); // lootChest
+            this.setLootChest((String) obj.get("lootChest")); // lootChest
         }
         
         if(obj.containsKey("entityType")){
-            schedule.setEntityType((String) obj.get("entityType"));
+            this.setEntityType((String) obj.get("entityType"));
         }
 
-        return schedule;
+        return this;
 
     }
 
@@ -121,7 +123,7 @@ public class Schedule {
             obj.put("maxRunTime", this.maxRunTime); // maxRunTime
         }
 
-        if (lootAmount != -1 || lootAmount == ConfigHandler.getCfgHandler().getLoot().getLootAmount()) {
+        if (lootAmount != -1 || lootAmount == ConfigHandler.getInstance().getLoot().getLootAmount()) {
             obj.put("lootAmount", this.lootAmount); // lootAmount
         }
 
