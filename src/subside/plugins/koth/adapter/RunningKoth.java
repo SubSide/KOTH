@@ -1,13 +1,14 @@
 package subside.plugins.koth.adapter;
 
 import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.utils.JSONSerializable;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public interface RunningKoth {
+public interface RunningKoth extends JSONSerializable<RunningKoth> {
 
     /** initializer, enforcing every implementation to have this makes it possible
      *  to dynamicly create games
@@ -15,6 +16,12 @@ public interface RunningKoth {
      */
     @Deprecated
     public void init(StartParams params);
+    
+    /** Get the type of the RunningKoth
+     * 
+     * @return          The koth type
+     */
+    public String getType();
     
     /** Get the TimeObject for the running KoTH
      * 

@@ -164,7 +164,7 @@ public class Utils {
     }
     
     public static String parseCurrentDate(){
-        return parseDate(System.currentTimeMillis() + ConfigHandler.getCfgHandler().getGlobal().getMinuteOffset()*60*1000);
+        return parseDate(System.currentTimeMillis() + ConfigHandler.getInstance().getGlobal().getMinuteOffset()*60*1000);
     }
     
     public static Location getLocFromObject(JSONObject loc) {

@@ -56,7 +56,7 @@ public enum Day {
     private long getStartOfWeek(){
         if(startOfWeek <= 0){
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getCfgHandler().getGlobal().getTimeZone()));
+            calendar.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getInstance().getGlobal().getTimeZone()));
             calendar.setFirstDayOfWeek(Calendar.MONDAY);
             calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.clear(Calendar.MINUTE);
@@ -64,10 +64,10 @@ public enum Day {
             calendar.clear(Calendar.MILLISECOND);
     
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-            calendar.add(Calendar.MINUTE, ConfigHandler.getCfgHandler().getGlobal().getStartWeekMinuteOffset());
+            calendar.add(Calendar.MINUTE, ConfigHandler.getInstance().getGlobal().getStartWeekMinuteOffset());
     
             startOfWeek = calendar.getTimeInMillis();
-            if(ConfigHandler.getCfgHandler().getGlobal().isDebug()){
+            if(ConfigHandler.getInstance().getGlobal().isDebug()){
                 Utils.log("Schedule start of week has been set to: "+Utils.parseDate(startOfWeek)+" ("+startOfWeek+")");
             }
         }

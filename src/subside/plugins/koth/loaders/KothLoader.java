@@ -35,7 +35,9 @@ public class KothLoader {
 				Iterator<?> it = koths.iterator();
 				while(it.hasNext()){
 					try {
-						KothHandler.getInstance().getAvailableKoths().add(Koth.load((JSONObject)it.next()));
+					    Koth koth = new Koth(null);
+					    koth.load((JSONObject)it.next());
+						KothHandler.getInstance().getAvailableKoths().add(koth);
 					} catch(Exception e){
 					    KothPlugin.getPlugin().getLogger().severe("////////////////");
 					    KothPlugin.getPlugin().getLogger().severe("Error loading koth!");

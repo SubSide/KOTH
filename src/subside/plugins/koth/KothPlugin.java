@@ -71,7 +71,7 @@ public class KothPlugin extends JavaPlugin {
         gR.getGamemodes().clear();
         gR.register("classic", KothClassic.class);
         
-        if(ConfigHandler.getCfgHandler().getHooks().isFactions()){
+        if(ConfigHandler.getInstance().getHooks().isFactions()){
             // Add conquest if factions is enabled in the config
             gR.register("conquest", KothConquest.class);
         }
@@ -83,7 +83,7 @@ public class KothPlugin extends JavaPlugin {
         // Add the player entity
         cER.registerCaptureType("player", CappingPlayer.class);
         cER.setPreferedClass(CappingPlayer.class);
-        if(ConfigHandler.getCfgHandler().getHooks().isFactions() && getServer().getPluginManager().getPlugin("Factions") != null){
+        if(ConfigHandler.getInstance().getHooks().isFactions() && getServer().getPluginManager().getPlugin("Factions") != null){
             try {
                 // If this class is not found it means that Factions is not in the server
                 Class.forName("com.massivecraft.factions.entity.FactionColl");
@@ -98,22 +98,22 @@ public class KothPlugin extends JavaPlugin {
             }
         }
         
-        if(ConfigHandler.getCfgHandler().getHooks().isKingdoms() && getServer().getPluginManager().getPlugin("Kingdoms") != null){
+        if(ConfigHandler.getInstance().getHooks().isKingdoms() && getServer().getPluginManager().getPlugin("Kingdoms") != null){
             cER.registerCaptureType("kingdoms", CappingKingdom.class);
             cER.setPreferedClass(CappingKingdom.class);
         }
         
-        if(cER.getCaptureClass(ConfigHandler.getCfgHandler().getKoth().getDefaultCaptureType()) != null)
-            cER.setPreferedClass(cER.getCaptureClass(ConfigHandler.getCfgHandler().getKoth().getDefaultCaptureType()));
+        if(cER.getCaptureClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()) != null)
+            cER.setPreferedClass(cER.getCaptureClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()));
         
 
         // Registering the scoreboards //
         new ScoreboardManager();
-        if(ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()){
-            if(ConfigHandler.getCfgHandler().getHooks().isFactions()){
+        if(ConfigHandler.getInstance().getScoreboard().isUseScoreboard()){
+            if(ConfigHandler.getInstance().getHooks().isFactions()){
                 ScoreboardManager.getInstance().registerScoreboard("conquest", ConquestScoreboard.class);
             }
-            if(ConfigHandler.getCfgHandler().getScoreboard().isUseOldScoreboard()){
+            if(ConfigHandler.getInstance().getScoreboard().isUseOldScoreboard()){
                 ScoreboardManager.getInstance().registerScoreboard("default", OldScoreboard.class);
             } else {
                 ScoreboardManager.getInstance().registerScoreboard("default", DefaultScoreboard.class);
@@ -138,7 +138,7 @@ public class KothPlugin extends JavaPlugin {
         // Register all events
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         // Register scoreboard events (PlayerJoin, playerQuit for setting and removing the scoreboard)
-        if(ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()){
+        if(ConfigHandler.getInstance().getScoreboard().isUseScoreboard()){
             getServer().getPluginManager().registerEvents(ScoreboardManager.getInstance(), this);
         }
         
@@ -157,6 +157,11 @@ public class KothPlugin extends JavaPlugin {
         KothLoader.load();
         LootLoader.load();
         ScheduleLoader.load();
+        
+        // Cache loading
+        if(ConfigHandler.getInstance().getGlobal().isUseCache()){
+            CacheHandler.getInstance().load(this);
+        }
     }
     
 	@Override
@@ -174,6 +179,11 @@ public class KothPlugin extends JavaPlugin {
                     break; // No need to close the players inventory more than once!
                 }
             }
+        }
+        
+        // Cache saving
+        if(ConfigHandler.getInstance().getGlobal().isUseCache()){
+            CacheHandler.getInstance().save(this);
         }
 	}
     

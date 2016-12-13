@@ -105,22 +105,22 @@ public class CommandLoot implements ICommand {
             } else {
                 Koth koth = KothHandler.getInstance().getKoth(sched.getKoth());
                 if(koth == null){
-                    if(!ConfigHandler.getCfgHandler().getLoot().getDefaultLoot().equalsIgnoreCase("")){
-                        loot = ConfigHandler.getCfgHandler().getLoot().getDefaultLoot();
+                    if(!ConfigHandler.getInstance().getLoot().getDefaultLoot().equalsIgnoreCase("")){
+                        loot = ConfigHandler.getInstance().getLoot().getDefaultLoot();
                     } else {
                         return;
                     }
                 } else if(koth.getLoot() != null){
                     loot = koth.getLoot();
                 } else {
-                    loot = ConfigHandler.getCfgHandler().getLoot().getDefaultLoot();
+                    loot = ConfigHandler.getInstance().getLoot().getDefaultLoot();
                 }
             }
             
         } else {
             if(rKoth.getLootChest() == null){
                 if(rKoth.getKoth().getLoot() == null){
-                    loot = ConfigHandler.getCfgHandler().getLoot().getDefaultLoot();
+                    loot = ConfigHandler.getInstance().getLoot().getDefaultLoot();
                 } else {
                     loot = rKoth.getKoth().getLoot();
                 }
@@ -168,11 +168,11 @@ public class CommandLoot implements ICommand {
     }
     
     private void commands(CommandSender sender, String[] args){
-        if(!ConfigHandler.getCfgHandler().getLoot().isCmdIngame()){
+        if(!ConfigHandler.getInstance().getLoot().isCmdIngame()){
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_INGAME_DISABLED));
         }
         
-        if(!sender.isOp() && ConfigHandler.getCfgHandler().getLoot().isCmdNeedOp()){
+        if(!sender.isOp() && ConfigHandler.getInstance().getLoot().isCmdNeedOp()){
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_OPONLY));
         }
         
@@ -182,7 +182,7 @@ public class CommandLoot implements ICommand {
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> add <command>").commandInfo("Add a command").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> list").commandInfo("Show a list of commands").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> remove <id>").commandInfo("Remove a command").build());
-            if(ConfigHandler.getCfgHandler().getLoot().isCmdEnabled()){
+            if(ConfigHandler.getInstance().getLoot().isCmdEnabled()){
                 Utils.sendMessage(sender, true, "&cNote: commands are disabled in the config!");
             }
         return;
@@ -224,7 +224,7 @@ public class CommandLoot implements ICommand {
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> add").commandInfo("Create loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> list").commandInfo("Edit loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> remove <id>").commandInfo("Remove loot chest").build());
-            if(ConfigHandler.getCfgHandler().getLoot().isCmdEnabled()){
+            if(ConfigHandler.getInstance().getLoot().isCmdEnabled()){
                 Utils.sendMessage(sender, true, "&cNote: commands are disabled in the config!");
             }
             return;

@@ -74,7 +74,7 @@ public class CommandSchedule implements ICommand {
         list.add(" ");
         list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_CURRENTDATETIME).date(Utils.parseCurrentDate()).buildArray());
         for (Day day : Day.values()) {
-            if(ConfigHandler.getCfgHandler().getGlobal().isCurrentDayOnly() && day != Day.getCurrentDay())
+            if(ConfigHandler.getInstance().getGlobal().isCurrentDayOnly() && day != Day.getCurrentDay())
                 continue;
             
             List<String> subList = new ArrayList<>();
@@ -135,7 +135,7 @@ public class CommandSchedule implements ICommand {
         
         int captureTime = 15;
         int maxRunTime = -1;
-        int lootAmount = ConfigHandler.getCfgHandler().getLoot().getLootAmount();
+        int lootAmount = ConfigHandler.getInstance().getLoot().getLootAmount();
         String lootChest = null;
         String entityType = null;
         try {

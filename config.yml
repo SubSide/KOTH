@@ -3,6 +3,7 @@
 # To grab your own timezone go to: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 global:
+  use-cache: false
   debug: false
   multiplekothsatonce: true
   schedule-show-current-day-only: false

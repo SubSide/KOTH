@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -202,5 +203,21 @@ public class KothConquest implements RunningKoth {
     
     public MessageBuilder fillMessageBuilder(MessageBuilder mB){
         return mB.maxTime(maxRunTime).koth(koth);
+    }
+    
+    public String getType(){
+        return "conquest";
+    }
+
+    @Override
+    public RunningKoth load(JSONObject obj) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public JSONObject save() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

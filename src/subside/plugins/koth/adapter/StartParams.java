@@ -12,7 +12,7 @@ public class StartParams {
         private @Getter @Setter String gamemode = "classic";
         private @Getter @Setter int captureTime = 15*60;
         private @Getter @Setter int maxRunTime = -1;
-        private @Getter @Setter int lootAmount = ConfigHandler.getCfgHandler().getLoot().getLootAmount();
+        private @Getter @Setter int lootAmount = ConfigHandler.getInstance().getLoot().getLootAmount();
         private @Setter String lootChest = null;
         private @Getter @Setter boolean isScheduled = false;
         private @Getter @Setter String entityType = null;

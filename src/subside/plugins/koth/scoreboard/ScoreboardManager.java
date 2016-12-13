@@ -31,13 +31,13 @@ public class ScoreboardManager implements Listener {
     }
     
     public AbstractScoreboard loadScoreboard(String name, RunningKoth koth){
-        if(currentScoreboard != null || !ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()){
+        if(currentScoreboard != null || !ConfigHandler.getInstance().getScoreboard().isUseScoreboard()){
             return null;
         }
         try {
             currentScoreboard = scoreboardTypes.get(name).getConstructor().newInstance();
             
-            ConfigurationSection section = ConfigHandler.getCfgHandler().getScoreboard().getSection().getConfigurationSection(name.toLowerCase());
+            ConfigurationSection section = ConfigHandler.getInstance().getScoreboard().getSection().getConfigurationSection(name.toLowerCase());
             currentScoreboard.load(koth, section.getString("title"), section.getStringList("contents").toArray(new String[section.getStringList("contents").size()]));
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {

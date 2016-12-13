@@ -35,7 +35,9 @@ public class LootLoader {
                 Iterator<?> it = koths.iterator();
                 while(it.hasNext()){
                     try {
-                        KothHandler.getInstance().getLoots().add(Loot.load((JSONObject)it.next()));
+                        Loot loot = new Loot(null);
+                        loot.load((JSONObject)it.next());
+                        KothHandler.getInstance().getLoots().add(loot);
                     } catch(Exception e){
                         KothPlugin.getPlugin().getLogger().severe("////////////////");
                         KothPlugin.getPlugin().getLogger().severe("Error loading loot!");

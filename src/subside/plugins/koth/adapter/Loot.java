@@ -16,6 +16,7 @@ import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.utils.JSONSerializable;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Utils;
 
@@ -23,7 +24,7 @@ import subside.plugins.koth.utils.Utils;
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class Loot {
+public class Loot implements JSONSerializable<Loot> {
 
     private @Getter Inventory inventory;
     private @Getter @Setter String name;
@@ -52,7 +53,7 @@ public class Loot {
     }
     
     public void triggerCommands(Koth koth, Capper capper){
-        if(!ConfigHandler.getCfgHandler().getLoot().isCmdEnabled()){
+        if(!ConfigHandler.getInstance().getLoot().isCmdEnabled()){
             return;
         }
         
@@ -72,13 +73,13 @@ public class Loot {
     
 
     @Deprecated
-    public static Loot load(JSONObject obj) {
-        Loot loot = new Loot((String)obj.get("name"));
+    public Loot load(JSONObject obj) {
+        this.name = (String)obj.get("name");
         
         JSONObject lootItems = (JSONObject)obj.get("items");
         for(Object key : lootItems.keySet()){
             try {
-                loot.inventory.setItem(Integer.parseInt((String)key), Utils.itemFrom64((String)lootItems.get(key)));
+                this.inventory.setItem(Integer.parseInt((String)key), Utils.itemFrom64((String)lootItems.get(key)));
             } catch(Exception e){
                 e.printStackTrace();
             }
@@ -89,7 +90,7 @@ public class Loot {
             Iterator<?> it = commands.iterator();
             while(it.hasNext()){
                 try {
-                    loot.commands.add((String)it.next());
+                    this.commands.add((String)it.next());
                 } catch(Exception e){
                     e.printStackTrace();
                 }
@@ -97,7 +98,7 @@ public class Loot {
         }
         
         
-        return loot;
+        return this;
     }
 
     @Deprecated
