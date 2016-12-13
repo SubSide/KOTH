@@ -38,7 +38,7 @@ public class CacheHandler {
             JSONObject jsonObj = (JSONObject) obj;
             
             // Loading
-            MapRotation.getInstance().setIndex((int)jsonObj.get("mapRotationIndex"));
+            MapRotation.getInstance().load((JSONObject)jsonObj.get("mapRotation"));
 
             JSONArray runningKoths = (JSONArray)jsonObj.get("runningKoths");
             for(Object rObject : runningKoths){
