@@ -36,7 +36,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     public FeatherboardHook(){
         inRange = new ArrayList<>();
         if(Bukkit.getServer().getPluginManager().isPluginEnabled("FeatherBoard")){
-            Featherboard fbHook = ConfigHandler.getCfgHandler().getHooks().getFeatherboard();
+            Featherboard fbHook = ConfigHandler.getInstance().getHooks().getFeatherboard();
             if(fbHook.isEnabled()){
                 enabled = true;
                 range = fbHook.getRange();

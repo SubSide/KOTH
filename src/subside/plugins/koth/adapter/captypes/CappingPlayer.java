@@ -39,7 +39,7 @@ public class CappingPlayer extends Capper {
     @Override
     public String getName(){
         if(!player.isOnline()) return player.getName();
-        return ConfigHandler.getCfgHandler().getGlobal().isUseFancyPlayerName()?player.getPlayer().getDisplayName():player.getName();
+        return ConfigHandler.getInstance().getGlobal().isUseFancyPlayerName()?player.getPlayer().getDisplayName():player.getName();
     }
     
     public CappingPlayer(List<Player> playerList){

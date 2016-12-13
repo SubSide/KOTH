@@ -50,7 +50,7 @@ public class CommandHelp implements ICommand {
     }
 
     public static void asMember(CommandSender sender, String[] args) {
-        List<String> list = ConfigHandler.getCfgHandler().getGlobal().getHelpCommand();
+        List<String> list = ConfigHandler.getInstance().getGlobal().getHelpCommand();
         List<String> list2 = new ArrayList<>();
         for (String hlp : list) {
             MessageBuilder mB = new MessageBuilder(hlp);

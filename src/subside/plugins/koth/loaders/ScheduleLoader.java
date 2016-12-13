@@ -40,7 +40,12 @@ public class ScheduleLoader {
                 Iterator<?> it = koths.iterator();
                 while (it.hasNext()) {
                     try {
-                        ScheduleHandler.getInstance().getSchedules().add(Schedule.load((JSONObject) it.next(), day));
+                        Schedule schedule = new Schedule(null, null, null);
+                        JSONObject schedObj = (JSONObject) it.next();
+                        schedObj.put("day", day.getDay());
+                        schedule.load((JSONObject) it.next());
+                        
+                        ScheduleHandler.getInstance().getSchedules().add(schedule);
                     }
                     catch (Exception e) {
                         KothPlugin.getPlugin().getLogger().severe("////////////////");

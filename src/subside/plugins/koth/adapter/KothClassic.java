@@ -1,6 +1,7 @@
 package subside.plugins.koth.adapter;
 
 import org.bukkit.Bukkit;
+import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import subside.plugins.koth.ConfigHandler;
@@ -18,8 +19,7 @@ public class KothClassic implements RunningKoth {
     private @Getter Koth koth;
     private @Getter CapInfo capInfo;
     private int captureTime;
-
-    //private @Getter String cappingPlayer;
+    
     private @Getter String lootChest;
     private int timeNotCapped;
     private int lootAmount;
@@ -106,7 +106,7 @@ public class KothClassic implements RunningKoth {
         timeRunning++;
         timeNotCapped++;
 
-        if (knocked && timeKnocked < ConfigHandler.getCfgHandler().getKoth().getKnockTime()) {
+        if (knocked && timeKnocked < ConfigHandler.getInstance().getKoth().getKnockTime()) {
             timeKnocked++;
             return;
         } else if (knocked) {
@@ -132,7 +132,7 @@ public class KothClassic implements RunningKoth {
             return;
         }
         
-        if(ConfigHandler.getCfgHandler().getGlobal().getNoCapBroadcastInterval() != 0 && timeNotCapped % ConfigHandler.getCfgHandler().getGlobal().getNoCapBroadcastInterval() == 0) {
+        if(ConfigHandler.getInstance().getGlobal().getNoCapBroadcastInterval() != 0 && timeNotCapped % ConfigHandler.getInstance().getGlobal().getNoCapBroadcastInterval() == 0) {
             new MessageBuilder(Lang.KOTH_PLAYING_NOT_CAPPING).maxTime(maxRunTime).time(getTimeObject()).koth(koth).buildAndBroadcast();
         }
 
@@ -144,5 +144,45 @@ public class KothClassic implements RunningKoth {
     
     public MessageBuilder fillMessageBuilder(MessageBuilder mB){
         return mB.maxTime(maxRunTime).time(getTimeObject()).capper(getCapInfo().getName()).koth(koth);
+    }
+    
+    public String getType(){
+        return "classic";
+    }
+    
+    @SuppressWarnings("unchecked")
+    public JSONObject save(){
+        JSONObject obj = new JSONObject();
+        obj.put("koth", koth.getName());
+        obj.put("capperType", capInfo.getCapper().getUniqueClassIdentifier());
+        obj.put("capperEntity", capInfo.getCapper().getUniqueObjectIdentifier());
+        obj.put("capperTime", capInfo.getTimeCapped());
+        
+        obj.put("captureTime", this.captureTime);
+        obj.put("lootChest", this.lootChest);
+        obj.put("lootAmount", this.lootAmount);
+        obj.put("timeKnocked", this.timeKnocked);
+        obj.put("knocked", this.knocked);
+        obj.put("maxRunTime", this.maxRunTime);
+        obj.put("timeRunning", this.timeRunning);
+
+        return obj;
+    }
+    
+    public KothClassic load(JSONObject obj){
+        this.koth = KothHandler.getInstance().getKoth((String)obj.get("koth"));
+        this.capInfo = new CapInfo(this, this.koth, KothHandler.getInstance().getCapEntityRegistry().getCaptureClass((String)obj.get("capperType")));
+        this.capInfo.setCapper(KothHandler.getInstance().getCapEntityRegistry().getCapperFromType((String)obj.get("capperType"), (String)obj.get("capperEntity")));
+        this.capInfo.setTimeCapped((int) obj.get("capperTime"));
+        
+        this.captureTime = (int) obj.get("captureTime");
+        this.lootChest = (String) obj.get("lootChest");
+        this.lootAmount = (int) obj.get("lootAmount");
+        this.timeKnocked = (int) obj.get("timeKnocked");
+        this.knocked = (boolean) obj.get("knocked");
+        this.maxRunTime = (int) obj.get("maxRunTime");
+        this.timeRunning = (int) obj.get("timeRunning");
+        
+        return this;
     }
 }

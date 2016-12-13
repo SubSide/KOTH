@@ -17,7 +17,7 @@ public class VanishHook extends AbstractHook {
     
     public VanishHook(){
         if(Bukkit.getServer().getPluginManager().isPluginEnabled("VanishNoPacket")){
-            if(ConfigHandler.getCfgHandler().getHooks().isVanishNoPacket()){
+            if(ConfigHandler.getInstance().getHooks().isVanishNoPacket()){
                 enabled = true;
             }
             vanishManager = ((VanishPlugin)Bukkit.getServer().getPluginManager().getPlugin("VanishNoPacket")).getManager();

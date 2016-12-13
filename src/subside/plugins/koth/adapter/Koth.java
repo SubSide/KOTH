@@ -24,6 +24,7 @@ import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.events.KothChestCreationEvent;
+import subside.plugins.koth.utils.JSONSerializable;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Utils;
 
@@ -31,7 +32,7 @@ import subside.plugins.koth.utils.Utils;
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class Koth implements Capable {
+public class Koth implements Capable, JSONSerializable<Koth> {
     private @Getter @Setter String name;
     private @Getter @Setter Location lootPos = null;
     private @Setter String loot = null;
@@ -51,7 +52,7 @@ public class Koth implements Capable {
         if(loot != null && !loot.equalsIgnoreCase("")){
             return loot;
         }
-        return ConfigHandler.getCfgHandler().getLoot().getDefaultLoot();
+        return ConfigHandler.getInstance().getLoot().getDefaultLoot();
     }
     
     /** Return a RunningKoth linked to this KoTH if there is running one
@@ -134,7 +135,7 @@ public class Koth implements Capable {
         Loot loot = KothHandler.getInstance().getLoot((lootChest == null)?getLoot():lootChest);
         
         if(loot == null){
-            loot = KothHandler.getInstance().getLoot(ConfigHandler.getCfgHandler().getLoot().getDefaultLoot()); 
+            loot = KothHandler.getInstance().getLoot(ConfigHandler.getInstance().getLoot().getDefaultLoot()); 
         }
         
         return loot;
@@ -168,7 +169,7 @@ public class Koth implements Capable {
             if (usableLoot.size() < 1) return;
 
             Inventory inv = Bukkit.createInventory(null, 54);
-            if (ConfigHandler.getCfgHandler().getLoot().isRandomizeLoot()) {
+            if (ConfigHandler.getInstance().getLoot().isRandomizeLoot()) {
                 for (int x = 0; x < lootAmount; x++) {
                     if (usableLoot.size() < 1) {
                         break;
@@ -176,12 +177,12 @@ public class Koth implements Capable {
 
                     // UseItemsMultipleTimes
                     ItemStack uLoot = usableLoot.get(new Random().nextInt(usableLoot.size()));
-                    if (!ConfigHandler.getCfgHandler().getLoot().isUseItemsMultipleTimes()) {
+                    if (!ConfigHandler.getInstance().getLoot().isUseItemsMultipleTimes()) {
                         usableLoot.remove(uLoot);
                     }
 
                     // Randomize amount of loot or not?
-                    if (ConfigHandler.getCfgHandler().getLoot().isRandomizeStackSize()) {
+                    if (ConfigHandler.getInstance().getLoot().isRandomizeStackSize()) {
                         int amount = uLoot.getAmount();
                         ItemStack stack = uLoot.clone();
                         stack.setAmount(new Random().nextInt(amount) + 1);
@@ -196,7 +197,7 @@ public class Koth implements Capable {
                 }
             }
 
-            if (ConfigHandler.getCfgHandler().getLoot().isInstantLoot()) {
+            if (ConfigHandler.getInstance().getLoot().isInstantLoot()) {
                 List<Player> players = this.lastWinner.getAvailablePlayers(this);
                 Player player = players.get(new Random().nextInt(players.size()));
                 
@@ -238,7 +239,7 @@ public class Koth implements Capable {
                 Chest chest = (Chest) lootPos.getBlock().getState();
                 chest.getInventory().setContents(Arrays.copyOf(inv.getContents(), 27));
 
-                if (ConfigHandler.getCfgHandler().getLoot().getRemoveLootAfterSeconds() < 1) {
+                if (ConfigHandler.getInstance().getLoot().getRemoveLootAfterSeconds() < 1) {
                     return;
                 }
 
@@ -247,7 +248,7 @@ public class Koth implements Capable {
                     public void run() {
                         removeLootChest();
                     }
-                }, ConfigHandler.getCfgHandler().getLoot().getRemoveLootAfterSeconds() * 20);
+                }, ConfigHandler.getInstance().getLoot().getRemoveLootAfterSeconds() * 20);
 
             }
 
@@ -272,7 +273,7 @@ public class Koth implements Capable {
                     return;
                 }
 
-                if (!ConfigHandler.getCfgHandler().getLoot().isDropLootOnRemoval()) {
+                if (!ConfigHandler.getInstance().getLoot().isDropLootOnRemoval()) {
                     if (koth.getLootPos().getBlock().getState() instanceof Chest) {
                         Chest chest = (Chest) koth.getLootPos().getBlock().getState();
                         Inventory inv = chest.getInventory();
@@ -307,20 +308,20 @@ public class Koth implements Capable {
 //    private @Getter List<Area> areas = new ArrayList<>();
 
     @Deprecated
-    public static Koth load(JSONObject obj){
-        Koth koth = new Koth((String)obj.get("name")); //name
+    public Koth load(JSONObject obj){
+        this.name = (String)obj.get("name"); //name
         
         if(obj.containsKey("lastWinner")){
-            koth.lastWinner = Capper.load((JSONObject)obj.get("lastWinner")); //lastwinner
+            this.lastWinner = Capper.load((JSONObject)obj.get("lastWinner")); //lastwinner
         }
         
         if(obj.containsKey("loot")){
             JSONObject lootObj = (JSONObject)obj.get("loot");
             if(lootObj.containsKey("position")){
-                koth.lootPos = Utils.getLocFromObject((JSONObject)lootObj.get("position")); //lootpos
+                this.lootPos = Utils.getLocFromObject((JSONObject)lootObj.get("position")); //lootpos
             }
             if(lootObj.containsKey("name")){
-                koth.loot = (String)lootObj.get("name"); //loot
+                this.loot = (String)lootObj.get("name"); //loot
             }
         }
 
@@ -328,11 +329,11 @@ public class Koth implements Capable {
             JSONArray areaz = (JSONArray)obj.get("areas");
             Iterator<?> it = areaz.iterator();
             while(it.hasNext()){
-                koth.areas.add(Area.load((JSONObject)it.next())); //areas
+                this.areas.add(Area.load((JSONObject)it.next())); //areas
             }
         }
         
-        return koth;
+        return this;
     }
 
     @Deprecated

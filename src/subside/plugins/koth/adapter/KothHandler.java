@@ -61,7 +61,7 @@ public class KothHandler {
             while (it.hasNext()) {
                 it.next().update();
             }
-            if (ConfigHandler.getCfgHandler().getScoreboard().isUseScoreboard()) {
+            if (ConfigHandler.getInstance().getScoreboard().isUseScoreboard()) {
                 ScoreboardManager.getInstance().update();
             }
             ScheduleHandler.getInstance().tick();
@@ -118,13 +118,13 @@ public class KothHandler {
             KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled(), params.getEntityType());
             
             boolean anotherAlreadyRunning = false;
-            if(KothHandler.getInstance().getRunningKoth() != null && !ConfigHandler.getCfgHandler().getGlobal().isMultipleKothsAtOnce()){
+            if(KothHandler.getInstance().getRunningKoth() != null && !ConfigHandler.getInstance().getGlobal().isMultipleKothsAtOnce()){
                 event.setCancelled(true);
                 anotherAlreadyRunning = true;
             }
             
             boolean minimumNotMet = false;
-            if (params.isScheduled() && Lists.newArrayList(Bukkit.getOnlinePlayers()).size() < ConfigHandler.getCfgHandler().getKoth().getMinimumPlayersNeeded()) {
+            if (params.isScheduled() && Lists.newArrayList(Bukkit.getOnlinePlayers()).size() < ConfigHandler.getInstance().getKoth().getMinimumPlayersNeeded()) {
                 event.setCancelled(true);
                 minimumNotMet = true;
             }

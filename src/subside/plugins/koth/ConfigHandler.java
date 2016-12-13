@@ -8,7 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import lombok.Getter;
 
 public class ConfigHandler {
-    private @Getter static ConfigHandler cfgHandler;
+    private @Getter static ConfigHandler instance;
     
 	private @Getter Global global;
 	private @Getter Loot loot;
@@ -17,7 +17,7 @@ public class ConfigHandler {
 	private @Getter Hooks hooks;
 	
 	public ConfigHandler(FileConfiguration cfg){
-		cfgHandler = this;
+		instance = this;
         
 		global = new Global(cfg.getConfigurationSection("global"));
 		loot = new Loot(cfg.getConfigurationSection("loot"));
@@ -27,6 +27,7 @@ public class ConfigHandler {
 	}
 	
 	public class Global {
+	    private @Getter boolean useCache = false;
 	    private @Getter boolean currentDayOnly = false;
 	    private @Getter String timeZone = "Europe/Amsterdam";
         private @Getter int minuteOffset = 0;
@@ -40,6 +41,7 @@ public class ConfigHandler {
 	    private @Getter boolean debug = false;
 	    
 	    public Global(ConfigurationSection section){
+	        useCache = section.getBoolean("use-cache");
 	        currentDayOnly = section.getBoolean("schedule-show-current-day-only");
 	        timeZone = section.getString("schedule-timezone");
             minuteOffset = section.getInt("minuteoffset");
