@@ -12,7 +12,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
-import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
@@ -27,18 +26,34 @@ import subside.plugins.koth.utils.Utils;
 public class Loot implements JSONSerializable<Loot> {
 
     private @Getter Inventory inventory;
-    private @Getter @Setter String name;
+    private @Getter String name;
     private @Getter List<String> commands;
     
+    public Loot(){
+        commands = new ArrayList<>();
+        inventory = Bukkit.createInventory(null, 54, "Loot chest!");
+    }
+    
     public Loot(String name){
-        inventory = Bukkit.createInventory(null, 54, getTitle(name));
-        this.name = name;
-        this.commands = new ArrayList<>();
+        this();
+        setName(name);
     }
     
     public Loot(String name, List<String> commands){
         this(name);
         this.commands = commands;
+    }
+    
+    public void setName(String title){
+        this.name = title;
+        Inventory newInv = Bukkit.createInventory(null, 54, createTitle(name));
+        if(this.inventory != null){
+            for(int i = 0; i < this.inventory.getContents().length; i++){
+                newInv.setItem(i, this.inventory.getContents()[i]);
+            }
+        }
+        
+        this.inventory = newInv;
     }
 
     /** Get the title by the loot name
@@ -46,7 +61,8 @@ public class Loot implements JSONSerializable<Loot> {
      * @param name      The name of the loot
      * @return          The marked-up title
      */
-    public static String getTitle(String name){
+    public static String createTitle(String name){
+        name = name == null ? "" : name;
         String title = new MessageBuilder(Lang.COMMAND_LOOT_CHEST_TITLE).loot(name).build()[0];
         if (title.length() > 32) title = title.substring(0, 32);
         return title;
@@ -75,6 +91,7 @@ public class Loot implements JSONSerializable<Loot> {
     @Deprecated
     public Loot load(JSONObject obj) {
         this.name = (String)obj.get("name");
+        this.setName(this.name);
         
         JSONObject lootItems = (JSONObject)obj.get("items");
         for(Object key : lootItems.keySet()){

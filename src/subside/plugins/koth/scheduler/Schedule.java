@@ -27,6 +27,10 @@ public class Schedule implements JSONSerializable<Schedule> {
     
     private static final long WEEK = 7 * 24 * 60 * 60 * 1000;
 
+    public Schedule(){
+        
+    }
+    
     public Schedule(String koth, Day day, String time) {
         this.koth = koth;
         this.day = day;
@@ -104,6 +108,7 @@ public class Schedule implements JSONSerializable<Schedule> {
             this.setEntityType((String) obj.get("entityType"));
         }
 
+        calculateNextEvent();
         return this;
 
     }
@@ -112,7 +117,7 @@ public class Schedule implements JSONSerializable<Schedule> {
     public JSONObject save() {
         JSONObject obj = new JSONObject();
         obj.put("koth", this.koth); // koth
-        //obj.put("day", this.day.getDay()); // day
+        obj.put("day", this.day.getDay()); // day
         obj.put("time", this.time); // time
 
         if (captureTime != -1) {

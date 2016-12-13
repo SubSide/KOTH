@@ -40,10 +40,10 @@ public class ScheduleLoader {
                 Iterator<?> it = koths.iterator();
                 while (it.hasNext()) {
                     try {
-                        Schedule schedule = new Schedule(null, null, null);
+                        Schedule schedule = new Schedule();
                         JSONObject schedObj = (JSONObject) it.next();
                         schedObj.put("day", day.getDay());
-                        schedule.load((JSONObject) it.next());
+                        schedule.load((JSONObject) schedObj);
                         
                         ScheduleHandler.getInstance().getSchedules().add(schedule);
                     }
