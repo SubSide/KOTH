@@ -252,7 +252,7 @@ public class CommandInfo implements ICommand {
         if(sched.getEntityType() != null){
             captureType = sched.getEntityType();
             try {
-                Class<? extends Capper> clazz = KothHandler.getInstance().getCapEntityRegistry().getCaptureClass(sched.getEntityType());
+                Class<? extends Capper> clazz = KothHandler.getInstance().getCapEntityRegistry().getCaptureTypeClass(sched.getEntityType());
                 captureType += " (Java class: "+clazz.getSimpleName()+")";
             } catch(Exception e){
                 captureType += " (Invalid CaptureType)";

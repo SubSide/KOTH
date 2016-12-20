@@ -24,10 +24,12 @@ public class StartParams {
         
         public StartParams(String kth){
         	gamemode = KothHandler.getInstance().getGamemodeRegistry().getCurrentMode();
-            if (kth.equalsIgnoreCase("random")) {
+            if (kth.equalsIgnoreCase("$random")) {
                 if (KothHandler.getInstance().getAvailableKoths().size() > 0) {
                     kth = KothHandler.getInstance().getAvailableKoths().get(new Random().nextInt(KothHandler.getInstance().getAvailableKoths().size())).getName();
                 }
+            } else if(kth.equalsIgnoreCase("$rotation")){
+                kth = MapRotation.getInstance().getNext();
             }
 
             for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {

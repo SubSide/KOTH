@@ -47,6 +47,12 @@ koth:
   default-capturetype: "" # set this to your desired capture type
   knockTime: 0
   minimum-players: 0
+  map-rotation:
+    - "map1"
+    - "map2"
+    - "map3"
+    - "map2"
+    - "etc"
 
 scoreboard:
   characterlimit: 16

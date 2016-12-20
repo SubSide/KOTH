@@ -14,8 +14,10 @@ import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.KothHandler.CapEntityRegistry;
 import subside.plugins.koth.adapter.KothHandler.GamemodeRegistry;
 import subside.plugins.koth.adapter.Loot;
+import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.adapter.captypes.CappingFactionNormal;
 import subside.plugins.koth.adapter.captypes.CappingFactionUUID;
+import subside.plugins.koth.adapter.captypes.CappingGroup;
 import subside.plugins.koth.adapter.captypes.CappingKingdom;
 import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.commands.CommandHandler;
@@ -79,20 +81,27 @@ public class KothPlugin extends JavaPlugin {
         // Registering the capture entities //
         CapEntityRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
         cER.getCaptureTypes().clear();
+        cER.getCaptureClasses().clear();
         
         // Add the player entity
+
+        cER.registerCaptureClass("capperclass", Capper.class);
+        
         cER.registerCaptureType("player", CappingPlayer.class);
         cER.setPreferedClass(CappingPlayer.class);
+        boolean hasGroupPlugin = false;
         if(ConfigHandler.getInstance().getHooks().isFactions() && getServer().getPluginManager().getPlugin("Factions") != null){
             try {
                 // If this class is not found it means that Factions is not in the server
                 Class.forName("com.massivecraft.factions.entity.FactionColl");
                 cER.registerCaptureType("faction", CappingFactionNormal.class);
                 cER.setPreferedClass(CappingFactionNormal.class);
+                hasGroupPlugin = true;
             } catch(ClassNotFoundException e){
                 // So if the class is not found, we add FactionsUUID instead
                 cER.registerCaptureType("factionuuid", CappingFactionUUID.class);
                 cER.setPreferedClass(CappingFactionUUID.class);
+                hasGroupPlugin = true;
             } catch(Exception e){
                 e.printStackTrace();
             }
@@ -101,10 +110,16 @@ public class KothPlugin extends JavaPlugin {
         if(ConfigHandler.getInstance().getHooks().isKingdoms() && getServer().getPluginManager().getPlugin("Kingdoms") != null){
             cER.registerCaptureType("kingdoms", CappingKingdom.class);
             cER.setPreferedClass(CappingKingdom.class);
+            hasGroupPlugin = true;
         }
         
-        if(cER.getCaptureClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()) != null)
-            cER.setPreferedClass(cER.getCaptureClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()));
+        // Make sure when you register your own group-like capturetype, to register the CappingGroup in the capentityregistry
+        if(hasGroupPlugin){
+            cER.registerCaptureClass("groupclass", CappingGroup.class);
+        }
+        
+        if(cER.getCaptureTypeClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()) != null)
+            cER.setPreferedClass(cER.getCaptureTypeClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()));
         
 
         // Registering the scoreboards //
@@ -160,6 +175,7 @@ public class KothPlugin extends JavaPlugin {
         
         // Cache loading
         if(ConfigHandler.getInstance().getGlobal().isUseCache()){
+            new CacheHandler();
             CacheHandler.getInstance().load(this);
         }
     }

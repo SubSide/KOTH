@@ -1,6 +1,6 @@
 package subside.plugins.koth.adapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONObject;
 
@@ -9,11 +9,12 @@ import lombok.Setter;
 import subside.plugins.koth.utils.JSONSerializable;
 
 public class MapRotation implements JSONSerializable<MapRotation> {
-    public static @Getter MapRotation instance;
-    public ArrayList<String> rotation;
+    private static @Getter MapRotation instance;
+    
+    public List<String> rotation;
     public @Getter @Setter int index;
     
-    public MapRotation(ArrayList<String> rotation){
+    public MapRotation(List<String> rotation){
         instance = this;
         this.rotation = rotation;
     }
@@ -24,7 +25,7 @@ public class MapRotation implements JSONSerializable<MapRotation> {
 
     @Override
     public MapRotation load(JSONObject obj) {
-        this.index = (int)obj.get("index");
+        this.index = (int)(long)obj.get("index");
         
         return this;
     }
