@@ -18,9 +18,12 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.RunningKoth.EndReason;
 import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.events.KothPostUpdateEvent;
+import subside.plugins.koth.events.KothPreUpdateEvent;
 import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.exceptions.AnotherKothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
@@ -61,7 +64,15 @@ public class KothHandler {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
-                it.next().update();
+                // Call an PreUpdateEvent, this can be cancelled (For whichever reason)
+                KothPreUpdateEvent preEvent = new KothPreUpdateEvent(it.next());
+                KothPlugin.getPlugin().getServer().getPluginManager().callEvent(preEvent);
+                if(!preEvent.isCancelled()){
+                    preEvent.getRunningKoth().update();
+                    
+                    // If the preEvent is not cancelled call postUpdateEvent, this cannot be cancelled as there is nothing to cancel.
+                    KothPlugin.getPlugin().getServer().getPluginManager().callEvent(new KothPostUpdateEvent(preEvent.getRunningKoth()));
+                }
             }
             if (ConfigHandler.getInstance().getScoreboard().isUseScoreboard()) {
                 ScoreboardManager.getInstance().update();
