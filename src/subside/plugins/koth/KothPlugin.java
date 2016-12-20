@@ -25,10 +25,6 @@ import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.loaders.LootLoader;
 import subside.plugins.koth.loaders.ScheduleLoader;
-import subside.plugins.koth.scoreboard.ConquestScoreboard;
-import subside.plugins.koth.scoreboard.DefaultScoreboard;
-import subside.plugins.koth.scoreboard.OldScoreboard;
-import subside.plugins.koth.scoreboard.ScoreboardManager;
 
 public class KothPlugin extends JavaPlugin {
 	private @Getter static KothPlugin plugin;
@@ -121,19 +117,6 @@ public class KothPlugin extends JavaPlugin {
         if(cER.getCaptureTypeClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()) != null)
             cER.setPreferedClass(cER.getCaptureTypeClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()));
         
-
-        // Registering the scoreboards //
-        new ScoreboardManager();
-        if(ConfigHandler.getInstance().getScoreboard().isUseScoreboard()){
-            if(ConfigHandler.getInstance().getHooks().isFactions()){
-                ScoreboardManager.getInstance().registerScoreboard("conquest", ConquestScoreboard.class);
-            }
-            if(ConfigHandler.getInstance().getScoreboard().isUseOldScoreboard()){
-                ScoreboardManager.getInstance().registerScoreboard("default", OldScoreboard.class);
-            } else {
-                ScoreboardManager.getInstance().registerScoreboard("default", DefaultScoreboard.class);
-            }
-        }
     }
 
     @SuppressWarnings("deprecation")
@@ -152,10 +135,7 @@ public class KothPlugin extends JavaPlugin {
         
         // Register all events
         getServer().getPluginManager().registerEvents(new EventListener(), this);
-        // Register scoreboard events (PlayerJoin, playerQuit for setting and removing the scoreboard)
-        if(ConfigHandler.getInstance().getScoreboard().isUseScoreboard()){
-            getServer().getPluginManager().registerEvents(ScoreboardManager.getInstance(), this);
-        }
+        
         
         // Add a repeating ASYNC scheduler for the KothHandler
         Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
@@ -182,9 +162,6 @@ public class KothPlugin extends JavaPlugin {
     
 	@Override
 	public void onDisable() {
-	    // Remove the scoreboard from all the players
-		ScoreboardManager.getInstance().destroy();
-		
 		// Make sure that nobody is viewing a loot chest
 		// This is important because otherwise people could take stuff out of the viewing loot chest
         for(Player player : Bukkit.getOnlinePlayers()){

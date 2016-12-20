@@ -15,8 +15,6 @@ import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.adapter.captypes.CappingGroup;
 import subside.plugins.koth.events.KothEndEvent;
-import subside.plugins.koth.scoreboard.ConquestScoreboard;
-import subside.plugins.koth.scoreboard.ScoreboardManager;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
@@ -33,7 +31,6 @@ public class KothConquest implements RunningKoth {
     
     private @Getter List<ConquestArea> areas;
     private @Getter List<FactionScore> fScores;
-    private ConquestScoreboard scoreboard;
     private int runTime;
 
 
@@ -48,14 +45,6 @@ public class KothConquest implements RunningKoth {
         for(Area area : koth.getAreas()){
             areas.add(new ConquestArea(this, area));
         }
-
-        final KothConquest thiz = this;
-        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable(){
-            @Override
-            public void run() {
-                scoreboard = (ConquestScoreboard)ScoreboardManager.getInstance().loadScoreboard("conquest", thiz);
-            }    
-        });
     }
 
     @Override
@@ -184,7 +173,6 @@ public class KothConquest implements RunningKoth {
             if(updateTime == runTime){
                 if(holdingTime % 30 == 0){
                     points++;
-                    scoreboard.getSbObject().setFactionScore(faction.getName(), points);
                     if(points >= maxPoints){
                         Bukkit.broadcastMessage("GG");
                     }

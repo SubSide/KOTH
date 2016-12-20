@@ -46,7 +46,7 @@ public class CacheHandler {
                     JSONObject rObj = (JSONObject)rObject;
                     RunningKoth rKoth = KothHandler.getInstance().getGamemodeRegistry().createGame((String)rObj.get("kothType"));
                     rKoth.load((JSONObject)rObj);
-                    KothHandler.getInstance().getRunningKoths().add(rKoth);
+                    KothHandler.getInstance().addRunningKoth(rKoth);
                 }
             }
             //

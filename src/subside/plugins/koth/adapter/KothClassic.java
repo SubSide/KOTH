@@ -9,7 +9,6 @@ import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.events.KothEndEvent;
-import subside.plugins.koth.scoreboard.ScoreboardManager;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
@@ -44,14 +43,6 @@ public class KothClassic implements RunningKoth {
         }
         koth.setLastWinner(null);
         new MessageBuilder(Lang.KOTH_PLAYING_STARTING).maxTime(maxRunTime).time(getTimeObject()).koth(koth).buildAndBroadcast();
-        
-        final KothClassic thiz = this;
-        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable(){
-            @Override
-            public void run() {
-                ScoreboardManager.getInstance().loadScoreboard("default", thiz);
-            }    
-        });
     }
     
     @Override
@@ -188,14 +179,6 @@ public class KothClassic implements RunningKoth {
         this.knocked = (boolean) obj.get("knocked");
         this.maxRunTime = (int) (long) obj.get("maxRunTime");
         this.timeRunning = (int) (long) obj.get("timeRunning");
-        
-        final KothClassic thiz = this;
-        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable(){
-            @Override
-            public void run() {
-                ScoreboardManager.getInstance().loadScoreboard("default", thiz);
-            }    
-        });
         
         return this;
     }

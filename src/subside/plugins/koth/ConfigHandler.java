@@ -14,7 +14,6 @@ public class ConfigHandler {
 	private @Getter Global global;
 	private @Getter Loot loot;
 	private @Getter Koth koth;
-	private @Getter Scoreboard scoreboard;
 	private @Getter Hooks hooks;
 	
 	public ConfigHandler(FileConfiguration cfg){
@@ -23,7 +22,6 @@ public class ConfigHandler {
 		global = new Global(cfg.getConfigurationSection("global"));
 		loot = new Loot(cfg.getConfigurationSection("loot"));
 		koth = new Koth(cfg.getConfigurationSection("koth"));
-		scoreboard = new Scoreboard(cfg.getConfigurationSection("scoreboard"));
 		hooks = new Hooks(cfg.getConfigurationSection("hooks"));
 	}
 	
@@ -131,23 +129,4 @@ public class ConfigHandler {
 	    }
 	}
 	
-	public class Scoreboard {
-        private @Getter int characterLimit = 16;
-        private @Getter int characterTitleLimit = 16;
-	    private @Getter boolean useScoreboard = true;
-	    private @Getter boolean useOldScoreboard = false;
-	    private ConfigurationSection section;
-	    
-	    public Scoreboard(ConfigurationSection section){
-            characterLimit = section.getInt("characterlimit");
-            characterLimit = section.getInt("charactertitlelimit");
-	        useScoreboard = section.getBoolean("use-scoreboard");
-	        useOldScoreboard = section.getBoolean("use-old-scoreboard");
-	        this.section = section;
-	    }
-	    
-	    public ConfigurationSection getSection(){
-	        return section;
-	    }
-	}
 }
