@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import lombok.Getter;
 import lombok.Setter;
+import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.events.KothCapEvent;
@@ -59,6 +60,16 @@ public class CapInfo {
     public void update(){
         if(capper != null && capper.getObject() != null){
             if(capper.areaCheck(captureZone)){
+                
+                // Handle contestFreeze
+                if(ConfigHandler.getInstance().getKoth().isContestFreeze()){
+                    for(Player player : getInsidePlayers()){
+                        if(!capper.isInOrEqualTo(player)){
+                            return;
+                        }
+                    }
+                }
+                
                 timeCapped++;
                 return;
             }
@@ -86,14 +97,8 @@ public class CapInfo {
                 capper = event.getNextCapper();
             }   
         } else {
-            List<Player> insideArea = new ArrayList<>();
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (captureZone.isInArea(player)) {
-                    if(HookManager.getHookManager().canCap(player)) {
-                        insideArea.add(player);
-                    }
-                }
-            }
+            List<Player> insideArea = getInsidePlayers();
+            
             if (insideArea.size() < 1) {
                 return;
             }
@@ -118,6 +123,18 @@ public class CapInfo {
 //            }
             // TO-DO
         }
+    }
+    
+    public List<Player> getInsidePlayers(){
+        List<Player> insideArea = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (captureZone.isInArea(player)) {
+                if(HookManager.getHookManager().canCap(player)) {
+                    insideArea.add(player);
+                }
+            }
+        }
+        return insideArea;
     }
     
     /**
