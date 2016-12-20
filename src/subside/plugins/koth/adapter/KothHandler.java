@@ -22,6 +22,7 @@ import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.adapter.RunningKoth.EndReason;
 import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.events.KothInitializeEvent;
 import subside.plugins.koth.events.KothPostUpdateEvent;
 import subside.plugins.koth.events.KothPreUpdateEvent;
 import subside.plugins.koth.events.KothStartEvent;
@@ -33,7 +34,6 @@ import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
-import subside.plugins.koth.scoreboard.ScoreboardManager;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
@@ -74,9 +74,6 @@ public class KothHandler {
                     KothPlugin.getPlugin().getServer().getPluginManager().callEvent(new KothPostUpdateEvent(preEvent.getRunningKoth()));
                 }
             }
-            if (ConfigHandler.getInstance().getScoreboard().isUseScoreboard()) {
-                ScoreboardManager.getInstance().update();
-            }
             ScheduleHandler.getInstance().tick();
             HookManager.getHookManager().tick();
         }
@@ -94,6 +91,13 @@ public class KothHandler {
                 return null;
             }
         }
+    }
+    
+    public void addRunningKoth(RunningKoth rKoth){
+        KothInitializeEvent event = new KothInitializeEvent(rKoth);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        
+        runningKoths.add(rKoth);
     }
     
     @Deprecated
@@ -147,7 +151,7 @@ public class KothHandler {
             if (!event.isCancelled()) {
                 RunningKoth rKoth = this.getGamemodeRegistry().createGame(params.getGamemode());
                 rKoth.init(params);
-                runningKoths.add(rKoth);
+                addRunningKoth(rKoth);
             } else if(anotherAlreadyRunning) {
                 throw new AnotherKothAlreadyRunningException();
             }else if(minimumNotMet){
@@ -230,18 +234,12 @@ public class KothHandler {
                 it.next().endKoth(EndReason.FORCED);
             }
         }
-
-        ScoreboardManager.getInstance().destroy();
     }
 
     @Deprecated
     public void remove(RunningKoth koth){
         synchronized (runningKoths) {
             runningKoths.remove(koth);
-
-            if(runningKoths.size() < 1){
-                ScoreboardManager.getInstance().destroy();
-            }
         }
     }
     
