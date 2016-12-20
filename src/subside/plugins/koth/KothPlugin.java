@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
@@ -155,8 +156,13 @@ public class KothPlugin extends JavaPlugin {
         
         // Cache loading
         if(ConfigHandler.getInstance().getGlobal().isUseCache()){
-            new CacheHandler();
-            CacheHandler.getInstance().load(this);
+            Bukkit.getScheduler().runTask(this, new BukkitRunnable(){
+                @Override
+                public void run(){
+                    new CacheHandler();
+                    CacheHandler.getInstance().load(KothPlugin.getPlugin());
+                }
+            });
         }
     }
     
