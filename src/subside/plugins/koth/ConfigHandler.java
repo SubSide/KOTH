@@ -119,11 +119,13 @@ public class ConfigHandler {
 	public class Koth {
 	    private @Getter int knockTime = 0;
 	    private @Getter boolean removeChestAtStart = true;
+        private @Getter boolean ffaChestTimeLimit = false;
 	    private @Getter int minimumPlayersNeeded = 0;
         private @Getter String defaultCaptureType = "Player";
 	    
 	    public Koth(ConfigurationSection section){
 	        removeChestAtStart = section.getBoolean("remove-chest-at-start");
+	        ffaChestTimeLimit = section.getBoolean("ffa-on-time-limit");
 	        knockTime = section.getInt("knockTime");
 	        minimumPlayersNeeded = section.getInt("minimum-players");
 	        defaultCaptureType = section.getString("default-capturetype");

@@ -45,6 +45,7 @@ hooks:
 
 koth:
   remove-chest-at-start: true
+  ffa-on-time-limit: false # This will on time limit create a FreeForAll chest
   default-capturetype: "" # set this to your desired capture type
   knockTime: 0
   minimum-players: 0

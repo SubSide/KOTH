@@ -46,7 +46,7 @@ public class EventListener implements Listener {
                 KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
                 event.setCancelled(true);
                 try {
-                    if(Perm.Admin.BYPASS.has((Player) e.getPlayer()) || (koth.getLastWinner() != null && koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer()))){
+                    if(Perm.Admin.BYPASS.has((Player) e.getPlayer()) || (ConfigHandler.getInstance().getKoth().isFfaChestTimeLimit() && koth.getLastWinner() == null && koth.getRunningKoth() == null) || (koth.getLastWinner() != null && koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer()))){
                         event.setCancelled(false);
                     }
                 } catch(Exception f){

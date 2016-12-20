@@ -34,10 +34,10 @@ public class KothClassic implements RunningKoth {
         this.captureTime = params.getCaptureTime();
         this.lootChest = params.getLootChest();
         this.lootAmount = params.getLootAmount();
+        this.maxRunTime = params.getMaxRunTime() * 60;
         
         this.timeNotCapped = 0;
         this.capInfo = new CapInfo(this, this.koth, KothHandler.getInstance().getCapEntityRegistry().getCaptureTypeClass(params.getEntityType()));
-        this.maxRunTime = maxRunTime * 60;
         if(ConfigHandler.getInstance().getKoth().isRemoveChestAtStart()){
             koth.removeLootChest();
         }
@@ -59,6 +59,7 @@ public class KothClassic implements RunningKoth {
     }
 
     public void endKoth(EndReason reason) {
+        boolean shouldCreateChest = true;
         if (reason == EndReason.WON || reason == EndReason.GRACEFUL) {
             if (capInfo.getCapper() != null) {
                 new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth)/*.shouldExcludePlayer()*/.buildAndBroadcast();
@@ -69,10 +70,13 @@ public class KothClassic implements RunningKoth {
             }
         } else if (reason == EndReason.TIMEUP) {
             new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP).maxTime(maxRunTime).koth(koth).buildAndBroadcast();
+            shouldCreateChest = ConfigHandler.getInstance().getKoth().isFfaChestTimeLimit();
         }
 
 
         KothEndEvent event = new KothEndEvent(koth, capInfo.getCapper(), reason);
+        event.setCreatingChest(shouldCreateChest);
+        
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         koth.setLastWinner(capInfo.getCapper());
