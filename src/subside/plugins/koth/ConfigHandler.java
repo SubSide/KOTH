@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import lombok.Getter;
+import subside.plugins.koth.adapter.MapRotation;
 
 public class ConfigHandler {
     private @Getter static ConfigHandler instance;
@@ -126,6 +127,7 @@ public class ConfigHandler {
 	        knockTime = section.getInt("knockTime");
 	        minimumPlayersNeeded = section.getInt("minimum-players");
 	        defaultCaptureType = section.getString("default-capturetype");
+	        new MapRotation(section.getStringList("map-rotation"));
 	    }
 	}
 	

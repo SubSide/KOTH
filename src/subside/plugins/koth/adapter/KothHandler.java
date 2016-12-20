@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -308,19 +310,40 @@ public class KothHandler {
     }
     
     public class CapEntityRegistry {
-        private @Getter Map<String, Class<? extends Capper>> captureTypes = new HashMap<>();
+        private @Getter Map<String, Class<? extends Capper>> captureClasses;
+        private @Getter Map<String, Class<? extends Capper>> captureTypes;
         private @Getter @Setter Class<? extends Capper> preferedClass;
 
         public CapEntityRegistry(){
             captureTypes = new HashMap<>();
+            captureClasses = new HashMap<>();
         }
         
         public void registerCaptureType(String captureTypeIdentifier, Class<? extends Capper> clazz){
             captureTypes.put(captureTypeIdentifier, clazz);
+
+            registerCaptureClass(captureTypeIdentifier, clazz); // Also register it as a capture class
+        }
+        
+        public void registerCaptureClass(String captureClassIdentifier, Class<? extends Capper> clazz){
+            captureClasses.put(captureClassIdentifier, clazz);
+        }
+        
+        public Class<? extends Capper> getCaptureTypeClass(String name){
+            return captureTypes.get(name);
         }
         
         public Class<? extends Capper> getCaptureClass(String name){
-            return captureTypes.get(name);
+            return captureClasses.get(name);
+        }
+        
+        public String getIdentifierFromClass(Class<? extends Capper> clazz){
+            for (Entry<String, Class<? extends Capper>> entry : captureClasses.entrySet()) {
+                if (Objects.equals(clazz, entry.getValue())) {
+                    return entry.getKey();
+                }
+            }
+            return null;
         }
         
         public Capper getCapperFromType(String captureTypeIdentifier, String objectUniqueId){

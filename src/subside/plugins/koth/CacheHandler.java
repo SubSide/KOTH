@@ -39,13 +39,15 @@ public class CacheHandler {
             
             // Loading
             MapRotation.getInstance().load((JSONObject)jsonObj.get("mapRotation"));
-
-            JSONArray runningKoths = (JSONArray)jsonObj.get("runningKoths");
-            for(Object rObject : runningKoths){
-                JSONObject rObj = (JSONObject)rObject;
-                RunningKoth rKoth = KothHandler.getInstance().getGamemodeRegistry().createGame((String)rObj.get("kothType"));
-                rKoth.load((JSONObject)rObj);
-                KothHandler.getInstance().getRunningKoths().add(rKoth);
+            
+            if(KothPlugin.getPlugin().getServer().getOnlinePlayers().size() > 0){
+                JSONArray runningKoths = (JSONArray)jsonObj.get("runningKoths");
+                for(Object rObject : runningKoths){
+                    JSONObject rObj = (JSONObject)rObject;
+                    RunningKoth rKoth = KothHandler.getInstance().getGamemodeRegistry().createGame((String)rObj.get("kothType"));
+                    rKoth.load((JSONObject)rObj);
+                    KothHandler.getInstance().getRunningKoths().add(rKoth);
+                }
             }
             //
             
@@ -72,7 +74,7 @@ public class CacheHandler {
             JSONObject obj = new JSONObject();
             
             // Saving
-            obj.put("mapRotationIndex", MapRotation.getInstance().getIndex());
+            obj.put("mapRotation", MapRotation.getInstance().save());
             
             JSONArray runningKoths = new JSONArray();
             for(RunningKoth koth : KothHandler.getInstance().getRunningKoths()){
