@@ -22,7 +22,7 @@ public class KothClassic implements RunningKoth {
     private @Getter String lootChest;
     private int timeNotCapped;
     private int lootAmount;
-    private int timeKnocked;
+    private int captureCooldown;
     private boolean knocked;
 
     private @Getter int maxRunTime;
@@ -103,8 +103,8 @@ public class KothClassic implements RunningKoth {
         timeRunning++;
         timeNotCapped++;
 
-        if (knocked && timeKnocked < ConfigHandler.getInstance().getKoth().getKnockTime()) {
-            timeKnocked++;
+        if (knocked && captureCooldown < ConfigHandler.getInstance().getKoth().getCaptureCooldown()) {
+            captureCooldown++;
             return;
         } else if (knocked) {
             knocked = false;
@@ -160,7 +160,7 @@ public class KothClassic implements RunningKoth {
         obj.put("captureTime", this.captureTime);
         obj.put("lootChest", this.lootChest);
         obj.put("lootAmount", this.lootAmount);
-        obj.put("timeKnocked", this.timeKnocked);
+        obj.put("captureCooldown", this.captureCooldown);
         obj.put("knocked", this.knocked);
         obj.put("maxRunTime", this.maxRunTime);
         obj.put("timeRunning", this.timeRunning);
@@ -179,7 +179,7 @@ public class KothClassic implements RunningKoth {
         this.captureTime = (int) (long) obj.get("captureTime");
         this.lootChest = (String) obj.get("lootChest");
         this.lootAmount = (int) (long) obj.get("lootAmount");
-        this.timeKnocked = (int) (long) obj.get("timeKnocked");
+        this.captureCooldown = (int) (long) obj.get("captureCooldown");
         this.knocked = (boolean) obj.get("knocked");
         this.maxRunTime = (int) (long) obj.get("maxRunTime");
         this.timeRunning = (int) (long) obj.get("timeRunning");
