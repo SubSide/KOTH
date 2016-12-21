@@ -18,6 +18,7 @@ global:
     - "&a/koth list &7Shows all available koths"
     - "&a/koth loot &7Shows the loot for the upcoming koth"
     - "&a/koth schedule &7Shows the schedule for koths"
+    - "&a/koth ignore &7Toggles the KoTH messages"
 
 loot:
   default: ""
@@ -48,7 +49,7 @@ koth:
   ffa-on-time-limit: false # This will on time limit create a FreeForAll chest
   default-capturetype: "" # set this to your desired capture type
   contest-freeze: false
-  knockTime: 0
+  capture-cooldown: 0
   minimum-players: 0
   map-rotation:
     - "map1"
