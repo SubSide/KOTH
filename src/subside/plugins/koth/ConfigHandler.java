@@ -128,7 +128,7 @@ public class ConfigHandler {
 	        removeChestAtStart = section.getBoolean("remove-chest-at-start");
 	        ffaChestTimeLimit = section.getBoolean("ffa-on-time-limit");
 	        contestFreeze = section.getBoolean("contest-freeze");
-	        captureCooldown = section.getInt("captureCooldown");
+	        captureCooldown = section.getInt("capture-cooldown");
 	        minimumPlayersNeeded = section.getInt("minimum-players");
 	        defaultCaptureType = section.getString("default-capturetype");
 	        new MapRotation(section.getStringList("map-rotation"));
