@@ -30,6 +30,7 @@ public class CapInfo {
         this.captureZone = captureZone;
         this.sendMessages = sendMessages;
         
+        // If the type is null, set the capEntity to the prefered class.
         if(ofType != null){
             this.ofType = ofType;
         } else {
@@ -58,73 +59,92 @@ public class CapInfo {
      * 
      */
     public void update(){
-        if(capper != null && capper.getObject() != null){
-            if(capper.areaCheck(captureZone)){
-                
-                // Handle contestFreeze
-                if(ConfigHandler.getInstance().getKoth().isContestFreeze()){
-                    for(Player player : getInsidePlayers()){
-                        if(!capper.isInOrEqualTo(player)){
-                            return;
-                        }
-                    }
-                }
-                
-                timeCapped++;
-                return;
-            }
-            KothLeftEvent event = new KothLeftEvent(runningKoth, captureZone, capper, timeCapped);
-            Bukkit.getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) {
-                timeCapped++;
-                return;
-            }
-            
+        // If the capper is null find a new entity
+        if(capper == null || capper.getObject() == null){
+            findAndSetNewEntity();
+            return;
+        }
         
+        // If the capper is still in the area add to the time
+        if(capper.areaCheck(captureZone)){
+           addTime();
+            return;
+        }
         
-
-            if (event.getNextCapper() == null) {
-//                new MessageBuilder(Lang.KOTH_PLAYING_LEFT).maxTime(maxRunTime).time(getTimeObject()).player(pCapper.getName()).koth(koth).shouldExcludePlayer().buildAndBroadcast();
-//                if (pCapper.isOnline()) {
-//                    new MessageBuilder(Lang.KOTH_PLAYING_LEFT_CAPPER).maxTime(maxRunTime).time(getTimeObject()).player(pCapper.getName()).koth(koth).buildAndSend(pCapper.getPlayer());
-//                }
-            	if(sendMessages)
-            		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_LEFT)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
-                capper = null;
-                timeCapped = 0;
-            } else {
-                timeCapped++;
-                capper = event.getNextCapper();
-            }   
-        } else {
-            List<Player> insideArea = getInsidePlayers();
-            
-            if (insideArea.size() < 1) {
-                return;
-            }
-            
-            
-            Capper capper = getRandomCapper(insideArea);
-            if(capper == null)
-            	return;
-            KothCapEvent event = new KothCapEvent(runningKoth, captureZone, insideArea, capper);
-            Bukkit.getServer().getPluginManager().callEvent(event);
-
-            if (event.isCancelled()) {
-                return;
-            }
-
-            this.capper = event.getNextCapper();
-            
+        // Trigger an KothLeftEvent
+        KothLeftEvent event = new KothLeftEvent(runningKoth, captureZone, capper, timeCapped);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            // If the event is cancelled we still need to add the time.
+            addTime();
+            return;
+        }
+        
+        // if the event is null it means the entity left the KoTH
+        if (event.getNextCapper() == null) {
         	if(sendMessages)
-        		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName())/*.shouldExcludePlayer()*/.buildAndBroadcast();
-//            if (Bukkit.getPlayer(cappingPlayer) != null) {
-//                new MessageBuilder(Lang.KOTH_PLAYING_PLAYERCAP_CAPPER).maxTime(maxRunTime).capper(cappingPlayer).koth(koth).time(getTimeObject()).buildAndSend(Bukkit.getPlayer(cappingPlayer));
-//            }
-            // TO-DO
+        		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_LEFT)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
+            capper = null;
+            timeCapped = 0;
+        } else {
+            // If for some reason it has a next capper, we just want it to change to the next capper and then add time
+            capper = event.getNextCapper();
+            addTime();
         }
     }
     
+    /** Check for contesting (if other players/factions are on the point)
+     *  and then add a second to timeCapped.
+     */
+    public void addTime(){
+        // Handles contestFreeze by looping over all players to check if someone else is in
+        if(ConfigHandler.getInstance().getKoth().isContestFreeze()){
+            for(Player player : getInsidePlayers()){
+                if(!capper.isInOrEqualTo(player)){
+                    return;
+                }
+            }
+        }
+        
+        // Add to timeCapped
+        timeCapped++;
+    }
+    
+    /** finds a new entity that can capture, and sets it.
+     *  This is more of a convinience function to keep the update method clean and readable
+     */
+    private void findAndSetNewEntity(){
+        List<Player> insideArea = getInsidePlayers();
+        
+        if (insideArea.size() < 1) {
+            return;
+        }
+        
+        // Get a random capper
+        Capper capper = getRandomCapper(insideArea);
+        if(capper == null)
+            return;
+        
+        // Create the event.
+        KothCapEvent event = new KothCapEvent(runningKoth, captureZone, insideArea, capper);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) {
+            return;
+        }
+        
+        // Change the capper
+        this.capper = event.getNextCapper();
+        
+        if(sendMessages)
+            runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName())/*.shouldExcludePlayer()*/.buildAndBroadcast();
+        
+    }
+    
+    /** Get all the players inside the capture zone except dismissed by hooks.
+     * 
+     * @return the players inside the capture zone
+     */
     public List<Player> getInsidePlayers(){
         List<Player> insideArea = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
