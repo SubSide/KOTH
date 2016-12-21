@@ -117,7 +117,7 @@ public class ConfigHandler {
 	}
 	
 	public class Koth {
-	    private @Getter int knockTime = 0;
+	    private @Getter int captureCooldown = 0;
 	    private @Getter boolean contestFreeze = false;
 	    private @Getter boolean removeChestAtStart = true;
         private @Getter boolean ffaChestTimeLimit = false;
@@ -128,7 +128,7 @@ public class ConfigHandler {
 	        removeChestAtStart = section.getBoolean("remove-chest-at-start");
 	        ffaChestTimeLimit = section.getBoolean("ffa-on-time-limit");
 	        contestFreeze = section.getBoolean("contest-freeze");
-	        knockTime = section.getInt("knockTime");
+	        captureCooldown = section.getInt("captureCooldown");
 	        minimumPlayersNeeded = section.getInt("minimum-players");
 	        defaultCaptureType = section.getString("default-capturetype");
 	        new MapRotation(section.getStringList("map-rotation"));
