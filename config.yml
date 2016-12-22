@@ -50,6 +50,7 @@ koth:
   default-capturetype: "" # set this to your desired capture type
   contest-freeze: false
   capture-cooldown: 0
+  channel-time: 0
   minimum-players: 0
   map-rotation:
     - "map1"

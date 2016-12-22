@@ -24,6 +24,7 @@ public class Lang {
     public static String[] KOTH_PLAYING_STARTING = new String[]{"&aThe koth %koth% has begun!"};
     public static String[] KOTH_PLAYING_MINIMUM_PLAYERS_NOT_MET = new String[] { "&aThe minimum required of players is not met, KoTH will not continue." };
     public static String[] KOTH_PLAYING_CAP_START = new String[]{"&a%capper% has started to cap %koth%!"};
+    public static String[] KOTH_PLAYING_CAP_CHANNELING = new String[]{"&aChanneling started for %capper%, stay on the point for just %time% seconds!"};
     public static String[] KOTH_PLAYING_CAP_START_CAPPER = new String[]{"&aYou have started capping %koth%!"};
     public static String[] KOTH_PLAYING_CAPTIME = new String[]{"&a%capper% is capping the koth! %ml%:%sl% left!"};
     public static String[] KOTH_PLAYING_CAPTIME_CAPPER = new String[]{"&aYou are capping the koth! %ml%:%sl% left!"};
