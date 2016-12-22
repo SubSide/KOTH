@@ -12,7 +12,6 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 
 import subside.plugins.koth.adapter.Capable;
-import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.hooks.HookManager;
 
 public class CappingFactionUUID extends CappingGroup {
@@ -72,13 +71,13 @@ public class CappingFactionUUID extends CappingGroup {
     }
     
     @Override
-    public List<Player> getAvailablePlayers(Koth koth){
+    public List<Player> getAvailablePlayers(Capable area){
         List<Player> list = new ArrayList<Player>();
         
         List<Player> players = faction.getOnlinePlayers();
         if(players.size() > 0){
             for(Player player : players){
-                if(koth.isInArea(player)){
+                if(area.isInArea(player)){
                     list.add(player);
                 }
             }
