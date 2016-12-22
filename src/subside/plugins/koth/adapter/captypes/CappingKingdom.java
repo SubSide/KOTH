@@ -12,7 +12,6 @@ import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
 import subside.plugins.koth.adapter.Capable;
-import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.hooks.HookManager;
 
 public class CappingKingdom extends CappingGroup {
@@ -72,13 +71,13 @@ public class CappingKingdom extends CappingGroup {
     }
     
     @Override
-    public List<Player> getAvailablePlayers(Koth koth){
+    public List<Player> getAvailablePlayers(Capable area){
         List<Player> list = new ArrayList<Player>();
         
         List<KingdomPlayer> kPlayers = kingdom.getOnlineMembers();
         if(kPlayers.size() > 0){
             for(KingdomPlayer kPlayer : kPlayers){
-                if(koth.isInArea(kPlayer.getPlayer())){
+                if(area.isInArea(kPlayer.getPlayer())){
                     list.add(kPlayer.getPlayer());
                 }
             }

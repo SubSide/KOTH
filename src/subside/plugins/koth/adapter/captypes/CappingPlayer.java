@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.adapter.Capable;
-import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.hooks.HookManager;
 
 public class CappingPlayer extends Capper {
@@ -60,7 +59,7 @@ public class CappingPlayer extends Capper {
     }
     
     @Override
-    public List<Player> getAvailablePlayers(Koth koth){
+    public List<Player> getAvailablePlayers(Capable area){
         List<Player> list = new ArrayList<Player>();
         if(player.isOnline()){
             list.add(player.getPlayer());

@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
 import subside.plugins.koth.adapter.Capable;
-import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 
 public abstract class Capper {
@@ -18,7 +17,7 @@ public abstract class Capper {
     public abstract String getName();
     public abstract Object getObject();
     public abstract boolean areaCheck(Capable cap);
-    public abstract List<Player> getAvailablePlayers(Koth koth);
+    public abstract List<Player> getAvailablePlayers(Capable area);
     
     
     @Deprecated
