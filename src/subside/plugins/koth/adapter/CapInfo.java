@@ -18,6 +18,8 @@ import subside.plugins.koth.utils.MessageBuilder;
 
 public class CapInfo {
     private @Getter @Setter int timeCapped;
+
+    private @Getter int channelTime;
     
     private @Getter @Setter Capper capper;
     private @Getter RunningKoth runningKoth;
@@ -29,6 +31,8 @@ public class CapInfo {
         this.runningKoth = runningKoth;
         this.captureZone = captureZone;
         this.sendMessages = sendMessages;
+        
+        this.channelTime = 0;
         
         // If the type is null, set the capEntity to the prefered class.
         if(ofType != null){
@@ -62,12 +66,30 @@ public class CapInfo {
         // If the capper is null find a new entity
         if(capper == null || capper.getObject() == null){
             findAndSetNewEntity();
-            return;
         }
         
-        // If the capper is still in the area add to the time
+        
+        // If the capper is still in the area, check channelingTime and add a second to the time
         if(capper.areaCheck(captureZone)){
-           addTime();
+            // Channeling time
+            if (channelTime >= 0) {
+                if(channelTime > 0){
+                    int configChannelTime = ConfigHandler.getInstance().getKoth().getChannelTime();
+                    
+                    if (configChannelTime != 0 && channelTime == configChannelTime && sendMessages) {
+                        new MessageBuilder(Lang.KOTH_PLAYING_CAP_CHANNELING).capper(capper.getName()).time(""+channelTime).capper(capper.getName()).buildAndBroadcast();
+                    }
+                } else if (sendMessages){
+                        runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName()).buildAndBroadcast();
+                }
+                
+                
+                channelTime--;
+                return;
+            }
+            // end channeling time
+
+            addTime();
             return;
         }
         
@@ -135,9 +157,7 @@ public class CapInfo {
         
         // Change the capper
         this.capper = event.getNextCapper();
-        
-        if(sendMessages)
-            runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName())/*.shouldExcludePlayer()*/.buildAndBroadcast();
+        this.channelTime = ConfigHandler.getInstance().getKoth().getChannelTime();
         
     }
     
