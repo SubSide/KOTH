@@ -20,6 +20,7 @@ public class CapInfo {
     private @Getter @Setter int timeCapped;
 
     private @Getter int channelTime;
+    private @Getter int knockTime;
     
     private @Getter @Setter Capper capper;
     private @Getter RunningKoth runningKoth;
@@ -33,6 +34,7 @@ public class CapInfo {
         this.sendMessages = sendMessages;
         
         this.channelTime = 0;
+        this.knockTime = 0;
         
         // If the type is null, set the capEntity to the prefered class.
         if(ofType != null){
@@ -71,6 +73,7 @@ public class CapInfo {
         
         // If the capper is still in the area, check channelingTime and add a second to the time
         if(capper.areaCheck(captureZone)){
+            knockTime = ConfigHandler.getInstance().getKoth().getKnockTime();
             // Channeling time
             if (channelTime >= 0) {
                 if(channelTime > 0){
@@ -93,6 +96,12 @@ public class CapInfo {
             return;
         }
         
+        // Knocktime
+        if(knockTime > 0){
+            knockTime--;
+            return;
+        }
+        
         // Trigger an KothLeftEvent
         KothLeftEvent event = new KothLeftEvent(runningKoth, captureZone, capper, timeCapped);
         Bukkit.getServer().getPluginManager().callEvent(event);
@@ -104,7 +113,7 @@ public class CapInfo {
         
         // if the event is null it means the entity left the KoTH
         if (event.getNextCapper() == null) {
-        	if(sendMessages)
+        	if(sendMessages && channelTime < 0) // If we were still channeling don't message!
         		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_LEFT)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
             capper = null;
             timeCapped = 0;
