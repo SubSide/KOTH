@@ -14,6 +14,7 @@ import subside.plugins.koth.adapter.Area;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.TimeObject;
+import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.scheduler.Schedule;
 
 public class MessageBuilder {
@@ -179,6 +180,13 @@ public class MessageBuilder {
     
     public MessageBuilder exclude(List<Player> excluders){
         this.excluders = excluders;
+        return this;
+    }
+    
+    public MessageBuilder exclude(Capper capper){
+        if(capper != null)
+            this.excluders = capper.getAllOnlinePlayers();
+        
         return this;
     }
 
