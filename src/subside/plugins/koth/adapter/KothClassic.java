@@ -7,6 +7,7 @@ import lombok.Getter;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
+import subside.plugins.koth.adapter.CapInfo.CapStatus;
 import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.utils.MessageBuilder;
@@ -23,14 +24,16 @@ public class KothClassic implements RunningKoth {
     private int timeNotCapped;
     private int lootAmount;
     private int captureCooldown;
-    private boolean knocked;
 
     private @Getter int maxRunTime;
     private int timeRunning;
     
+    private CapStatus prevStatus = CapStatus.EMPTY;
+    
     @Override
     public void init(StartParams params){
         this.koth = params.getKoth();
+        this.captureCooldown = 0;
         this.captureTime = params.getCaptureTime();
         this.lootChest = params.getLootChest();
         this.lootAmount = params.getLootAmount();
@@ -102,17 +105,26 @@ public class KothClassic implements RunningKoth {
     public void update() {
         timeRunning++;
         timeNotCapped++;
-
-        if (knocked && captureCooldown < ConfigHandler.getInstance().getKoth().getCaptureCooldown()) {
-            captureCooldown++;
+        
+        
+        // Handling capture cooldown
+        if (captureCooldown > 0) {
+            captureCooldown--;
             return;
-        } else if (knocked) {
-            knocked = false;
         }
-        // CAPTURE INFO UPDATE
-        capInfo.update();
+        // Capture info update and cooldown initiator
+        CapStatus status = capInfo.update();
+        
+        if(prevStatus == CapStatus.CAPPING && status == CapStatus.EMPTY){
+            captureCooldown = ConfigHandler.getInstance().getKoth().getCaptureCooldown();
+        }
+        prevStatus = status;
+        
+        if(status == CapStatus.CHANNELING) prevStatus = CapStatus.EMPTY;
+        if(status == CapStatus.KNOCKED) prevStatus = CapStatus.CAPPING;
         ////////
 
+        
         if (capInfo.getCapper() != null) {
             timeNotCapped = 0;
             if (capInfo.getTimeCapped() < captureTime) {
@@ -161,7 +173,6 @@ public class KothClassic implements RunningKoth {
         obj.put("lootChest", this.lootChest);
         obj.put("lootAmount", this.lootAmount);
         obj.put("captureCooldown", this.captureCooldown);
-        obj.put("knocked", this.knocked);
         obj.put("maxRunTime", this.maxRunTime);
         obj.put("timeRunning", this.timeRunning);
 
@@ -180,7 +191,6 @@ public class KothClassic implements RunningKoth {
         this.lootChest = (String) obj.get("lootChest");
         this.lootAmount = (int) (long) obj.get("lootAmount");
         this.captureCooldown = (int) (long) obj.get("captureCooldown");
-        this.knocked = (boolean) obj.get("knocked");
         this.maxRunTime = (int) (long) obj.get("maxRunTime");
         this.timeRunning = (int) (long) obj.get("timeRunning");
         
