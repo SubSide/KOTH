@@ -14,7 +14,6 @@ import subside.plugins.koth.adapter.Area;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.TimeObject;
-import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.scheduler.Schedule;
 
 public class MessageBuilder {
@@ -114,8 +113,8 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder capper(Capper capper) {
-        message.replaceAll("%capper%", (capper != null) ? capper.getName() : "None");
+    public MessageBuilder capper(String capper) {
+        message.replaceAll("%capper%", (capper != null) ? capper: "None");
         return this;
     }
 
