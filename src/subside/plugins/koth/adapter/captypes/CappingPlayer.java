@@ -59,8 +59,8 @@ public class CappingPlayer extends Capper {
     }
     
     @Override
-    public List<Player> getAvailablePlayers(Capable area){
-        List<Player> list = new ArrayList<Player>();
+    public List<Player> getAllOnlinePlayers(){
+        List<Player> list = new ArrayList<>();
         if(player.isOnline()){
             list.add(player.getPlayer());
         }

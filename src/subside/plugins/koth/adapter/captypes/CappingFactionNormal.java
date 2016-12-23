@@ -1,6 +1,7 @@
 package subside.plugins.koth.adapter.captypes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,23 +72,9 @@ private Faction faction;
         return false;
     }
     
-    @Override
-    public List<Player> getAvailablePlayers(Capable area){
-        List<Player> list = new ArrayList<Player>();
-        
-        List<Player> players = faction.getOnlinePlayers();
-        if(players.size() > 0){
-            for(Player player : players){
-                if(area.isInArea(player)){
-                    list.add(player);
-                }
-            }
-            
-            if(list.size() < 1){
-                list.add(players.get(0));
-            }
-        }
-        return list;
+    @Override 
+    public List<Player> getAllOnlinePlayers(){
+        return faction.getOnlinePlayers();
     }
     
 

@@ -1,5 +1,6 @@
 package subside.plugins.koth.adapter.captypes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.OfflinePlayer;
@@ -17,7 +18,20 @@ public abstract class Capper {
     public abstract String getName();
     public abstract Object getObject();
     public abstract boolean areaCheck(Capable cap);
-    public abstract List<Player> getAvailablePlayers(Capable area);
+    public abstract List<Player> getAllOnlinePlayers();
+
+    
+    public List<Player> getAvailablePlayers(Capable area){
+        List<Player> list = new ArrayList<Player>();
+        
+        for(Player player : getAllOnlinePlayers()){
+            if(area.isInArea(player)){
+                list.add(player);
+            }
+        }
+        
+        return list;
+    }
     
     
     @Deprecated
