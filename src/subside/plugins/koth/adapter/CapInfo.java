@@ -84,10 +84,12 @@ public class CapInfo {
                     int configChannelTime = ConfigHandler.getInstance().getKoth().getChannelTime();
                     
                     if (configChannelTime != 0 && channelTime == configChannelTime && sendMessages) {
-                        new MessageBuilder(Lang.KOTH_PLAYING_CAP_CHANNELING).capper(capper.getName()).time(""+channelTime).capper(capper.getName()).buildAndBroadcast();
+                        new MessageBuilder(Lang.KOTH_PLAYING_CAP_CHANNELING).capper(getName()).time(""+channelTime).exclude(capper).buildAndBroadcast();
+                        new MessageBuilder(Lang.KOTH_PLAYING_CAP_CHANNELING_CAPPER).capper(getName()).time(""+channelTime).buildAndSend(capper);
                     }
                 } else if (sendMessages){
-                        runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName()).buildAndBroadcast();
+                    runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START)).capper(getName()).exclude(capper).buildAndBroadcast();
+                    runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_CAP_START_CAPPER)).capper(getName()).buildAndSend(capper);
                 }
                 
                 
@@ -117,8 +119,10 @@ public class CapInfo {
         
         // if the event is null it means the entity left the KoTH
         if (event.getNextCapper() == null) {
-        	if(sendMessages && channelTime < 0) // If we were still channeling don't message!
-        		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_LEFT)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
+        	if(sendMessages && channelTime < 0) { // If we were still channeling don't message!
+                runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_LEFT)).capper(getName()).exclude(capper).buildAndBroadcast();
+                runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_LEFT_CAPPER)).capper(getName()).buildAndSend(capper);
+        	}
             capper = null;
             timeCapped = 0;
             return CapStatus.EMPTY;
