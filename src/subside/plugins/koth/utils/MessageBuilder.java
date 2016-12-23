@@ -1,5 +1,6 @@
 package subside.plugins.koth.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -191,12 +192,17 @@ public class MessageBuilder {
     }
 
     public void buildAndBroadcast() {
-        Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+        Collection<? extends Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
         
         if(excluders != null){
             players.removeAll(excluders);
         }
         buildAndSend(players);
+    }
+    
+    public void buildAndSend(Capper capper){
+        if(capper != null)
+            buildAndSend(capper.getAllOnlinePlayers());
     }
     
     public void buildAndSend(Collection<? extends Player> players){
