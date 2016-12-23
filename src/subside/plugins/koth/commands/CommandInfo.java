@@ -240,7 +240,7 @@ public class CommandInfo implements ICommand {
         String linkedKoth = sched.getKoth();
 
         String lootChest = (sched.getLootChest()==null)?("None (Inherited)"):(sched.getLootChest());
-        String lootAmount = sched.getLootAmount()+" items";
+        String lootAmount = ""+sched.getLootAmount();
         
         String captureTime = sched.getCaptureTime()+" minutes";
         String maxRunTime = sched.getMaxRunTime()+" minutes";
