@@ -64,10 +64,14 @@ public class CapInfo {
     /** Gets updated every single tick
      * 
      */
-    public void update(){
+    public CapStatus update(){
         // If the capper is null find a new entity
         if(capper == null || capper.getObject() == null){
             findAndSetNewEntity();
+            // Make sure not to continue if none is found
+            if(capper == null || capper.getObject() == null){
+                return CapStatus.EMPTY;
+            }
         }
         
         
@@ -88,18 +92,18 @@ public class CapInfo {
                 
                 
                 channelTime--;
-                return;
+                return CapStatus.CHANNELING;
             }
             // end channeling time
 
             addTime();
-            return;
+            return CapStatus.CAPPING;
         }
         
         // Knocktime
         if(knockTime > 0){
             knockTime--;
-            return;
+            return CapStatus.KNOCKED;
         }
         
         // Trigger an KothLeftEvent
@@ -108,7 +112,7 @@ public class CapInfo {
         if (event.isCancelled()) {
             // If the event is cancelled we still need to add the time.
             addTime();
-            return;
+            return CapStatus.CAPPING;
         }
         
         // if the event is null it means the entity left the KoTH
@@ -117,10 +121,12 @@ public class CapInfo {
         		runningKoth.fillMessageBuilder(new MessageBuilder(Lang.KOTH_PLAYING_LEFT)).capper(getName()).shouldExcludePlayer().buildAndBroadcast();
             capper = null;
             timeCapped = 0;
+            return CapStatus.EMPTY;
         } else {
             // If for some reason it has a next capper, we just want it to change to the next capper and then add time
             capper = event.getNextCapper();
             addTime();
+            return CapStatus.CAPPING;
         }
     }
     
@@ -195,5 +201,9 @@ public class CapInfo {
     	} else {
     		return "None";
     	}
+    }
+    
+    enum CapStatus {
+        EMPTY, CHANNELING, CAPPING, KNOCKED
     }
 }
