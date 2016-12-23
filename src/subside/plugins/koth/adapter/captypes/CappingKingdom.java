@@ -70,25 +70,15 @@ public class CappingKingdom extends CappingGroup {
         return false;
     }
     
-    @Override
-    public List<Player> getAvailablePlayers(Capable area){
-        List<Player> list = new ArrayList<Player>();
-        
-        List<KingdomPlayer> kPlayers = kingdom.getOnlineMembers();
-        if(kPlayers.size() > 0){
-            for(KingdomPlayer kPlayer : kPlayers){
-                if(area.isInArea(kPlayer.getPlayer())){
-                    list.add(kPlayer.getPlayer());
-                }
-            }
-            
-            if(list.size() < 1){
-                list.add(kPlayers.get(0).getPlayer());
-            }
+    @Override 
+    public List<Player> getAllOnlinePlayers(){
+        List<Player> list = new ArrayList<>();
+        for(KingdomPlayer player : kingdom.getOnlineMembers()){
+            list.add(player.getPlayer());
         }
+        
         return list;
     }
-    
 
     public static Capper getFromUniqueName(String name){
         return new CappingKingdom(GameManagement.getKingdomManager().getOrLoadKingdom(name));
