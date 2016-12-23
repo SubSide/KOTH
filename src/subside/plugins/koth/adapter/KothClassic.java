@@ -65,8 +65,8 @@ public class KothClassic implements RunningKoth {
         boolean shouldCreateChest = true;
         if (reason == EndReason.WON || reason == EndReason.GRACEFUL) {
             if (capInfo.getCapper() != null) {
-                new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).exclude(capInfo.getCapper()).buildAndBroadcast();
-                new MessageBuilder(Lang.KOTH_PLAYING_WON_CAPPER).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(capInfo.getCapper());
+                new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).exclude(capInfo.getCapper(), koth).buildAndBroadcast();
+                new MessageBuilder(Lang.KOTH_PLAYING_WON_CAPPER).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(capInfo.getCapper(), koth);
             }
         } else if (reason == EndReason.TIMEUP) {
             new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP).maxTime(maxRunTime).koth(koth).buildAndBroadcast();
@@ -126,8 +126,8 @@ public class KothClassic implements RunningKoth {
             timeNotCapped = 0;
             if (capInfo.getTimeCapped() < captureTime) {
                 if (capInfo.getTimeCapped() % 30 == 0 && capInfo.getTimeCapped() != 0) {
-                    new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).exclude(capInfo.getCapper()).buildAndBroadcast();
-                    new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(capInfo.getCapper());
+                    new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).exclude(capInfo.getCapper(), koth).buildAndBroadcast();
+                    new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(capInfo.getCapper(), koth);
                 }
             } else {
                 endKoth(EndReason.WON);
