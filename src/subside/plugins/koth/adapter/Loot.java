@@ -73,6 +73,10 @@ public class Loot implements JSONSerializable<Loot> {
             return;
         }
         
+        if(capper == null){
+            return;
+        }
+        
         for(String command : commands){
             List<Player> players = capper.getAvailablePlayers(koth);
             if(command.contains("%player%")){
