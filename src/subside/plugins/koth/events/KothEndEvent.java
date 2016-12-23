@@ -15,7 +15,7 @@ import subside.plugins.koth.adapter.captypes.Capper;
  */
 public class KothEndEvent extends Event implements IEvent {
     private @Getter Capper winner;
-    private @Getter @Setter boolean creatingChest;
+    private @Getter @Setter boolean triggerLoot;
     private @Getter EndReason reason;
     private @Getter Koth koth;
     
@@ -23,10 +23,19 @@ public class KothEndEvent extends Event implements IEvent {
     public KothEndEvent(Koth koth, Capper capper, EndReason reason){
         this.koth = koth;
         this.winner = capper;
-        this.creatingChest = true;
+        this.triggerLoot = true;
         this.reason = reason;
     }
     
+    @Deprecated
+    public void setCreatingChest(boolean creatingChest){
+        this.triggerLoot = creatingChest;
+    }
+    
+    @Deprecated
+    public boolean isCreatingChest(){
+        return this.triggerLoot;
+    }
 
     private static final HandlerList handlers = new HandlerList();
 

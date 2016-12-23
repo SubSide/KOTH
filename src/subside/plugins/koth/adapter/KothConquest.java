@@ -95,7 +95,7 @@ public class KothConquest implements RunningKoth {
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         koth.setLastWinner(faction);
-        if (event.isCreatingChest()) {
+        if (event.isTriggerLoot()) {
             Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
                 public void run() {
                     koth.triggerLoot(lootAmount, lootChest);

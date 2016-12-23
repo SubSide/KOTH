@@ -62,7 +62,7 @@ public class KothClassic implements RunningKoth {
     }
 
     public void endKoth(EndReason reason) {
-        boolean shouldCreateChest = true;
+        boolean shouldTriggerLoot = true;
         if (reason == EndReason.WON || reason == EndReason.GRACEFUL) {
             if (capInfo.getCapper() != null) {
                 new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).exclude(capInfo.getCapper(), koth).buildAndBroadcast();
@@ -70,17 +70,19 @@ public class KothClassic implements RunningKoth {
             }
         } else if (reason == EndReason.TIMEUP) {
             new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP).maxTime(maxRunTime).koth(koth).buildAndBroadcast();
-            shouldCreateChest = ConfigHandler.getInstance().getKoth().isFfaChestTimeLimit();
+            shouldTriggerLoot = ConfigHandler.getInstance().getKoth().isFfaChestTimeLimit();
+        } else if(reason == EndReason.FORCED){
+            shouldTriggerLoot = false;
         }
 
 
         KothEndEvent event = new KothEndEvent(koth, capInfo.getCapper(), reason);
-        event.setCreatingChest(shouldCreateChest);
+        event.setTriggerLoot(shouldTriggerLoot);
         
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         koth.setLastWinner(capInfo.getCapper());
-        if (event.isCreatingChest()) {
+        if (event.isTriggerLoot()) {
             Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
                 public void run() {
                     koth.triggerLoot(lootAmount, lootChest);
