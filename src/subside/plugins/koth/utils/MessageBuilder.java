@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import subside.plugins.koth.adapter.Area;
+import subside.plugins.koth.adapter.Capable;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.TimeObject;
@@ -184,9 +185,9 @@ public class MessageBuilder {
         return this;
     }
     
-    public MessageBuilder exclude(Capper capper){
+    public MessageBuilder exclude(Capper capper, Capable area){
         if(capper != null)
-            this.excluders = capper.getAllOnlinePlayers();
+            this.excluders = capper.getAvailablePlayers(area);
         
         return this;
     }
@@ -200,9 +201,9 @@ public class MessageBuilder {
         buildAndSend(players);
     }
     
-    public void buildAndSend(Capper capper){
+    public void buildAndSend(Capper capper, Capable area){
         if(capper != null)
-            buildAndSend(capper.getAllOnlinePlayers());
+            buildAndSend(capper.getAvailablePlayers(area));
     }
     
     public void buildAndSend(Collection<? extends Player> players){
