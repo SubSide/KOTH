@@ -34,12 +34,10 @@ public abstract class Capper {
     }
     
     
-    @Deprecated
     public static Capper load(JSONObject obj){
         return KothHandler.getInstance().getCapEntityRegistry().getCapperFromType((String)obj.get("capperType"), (String)obj.get("uniqueId"));
     }
 
-    @Deprecated
     @SuppressWarnings("unchecked")
     public JSONObject save(){
         JSONObject obj = new JSONObject();

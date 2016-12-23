@@ -91,14 +91,12 @@ public class KothClassic implements RunningKoth {
         
         final KothClassic thisObj = this;
         Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
-            @SuppressWarnings("deprecation")
             public void run() {
                 KothHandler.getInstance().remove(thisObj);
             }
         });
     }
 
-    @Deprecated
     public void update() {
         timeRunning++;
         timeNotCapped++;

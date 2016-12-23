@@ -88,7 +88,6 @@ public class Area implements Capable {
         return false;
     }
     
-    @Deprecated
     public static Area load(JSONObject obj){
         String name = (String)obj.get("name"); // name
         Location loc1 = Utils.getLocFromObject((JSONObject)obj.get("loc1")); // loc1
@@ -96,7 +95,6 @@ public class Area implements Capable {
         return new Area(name, loc1, loc2);
     }
 
-    @Deprecated
     @SuppressWarnings("unchecked")
     public JSONObject save(){
         JSONObject obj = new JSONObject();

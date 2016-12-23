@@ -301,13 +301,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
         }
         return null;
     }
-//    
-//    private @Getter String name;
-//    private @Getter @Setter Location lootPos = null;
-//    private String lastWinner;
-//    private @Getter List<Area> areas = new ArrayList<>();
-
-    @Deprecated
+    
     public Koth load(JSONObject obj){
         this.name = (String)obj.get("name"); //name
         
@@ -336,7 +330,6 @@ public class Koth implements Capable, JSONSerializable<Koth> {
         return this;
     }
 
-    @Deprecated
     @SuppressWarnings("unchecked")
     public JSONObject save(){
         JSONObject obj = new JSONObject();

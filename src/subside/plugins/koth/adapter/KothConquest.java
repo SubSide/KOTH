@@ -66,7 +66,6 @@ public class KothConquest implements RunningKoth {
         return null;
     }
     
-    @Deprecated
     public void update() {
         runTime++;
         for(ConquestArea cArea : areas){
@@ -107,7 +106,6 @@ public class KothConquest implements RunningKoth {
         
         final RunningKoth thisObj = this;
         Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
-            @SuppressWarnings("deprecation")
             public void run() {
                 KothHandler.getInstance().remove(thisObj);
             }
@@ -137,7 +135,6 @@ public class KothConquest implements RunningKoth {
             this.capInfo = new CapInfo(kC, area, CappingGroup.class, false);
         }
         
-        @Deprecated
         public void update(){
             	capInfo.update();
             	if(capInfo.getCapper() != null){

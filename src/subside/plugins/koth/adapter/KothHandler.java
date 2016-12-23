@@ -59,7 +59,6 @@ public class KothHandler {
         capEntityRegistry = new CapEntityRegistry();
     }
 
-    @Deprecated
     public void update() {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
@@ -100,7 +99,6 @@ public class KothHandler {
         runningKoths.add(rKoth);
     }
     
-    @Deprecated
     public void startKoth(Schedule schedule){
         StartParams params = new StartParams(schedule.getKoth());
         params.setCaptureTime(schedule.getCaptureTime()*60);
@@ -124,7 +122,6 @@ public class KothHandler {
      * @param entityType        The entity type that should be able to cap the KoTH (Players, Factions etc.)
      * @param isScheduled       This is used to see if it should obey stuff like minimumPlayers
      */
-    @SuppressWarnings("deprecation")
     public void startKoth(StartParams params) {
         synchronized (runningKoths) {
             for (RunningKoth rKoth : runningKoths) {
@@ -236,7 +233,6 @@ public class KothHandler {
         }
     }
 
-    @Deprecated
     public void remove(RunningKoth koth){
         synchronized (runningKoths) {
             runningKoths.remove(koth);
