@@ -1,6 +1,7 @@
 package subside.plugins.koth.utils;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -13,12 +14,12 @@ import subside.plugins.koth.adapter.Area;
 import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.TimeObject;
+import subside.plugins.koth.adapter.captypes.Capper;
 import subside.plugins.koth.scheduler.Schedule;
 
 public class MessageBuilder {
-    StrObj message;
-    String excluder = "";
-    boolean shouldExclude;
+    private StrObj message;
+    private List<Player> excluders;
 
     private class StrObj {
         private String[] message;
@@ -113,16 +114,8 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder capper(String capper) {
-//        excluder = capper;
-        if (capper == null) capper = "None";
-//        if (ConfigHandler.getCfgHandler().getGlobal().isUseFancyPlayerName()){
-//            if(Bukkit.getPlayer(capper) != null){
-//                capper = Bukkit.getPlayer(capper).getDisplayName();
-//            }
-//        }
-        // TODO
-        message.replaceAll("%capper%", capper);
+    public MessageBuilder capper(Capper capper) {
+        message.replaceAll("%capper%", (capper != null) ? capper.getName() : "None");
         return this;
     }
 
@@ -184,29 +177,32 @@ public class MessageBuilder {
         message.replaceAll("%command_info%", commandInfo);
         return this;
     }
-
-    public MessageBuilder shouldExcludePlayer() {
-        shouldExclude = true;
+    
+    public MessageBuilder exclude(List<Player> excluders){
+        this.excluders = excluders;
         return this;
     }
 
     public void buildAndBroadcast() {
+        Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+        
+        if(excluders != null){
+            players.removeAll(excluders);
+        }
+        buildAndSend(players);
+    }
+    
+    public void buildAndSend(Collection<? extends Player> players){
         String[] msg = build();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (shouldExclude) {
-                if (excluder.equalsIgnoreCase(player.getName())) {
-                    continue;
-                }
-            }
-
+        for(Player player : players){
             for (int x = 0; x < msg.length; x++) {
                 if(!msg[x].equalsIgnoreCase("")){
                     Utils.sendMsg(player, msg[x]);
                 }
             }
         }
-
     }
+    
 
     public void buildAndSend(CommandSender player) {
         Utils.sendMsg(player, (Object[])build());
