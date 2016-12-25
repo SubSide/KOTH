@@ -10,7 +10,6 @@ global:
   schedule-timezone: "Europe/Amsterdam"
   minuteoffset: 0
   startweekminuteoffset: 0
-  use-playermoveevent: false
   pre-broadcast: 0
   nocap-broadcast-interval: 30
   helpcommand:
@@ -24,7 +23,7 @@ loot:
   default: ""
   randomize: true
   default-amount: 5
-  randomize-amount: false
+  randomize-stacksize: false
   can-use-same-items: true
   remove-after: 0
   drop-on-removal: false

@@ -182,8 +182,8 @@ public class CommandLoot implements ICommand {
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> add <command>").commandInfo("Add a command").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> list").commandInfo("Show a list of commands").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> remove <id>").commandInfo("Remove a command").build());
-            if(ConfigHandler.getInstance().getLoot().isCmdEnabled()){
-                Utils.sendMessage(sender, true, "&cNote: commands are disabled in the config!");
+            if(!ConfigHandler.getInstance().getLoot().isCmdEnabled()){
+                new MessageBuilder(Lang.COMMAND_LOOT_CMD_CONFIG_NOT_ENABLED).buildAndSend(sender);
             }
         return;
         }
