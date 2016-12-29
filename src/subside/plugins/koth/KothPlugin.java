@@ -29,7 +29,8 @@ import subside.plugins.koth.loaders.ScheduleLoader;
 
 public class KothPlugin extends JavaPlugin {
 	private @Getter static KothPlugin plugin;
-	private @Getter static WorldEditPlugin worldEdit;
+	private @Getter WorldEditPlugin worldEdit;
+	private @Getter CommandHandler commandHandler;
 	
 	
 	// Loaded on server startup (Not to be confused with enable)
@@ -58,7 +59,8 @@ public class KothPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
-		getCommand("koth").setExecutor(new CommandHandler(this));
+		commandHandler = new CommandHandler(this);
+		getCommand("koth").setExecutor(commandHandler);
         init();
 	}
 
