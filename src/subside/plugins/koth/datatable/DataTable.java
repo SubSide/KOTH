@@ -64,6 +64,7 @@ public class DataTable {
                     + "gamemode VARCHAR(32) NOT NULL, "
                     + "date INT(16) NOT NULL, "
                     + "capper_uuid VARCHAR(36) NOT NULL, "
+                    + "capper_displayname VARCHAR(64) NOT NULL, "
                     + "capper_type VARCHAR(32) NOT NULL"
                     + ((databaseProvider instanceof SQLite)?"":", PRIMARY KEY (id)")
                     + ")");

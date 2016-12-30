@@ -24,16 +24,21 @@ public class DataTableEventListener implements Listener {
             return;
         }
         
+        if(event.getWinner() == null || event.getWinner().getObject() == null){
+            return;
+        }
+        
 
         try {
             PreparedStatement ps = dataTable.getDatabaseProvider().getConnection().prepareStatement(
-                    "INSERT INTO results(id, koth, gamemode, date, capper_uuid, capper_type) "
-                    + "VALUES (NULL, ?, ?, ?, ?, ?)");
+                    "INSERT INTO results(id, koth, gamemode, date, capper_uuid, capper_displayname, capper_type) "
+                    + "VALUES (NULL, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, event.getKoth().getName());
             ps.setString(2, event.getRunningKoth().getType());
             ps.setInt(3, (int)System.currentTimeMillis()/1000);
             ps.setString(4, event.getWinner().getUniqueObjectIdentifier());
-            ps.setString(5, event.getWinner().getUniqueClassIdentifier());
+            ps.setString(5, event.getWinner().getName());
+            ps.setString(6, event.getWinner().getUniqueClassIdentifier());
             ps.execute();
         }
         catch (SQLException e) {
