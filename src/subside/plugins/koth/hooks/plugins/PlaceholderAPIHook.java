@@ -9,6 +9,7 @@ import subside.plugins.koth.adapter.Koth;
 import subside.plugins.koth.adapter.KothHandler;
 import subside.plugins.koth.adapter.RunningKoth;
 import subside.plugins.koth.adapter.TimeObject;
+import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 
 /**
@@ -26,18 +27,33 @@ public class PlaceholderAPIHook extends EZPlaceholderHook {
             return "";
         }
         
+        
+        // Loop over all all live KoTH's
         for(Koth koth : KothHandler.getInstance().getAvailableKoths()){
             String replacer = replaceHolders(identifier, "live_"+koth.getName().toLowerCase()+"_", koth, player);
             if(replacer != null) return replacer;
         }
         
+        // Loop over all schedules.
         if(ScheduleHandler.getInstance().getNextEvent() != null){
-            Koth koth = KothHandler.getInstance().getKoth(ScheduleHandler.getInstance().getNextEvent().getKoth());
+            Schedule schedule = ScheduleHandler.getInstance().getNextEvent();
+            if(schedule == null) return "";
+            
+            if(schedule.getKoth().startsWith("$")){
+                String scheduleReplacer = replaceSchedulingHolders(identifier, "next_", schedule);
+                if(scheduleReplacer != null) return scheduleReplacer;
+                
+                return "???";
+            }
+            
+            Koth koth = KothHandler.getInstance().getKoth(schedule.getKoth());
+            if(koth == null) return "";
+            
             String replacer = replaceHolders(identifier, "next_", koth, player);
             if(replacer != null) return replacer;
         }
         
-        
+        // Check if  there is a running KoTH
         if (KothHandler.getInstance().getRunningKoth() == null) return "";
         
         RunningKoth rKoth = KothHandler.getInstance().getRunningKoth();
@@ -88,8 +104,23 @@ public class PlaceholderAPIHook extends EZPlaceholderHook {
         }
         
         RunningKoth rKoth = koth.getRunningKoth();
-        if (rKoth == null) return null;
+        if (rKoth != null){
+            return replaceRunningKothHolders(identifier, prefix, rKoth);
+        }
         
+        
+        return null;
+    }
+    
+    public String replaceSchedulingHolders(String identifier, String prefix, Schedule schedule){
+        if (identifier.equals(prefix+"nextevent")) return TimeObject.getTimeTillNextEvent(schedule);
+        if (identifier.equals(prefix+"name")) return schedule.getKoth();
+        if (identifier.equals(prefix+"time")) return schedule.getTime();
+        return null;
+    }
+    
+    public String replaceRunningKothHolders(String identifier, String prefix, RunningKoth rKoth){
+
         if (identifier.equals(prefix+"time_secondsleft")) return "" + rKoth.getTimeObject().getSecondsLeft();
         if (identifier.equals(prefix+"time_minutesleft")) return "" + rKoth.getTimeObject().getMinutesLeft();
         if (identifier.equals(prefix+"time_secondscapped")) return "" + rKoth.getTimeObject().getSecondsCapped();
