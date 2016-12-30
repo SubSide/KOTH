@@ -76,7 +76,7 @@ public class KothClassic implements RunningKoth {
         }
 
 
-        KothEndEvent event = new KothEndEvent(koth, capInfo.getCapper(), reason);
+        KothEndEvent event = new KothEndEvent(this, capInfo.getCapper(), reason);
         event.setTriggerLoot(shouldTriggerLoot);
         
         Bukkit.getServer().getPluginManager().callEvent(event);

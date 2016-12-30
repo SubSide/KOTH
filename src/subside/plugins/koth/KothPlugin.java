@@ -22,6 +22,7 @@ import subside.plugins.koth.adapter.captypes.CappingGroup;
 import subside.plugins.koth.adapter.captypes.CappingKingdom;
 import subside.plugins.koth.adapter.captypes.CappingPlayer;
 import subside.plugins.koth.commands.CommandHandler;
+import subside.plugins.koth.datatable.DataTable;
 import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.loaders.LootLoader;
@@ -31,6 +32,7 @@ public class KothPlugin extends JavaPlugin {
 	private @Getter static KothPlugin plugin;
 	private @Getter WorldEditPlugin worldEdit;
 	private @Getter CommandHandler commandHandler;
+	private @Getter DataTable dataTable;
 	
 	
 	// Loaded on server startup (Not to be confused with enable)
@@ -155,6 +157,11 @@ public class KothPlugin extends JavaPlugin {
         KothLoader.load();
         LootLoader.load();
         ScheduleLoader.load();
+        
+        // Database connection
+        if(ConfigHandler.getInstance().getDatabase().isEnabled()){
+            dataTable = new DataTable(this);
+        }
         
         // Cache loading
         if(ConfigHandler.getInstance().getGlobal().isUseCache()){

@@ -91,7 +91,7 @@ public class KothConquest implements RunningKoth {
         }
 
 
-        KothEndEvent event = new KothEndEvent(koth, faction, reason);
+        KothEndEvent event = new KothEndEvent(this, faction, reason);
         Bukkit.getServer().getPluginManager().callEvent(event);
 
         koth.setLastWinner(faction);

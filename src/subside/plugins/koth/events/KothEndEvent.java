@@ -6,6 +6,7 @@ import org.bukkit.event.HandlerList;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.adapter.Koth;
+import subside.plugins.koth.adapter.RunningKoth;
 import subside.plugins.koth.adapter.RunningKoth.EndReason;
 import subside.plugins.koth.adapter.captypes.Capper;
 
@@ -17,14 +18,18 @@ public class KothEndEvent extends Event implements IEvent {
     private @Getter Capper winner;
     private @Getter @Setter boolean triggerLoot;
     private @Getter EndReason reason;
-    private @Getter Koth koth;
+    private @Getter RunningKoth runningKoth;
     
     
-    public KothEndEvent(Koth koth, Capper capper, EndReason reason){
-        this.koth = koth;
+    public KothEndEvent(RunningKoth koth, Capper capper, EndReason reason){
+        this.runningKoth = koth;
         this.winner = capper;
         this.triggerLoot = true;
         this.reason = reason;
+    }
+    
+    public Koth getKoth(){
+        return runningKoth.getKoth();
     }
     
     @Deprecated

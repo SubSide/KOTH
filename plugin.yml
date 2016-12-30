@@ -92,6 +92,9 @@ permissions:
   koth.admin.tp:
     description: Gives the player permissions to tp to koths
     default: op
+  koth.admin.admin:
+    description: Gives the player permissions to tp to koths
+    default: op
 
   koth.control:
     description: Gives the player permissions to all control commands

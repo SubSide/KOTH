@@ -38,6 +38,7 @@ public class CommandHandler implements CommandExecutor {
         commands.add(new CommandChange());
         commands.add(new CommandIgnore());
         commands.add(new CommandNext());
+        commands.add(new CommandDatatable());
         
         fallback = new CommandHelp();
         commands.add(fallback);

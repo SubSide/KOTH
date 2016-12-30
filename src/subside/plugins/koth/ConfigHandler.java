@@ -15,6 +15,7 @@ public class ConfigHandler {
 	private @Getter Loot loot;
 	private @Getter Koth koth;
 	private @Getter Hooks hooks;
+	private @Getter Database database;
 	
 	public ConfigHandler(FileConfiguration cfg){
 		instance = this;
@@ -22,7 +23,8 @@ public class ConfigHandler {
 		global = new Global(cfg.getConfigurationSection("global"));
 		loot = new Loot(cfg.getConfigurationSection("loot"));
 		koth = new Koth(cfg.getConfigurationSection("koth"));
-		hooks = new Hooks(cfg.getConfigurationSection("hooks"));
+        hooks = new Hooks(cfg.getConfigurationSection("hooks"));
+        database = new Database(cfg.getConfigurationSection("database"));
 	}
 	
 	public class Global {
@@ -113,28 +115,48 @@ public class ConfigHandler {
             cmdIngame = section.getBoolean("commands.changeingame");
 	    }
 	}
-	
-	public class Koth {
-	    private @Getter int captureCooldown = 0;
-	    private @Getter int channelTime = 0;
-	    private @Getter int knockTime = 0;
-	    private @Getter boolean contestFreeze = false;
-	    private @Getter boolean removeChestAtStart = true;
+    
+    public class Koth {
+        private @Getter int captureCooldown = 0;
+        private @Getter int channelTime = 0;
+        private @Getter int knockTime = 0;
+        private @Getter boolean contestFreeze = false;
+        private @Getter boolean removeChestAtStart = true;
         private @Getter boolean ffaChestTimeLimit = false;
-	    private @Getter int minimumPlayersNeeded = 0;
+        private @Getter int minimumPlayersNeeded = 0;
         private @Getter String defaultCaptureType = "Player";
-	    
-	    public Koth(ConfigurationSection section){
-	        removeChestAtStart = section.getBoolean("remove-chest-at-start");
-	        ffaChestTimeLimit = section.getBoolean("ffa-on-time-limit");
-	        contestFreeze = section.getBoolean("contest-freeze");
-	        channelTime = section.getInt("channel-time");
-	        knockTime = section.getInt("knock-time");
-	        captureCooldown = section.getInt("capture-cooldown");
-	        minimumPlayersNeeded = section.getInt("minimum-players");
-	        defaultCaptureType = section.getString("default-capturetype");
-	        new MapRotation(section.getStringList("map-rotation"));
-	    }
-	}
+        
+        public Koth(ConfigurationSection section){
+            removeChestAtStart = section.getBoolean("remove-chest-at-start");
+            ffaChestTimeLimit = section.getBoolean("ffa-on-time-limit");
+            contestFreeze = section.getBoolean("contest-freeze");
+            channelTime = section.getInt("channel-time");
+            knockTime = section.getInt("knock-time");
+            captureCooldown = section.getInt("capture-cooldown");
+            minimumPlayersNeeded = section.getInt("minimum-players");
+            defaultCaptureType = section.getString("default-capturetype");
+            new MapRotation(section.getStringList("map-rotation"));
+        }
+    }
+    
+    public class Database {
+        private @Getter boolean enabled = false;
+        private @Getter String storagetype = "sqlite";
+        private @Getter String database = "KoTH";
+        private @Getter String host = "localhost";
+        private @Getter int port = 3306;
+        private @Getter String username = "root";
+        private @Getter String password = "";
+        
+        public Database(ConfigurationSection section){
+            enabled = section.getBoolean("enabled");
+            storagetype = section.getString("storagetype");
+            database = section.getString("database");
+            host = section.getString("host");
+            port = section.getInt("port");
+            username = section.getString("username");
+            password = section.getString("password");
+        }
+    }
 	
 }
