@@ -91,6 +91,7 @@ public class Lang {
     public static String[] COMMAND_LOOT_CMD_NOTANUMBER = new String[]{ "&aThis is not a valid ID!" };
     public static String[] COMMAND_LOOT_CMD_INGAME_DISABLED = new String[]{ "&aCommands can't be managed from ingame! Must be through config!" };
     public static String[] COMMAND_LOOT_CMD_OPONLY = new String[]{ "&aYou must be an OP to manage commands!" };
+    public static String[] COMMAND_LOOT_CMD_CONFIG_NOT_ENABLED = new String[]{ "&cNote: commands are disabled in the config!" };
     
 
     public static String[] COMMAND_CHANGE_POINTS_SET = new String[]{ "&aPoints of the faction %entry% succesfully set!" };

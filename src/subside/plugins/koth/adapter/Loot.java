@@ -73,6 +73,10 @@ public class Loot implements JSONSerializable<Loot> {
             return;
         }
         
+        if(capper == null){
+            return;
+        }
+        
         for(String command : commands){
             List<Player> players = capper.getAvailablePlayers(koth);
             if(command.contains("%player%")){
@@ -86,9 +90,7 @@ public class Loot implements JSONSerializable<Loot> {
             }
         }
     }
-    
-
-    @Deprecated
+  
     public Loot load(JSONObject obj) {
         this.name = (String)obj.get("name");
         this.setName(this.name);
@@ -118,7 +120,6 @@ public class Loot implements JSONSerializable<Loot> {
         return this;
     }
 
-    @Deprecated
     @SuppressWarnings("unchecked")
     public JSONObject save(){
         JSONObject obj = new JSONObject();

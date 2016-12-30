@@ -10,7 +10,6 @@ global:
   schedule-timezone: "Europe/Amsterdam"
   minuteoffset: 0
   startweekminuteoffset: 0
-  use-playermoveevent: false
   pre-broadcast: 0
   nocap-broadcast-interval: 30
   helpcommand:
@@ -24,7 +23,7 @@ loot:
   default: ""
   randomize: true
   default-amount: 5
-  randomize-amount: false
+  randomize-stacksize: false
   can-use-same-items: true
   remove-after: 0
   drop-on-removal: false
@@ -59,3 +58,14 @@ koth:
     - "map3"
     - "map2"
     - "etc"
+
+# If you use SQLite only database will be used, as name for the file to create
+# change storagetype to mysql if you want to use MySQL instead.
+database:
+  enabled: false
+  storagetype: "sqlite"
+  database: "KoTH"
+  host: "localhost"
+  port: 3306
+  username: "root"
+  password: ""

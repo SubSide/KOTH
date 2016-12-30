@@ -52,7 +52,6 @@ public class Schedule implements JSONSerializable<Schedule> {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public void tick() {
         if (ConfigHandler.getInstance().getGlobal().getPreBroadcast() != 0) {
             if(!isBroadcasted){

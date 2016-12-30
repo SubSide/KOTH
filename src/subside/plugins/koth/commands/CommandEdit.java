@@ -77,7 +77,7 @@ public class CommandEdit implements ICommand {
     private void area(CommandSender sender, String[] args, Koth koth) {
         if (args.length > 0) {
             if (args[0].equalsIgnoreCase("create")) {
-                Selection selection = KothPlugin.getWorldEdit().getSelection((Player) sender);
+                Selection selection = KothPlugin.getPlugin().getWorldEdit().getSelection((Player) sender);
                 if (selection != null) {
                     if(args.length < 2){
                         throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> area create <name>");
@@ -102,7 +102,7 @@ public class CommandEdit implements ICommand {
                 }
                 return;
             } else if (args[0].equalsIgnoreCase("edit")) {
-                Selection selection = KothPlugin.getWorldEdit().getSelection((Player) sender);
+                Selection selection = KothPlugin.getPlugin().getWorldEdit().getSelection((Player) sender);
                 if (selection == null) {
                     throw new CommandMessageException(Lang.COMMAND_GLOBAL_WESELECT);
                 }

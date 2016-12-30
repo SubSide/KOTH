@@ -18,7 +18,6 @@ import subside.plugins.koth.utils.Utils;
 
 public class KothLoader {
 	
-	@SuppressWarnings("deprecation")
     public static void load() {
 		KothPlugin plugin = KothPlugin.getPlugin();
 		try {
@@ -55,9 +54,7 @@ public class KothLoader {
 		}
 	}
 
-	@SuppressWarnings({
-            "unchecked", "deprecation"
-    })
+	@SuppressWarnings("unchecked")
 	public static void save() {
 		KothPlugin plugin = KothPlugin.getPlugin();
 		try {

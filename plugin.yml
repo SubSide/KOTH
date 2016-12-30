@@ -1,6 +1,6 @@
 name: KoTH
 main: subside.plugins.koth.KothPlugin
-version: 1.4.0
+version: 1.4.1
 author: SubSide
 softdepend: [Multiverse-Core, Factions, Kingdoms, PlaceholderAPI]
 commands:
@@ -90,6 +90,9 @@ permissions:
     description: Gives the player permissions to show info about koths
     default: op
   koth.admin.tp:
+    description: Gives the player permissions to tp to koths
+    default: op
+  koth.admin.admin:
     description: Gives the player permissions to tp to koths
     default: op
 

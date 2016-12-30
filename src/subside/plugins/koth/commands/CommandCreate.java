@@ -29,7 +29,7 @@ public class CommandCreate implements ICommand {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_ALREADYEXISTS).koth(args[0]));
         }
 
-        Selection sel = KothPlugin.getWorldEdit().getSelection(player);
+        Selection sel = KothPlugin.getPlugin().getWorldEdit().getSelection(player);
         if (sel == null) {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_WESELECT);
         }

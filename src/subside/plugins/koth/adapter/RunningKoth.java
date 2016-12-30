@@ -14,7 +14,6 @@ public interface RunningKoth extends JSONSerializable<RunningKoth> {
      *  to dynamicly create games
      * 
      */
-    @Deprecated
     public void init(StartParams params);
     
     /** Get the type of the RunningKoth
@@ -53,7 +52,6 @@ public interface RunningKoth extends JSONSerializable<RunningKoth> {
      */
     public MessageBuilder fillMessageBuilder(MessageBuilder mB);
 
-    @Deprecated
     public void update();
     
     /** End the KoTH with a reason
