@@ -23,8 +23,8 @@ public class ConfigHandler {
 		global = new Global(cfg.getConfigurationSection("global"));
 		loot = new Loot(cfg.getConfigurationSection("loot"));
 		koth = new Koth(cfg.getConfigurationSection("koth"));
-        hooks = new Hooks(cfg.getConfigurationSection("hooks"));
-        database = new Database(cfg.getConfigurationSection("database"));
+    hooks = new Hooks(cfg.getConfigurationSection("hooks"));
+    database = new Database(cfg.getConfigurationSection("database"));
 	}
 	
 	public class Global {
@@ -159,4 +159,26 @@ public class ConfigHandler {
         }
     }
 	
+	public class Koth {
+	    private @Getter int captureCooldown = 0;
+	    private @Getter int channelTime = 0;
+	    private @Getter int knockTime = 0;
+	    private @Getter boolean contestFreeze = false;
+	    private @Getter boolean removeChestAtStart = true;
+        private @Getter boolean ffaChestTimeLimit = false;
+	    private @Getter int minimumPlayersNeeded = 0;
+        private @Getter String defaultCaptureType = "Player";
+	    
+	    public Koth(ConfigurationSection section){
+	        removeChestAtStart = section.getBoolean("remove-chest-at-start");
+	        ffaChestTimeLimit = section.getBoolean("ffa-on-time-limit");
+	        contestFreeze = section.getBoolean("contest-freeze");
+	        channelTime = section.getInt("channel-time");
+	        knockTime = section.getInt("knock-time");
+	        captureCooldown = section.getInt("capture-cooldown");
+	        minimumPlayersNeeded = section.getInt("minimum-players");
+	        defaultCaptureType = section.getString("default-capturetype");
+	        new MapRotation(section.getStringList("map-rotation"));
+	    }
+	}
 }

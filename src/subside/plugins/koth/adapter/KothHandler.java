@@ -98,7 +98,7 @@ public class KothHandler {
         
         runningKoths.add(rKoth);
     }
-    
+  
     public void startKoth(Schedule schedule){
         StartParams params = new StartParams(schedule.getKoth());
         params.setCaptureTime(schedule.getCaptureTime()*60);

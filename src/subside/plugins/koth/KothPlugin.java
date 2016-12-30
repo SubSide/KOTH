@@ -157,12 +157,12 @@ public class KothPlugin extends JavaPlugin {
         KothLoader.load();
         LootLoader.load();
         ScheduleLoader.load();
-        
+    
         // Database connection
         if(ConfigHandler.getInstance().getDatabase().isEnabled()){
             dataTable = new DataTable(this);
         }
-        
+    
         // Cache loading
         if(ConfigHandler.getInstance().getGlobal().isUseCache()){
             Bukkit.getScheduler().runTask(this, new BukkitRunnable(){

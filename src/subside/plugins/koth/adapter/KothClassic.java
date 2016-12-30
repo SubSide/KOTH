@@ -63,6 +63,7 @@ public class KothClassic implements RunningKoth {
 
     public void endKoth(EndReason reason) {
         boolean shouldTriggerLoot = true;
+      
         if (reason == EndReason.WON || reason == EndReason.GRACEFUL) {
             if (capInfo.getCapper() != null) {
                 new MessageBuilder(Lang.KOTH_PLAYING_WON).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).exclude(capInfo.getCapper(), koth).buildAndBroadcast();
