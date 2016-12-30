@@ -191,7 +191,6 @@ public class DataTable {
                 queryBuilder += " LIMIT " + limit;
             }
             
-            System.out.println(queryBuilder);
             PreparedStatement ps = databaseProvider.getConnection().prepareStatement(queryBuilder);
             
             int index = 1;
