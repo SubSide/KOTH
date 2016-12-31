@@ -9,10 +9,10 @@ import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.adapter.Capable;
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.RunningKoth;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.areas.Capable;
+import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.capture.Capper;
+import subside.plugins.koth.gamemodes.RunningKoth;
 
 /**
  * @author Thomas "SubSide" van den Bulk

@@ -1,6 +1,8 @@
-package subside.plugins.koth.adapter;
+package subside.plugins.koth.gamemodes;
 
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
+import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 

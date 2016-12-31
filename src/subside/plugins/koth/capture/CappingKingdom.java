@@ -1,4 +1,4 @@
-package subside.plugins.koth.adapter.captypes;
+package subside.plugins.koth.capture;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +11,7 @@ import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
-import subside.plugins.koth.adapter.Capable;
+import subside.plugins.koth.areas.Capable;
 import subside.plugins.koth.hooks.HookManager;
 
 public class CappingKingdom extends CappingGroup {

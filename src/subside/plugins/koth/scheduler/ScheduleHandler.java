@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
-import subside.plugins.koth.adapter.Koth;
+import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.loaders.ScheduleLoader;
 
 public class ScheduleHandler {

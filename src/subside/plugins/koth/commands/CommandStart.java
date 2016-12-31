@@ -2,10 +2,10 @@ package subside.plugins.koth.commands;
 
 import org.bukkit.command.CommandSender;
 
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.StartParams;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.gamemodes.StartParams;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;

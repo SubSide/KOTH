@@ -4,10 +4,10 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.Area;
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.areas.Area;
+import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.exceptions.AreaNotExistException;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.KothNotExistException;

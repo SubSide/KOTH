@@ -2,9 +2,9 @@ package subside.plugins.koth.commands;
 
 import org.bukkit.command.CommandSender;
 
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 

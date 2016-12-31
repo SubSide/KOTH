@@ -4,8 +4,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.RunningKoth;
+import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.gamemodes.RunningKoth;
 
 /**
  * @author Thomas "SubSide" van den Bulk

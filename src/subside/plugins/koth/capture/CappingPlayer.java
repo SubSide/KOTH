@@ -1,4 +1,4 @@
-package subside.plugins.koth.adapter.captypes;
+package subside.plugins.koth.capture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.adapter.Capable;
+import subside.plugins.koth.areas.Capable;
 import subside.plugins.koth.hooks.HookManager;
 
 public class CappingPlayer extends Capper {

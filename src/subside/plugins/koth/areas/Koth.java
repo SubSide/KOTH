@@ -1,4 +1,4 @@
-package subside.plugins.koth.adapter;
+package subside.plugins.koth.areas;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,10 +20,13 @@ import org.json.simple.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.Loot;
+import subside.plugins.koth.capture.Capper;
 import subside.plugins.koth.events.KothChestCreationEvent;
+import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.utils.JSONSerializable;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Utils;

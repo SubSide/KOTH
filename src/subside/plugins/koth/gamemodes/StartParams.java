@@ -1,11 +1,14 @@
-package subside.plugins.koth.adapter;
+package subside.plugins.koth.gamemodes;
 
 import java.util.Random;
 
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.KothHandler;
+import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.exceptions.KothNotExistException;
+import subside.plugins.koth.scheduler.MapRotation;
 
 public class StartParams {
         private @Getter @Setter Koth koth;

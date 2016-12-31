@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.Area;
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.areas.Area;
+import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.exceptions.AreaAlreadyExistException;
 import subside.plugins.koth.exceptions.AreaNotExistException;
 import subside.plugins.koth.exceptions.CommandMessageException;

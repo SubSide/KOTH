@@ -1,6 +1,7 @@
-package subside.plugins.koth.adapter;
+package subside.plugins.koth.gamemodes;
 
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.capture.Capper;
 import subside.plugins.koth.utils.JSONSerializable;
 import subside.plugins.koth.utils.MessageBuilder;
 

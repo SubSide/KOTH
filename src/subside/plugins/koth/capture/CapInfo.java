@@ -1,4 +1,4 @@
-package subside.plugins.koth.adapter;
+package subside.plugins.koth.capture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,12 @@ import org.bukkit.entity.Player;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.areas.Capable;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
+import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.utils.MessageBuilder;
 
@@ -207,7 +209,7 @@ public class CapInfo {
     	}
     }
     
-    enum CapStatus {
+    public enum CapStatus {
         EMPTY, CHANNELING, CAPPING, KNOCKED
     }
 }

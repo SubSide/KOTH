@@ -1,4 +1,4 @@
-package subside.plugins.koth.adapter;
+package subside.plugins.koth;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -17,11 +17,9 @@ import com.google.common.collect.Lists;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.RunningKoth.EndReason;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.areas.Area;
+import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.capture.Capper;
 import subside.plugins.koth.events.KothInitializeEvent;
 import subside.plugins.koth.events.KothPostUpdateEvent;
 import subside.plugins.koth.events.KothPreUpdateEvent;
@@ -30,6 +28,9 @@ import subside.plugins.koth.exceptions.AnotherKothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothNotExistException;
+import subside.plugins.koth.gamemodes.RunningKoth;
+import subside.plugins.koth.gamemodes.StartParams;
+import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
 import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.scheduler.Schedule;
@@ -40,26 +41,19 @@ import subside.plugins.koth.utils.MessageBuilder;
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class KothHandler {
-    private static @Getter KothHandler instance;
-    
+public class KothHandler implements Runnable {
     private @Getter List<RunningKoth> runningKoths;
     private @Getter List<Koth> availableKoths;
     private @Getter List<Loot> loots;
-    private @Getter GamemodeRegistry gamemodeRegistry;
-    private @Getter CapEntityRegistry capEntityRegistry;
     
     public KothHandler(){
-        instance = this;
         runningKoths = new ArrayList<>();
         availableKoths = new ArrayList<>();
         loots = new ArrayList<>();
-        
-        gamemodeRegistry = new GamemodeRegistry();
-        capEntityRegistry = new CapEntityRegistry();
     }
 
-    public void update() {
+    @Override
+    public void run() {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
@@ -281,104 +275,6 @@ public class KothHandler {
                 }
             }
             throw new KothNotExistException(name);
-        }
-    }
-    
-    public class GamemodeRegistry {
-        private @Getter HashMap<String, Class<? extends RunningKoth>> gamemodes;
-        private @Getter @Setter String currentMode;
-        
-        public GamemodeRegistry(){
-            gamemodes = new HashMap<>();
-            currentMode = "classic";
-        }
-        
-        public void register(String name, Class<? extends RunningKoth> clazz){
-            gamemodes.put(name, clazz);
-        }
-        
-        public RunningKoth createGame(){
-            return createGame(currentMode);
-        }
-        
-        public RunningKoth createGame(String gamemode){
-            if(gamemodes.containsKey(gamemode)){
-                try {
-                    return gamemodes.get(gamemode).newInstance();
-                }
-                catch (InstantiationException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-    }
-    
-    public class CapEntityRegistry {
-        private @Getter Map<String, Class<? extends Capper>> captureClasses;
-        private @Getter Map<String, Class<? extends Capper>> captureTypes;
-        private @Getter @Setter Class<? extends Capper> preferedClass;
-
-        public CapEntityRegistry(){
-            captureTypes = new HashMap<>();
-            captureClasses = new HashMap<>();
-        }
-        
-        public void registerCaptureType(String captureTypeIdentifier, Class<? extends Capper> clazz){
-            captureTypes.put(captureTypeIdentifier, clazz);
-
-            registerCaptureClass(captureTypeIdentifier, clazz); // Also register it as a capture class
-        }
-        
-        public void registerCaptureClass(String captureClassIdentifier, Class<? extends Capper> clazz){
-            captureClasses.put(captureClassIdentifier, clazz);
-        }
-        
-        public Class<? extends Capper> getCaptureTypeClass(String name){
-            return captureTypes.get(name);
-        }
-        
-        public Class<? extends Capper> getCaptureClass(String name){
-            return captureClasses.get(name);
-        }
-        
-        public String getIdentifierFromClass(Class<? extends Capper> clazz){
-            for (Entry<String, Class<? extends Capper>> entry : captureClasses.entrySet()) {
-                if (Objects.equals(clazz, entry.getValue())) {
-                    return entry.getKey();
-                }
-            }
-            return null;
-        }
-        
-        public Capper getCapperFromType(String captureTypeIdentifier, String objectUniqueId){
-            if(!captureTypes.containsKey(captureTypeIdentifier)){
-                return null;
-            }
-            try {
-                return (Capper)captureTypes.get(captureTypeIdentifier).getDeclaredMethod("getFromUniqueName", String.class).invoke(null, objectUniqueId);
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-                return null;
-            }
-        }
-        
-
-        public Capper getCapper(Class<? extends Capper> capperClazz, List<Player> players){
-            try {
-                for(Class<? extends Capper> clazz : getCaptureTypes().values()){
-                    if(capperClazz.isAssignableFrom(clazz)){
-                        Capper capper =  clazz.getDeclaredConstructor(List.class).newInstance(players);
-                        if(capper.getObject() == null){
-                            return null;
-                        }
-                        return capper;
-                    }
-                }
-            } catch(Exception e){
-                e.printStackTrace();
-            }
-            
-            return null;
         }
     }
 }

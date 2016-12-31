@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.KothHandler.CapEntityRegistry;
-import subside.plugins.koth.adapter.KothHandler.GamemodeRegistry;
+import subside.plugins.koth.KothHandler.CapEntityRegistry;
+import subside.plugins.koth.KothHandler.GamemodeRegistry;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;

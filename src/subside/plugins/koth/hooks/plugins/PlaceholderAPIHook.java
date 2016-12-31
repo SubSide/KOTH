@@ -4,11 +4,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import me.clip.placeholderapi.external.EZPlaceholderHook;
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.RunningKoth;
-import subside.plugins.koth.adapter.TimeObject;
+import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.gamemodes.RunningKoth;
+import subside.plugins.koth.gamemodes.TimeObject;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 

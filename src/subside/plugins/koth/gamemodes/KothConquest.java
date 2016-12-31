@@ -1,4 +1,4 @@
-package subside.plugins.koth.adapter;
+package subside.plugins.koth.gamemodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,10 +10,14 @@ import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import lombok.Setter;
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.captypes.Capper;
-import subside.plugins.koth.adapter.captypes.CappingGroup;
+import subside.plugins.koth.areas.Area;
+import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.capture.CapInfo;
+import subside.plugins.koth.capture.Capper;
+import subside.plugins.koth.capture.CappingGroup;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.utils.MessageBuilder;
 

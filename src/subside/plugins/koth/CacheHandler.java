@@ -13,18 +13,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import lombok.Getter;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.MapRotation;
-import subside.plugins.koth.adapter.RunningKoth;
+import subside.plugins.koth.gamemodes.RunningKoth;
+import subside.plugins.koth.scheduler.MapRotation;
 import subside.plugins.koth.utils.Utils;
 
 public class CacheHandler {
-    private static @Getter CacheHandler instance;
-    
-    public CacheHandler(){
-        instance = this;
-    }
-    
     public void load(JavaPlugin plugin) {
         try {
 

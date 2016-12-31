@@ -8,8 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import subside.plugins.koth.adapter.RunningKoth.EndReason;
 import subside.plugins.koth.events.KothEndEvent;
+import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
 
 public class DataTableEventListener implements Listener {
     DataTable dataTable;

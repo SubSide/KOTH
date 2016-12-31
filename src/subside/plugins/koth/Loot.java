@@ -1,4 +1,4 @@
-package subside.plugins.koth.adapter;
+package subside.plugins.koth;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,9 +12,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
-import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.capture.Capper;
 import subside.plugins.koth.utils.JSONSerializable;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Utils;

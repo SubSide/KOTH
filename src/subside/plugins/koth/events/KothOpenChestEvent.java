@@ -1,13 +1,12 @@
 package subside.plugins.koth.events;
 
 import lombok.Getter;
+import subside.plugins.koth.areas.Koth;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import subside.plugins.koth.adapter.Koth;
 
 /**
  * @author Thomas "SubSide" van den Bulk

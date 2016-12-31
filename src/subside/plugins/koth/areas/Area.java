@@ -1,4 +1,4 @@
-package subside.plugins.koth.adapter;
+package subside.plugins.koth.areas;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;

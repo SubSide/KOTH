@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.capture.Capper;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.Perm;

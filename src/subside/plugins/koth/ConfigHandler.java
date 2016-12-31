@@ -6,7 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import lombok.Getter;
-import subside.plugins.koth.adapter.MapRotation;
+import subside.plugins.koth.scheduler.MapRotation;
 
 public class ConfigHandler {
     private @Getter static ConfigHandler instance;

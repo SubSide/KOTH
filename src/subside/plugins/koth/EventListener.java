@@ -14,11 +14,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.Loot;
-import subside.plugins.koth.adapter.RunningKoth;
+import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.events.KothOpenChestEvent;
+import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.loaders.LootLoader;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;

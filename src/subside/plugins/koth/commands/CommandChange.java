@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
+import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.KothConquest;
-import subside.plugins.koth.adapter.KothConquest.FactionScore;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.RunningKoth;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.gamemodes.KothConquest;
+import subside.plugins.koth.gamemodes.RunningKoth;
+import subside.plugins.koth.gamemodes.KothConquest.FactionScore;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;

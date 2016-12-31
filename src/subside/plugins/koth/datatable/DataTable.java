@@ -14,9 +14,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
 import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.KothHandler.CapEntityRegistry;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.KothHandler;
+import subside.plugins.koth.KothHandler.CapEntityRegistry;
+import subside.plugins.koth.capture.Capper;
 
 public class DataTable {
     private @Getter JavaPlugin plugin;

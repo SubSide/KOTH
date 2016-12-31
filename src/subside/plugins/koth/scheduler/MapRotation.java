@@ -1,4 +1,4 @@
-package subside.plugins.koth.adapter;
+package subside.plugins.koth.scheduler;
 
 import java.util.List;
 

@@ -9,27 +9,24 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 import lombok.Getter;
-import subside.plugins.koth.adapter.KothClassic;
-import subside.plugins.koth.adapter.KothConquest;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.KothHandler.CapEntityRegistry;
-import subside.plugins.koth.adapter.KothHandler.GamemodeRegistry;
-import subside.plugins.koth.adapter.Loot;
-import subside.plugins.koth.adapter.captypes.Capper;
-import subside.plugins.koth.adapter.captypes.CappingFactionNormal;
-import subside.plugins.koth.adapter.captypes.CappingFactionUUID;
-import subside.plugins.koth.adapter.captypes.CappingGroup;
-import subside.plugins.koth.adapter.captypes.CappingKingdom;
-import subside.plugins.koth.adapter.captypes.CappingPlayer;
+import subside.plugins.koth.capture.Capper;
+import subside.plugins.koth.capture.CappingFactionNormal;
+import subside.plugins.koth.capture.CappingFactionUUID;
+import subside.plugins.koth.capture.CappingGroup;
+import subside.plugins.koth.capture.CappingKingdom;
+import subside.plugins.koth.capture.CappingPlayer;
+import subside.plugins.koth.KothHandler.CapEntityRegistry;
+import subside.plugins.koth.KothHandler.GamemodeRegistry;
 import subside.plugins.koth.commands.CommandHandler;
 import subside.plugins.koth.datatable.DataTable;
+import subside.plugins.koth.gamemodes.KothClassic;
+import subside.plugins.koth.gamemodes.KothConquest;
 import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.loaders.LootLoader;
 import subside.plugins.koth.loaders.ScheduleLoader;
 
 public class KothPlugin extends JavaPlugin {
-	private @Getter static KothPlugin plugin;
 	private @Getter WorldEditPlugin worldEdit;
 	private @Getter CommandHandler commandHandler;
 	private @Getter DataTable dataTable;
@@ -41,7 +38,6 @@ public class KothPlugin extends JavaPlugin {
 	// if they want to register their own entities and such.
 	@Override
 	public void onLoad(){
-        plugin = this;
         
         // Initialize the KoTH main class
         new KothHandler();

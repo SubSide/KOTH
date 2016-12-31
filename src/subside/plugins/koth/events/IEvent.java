@@ -1,6 +1,6 @@
 package subside.plugins.koth.events;
 
-import subside.plugins.koth.adapter.Koth;
+import subside.plugins.koth.areas.Koth;
 
 /**
  * @author Thomas "SubSide" van den Bulk
