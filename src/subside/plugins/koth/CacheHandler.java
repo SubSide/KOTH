@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,13 +19,23 @@ import subside.plugins.koth.loaders.JSONLoader;
 import subside.plugins.koth.scheduler.MapRotation;
 import subside.plugins.koth.utils.Utils;
 
-public class CacheHandler {
-    private JavaPlugin plugin;
-    public CacheHandler(JavaPlugin plugin){
-        this.plugin = plugin;
+public class CacheHandler extends AbstractModule {
+    
+    public CacheHandler(KothPlugin plugin){
+        super(plugin);
     }
     
-    public void load() {
+    @Override
+    public void onEnable(){
+        Bukkit.getScheduler().runTask(plugin, new Runnable(){
+            @Override
+            public void run(){
+                lateEnable();
+            }
+        });
+    }
+    
+    private void lateEnable() {
         JSONObject jsonObj = (JSONObject)new JSONLoader(plugin, "cache.json").load();
         if(jsonObj == null)
             return;
@@ -42,8 +54,9 @@ public class CacheHandler {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    public void save(JavaPlugin plugin) {
+    public void onDisable() {
             JSONObject obj = new JSONObject();
             
             // Saving

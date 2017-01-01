@@ -6,6 +6,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -13,21 +14,35 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.events.KothOpenChestEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.loaders.LootLoader;
+import subside.plugins.koth.loot.Loot;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
-public class EventListener implements Listener {
-    private JavaPlugin plugin;
+public class EventListener extends AbstractModule implements Listener {
     
-    public EventListener(JavaPlugin plugin){
-        this.plugin = plugin;
+    public EventListener(KothPlugin plugin){
+        super(plugin);
     }
+    
+    @Override
+    public void onEnable(){
+        // Register the events
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+    
+    @Override
+    public void onDisable(){
+        // Remove all previous event handlers
+        HandlerList.unregisterAll(this);
+    }
+    
     
     @EventHandler(ignoreCancelled = true)
     public void onInventoryOpen(InventoryOpenEvent e) {

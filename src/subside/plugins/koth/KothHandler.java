@@ -3,10 +3,12 @@ package subside.plugins.koth;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import com.google.common.collect.Lists;
 
@@ -25,7 +27,9 @@ import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
 import subside.plugins.koth.gamemodes.StartParams;
 import subside.plugins.koth.hooks.HookManager;
+import subside.plugins.koth.loaders.JSONLoader;
 import subside.plugins.koth.loaders.KothLoader;
+import subside.plugins.koth.loot.Loot;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.utils.MessageBuilder;
@@ -34,18 +38,38 @@ import subside.plugins.koth.utils.MessageBuilder;
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class KothHandler implements Runnable {
+public class KothHandler extends AbstractModule implements Runnable {
     private @Getter List<RunningKoth> runningKoths;
     private @Getter List<Koth> availableKoths;
-    private @Getter List<Loot> loots;
-    private JavaPlugin plugin;
     
-    public KothHandler(JavaPlugin plugin){
-        this.plugin = plugin;
+    private @Getter int taskId;
+    
+    public KothHandler(KothPlugin plugin){
+        super(plugin);
         
         runningKoths = new ArrayList<>();
         availableKoths = new ArrayList<>();
-        loots = new ArrayList<>();
+    }
+    
+    @Override
+    public void onLoad(){
+    }
+    
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onEnable(){
+        loadKoths(); // Load all KoTH's
+        
+        // Add a repeating ASYNC scheduler for the KothHandler
+        this.taskId = Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, this, 20, 20);
+    }
+    
+    @Override
+    public void onDisable(){
+        // Remove all previous schedulings
+        Bukkit.getScheduler().cancelTask(this.taskId);
+        
+        saveKoths(); // Save all KoTH's
     }
 
     @Override
@@ -167,8 +191,9 @@ public class KothHandler implements Runnable {
      * @param name              The KoTH name
      * @param min               The first location
      * @param max               The max position
+     * @throws                  KothAlreadyExistException 
      */
-    public void createKoth(String name, Location min, Location max) {
+    public void createKoth(String name, Location min, Location max) throws KothAlreadyExistException {
         if (getKoth(name) == null && !name.equalsIgnoreCase("random")) {
             Koth koth = new Koth(this, name);
             koth.getAreas().add(new Area(name, min, max));
@@ -183,8 +208,9 @@ public class KothHandler implements Runnable {
     /** Remove a certain KoTH
      * 
      * @param koth              The KoTH to remove
+     * @throws                  KothNotExistException 
      */
-    public void removeKoth(String name) {
+    public void removeKoth(String name) throws KothNotExistException {
         Koth koth = getKoth(name);
         if (koth == null) {
             throw new KothNotExistException(name);
@@ -240,8 +266,9 @@ public class KothHandler implements Runnable {
     /** Gracefully ends a certain KoTH
      * 
      * @param name      The name of the KoTH to end
+     * @throws          KothNotExistException 
      */
-    public void endKoth(String name) {
+    public void endKoth(String name) throws KothNotExistException {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
@@ -279,6 +306,39 @@ public class KothHandler implements Runnable {
                 it.next().endKoth(EndReason.FORCED);
             }
         }
+    }
+    
+    /* Save/Load time */
+    public void loadKoths() {
+        availableKoths = new ArrayList<>();
+        
+        Object obj = new JSONLoader(plugin, "koths.json").load();
+        if(obj == null)
+            return;
+        
+        if(obj instanceof JSONArray){
+            JSONArray koths = (JSONArray) obj;
+            
+            Iterator<?> it = koths.iterator();
+            while(it.hasNext()){
+                try {
+                    Koth koth = new Koth(this, null);
+                    koth.load((JSONObject)it.next());
+                    availableKoths.add(koth);
+                } catch(Exception e){
+                    plugin.getLogger().log(Level.SEVERE, "////////////////\nError loading koth!\n////////////////", e);
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void saveKoths() {
+        JSONArray obj = new JSONArray();
+        for (Koth koth : availableKoths) {
+            obj.add(koth.save());
+        }
+        new JSONLoader(plugin, "koths.json").save(obj);
     }
 
 }

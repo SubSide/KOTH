@@ -8,17 +8,23 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.Utils;
 
-public class CommandHandler implements CommandExecutor {
+public class CommandHandler extends AbstractModule implements CommandExecutor {
 
     private List<AbstractCommand> commands;
     private AbstractCommand fallback;
 
     public CommandHandler(KothPlugin plugin) {
+        super(plugin);
+    }
+    
+    @Override
+    public void onLoad(){
         commands = new ArrayList<>();
         commands.add(new CommandLoot());
         commands.add(new CommandStart());
@@ -42,6 +48,12 @@ public class CommandHandler implements CommandExecutor {
         
         fallback = new CommandHelp();
         commands.add(fallback);
+    }
+    
+    @Override
+    public void onEnable(){
+        // Register the class to the command
+        plugin.getCommand("koth").setExecutor(this);
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {

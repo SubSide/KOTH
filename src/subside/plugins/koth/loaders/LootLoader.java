@@ -13,7 +13,7 @@ import org.json.simple.parser.JSONParser;
 
 import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.Loot;
+import subside.plugins.koth.loot.Loot;
 import subside.plugins.koth.utils.Utils;
 
 public class LootLoader {

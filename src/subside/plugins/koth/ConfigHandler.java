@@ -8,7 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import lombok.Getter;
 import subside.plugins.koth.scheduler.MapRotation;
 
-public class ConfigHandler {
+public class ConfigHandler extends AbstractModule {
     
 	private @Getter Global global;
 	private @Getter Loot loot;
@@ -16,10 +16,22 @@ public class ConfigHandler {
 	private @Getter Hooks hooks;
 	private @Getter Database database;
 	
-	public ConfigHandler(FileConfiguration cfg){
-		global = new Global(cfg.getConfigurationSection("global"));
-		loot = new Loot(cfg.getConfigurationSection("loot"));
-		koth = new Koth(cfg.getConfigurationSection("koth"));
+	public ConfigHandler(KothPlugin plugin){
+	    super(plugin);
+	    onLoad();
+	}
+	
+	@Override
+	public void onLoad(){
+        // reload the configs
+        plugin.saveDefaultConfig();
+        plugin.reloadConfig();
+        
+        // Now load all sub-classes
+	    FileConfiguration cfg = plugin.getConfig();
+        global = new Global(cfg.getConfigurationSection("global"));
+        loot = new Loot(cfg.getConfigurationSection("loot"));
+        koth = new Koth(cfg.getConfigurationSection("koth"));
         hooks = new Hooks(cfg.getConfigurationSection("hooks"));
         database = new Database(cfg.getConfigurationSection("database"));
 	}

@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.Loot;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.loot.Loot;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.Perm;
 
