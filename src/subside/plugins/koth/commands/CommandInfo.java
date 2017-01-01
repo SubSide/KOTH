@@ -17,9 +17,9 @@ import subside.plugins.koth.exceptions.KothNotExistException;
 import subside.plugins.koth.exceptions.LootNotExistException;
 import subside.plugins.koth.gamemodes.TimeObject;
 import subside.plugins.koth.loot.Loot;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.utils.IPerm;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
@@ -73,7 +73,7 @@ public class CommandInfo extends AbstractCommand {
     public void kothInfo(CommandSender sender, String[] args){
         Koth koth = getPlugin().getKothHandler().getKoth(args[0]);
         if (koth == null) {
-            throw new KothNotExistException(args[0]);
+            throw new KothNotExistException(getPlugin().getKothHandler(), args[0]);
         }
         
         String C1 = "&2";

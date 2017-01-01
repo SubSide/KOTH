@@ -11,8 +11,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
-import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.modules.AbstractModule;
 import subside.plugins.koth.utils.JSONLoader;
 
 public class LootHandler extends AbstractModule {

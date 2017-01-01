@@ -1,4 +1,4 @@
-package subside.plugins.koth.hooks.plugins;
+package subside.plugins.koth.hooks;
 
 import org.bukkit.entity.Player;
 
@@ -7,8 +7,8 @@ import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.gamemodes.TimeObject;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.scheduler.Schedule;
-import subside.plugins.koth.utils.Lang;
 
 /**
 * Made in collaboration with F64_Rx <3

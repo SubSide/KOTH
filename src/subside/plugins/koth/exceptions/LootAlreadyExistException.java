@@ -1,6 +1,6 @@
 package subside.plugins.koth.exceptions;
 
-import subside.plugins.koth.utils.Lang;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class LootAlreadyExistException extends CommandMessageException {

@@ -6,19 +6,21 @@ import java.util.List;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
-import subside.plugins.koth.areas.KothHandler;
 import subside.plugins.koth.captureentities.CaptureTypeRegistry;
 import subside.plugins.koth.commands.CommandHandler;
 import subside.plugins.koth.datatable.DataTable;
-import subside.plugins.koth.events.EventListener;
+import subside.plugins.koth.events.KothPluginInitializationEvent;
 import subside.plugins.koth.gamemodes.GamemodeRegistry;
 import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loot.LootHandler;
+import subside.plugins.koth.modules.AbstractModule;
+import subside.plugins.koth.modules.CacheHandler;
+import subside.plugins.koth.modules.ConfigHandler;
+import subside.plugins.koth.modules.EventListener;
+import subside.plugins.koth.modules.KothHandler;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.scheduler.MapRotation;
 import subside.plugins.koth.scheduler.ScheduleHandler;
-import subside.plugins.koth.utils.CacheHandler;
-import subside.plugins.koth.utils.ConfigHandler;
-import subside.plugins.koth.utils.Lang;
 
 public class KothPlugin extends JavaPlugin {
     
@@ -44,8 +46,11 @@ public class KothPlugin extends JavaPlugin {
 	// if they want to register their own entities and such.
 	@Override
 	public void onLoad(){
+	    // Load and set up all modules
+	    setupModules();
+	    
         // Trigger loading event on the modules
-        trigger(LoadingType.LOAD);
+        trigger(LoadingState.LOAD);
 	}
 	
 	public void setupModules(){
@@ -107,17 +112,17 @@ public class KothPlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-        trigger(LoadingType.ENABLE);
+        trigger(LoadingState.ENABLE);
 	}
 	
 	@Override
 	public void onDisable() {
-		trigger(LoadingType.DISABLE);
+		trigger(LoadingState.DISABLE);
 	}
 	
-	public void trigger(LoadingType event){
+	public void trigger(LoadingState state){
 	    for(AbstractModule module : activeModules){
-	        switch(event){
+	        switch(state){
 	            case LOAD:
 	                module.onLoad();
 	                break;
@@ -129,9 +134,11 @@ public class KothPlugin extends JavaPlugin {
 	                break;
 	        }
 	    }
+
+        getServer().getPluginManager().callEvent(new KothPluginInitializationEvent(state));
 	}
     
-	public enum LoadingType {
+	public enum LoadingState {
 	    LOAD, ENABLE, DISABLE;
 	}
 }

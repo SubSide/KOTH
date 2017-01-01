@@ -18,8 +18,8 @@ import subside.plugins.koth.exceptions.AreaAlreadyExistException;
 import subside.plugins.koth.exceptions.AreaNotExistException;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.KothNotExistException;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.IPerm;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
@@ -48,7 +48,7 @@ public class CommandEdit extends AbstractCommand {
         }
         Koth koth = getPlugin().getKothHandler().getKoth(args[0]);
         if (koth == null) {
-            throw new KothNotExistException(args[0]);
+            throw new KothNotExistException(getPlugin().getKothHandler(), args[0]);
         }
 
         String[] newArgs = Arrays.copyOfRange(args, 2, args.length);

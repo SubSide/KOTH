@@ -4,8 +4,8 @@ import org.bukkit.command.CommandSender;
 
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.IPerm;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
@@ -22,7 +22,7 @@ public class CommandRemove extends AbstractCommand {
         }
         
         getPlugin().getKothHandler().removeKoth(args[0]);
-        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_REMOVED).koth(args[0]));
+        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_REMOVED).koth(getPlugin().getKothHandler(), args[0]));
 
     }
 

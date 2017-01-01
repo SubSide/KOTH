@@ -1,4 +1,4 @@
-package subside.plugins.koth.hooks.plugins;
+package subside.plugins.koth.hooks;
 
 import java.util.logging.Level;
 
@@ -9,8 +9,6 @@ import org.kitteh.vanish.VanishPlugin;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.hooks.AbstractHook;
-import subside.plugins.koth.hooks.HookManager;
 
 public class VanishHook extends AbstractHook {
     private @Getter @Setter boolean enabled = false;

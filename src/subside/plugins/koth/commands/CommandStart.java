@@ -6,8 +6,8 @@ import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.KothException;
 import subside.plugins.koth.gamemodes.StartParams;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.IPerm;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 

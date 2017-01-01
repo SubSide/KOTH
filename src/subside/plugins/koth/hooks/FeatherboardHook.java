@@ -1,4 +1,4 @@
-package subside.plugins.koth.hooks.plugins;
+package subside.plugins.koth.hooks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,7 @@ import lombok.Getter;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.events.KothStartEvent;
-import subside.plugins.koth.hooks.AbstractHook;
-import subside.plugins.koth.hooks.HookManager;
-import subside.plugins.koth.utils.ConfigHandler.Hooks.Featherboard;
+import subside.plugins.koth.modules.ConfigHandler.Hooks.Featherboard;
 
 public class FeatherboardHook extends AbstractHook implements Listener {
     private @Getter boolean enabled = false;

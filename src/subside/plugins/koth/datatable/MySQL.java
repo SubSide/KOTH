@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.utils.ConfigHandler;
+import subside.plugins.koth.modules.ConfigHandler;
 
 public class MySQL implements IDatabase {
     private Connection connection;

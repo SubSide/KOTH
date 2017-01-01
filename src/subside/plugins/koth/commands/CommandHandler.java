@@ -9,10 +9,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import lombok.Getter;
-import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.exceptions.CommandMessageException;
-import subside.plugins.koth.utils.Lang;
+import subside.plugins.koth.modules.AbstractModule;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
@@ -136,30 +136,21 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
         List<String> list = new ArrayList<>();
         list.add("");
         for(CommandCategory category : categories){
-            list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title(category.getCategoryInfo()).buildArray());
+            List<String> categoryHelp = new ArrayList<>();
             for(AbstractCommand command : category.getCommands()){
-                list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command(command.getUsage()).commandInfo(command.getDescription()).buildArray());
+                if(command.getPermission().has(sender)){
+                    categoryHelp.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command(command.getUsage()).commandInfo(command.getDescription()).buildArray());
+                }
             }
+            
+            if(categoryHelp.size() > 0){
+                list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title(category.getCategoryInfo()).buildArray());
+                list.addAll(categoryHelp);
+            }
+            
             list.add("");
         }
         sender.sendMessage(list.toArray(new String[list.size()]));
-    }
-    
-    public void helpAsMember(CommandSender sender){
-        List<String> list = plugin.getConfigHandler().getGlobal().getHelpCommand();
-        List<String> list2 = new ArrayList<>();
-        for (String hlp : list) {
-            MessageBuilder mB = new MessageBuilder(hlp);
-            try {
-                mB.koth(plugin.getKothHandler().getRunningKoth().getKoth());
-                mB.time(plugin.getKothHandler().getRunningKoth().getTimeObject());
-            }
-            catch (Exception e) {
-                mB.koth("None").time("00:00").capper("None");
-            }
-            list2.addAll(mB.buildArray());
-        }
-        sender.sendMessage(list2.toArray(new String[list2.size()]));
     }
     
     public class CommandCategory {

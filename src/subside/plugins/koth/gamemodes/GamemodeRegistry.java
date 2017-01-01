@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.modules.AbstractModule;
 
 public class GamemodeRegistry extends AbstractModule {
     private @Getter HashMap<String, Class<? extends RunningKoth>> gamemodes;

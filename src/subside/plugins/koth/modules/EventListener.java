@@ -1,4 +1,4 @@
-package subside.plugins.koth.events;
+package subside.plugins.koth.modules;
 
 import java.util.logging.Level;
 
@@ -17,12 +17,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.events.KothOpenChestEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.loot.Loot;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 

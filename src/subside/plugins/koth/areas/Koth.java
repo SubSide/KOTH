@@ -23,8 +23,9 @@ import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.events.KothChestCreationEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.loot.Loot;
+import subside.plugins.koth.modules.KothHandler;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.JSONSerializable;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Utils;
 

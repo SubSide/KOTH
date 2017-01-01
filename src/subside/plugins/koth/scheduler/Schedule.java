@@ -7,8 +7,8 @@ import org.json.simple.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.exceptions.KothException;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.JSONSerializable;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class Schedule implements JSONSerializable<Schedule> {
@@ -59,7 +59,7 @@ public class Schedule implements JSONSerializable<Schedule> {
             if(!isBroadcasted){
                 if (System.currentTimeMillis() + 1000 * 60 * scheduleHandler.getPlugin().getConfigHandler().getGlobal().getPreBroadcast() > nextEventMillis) {
                     isBroadcasted = true;
-                    new MessageBuilder(Lang.KOTH_PLAYING_PRE_BROADCAST).maxTime(maxRunTime).captureTime(captureTime).lootAmount(lootAmount).koth(koth).buildAndBroadcast();
+                    new MessageBuilder(Lang.KOTH_PLAYING_PRE_BROADCAST).maxTime(maxRunTime).captureTime(captureTime).lootAmount(lootAmount).koth(scheduleHandler.getPlugin().getKothHandler(), koth).buildAndBroadcast();
                 }
             }
         }

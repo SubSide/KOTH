@@ -10,19 +10,25 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import org.bukkit.event.HandlerList;
+
 import lombok.Getter;
-import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.captureentities.CaptureTypeRegistry;
-import subside.plugins.koth.utils.ConfigHandler;
+import subside.plugins.koth.modules.AbstractModule;
+import subside.plugins.koth.modules.ConfigHandler;
 
 public class DataTable extends AbstractModule {
     private @Getter IDatabase databaseProvider;
+    private DataTableEventListener eventListener;
     
     public DataTable(KothPlugin plugin){
         super(plugin);
-        
+    }
+    
+    @Override
+    public void onEnable(){
         try {
             ConfigHandler.Database cDB = plugin.getConfigHandler().getDatabase();
             if(cDB.getStoragetype().equalsIgnoreCase("sqlite")){
@@ -48,8 +54,13 @@ public class DataTable extends AbstractModule {
         
         
         initialize();
-        
-        plugin.getServer().getPluginManager().registerEvents(new DataTableEventListener(this), plugin);
+        eventListener = new DataTableEventListener(this);
+        plugin.getServer().getPluginManager().registerEvents(eventListener, plugin);
+    }
+    
+    @Override
+    public void onDisable(){
+        HandlerList.unregisterAll(eventListener);
     }
     
     private void initialize(){

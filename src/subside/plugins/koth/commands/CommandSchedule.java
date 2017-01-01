@@ -9,10 +9,10 @@ import org.bukkit.command.CommandSender;
 
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.scheduler.Day;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.utils.IPerm;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
@@ -82,7 +82,7 @@ public class CommandSchedule extends AbstractCommand {
             List<String> subList = new ArrayList<>();
             for (Schedule sched : schedules) {
                 if (sched.getDay() == day) {
-                    subList.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_ENTRY).day(day.getDay()).lootAmount(sched.getLootAmount()).koth(sched.getKoth()).timeTillNext(sched).time(sched.getTime()).captureTime(sched.getCaptureTime()).buildArray());
+                    subList.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_ENTRY).day(day.getDay()).lootAmount(sched.getLootAmount()).koth(getPlugin().getKothHandler(), sched.getKoth()).timeTillNext(sched).time(sched.getTime()).captureTime(sched.getCaptureTime()).buildArray());
                 }
             }
             if (subList.size() > 0) {
@@ -177,7 +177,7 @@ public class CommandSchedule extends AbstractCommand {
 
         getPlugin().getScheduleHandler().getSchedules().add(schedule);
         getPlugin().getScheduleHandler().saveSchedules();
-        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_CREATED).koth(args[0]).lootAmount(lootAmount).day(day.getDay()).time(pTime).captureTime(captureTime));
+        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_CREATED).koth(getPlugin().getKothHandler(), args[0]).lootAmount(lootAmount).day(day.getDay()).time(pTime).captureTime(captureTime));
 
     }
 
@@ -191,7 +191,7 @@ public class CommandSchedule extends AbstractCommand {
             if (kth == null) {
                 throw new CommandMessageException(Lang.COMMAND_SCHEDULE_NOTEXIST);
             }
-            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_REMOVED).koth(kth));
+            throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_REMOVED).koth(getPlugin().getKothHandler(), kth));
         }
         catch (NumberFormatException e) {
             throw new CommandMessageException(Lang.COMMAND_SCHEDULE_REMOVENOID);
@@ -211,7 +211,7 @@ public class CommandSchedule extends AbstractCommand {
             List<String> subList = new ArrayList<>();
             for (Schedule sched : schedules) {
                 if (sched.getDay() == day) {
-                    subList.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_ENTRY).id(schedules.indexOf(sched)).day(day.getDay()).maxTime(sched.getMaxRunTime() * 60).koth(sched.getKoth()).time(sched.getTime()).captureTime(sched.getCaptureTime()).buildArray());
+                    subList.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_ENTRY).id(schedules.indexOf(sched)).day(day.getDay()).maxTime(sched.getMaxRunTime() * 60).koth(getPlugin().getKothHandler(), sched.getKoth()).time(sched.getTime()).captureTime(sched.getCaptureTime()).buildArray());
                 }
             }
             if (subList.size() > 0) {
@@ -240,7 +240,7 @@ public class CommandSchedule extends AbstractCommand {
             if (args[1].equalsIgnoreCase("koth")) { // change koth
                 schedule.setKoth(args[2]);
                 getPlugin().getScheduleHandler().saveSchedules();
-                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_EDITOR_CHANGE_KOTH).koth(args[2]).id(id));
+                throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_SCHEDULE_EDITOR_CHANGE_KOTH).koth(getPlugin().getKothHandler(), args[2]).id(id));
             } else if (args[1].equalsIgnoreCase("capturetime")) { // change capturetime
                 int captureTime;
                 try {

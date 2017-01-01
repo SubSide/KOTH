@@ -19,6 +19,7 @@ import org.json.simple.JSONObject;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.modules.Lang;
 
 public class Utils {
     static String KOTH_IGNORE_KEY = "KOTH_IGNORING";

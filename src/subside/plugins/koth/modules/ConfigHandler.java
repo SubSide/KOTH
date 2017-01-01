@@ -1,4 +1,4 @@
-package subside.plugins.koth.utils;
+package subside.plugins.koth.modules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import lombok.Getter;
-import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
 
 public class ConfigHandler extends AbstractModule {

@@ -16,7 +16,7 @@ import subside.plugins.koth.captureentities.CapInfo;
 import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.captureentities.CappingGroup;
 import subside.plugins.koth.events.KothEndEvent;
-import subside.plugins.koth.utils.Lang;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**

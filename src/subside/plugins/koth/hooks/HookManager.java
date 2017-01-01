@@ -8,11 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import lombok.Getter;
-import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.hooks.plugins.FeatherboardHook;
-import subside.plugins.koth.hooks.plugins.PlaceholderAPIHook;
-import subside.plugins.koth.hooks.plugins.VanishHook;
+import subside.plugins.koth.modules.AbstractModule;
 
 public class HookManager extends AbstractModule {
     private @Getter List<AbstractHook> hooks;

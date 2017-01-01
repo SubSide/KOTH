@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.gamemodes.KothConquest;
+import subside.plugins.koth.modules.AbstractModule;
 
 public class CaptureTypeRegistry extends AbstractModule {
     private @Getter Map<String, Class<? extends Capper>> captureClasses;

@@ -10,8 +10,8 @@ import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.AreaNotExistException;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.KothNotExistException;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.IPerm;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
@@ -33,7 +33,7 @@ public class CommandTp extends AbstractCommand {
 
         Koth koth = getPlugin().getKothHandler().getKoth(args[0]);
         if (koth == null) {
-            throw new KothNotExistException(args[0]);
+            throw new KothNotExistException(getPlugin().getKothHandler(), args[0]);
         }
         Location loc = koth.getMiddle();
         if(loc == null){

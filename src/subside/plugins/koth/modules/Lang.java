@@ -1,4 +1,4 @@
-package subside.plugins.koth.utils;
+package subside.plugins.koth.modules;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -7,8 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.utils.JSONLoader;
 
 public class Lang extends AbstractModule {
     
@@ -44,6 +44,7 @@ public class Lang extends AbstractModule {
     public static String[] KOTH_ERROR_NOTEXIST = new String[]{"&aThe koth %koth% doesn't exist!"};
 	public static String[] KOTH_ERROR_NO_COMPATIBLE_CAPPER = new String[]{"This is not a compatible player!" };
     public static String[] KOTH_ERROR_NOT_COMPATIBLE = new String[]{"&aThe current koth is not compatible!"};
+    public static String[] KOTH_ERROR_ILLEGALKOTHNAME = new String[]{"&aThe name %koth% is not allowed!"};
 
     public static String[] AREA_ERROR_ALREADYEXISTS = new String[]{"&aThe area %area% already exists!"};
     public static String[] AREA_ERROR_NOTEXIST = new String[]{"&aThe area %area% doesn't exist!"};

@@ -2,8 +2,8 @@ package subside.plugins.koth.gamemodes;
 
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.scheduler.Schedule;
-import subside.plugins.koth.utils.Lang;
 
 /**
  * @author Thomas "SubSide" van den Bulk

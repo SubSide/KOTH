@@ -1,6 +1,7 @@
-package subside.plugins.koth;
+package subside.plugins.koth.modules;
 
 import lombok.Getter;
+import subside.plugins.koth.KothPlugin;
 
 public abstract class AbstractModule {
     protected @Getter KothPlugin plugin;

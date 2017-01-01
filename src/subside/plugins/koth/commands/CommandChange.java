@@ -10,9 +10,9 @@ import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.gamemodes.KothConquest;
 import subside.plugins.koth.gamemodes.KothConquest.FactionScore;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.utils.IPerm;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 

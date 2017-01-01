@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Koth;
-import subside.plugins.koth.areas.KothHandler;
 import subside.plugins.koth.exceptions.KothNotExistException;
+import subside.plugins.koth.modules.KothHandler;
 
 public class StartParams {
         private @Getter @Setter Koth koth;
@@ -44,6 +44,6 @@ public class StartParams {
                     return;
                 }
             }
-            throw new KothNotExistException(kth);
+            throw new KothNotExistException(plugin.getKothHandler(), kth);
         }
     }

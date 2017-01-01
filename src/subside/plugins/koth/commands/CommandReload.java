@@ -2,11 +2,11 @@ package subside.plugins.koth.commands;
 
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.KothPlugin.LoadingType;
+import subside.plugins.koth.KothPlugin.LoadingState;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.IPerm;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.Perm;
 
 public class CommandReload extends AbstractCommand {
@@ -17,9 +17,10 @@ public class CommandReload extends AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
-        getPlugin().trigger(LoadingType.DISABLE);
-        getPlugin().trigger(LoadingType.LOAD);
-        getPlugin().trigger(LoadingType.ENABLE);
+        getPlugin().trigger(LoadingState.DISABLE);
+        getPlugin().setupModules();
+        getPlugin().trigger(LoadingState.LOAD);
+        getPlugin().trigger(LoadingState.ENABLE);
         throw new CommandMessageException(Lang.COMMAND_RELOAD_RELOAD);
     }
 

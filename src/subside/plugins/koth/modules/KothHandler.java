@@ -1,4 +1,4 @@
-package subside.plugins.koth.areas;
+package subside.plugins.koth.modules;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,20 +6,20 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.google.common.collect.Lists;
 
 import lombok.Getter;
-import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.events.KothInitializeEvent;
 import subside.plugins.koth.events.KothPostUpdateEvent;
 import subside.plugins.koth.events.KothPreUpdateEvent;
 import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.exceptions.AnotherKothAlreadyRunningException;
+import subside.plugins.koth.exceptions.IllegalKothNameException;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothException;
@@ -29,7 +29,6 @@ import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
 import subside.plugins.koth.gamemodes.StartParams;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.utils.JSONLoader;
-import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
@@ -152,7 +151,7 @@ public class KothHandler extends AbstractModule implements Runnable {
         synchronized (runningKoths) {
             for (RunningKoth rKoth : runningKoths) {
                 if (rKoth.getKoth() == params.getKoth()) {
-                    throw new KothAlreadyRunningException(params.getKoth().getName());
+                    throw new KothAlreadyRunningException(this, params.getKoth().getName());
                 }
             }
             KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled(), params.getEntityType());
@@ -185,22 +184,17 @@ public class KothHandler extends AbstractModule implements Runnable {
     }
 
 
-    /** Create a new KoTH
-     * 
-     * @param name              The KoTH name
-     * @param min               The first location
-     * @param max               The max position
-     * @throws                  KothAlreadyExistException 
-     */
-    public void createKoth(String name, Location min, Location max) throws KothAlreadyExistException {
-        if (getKoth(name) == null && !name.equalsIgnoreCase("random")) {
-            Koth koth = new Koth(this, name);
-            koth.getAreas().add(new Area(name, min, max));
-            availableKoths.add(koth);
-            saveKoths();
-        } else {
-            throw new KothAlreadyExistException(name);
+    public void addKoth(Koth koth){
+        if(getKoth(koth.getName()) != null){
+            throw new KothAlreadyExistException(this, koth.getName());
         }
+        
+        if(koth.getName().startsWith("$")){
+            throw new IllegalKothNameException(this, koth.getName());
+        }
+        
+        availableKoths.add(koth);
+        saveKoths();
     }
 
 
@@ -212,7 +206,7 @@ public class KothHandler extends AbstractModule implements Runnable {
     public void removeKoth(String name) throws KothNotExistException {
         Koth koth = getKoth(name);
         if (koth == null) {
-            throw new KothNotExistException(name);
+            throw new KothNotExistException(this, name);
         }
 
         availableKoths.remove(koth);
@@ -261,7 +255,7 @@ public class KothHandler extends AbstractModule implements Runnable {
                     return;
                 }
             }
-            throw new KothNotExistException(name);
+            throw new KothNotExistException(this, name);
         }
     }
     
