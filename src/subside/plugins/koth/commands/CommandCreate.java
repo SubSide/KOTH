@@ -11,9 +11,10 @@ import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-public class CommandCreate implements ICommand {
+public class CommandCreate implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -29,7 +30,7 @@ public class CommandCreate implements ICommand {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_ALREADYEXISTS).koth(args[0]));
         }
 
-        Selection sel = KothPlugin.getPlugin().getWorldEdit().getSelection(player);
+        Selection sel = ((WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit")).getSelection(player);
         if (sel == null) {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_WESELECT);
         }

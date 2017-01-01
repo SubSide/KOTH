@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandAsMember implements ICommand {
+public class CommandAsMember implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {

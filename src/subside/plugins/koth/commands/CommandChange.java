@@ -16,7 +16,7 @@ import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandChange implements ICommand {
+public class CommandChange implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {

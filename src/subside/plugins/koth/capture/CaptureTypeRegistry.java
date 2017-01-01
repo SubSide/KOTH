@@ -4,22 +4,75 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
 import lombok.Setter;
+import subside.plugins.koth.AbstractModule;
+import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.gamemodes.KothConquest;
 
-public class CapEntityRegistry {
+public class CaptureTypeRegistry extends AbstractModule {
     private @Getter Map<String, Class<? extends Capper>> captureClasses;
     private @Getter Map<String, Class<? extends Capper>> captureTypes;
     private @Getter @Setter Class<? extends Capper> preferedClass;
+    
+    private JavaPlugin plugin;
 
-    public CapEntityRegistry(){
+    public CaptureTypeRegistry(JavaPlugin plugin){
         captureTypes = new HashMap<>();
         captureClasses = new HashMap<>();
+        this.plugin = plugin;
+    }
+    
+    @Override
+    public void onLoad(){
+        captureTypes.clear();
+        captureClasses.clear();
+        
+        // Add the player entity
+        registerCaptureClass("capperclass", Capper.class);
+        
+        registerCaptureType("player", CappingPlayer.class);
+        setPreferedClass(CappingPlayer.class);
+        boolean hasGroupPlugin = false;
+        if(ConfigHandler.getInstance().getHooks().isFactions() && getServer().getPluginManager().getPlugin("Factions") != null){
+            try {
+                // If this class is not found it means that Factions is not in the server
+                Class.forName("com.massivecraft.factions.entity.FactionColl");
+                registerCaptureType("faction", CappingFactionNormal.class);
+                setPreferedClass(CappingFactionNormal.class);
+                hasGroupPlugin = true;
+            } catch(ClassNotFoundException e){
+                // So if the class is not found, we add FactionsUUID instead
+                registerCaptureType("factionuuid", CappingFactionUUID.class);
+                setPreferedClass(CappingFactionUUID.class);
+                hasGroupPlugin = true;
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        
+        if(ConfigHandler.getInstance().getHooks().isKingdoms() && getServer().getPluginManager().getPlugin("Kingdoms") != null){
+            registerCaptureType("kingdoms", CappingKingdom.class);
+            setPreferedClass(CappingKingdom.class);
+            hasGroupPlugin = true;
+        }
+        
+        // Make sure when you register your own group-like capturetype, to register the CappingGroup in the capentityregistry
+        if(hasGroupPlugin){
+            registerCaptureClass("groupclass", CappingGroup.class);
+            
+            // Since we know we have a group plugin, we can also register Conquest in the GamemodeRegistry
+            plugin.getGamemodeRegistry().register("conquest", KothConquest.class);
+        }
+        
+        if(getCaptureTypeClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()) != null)
+            setPreferedClass(getCaptureTypeClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()));
     }
     
     public void registerCaptureType(String captureTypeIdentifier, Class<? extends Capper> clazz){

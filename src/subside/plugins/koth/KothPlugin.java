@@ -27,9 +27,11 @@ import subside.plugins.koth.loaders.LootLoader;
 import subside.plugins.koth.loaders.ScheduleLoader;
 
 public class KothPlugin extends JavaPlugin {
-	private @Getter WorldEditPlugin worldEdit;
+    
+    // Modules
 	private @Getter CommandHandler commandHandler;
 	private @Getter DataTable dataTable;
+	private @Getter CacheHandler cacheHandler;
 	
 	
 	// Loaded on server startup (Not to be confused with enable)
@@ -50,75 +52,16 @@ public class KothPlugin extends JavaPlugin {
         // Load the lang.json
         Lang.load(this);
         
-        // Register the gamemodes, entities, and scoreboards
-        register();
+        // Trigger loading event on the modules
+        trigger(LoadingType.LOAD);
 	}
 	
 	@Override
 	public void onEnable() {
-		worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
 		commandHandler = new CommandHandler(this);
 		getCommand("koth").setExecutor(commandHandler);
         init();
 	}
-
-    
-    public void register(){
-        // Registering the Gamemodes //
-        GamemodeRegistry gR = KothHandler.getInstance().getGamemodeRegistry();
-        
-        gR.getGamemodes().clear();
-        gR.register("classic", KothClassic.class);
-        
-        if(ConfigHandler.getInstance().getHooks().isFactions()){
-            // Add conquest if factions is enabled in the config
-            gR.register("conquest", KothConquest.class);
-        }
-        
-        // Registering the capture entities //
-        CapEntityRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
-        cER.getCaptureTypes().clear();
-        cER.getCaptureClasses().clear();
-        
-        // Add the player entity
-
-        cER.registerCaptureClass("capperclass", Capper.class);
-        
-        cER.registerCaptureType("player", CappingPlayer.class);
-        cER.setPreferedClass(CappingPlayer.class);
-        boolean hasGroupPlugin = false;
-        if(ConfigHandler.getInstance().getHooks().isFactions() && getServer().getPluginManager().getPlugin("Factions") != null){
-            try {
-                // If this class is not found it means that Factions is not in the server
-                Class.forName("com.massivecraft.factions.entity.FactionColl");
-                cER.registerCaptureType("faction", CappingFactionNormal.class);
-                cER.setPreferedClass(CappingFactionNormal.class);
-                hasGroupPlugin = true;
-            } catch(ClassNotFoundException e){
-                // So if the class is not found, we add FactionsUUID instead
-                cER.registerCaptureType("factionuuid", CappingFactionUUID.class);
-                cER.setPreferedClass(CappingFactionUUID.class);
-                hasGroupPlugin = true;
-            } catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        
-        if(ConfigHandler.getInstance().getHooks().isKingdoms() && getServer().getPluginManager().getPlugin("Kingdoms") != null){
-            cER.registerCaptureType("kingdoms", CappingKingdom.class);
-            cER.setPreferedClass(CappingKingdom.class);
-            hasGroupPlugin = true;
-        }
-        
-        // Make sure when you register your own group-like capturetype, to register the CappingGroup in the capentityregistry
-        if(hasGroupPlugin){
-            cER.registerCaptureClass("groupclass", CappingGroup.class);
-        }
-        
-        if(cER.getCaptureTypeClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()) != null)
-            cER.setPreferedClass(cER.getCaptureTypeClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()));
-        
-    }
 
     @SuppressWarnings("deprecation")
 	public void init(){
@@ -190,5 +133,25 @@ public class KothPlugin extends JavaPlugin {
             CacheHandler.getInstance().save(this);
         }
 	}
+	
+	public void trigger(LoadingType event){
+	    AbstractModule[] modules = { commandHandler, dataTable, cacheHandler, gamemodeRegistry captureTypeRegistry };
+	    for(AbstractModule module : modules){
+	        switch(event){
+	            case LOAD:
+	                module.onLoad();
+	                break;
+	            case ENABLE:
+	                module.onEnable();
+	                break;
+	            case DISABLE:
+	                module.onDisable();
+	                break;
+	        }
+	    }
+	}
     
+	enum LoadingType {
+	    LOAD, ENABLE, DISABLE;
+	}
 }

@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
 import subside.plugins.koth.KothHandler;
@@ -25,7 +26,7 @@ import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
-public class CommandEdit implements ICommand {
+public class CommandEdit implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -77,7 +78,7 @@ public class CommandEdit implements ICommand {
     private void area(CommandSender sender, String[] args, Koth koth) {
         if (args.length > 0) {
             if (args[0].equalsIgnoreCase("create")) {
-                Selection selection = KothPlugin.getPlugin().getWorldEdit().getSelection((Player) sender);
+                Selection selection = ((WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit")).getSelection((Player) sender);
                 if (selection != null) {
                     if(args.length < 2){
                         throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> area create <name>");

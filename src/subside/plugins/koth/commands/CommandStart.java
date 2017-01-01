@@ -10,7 +10,7 @@ import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
-public class CommandStart implements ICommand {
+public class CommandStart implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {

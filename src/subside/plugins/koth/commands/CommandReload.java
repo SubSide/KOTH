@@ -12,7 +12,7 @@ import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandReload implements ICommand {
+public class CommandReload implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {

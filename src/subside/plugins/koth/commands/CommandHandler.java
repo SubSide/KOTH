@@ -15,8 +15,8 @@ import subside.plugins.koth.utils.Utils;
 
 public class CommandHandler implements CommandExecutor {
 
-    private List<ICommand> commands;
-    private ICommand fallback;
+    private List<AbstractCommand> commands;
+    private AbstractCommand fallback;
 
     public CommandHandler(KothPlugin plugin) {
         commands = new ArrayList<>();
@@ -56,7 +56,7 @@ public class CommandHandler implements CommandExecutor {
             }
             
             String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
-            for (ICommand command : commands) {
+            for (AbstractCommand command : commands) {
                 for (String com : command.getCommands()) {
                     if (!com.equalsIgnoreCase(args[0])) {
                         continue;

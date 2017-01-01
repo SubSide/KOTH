@@ -8,7 +8,7 @@ import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandList implements ICommand {
+public class CommandList implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {

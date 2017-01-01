@@ -41,8 +41,11 @@ public class Koth implements Capable, JSONSerializable<Koth> {
     private @Setter String loot = null;
     private Capper lastWinner;
     private @Getter List<Area> areas = new ArrayList<>();
+    
+    private @Getter KothHandler kothHandler;
 
-    public Koth(String name) {
+    public Koth(KothHandler kothHandler, String name) {
+        this.kothHandler = kothHandler;
         this.name = name;
     }
 
@@ -63,7 +66,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
      * @return          the RunningKoth linked to this KoTH, null if none
      */
     public RunningKoth getRunningKoth(){
-        for(RunningKoth rKoth : KothHandler.getInstance().getRunningKoths()){
+        for(RunningKoth rKoth : kothHandler.getRunningKoths()){
             if(rKoth.getKoth() == this){
                 return rKoth;
             }
@@ -135,10 +138,10 @@ public class Koth implements Capable, JSONSerializable<Koth> {
     }
     
     public Loot getLootChest(String lootChest){
-        Loot loot = KothHandler.getInstance().getLoot((lootChest == null)?getLoot():lootChest);
+        Loot loot = kothHandler.getLoot((lootChest == null)?getLoot():lootChest);
         
         if(loot == null){
-            loot = KothHandler.getInstance().getLoot(ConfigHandler.getInstance().getLoot().getDefaultLoot()); 
+            loot = kothHandler.getLoot(ConfigHandler.getInstance().getLoot().getDefaultLoot()); 
         }
         
         return loot;

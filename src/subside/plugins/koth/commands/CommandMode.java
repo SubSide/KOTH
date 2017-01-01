@@ -15,7 +15,7 @@ import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandMode implements ICommand {
+public class CommandMode implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -38,7 +38,7 @@ public class CommandMode implements ICommand {
     }
     
     public void captureType(CommandSender sender, String[] args){
-        CapEntityRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
+        CaptureTypeRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
         if(args.length > 0){
             if(cER.getCaptureTypes().containsKey(args[0].toLowerCase())){
                 cER.setPreferedClass(cER.getCaptureTypes().get(args[0].toLowerCase()));

@@ -1,25 +1,18 @@
 package subside.plugins.koth;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.collect.Lists;
 
 import lombok.Getter;
-import lombok.Setter;
 import subside.plugins.koth.areas.Area;
 import subside.plugins.koth.areas.Koth;
-import subside.plugins.koth.capture.Capper;
 import subside.plugins.koth.events.KothInitializeEvent;
 import subside.plugins.koth.events.KothPostUpdateEvent;
 import subside.plugins.koth.events.KothPreUpdateEvent;
@@ -29,8 +22,8 @@ import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothNotExistException;
 import subside.plugins.koth.gamemodes.RunningKoth;
-import subside.plugins.koth.gamemodes.StartParams;
 import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
+import subside.plugins.koth.gamemodes.StartParams;
 import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.scheduler.Schedule;
@@ -45,8 +38,11 @@ public class KothHandler implements Runnable {
     private @Getter List<RunningKoth> runningKoths;
     private @Getter List<Koth> availableKoths;
     private @Getter List<Loot> loots;
+    private JavaPlugin plugin;
     
-    public KothHandler(){
+    public KothHandler(JavaPlugin plugin){
+        this.plugin = plugin;
+        
         runningKoths = new ArrayList<>();
         availableKoths = new ArrayList<>();
         loots = new ArrayList<>();
@@ -59,12 +55,12 @@ public class KothHandler implements Runnable {
             while (it.hasNext()) {
                 // Call an PreUpdateEvent, this can be cancelled (For whichever reason)
                 KothPreUpdateEvent preEvent = new KothPreUpdateEvent(it.next());
-                KothPlugin.getPlugin().getServer().getPluginManager().callEvent(preEvent);
+                plugin.getServer().getPluginManager().callEvent(preEvent);
                 if(!preEvent.isCancelled()){
                     preEvent.getRunningKoth().update();
                     
                     // If the preEvent is not cancelled call postUpdateEvent, this cannot be cancelled as there is nothing to cancel.
-                    KothPlugin.getPlugin().getServer().getPluginManager().callEvent(new KothPostUpdateEvent(preEvent.getRunningKoth()));
+                    plugin.getServer().getPluginManager().callEvent(new KothPostUpdateEvent(preEvent.getRunningKoth()));
                 }
             }
             ScheduleHandler.getInstance().tick();
@@ -74,7 +70,7 @@ public class KothHandler implements Runnable {
 
     /** Gets a the currently running KoTH
      * 
-     * @return          the currently running KoTH, null if none is running.
+     * @return the currently running KoTH, null if none is running.
      */
     public RunningKoth getRunningKoth() {
         synchronized (runningKoths) {
@@ -86,11 +82,24 @@ public class KothHandler implements Runnable {
         }
     }
     
-    public void addRunningKoth(RunningKoth rKoth){
-        KothInitializeEvent event = new KothInitializeEvent(rKoth);
+    /** Remove a RunningKoth from runningKoths list
+     * 
+     * @param koth the runningKoth object
+     */
+    public void removeRunningKoth(RunningKoth runningKoth){
+        synchronized (runningKoths) {
+            runningKoths.remove(runningKoth);
+        }
+    }
+    /** Add a runningKoth to the runningKoths list
+     * 
+     * @param rKoth
+     */
+    public void addRunningKoth(RunningKoth runningKoth){
+        KothInitializeEvent event = new KothInitializeEvent(runningKoth);
         Bukkit.getServer().getPluginManager().callEvent(event);
         
-        runningKoths.add(rKoth);
+        runningKoths.add(runningKoth);
     }
     
     public void startKoth(Schedule schedule){
@@ -126,7 +135,7 @@ public class KothHandler implements Runnable {
             KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled(), params.getEntityType());
             
             boolean anotherAlreadyRunning = false;
-            if(KothHandler.getInstance().getRunningKoth() != null && !ConfigHandler.getInstance().getGlobal().isMultipleKothsAtOnce()){
+            if(this.getRunningKoth() != null && !ConfigHandler.getInstance().getGlobal().isMultipleKothsAtOnce()){
                 event.setCancelled(true);
                 anotherAlreadyRunning = true;
             }
@@ -161,7 +170,7 @@ public class KothHandler implements Runnable {
      */
     public void createKoth(String name, Location min, Location max) {
         if (getKoth(name) == null && !name.equalsIgnoreCase("random")) {
-            Koth koth = new Koth(name);
+            Koth koth = new Koth(this, name);
             koth.getAreas().add(new Area(name, min, max));
             availableKoths.add(koth);
             KothLoader.save();
@@ -215,38 +224,6 @@ public class KothHandler implements Runnable {
         return null;
     }
 
-    /** Stop all running koths
-     * 
-     */
-    public void stopAllKoths() {
-        synchronized (runningKoths) {
-            Iterator<RunningKoth> it = runningKoths.iterator();
-            while (it.hasNext()) {
-                it.next().endKoth(EndReason.FORCED);
-            }
-        }
-    }
-
-    public void remove(RunningKoth koth){
-        synchronized (runningKoths) {
-            runningKoths.remove(koth);
-        }
-    }
-    
-    /** Stop a specific koth
-     * 
-     * @param name      Stop a KoTH by a certain name
-     */
-    public void stopKoth(String name) {
-        Iterator<RunningKoth> it = runningKoths.iterator();
-        while (it.hasNext()) {
-            RunningKoth koth = it.next();
-            if (koth.getKoth().getName().equalsIgnoreCase(name)) {
-                koth.endKoth(EndReason.FORCED);
-            }
-        }
-    }
-
 
     /** Gracefully ends all running KoTHs
      * 
@@ -277,4 +254,31 @@ public class KothHandler implements Runnable {
             throw new KothNotExistException(name);
         }
     }
+    
+    /** Stop a specific koth
+     * 
+     * @param name      Stop a KoTH by a certain name
+     */
+    public void stopKoth(String name) {
+        Iterator<RunningKoth> it = runningKoths.iterator();
+        while (it.hasNext()) {
+            RunningKoth koth = it.next();
+            if (koth.getKoth().getName().equalsIgnoreCase(name)) {
+                koth.endKoth(EndReason.FORCED);
+            }
+        }
+    }
+
+    /** Stop all running koths
+     * 
+     */
+    public void stopAllKoths() {
+        synchronized (runningKoths) {
+            Iterator<RunningKoth> it = runningKoths.iterator();
+            while (it.hasNext()) {
+                it.next().endKoth(EndReason.FORCED);
+            }
+        }
+    }
+
 }

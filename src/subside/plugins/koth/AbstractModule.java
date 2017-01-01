@@ -1,5 +1,7 @@
 package subside.plugins.koth;
 
-public class AbstractModule {
-
+public abstract class AbstractModule {
+    public void onLoad(){};
+    public void onEnable(){};
+    public void onDisable(){};
 }

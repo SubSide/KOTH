@@ -2,6 +2,7 @@ package subside.plugins.koth.hooks.plugins;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,16 +13,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
 import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.ConfigHandler.Hooks.Featherboard;
 import subside.plugins.koth.areas.Koth;
-import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.hooks.AbstractHook;
-import subside.plugins.koth.utils.Utils;
 
 public class FeatherboardHook extends AbstractHook implements Listener {
     private @Getter boolean enabled = false;
@@ -33,7 +33,9 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     private @Getter String board;
     private List<OfflinePlayer> inRange;
     
-    public FeatherboardHook(){
+    public FeatherboardHook(JavaPlugin plugin){
+        super(plugin); // First call the constructor of the parent class
+        
         inRange = new ArrayList<>();
         if(Bukkit.getServer().getPluginManager().isPluginEnabled("FeatherBoard")){
             Featherboard fbHook = ConfigHandler.getInstance().getHooks().getFeatherboard();
@@ -44,7 +46,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
                 board = fbHook.getBoard();
             }
         }
-        Utils.log("Featherboard hook: "+(enabled?"Enabled":"Disabled"));
+        plugin.getLogger().log(Level.INFO, "Featherboard hook: "+(enabled?"Enabled":"Disabled"));
     }
     
     @EventHandler(ignoreCancelled = true)
@@ -123,7 +125,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
 
     
     public void setBoard(final Player player, final String board){
-        Bukkit.getScheduler().runTaskLater(KothPlugin.getPlugin(), new Runnable(){
+        Bukkit.getScheduler().runTaskLater(plugin, new Runnable(){
             @Override
             public void run() {
                 be.maximvdw.featherboard.api.FeatherBoardAPI.showScoreboard(player, board);
@@ -133,7 +135,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     }
     
     public void resetBoard(final Player player, final String board){
-        Bukkit.getScheduler().runTaskLater(KothPlugin.getPlugin(), new Runnable(){
+        Bukkit.getScheduler().runTaskLater(plugin, new Runnable(){
             @Override
             public void run() {
                 be.maximvdw.featherboard.api.FeatherBoardAPI.removeScoreboardOverride(player, board);

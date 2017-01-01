@@ -19,7 +19,7 @@ import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
-public class CommandSchedule implements ICommand {
+public class CommandSchedule implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {

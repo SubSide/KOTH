@@ -9,13 +9,11 @@ import lombok.Setter;
 import subside.plugins.koth.utils.JSONSerializable;
 
 public class MapRotation implements JSONSerializable<MapRotation> {
-    private static @Getter MapRotation instance;
     
     public List<String> rotation;
     public @Getter @Setter int index;
     
     public MapRotation(List<String> rotation){
-        instance = this;
         this.rotation = rotation;
     }
     

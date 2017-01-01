@@ -23,6 +23,12 @@ import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
 public class EventListener implements Listener {
+    private JavaPlugin plugin;
+    
+    public EventListener(JavaPlugin plugin){
+        this.plugin = plugin;
+    }
+    
     @EventHandler(ignoreCancelled = true)
     public void onInventoryOpen(InventoryOpenEvent e) {
         if (!(e.getPlayer() instanceof Player)) {

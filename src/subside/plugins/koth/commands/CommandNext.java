@@ -9,7 +9,7 @@ import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandNext implements ICommand {
+public class CommandNext implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {

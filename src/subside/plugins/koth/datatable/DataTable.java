@@ -119,7 +119,7 @@ public class DataTable {
             
             ResultSet result = sQB.execute();
             
-            CapEntityRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
+            CaptureTypeRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
             while(result.next()){
                 top.add(new SimpleEntry<Capper, Integer>(cER.getCapperFromType(result.getString("capper_type"), result.getString("capper_uuid")), result.getInt("result")));
             }

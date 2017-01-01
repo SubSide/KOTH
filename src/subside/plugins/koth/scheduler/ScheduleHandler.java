@@ -8,7 +8,6 @@ import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.loaders.ScheduleLoader;
 
 public class ScheduleHandler {
-    private static @Getter ScheduleHandler instance = new ScheduleHandler();
     private @Getter List<Schedule> schedules = new ArrayList<>();
 
     public Schedule getNextEvent() {

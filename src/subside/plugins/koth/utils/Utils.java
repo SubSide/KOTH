@@ -54,15 +54,6 @@ public class Utils {
 	public static void msg(CommandSender sender, String msg){
 		new MessageBuilder(Lang.COMMAND_GLOBAL_PREFIX+msg).buildAndSend(sender);
 	}
-	
-	public static String getGson(String str){
-		try {
-			return new com.google.gson.GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new com.google.gson.JsonParser().parse(str));
-		} catch(NoClassDefFoundError e){
-			return new org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new org.bukkit.craftbukkit.libs.com.google.gson.JsonParser().parse(str));
-		}
-		
-	}
 
     @SuppressWarnings("unchecked")
 	public static void sendMessage(CommandSender player, boolean priority, Object ...args){
@@ -152,10 +143,6 @@ public class Utils {
         }
         
         return t;
-    }
-    
-    public static void log(String log){
-        KothPlugin.getPlugin().getLogger().info("KoTH - "+log);
     }
     
     public static String parseDate(long millis){

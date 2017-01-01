@@ -11,7 +11,7 @@ import subside.plugins.koth.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandHelp implements ICommand {
+public class CommandHelp implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -49,7 +49,7 @@ public class CommandHelp implements ICommand {
 
     }
 
-    public static void asMember(CommandSender sender, String[] args) {
+    public void asMember(CommandSender sender, String[] args) {
         List<String> list = ConfigHandler.getInstance().getGlobal().getHelpCommand();
         List<String> list2 = new ArrayList<>();
         for (String hlp : list) {

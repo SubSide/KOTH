@@ -3,7 +3,7 @@ package subside.plugins.koth.exceptions;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
-public class AnotherKothAlreadyRunningException extends CommandMessageException {
+public class AnotherKothAlreadyRunningException extends KothException {
 
 
     /**

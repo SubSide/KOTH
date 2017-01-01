@@ -9,7 +9,6 @@ import lombok.Getter;
 import subside.plugins.koth.scheduler.MapRotation;
 
 public class ConfigHandler {
-    private @Getter static ConfigHandler instance;
     
 	private @Getter Global global;
 	private @Getter Loot loot;
@@ -18,8 +17,6 @@ public class ConfigHandler {
 	private @Getter Database database;
 	
 	public ConfigHandler(FileConfiguration cfg){
-		instance = this;
-        
 		global = new Global(cfg.getConfigurationSection("global"));
 		loot = new Loot(cfg.getConfigurationSection("loot"));
 		koth = new Koth(cfg.getConfigurationSection("koth"));

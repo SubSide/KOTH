@@ -26,7 +26,7 @@ import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
-public class CommandInfo implements ICommand {
+public class CommandInfo implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {

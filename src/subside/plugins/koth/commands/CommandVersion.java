@@ -9,7 +9,7 @@ import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandVersion implements ICommand {
+public class CommandVersion implements AbstractCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
