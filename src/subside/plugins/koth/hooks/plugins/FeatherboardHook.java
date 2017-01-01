@@ -15,12 +15,12 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import lombok.Getter;
-import subside.plugins.koth.ConfigHandler.Hooks.Featherboard;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.hooks.AbstractHook;
 import subside.plugins.koth.hooks.HookManager;
+import subside.plugins.koth.utils.ConfigHandler.Hooks.Featherboard;
 
 public class FeatherboardHook extends AbstractHook implements Listener {
     private @Getter boolean enabled = false;

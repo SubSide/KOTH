@@ -11,8 +11,8 @@ import org.bukkit.command.CommandSender;
 import lombok.Getter;
 import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.Lang;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
@@ -30,11 +30,12 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
     public void onLoad(){
         this.categories = new ArrayList<>();
 
+        // Basic commands
         CommandCategory basic = registerCategory("basic", "KoTH Basic Commands");
         fallback = new CommandAsMember(basic); // This one should be used for fallback
         
         basic.addCommand(new CommandList(basic));
-        basic.addCommand(fallback);
+        basic.addCommand(fallback); // CommandAsMember
         basic.addCommand(new CommandVersion(basic));
         basic.addCommand(new CommandReload(basic));
         basic.addCommand(new CommandTp(basic));
@@ -42,6 +43,11 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
         basic.addCommand(new CommandNext(basic));
         basic.addCommand(new CommandIgnore(basic));
         
+        if(getPlugin().getDataTable() != null){
+            basic.addCommand(new CommandDatatable(basic));
+        }
+        
+        // Control commands
         CommandCategory control = registerCategory("control", "KoTH Control Commands");
         control.addCommand(new CommandStart(control));
         control.addCommand(new CommandStop(control));
@@ -50,6 +56,7 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
         control.addCommand(new CommandChange(control));
         
         
+        // Editor commands
         CommandCategory editor = registerCategory("editor", "Koth Editor Commands");
         editor.addCommand(new CommandCreate(editor));
         editor.addCommand(new CommandRemove(editor));

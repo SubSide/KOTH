@@ -1,10 +1,9 @@
 package subside.plugins.koth.gamemodes;
 
-import subside.plugins.koth.KothHandler;
-import subside.plugins.koth.Lang;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.scheduler.Schedule;
-import subside.plugins.koth.scheduler.ScheduleHandler;
+import subside.plugins.koth.utils.Lang;
 
 /**
  * @author Thomas "SubSide" van den Bulk
@@ -73,16 +72,16 @@ public class TimeObject {
     
     
     // Time till next event (static)
-    public static String getTimeTillNextEvent(){
-        if(KothHandler.getInstance().getRunningKoth() != null) return "--:--:--";
+    public static String getTimeTillNextEvent(KothPlugin plugin){
+        if(plugin.getKothHandler().getRunningKoth() != null) return "--:--:--";
         
-        return getTimeTillNextEvent(ScheduleHandler.getInstance().getNextEvent());
+        return getTimeTillNextEvent(plugin.getScheduleHandler().getNextEvent());
     }
     
-    public static String getTimeTillNextEvent(Koth koth){
+    public static String getTimeTillNextEvent(KothPlugin plugin, Koth koth){
         if(koth.isRunning()) getTimeTillNextEvent((Schedule)null);
         
-        return getTimeTillNextEvent(ScheduleHandler.getInstance().getNextEvent(koth));
+        return getTimeTillNextEvent(plugin.getScheduleHandler().getNextEvent(koth));
     }
     
     public static String getTimeTillNextEvent(Schedule schedule){

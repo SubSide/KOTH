@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
@@ -16,6 +15,7 @@ import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.loot.Loot;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.utils.IPerm;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;

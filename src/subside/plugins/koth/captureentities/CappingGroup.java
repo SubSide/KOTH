@@ -1,4 +1,4 @@
-package subside.plugins.koth.capture;
+package subside.plugins.koth.captureentities;
 
 public abstract class CappingGroup extends Capper {
 

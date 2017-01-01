@@ -12,11 +12,10 @@ import java.util.logging.Level;
 
 import lombok.Getter;
 import subside.plugins.koth.AbstractModule;
-import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.capture.Capper;
-import subside.plugins.koth.capture.CaptureTypeRegistry;
-import subside.plugins.koth.commands.CommandHandler.CommandCategory;
+import subside.plugins.koth.captureentities.Capper;
+import subside.plugins.koth.captureentities.CaptureTypeRegistry;
+import subside.plugins.koth.utils.ConfigHandler;
 
 public class DataTable extends AbstractModule {
     private @Getter IDatabase databaseProvider;
@@ -73,9 +72,6 @@ public class DataTable extends AbstractModule {
         catch (SQLException e) {
             this.plugin.getLogger().log(Level.SEVERE, "Error: Couldn't create the database table: results", e);
         }
-        
-        CommandCategory category = plugin.getCommandHandler().getCategory("basic");
-        category.addCommand(new CommandDatatable(category));
     }
     
     

@@ -2,10 +2,10 @@ package subside.plugins.koth.commands;
 
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.Lang;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.scheduler.Schedule;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 

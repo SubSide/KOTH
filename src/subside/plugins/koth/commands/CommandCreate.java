@@ -6,10 +6,10 @@ import org.bukkit.entity.Player;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-import subside.plugins.koth.Lang;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.IPerm;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 

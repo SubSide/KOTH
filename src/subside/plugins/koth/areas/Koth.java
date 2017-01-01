@@ -19,15 +19,12 @@ import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.KothHandler;
-import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.Lang;
-import subside.plugins.koth.capture.Capper;
+import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.events.KothChestCreationEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.loot.Loot;
 import subside.plugins.koth.utils.JSONSerializable;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Utils;
 
@@ -58,7 +55,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
         if(loot != null && !loot.equalsIgnoreCase("")){
             return loot;
         }
-        return ConfigHandler.getInstance().getLoot().getDefaultLoot();
+        return kothHandler.getPlugin().getConfigHandler().getLoot().getDefaultLoot();
     }
     
     /** Return a RunningKoth linked to this KoTH if there is running one
@@ -138,10 +135,10 @@ public class Koth implements Capable, JSONSerializable<Koth> {
     }
     
     public Loot getLootChest(String lootChest){
-        Loot loot = kothHandler.getLoot((lootChest == null)?getLoot():lootChest);
+        Loot loot = kothHandler.getPlugin().getLootHandler().getLoot((lootChest == null)?getLoot():lootChest);
         
         if(loot == null){
-            loot = kothHandler.getLoot(ConfigHandler.getInstance().getLoot().getDefaultLoot()); 
+            loot = kothHandler.getPlugin().getLootHandler().getLoot(kothHandler.getPlugin().getConfigHandler().getLoot().getDefaultLoot()); 
         }
         
         return loot;
@@ -175,7 +172,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
             if (usableLoot.size() < 1) return;
 
             Inventory inv = Bukkit.createInventory(null, 54);
-            if (ConfigHandler.getInstance().getLoot().isRandomizeLoot()) {
+            if (kothHandler.getPlugin().getConfigHandler().getLoot().isRandomizeLoot()) {
                 for (int x = 0; x < lootAmount; x++) {
                     if (usableLoot.size() < 1) {
                         break;
@@ -183,12 +180,12 @@ public class Koth implements Capable, JSONSerializable<Koth> {
 
                     // UseItemsMultipleTimes
                     ItemStack uLoot = usableLoot.get(new Random().nextInt(usableLoot.size()));
-                    if (!ConfigHandler.getInstance().getLoot().isUseItemsMultipleTimes()) {
+                    if (!kothHandler.getPlugin().getConfigHandler().getLoot().isUseItemsMultipleTimes()) {
                         usableLoot.remove(uLoot);
                     }
 
                     // Randomize amount of loot or not?
-                    if (ConfigHandler.getInstance().getLoot().isRandomizeStackSize()) {
+                    if (kothHandler.getPlugin().getConfigHandler().getLoot().isRandomizeStackSize()) {
                         int amount = uLoot.getAmount();
                         ItemStack stack = uLoot.clone();
                         stack.setAmount(new Random().nextInt(amount) + 1);
@@ -203,7 +200,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
                 }
             }
 
-            if (ConfigHandler.getInstance().getLoot().isInstantLoot()) {
+            if (kothHandler.getPlugin().getConfigHandler().getLoot().isInstantLoot()) {
                 List<Player> players = this.lastWinner.getAvailablePlayers(this);
                 Player player = players.get(new Random().nextInt(players.size()));
                 
@@ -245,16 +242,16 @@ public class Koth implements Capable, JSONSerializable<Koth> {
                 Chest chest = (Chest) lootPos.getBlock().getState();
                 chest.getInventory().setContents(Arrays.copyOf(inv.getContents(), 27));
 
-                if (ConfigHandler.getInstance().getLoot().getRemoveLootAfterSeconds() < 1) {
+                if (kothHandler.getPlugin().getConfigHandler().getLoot().getRemoveLootAfterSeconds() < 1) {
                     return;
                 }
 
-                Bukkit.getScheduler().runTaskLater(KothPlugin.getPlugin(), new Runnable() {
+                Bukkit.getScheduler().runTaskLater(kothHandler.getPlugin(), new Runnable() {
                     @Override
                     public void run() {
                         removeLootChest();
                     }
-                }, ConfigHandler.getInstance().getLoot().getRemoveLootAfterSeconds() * 20);
+                }, kothHandler.getPlugin().getConfigHandler().getLoot().getRemoveLootAfterSeconds() * 20);
 
             }
 
@@ -269,7 +266,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
      */
     public void removeLootChest() {
         final Koth koth = this;
-        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
+        Bukkit.getScheduler().runTask(kothHandler.getPlugin(), new Runnable() {
             public void run() {
                 if (koth.getLootPos() == null) {
                     return;
@@ -279,7 +276,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
                     return;
                 }
 
-                if (!ConfigHandler.getInstance().getLoot().isDropLootOnRemoval()) {
+                if (!kothHandler.getPlugin().getConfigHandler().getLoot().isDropLootOnRemoval()) {
                     if (koth.getLootPos().getBlock().getState() instanceof Chest) {
                         Chest chest = (Chest) koth.getLootPos().getBlock().getState();
                         Inventory inv = chest.getInventory();
@@ -312,7 +309,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
         this.name = (String)obj.get("name"); //name
         
         if(obj.containsKey("lastWinner")){
-            this.lastWinner = Capper.load((JSONObject)obj.get("lastWinner")); //lastwinner
+            this.lastWinner = Capper.load(kothHandler.getPlugin().getCaptureTypeRegistry(), (JSONObject)obj.get("lastWinner")); //lastwinner
         }
         
         if(obj.containsKey("loot")){

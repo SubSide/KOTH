@@ -4,9 +4,9 @@ import java.util.Random;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.areas.KothHandler;
 import subside.plugins.koth.exceptions.KothNotExistException;
 
 public class StartParams {

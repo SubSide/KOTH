@@ -2,8 +2,9 @@ package subside.plugins.koth.scheduler;
 
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.logging.Level;
 
-import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.utils.Utils;
 
 public enum Day {
@@ -53,10 +54,10 @@ public enum Day {
         return null;
     }
     
-    private long getStartOfWeek(){
+    private long getStartOfWeek(KothPlugin plugin){
         if(startOfWeek <= 0){
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeZone(TimeZone.getTimeZone(ConfigHandler.getInstance().getGlobal().getTimeZone()));
+            calendar.setTimeZone(TimeZone.getTimeZone(plugin.getConfigHandler().getGlobal().getTimeZone()));
             calendar.setFirstDayOfWeek(Calendar.MONDAY);
             calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.clear(Calendar.MINUTE);
@@ -64,11 +65,11 @@ public enum Day {
             calendar.clear(Calendar.MILLISECOND);
     
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-            calendar.add(Calendar.MINUTE, ConfigHandler.getInstance().getGlobal().getStartWeekMinuteOffset());
+            calendar.add(Calendar.MINUTE, plugin.getConfigHandler().getGlobal().getStartWeekMinuteOffset());
     
             startOfWeek = calendar.getTimeInMillis();
-            if(ConfigHandler.getInstance().getGlobal().isDebug()){
-                Utils.log("Schedule start of week has been set to: "+Utils.parseDate(startOfWeek)+" ("+startOfWeek+")");
+            if(plugin.getConfigHandler().getGlobal().isDebug()){
+                plugin.getLogger().log(Level.INFO, "Schedule start of week has been set to: "+Utils.parseDate(startOfWeek)+" ("+startOfWeek+")");
             }
         }
         return startOfWeek;
@@ -93,8 +94,8 @@ public enum Day {
         return null;
     }
 
-    public long getDayStart() {
-        return getStartOfWeek() + (this.ordinal() * 24 * 60 * 60 * 1000);
+    public long getDayStart(KothPlugin plugin) {
+        return getStartOfWeek(plugin) + (this.ordinal() * 24 * 60 * 60 * 1000);
     }
     
     

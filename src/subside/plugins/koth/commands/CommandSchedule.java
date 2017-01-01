@@ -7,12 +7,12 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.Lang;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.scheduler.Day;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.utils.IPerm;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
@@ -74,7 +74,7 @@ public class CommandSchedule extends AbstractCommand {
         List<String> list = new ArrayList<>();
        
         list.add(" ");
-        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_CURRENTDATETIME).date(Utils.parseCurrentDate()).buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_CURRENTDATETIME).date(Utils.parseCurrentDate(getPlugin())).buildArray());
         for (Day day : Day.values()) {
             if(getPlugin().getConfigHandler().getGlobal().isCurrentDayOnly() && day != Day.getCurrentDay())
                 continue;
@@ -206,7 +206,7 @@ public class CommandSchedule extends AbstractCommand {
         List<String> list = new ArrayList<>();
         
         list.add(" ");
-        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME).date(Utils.parseCurrentDate()).buildArray());
+        list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_ADMIN_LIST_CURRENTDATETIME).date(Utils.parseCurrentDate(getPlugin())).buildArray());
         for (Day day : Day.values()) {
             List<String> subList = new ArrayList<>();
             for (Schedule sched : schedules) {

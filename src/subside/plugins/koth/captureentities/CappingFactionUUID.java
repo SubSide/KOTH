@@ -1,4 +1,4 @@
-package subside.plugins.koth.capture;
+package subside.plugins.koth.captureentities;
 
 import java.util.ArrayList;
 import java.util.Collections;

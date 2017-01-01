@@ -1,4 +1,4 @@
-package subside.plugins.koth;
+package subside.plugins.koth.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -7,7 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import subside.plugins.koth.utils.JSONLoader;
+import subside.plugins.koth.AbstractModule;
+import subside.plugins.koth.KothPlugin;
 
 public class Lang extends AbstractModule {
     

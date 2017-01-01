@@ -1,4 +1,4 @@
-package subside.plugins.koth.capture;
+package subside.plugins.koth.captureentities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Capable;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class CapInfo {

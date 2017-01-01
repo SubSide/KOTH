@@ -4,11 +4,11 @@ import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.gamemodes.TimeObject;
 import subside.plugins.koth.scheduler.Schedule;
+import subside.plugins.koth.utils.Lang;
 
 /**
 * Made in collaboration with F64_Rx <3
@@ -77,7 +77,7 @@ public class PlaceholderAPIHook extends EZPlaceholderHook {
         if (identifier.equals(prefix+"player_inarea")) return koth.isInArea(player)?"True":"False";
         
 
-        if(identifier.equals(prefix+"nextevent")) return TimeObject.getTimeTillNextEvent(koth);
+        if(identifier.equals(prefix+"nextevent")) return TimeObject.getTimeTillNextEvent(plugin, koth);
                 
         if(identifier.equals(prefix+"lastwinner")){
             if(koth.getLastWinner() == null) return "";

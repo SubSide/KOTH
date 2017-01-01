@@ -1,4 +1,4 @@
-package subside.plugins.koth.datatable;
+package subside.plugins.koth.commands;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -7,12 +7,11 @@ import java.util.Map.Entry;
 
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.Lang;
-import subside.plugins.koth.capture.Capper;
-import subside.plugins.koth.commands.AbstractCommand;
+import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.IPerm;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 

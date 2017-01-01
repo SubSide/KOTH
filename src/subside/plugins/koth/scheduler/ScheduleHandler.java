@@ -89,7 +89,7 @@ public class ScheduleHandler extends AbstractModule {
             Iterator<?> it = koths.iterator();
             while (it.hasNext()) {
                 try {
-                    Schedule schedule = new Schedule();
+                    Schedule schedule = new Schedule(this);
                     JSONObject schedObj = (JSONObject) it.next();
                     schedObj.put("day", day.getDay());
                     schedule.load((JSONObject) schedObj);

@@ -4,12 +4,12 @@ import org.bukkit.Bukkit;
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
-import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Koth;
-import subside.plugins.koth.capture.CapInfo;
-import subside.plugins.koth.capture.CapInfo.CapStatus;
-import subside.plugins.koth.capture.Capper;
+import subside.plugins.koth.captureentities.CapInfo;
+import subside.plugins.koth.captureentities.Capper;
+import subside.plugins.koth.captureentities.CapInfo.CapStatus;
 import subside.plugins.koth.events.KothEndEvent;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**

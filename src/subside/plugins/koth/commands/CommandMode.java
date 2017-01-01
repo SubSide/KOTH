@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.Lang;
-import subside.plugins.koth.capture.CaptureTypeRegistry;
+import subside.plugins.koth.captureentities.CaptureTypeRegistry;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.gamemodes.GamemodeRegistry;
 import subside.plugins.koth.utils.IPerm;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 

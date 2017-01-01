@@ -1,11 +1,12 @@
-package subside.plugins.koth;
+package subside.plugins.koth.utils;
 
 import org.bukkit.Bukkit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import subside.plugins.koth.AbstractModule;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.gamemodes.RunningKoth;
-import subside.plugins.koth.utils.JSONLoader;
 
 public class CacheHandler extends AbstractModule {
     

@@ -4,7 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Area;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
@@ -12,6 +11,7 @@ import subside.plugins.koth.exceptions.AreaNotExistException;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.KothNotExistException;
 import subside.plugins.koth.utils.IPerm;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 

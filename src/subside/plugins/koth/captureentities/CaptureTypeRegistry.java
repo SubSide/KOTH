@@ -1,4 +1,4 @@
-package subside.plugins.koth.capture;
+package subside.plugins.koth.captureentities;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -104,7 +104,7 @@ public class CaptureTypeRegistry extends AbstractModule {
             return null;
         }
         try {
-            return (Capper)captureTypes.get(captureTypeIdentifier).getDeclaredMethod("getFromUniqueName", String.class).invoke(null, objectUniqueId);
+            return (Capper)captureTypes.get(captureTypeIdentifier).getDeclaredMethod("getFromUniqueName", CaptureTypeRegistry.class, String.class).invoke(null, this, objectUniqueId);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             return null;
         }
@@ -115,7 +115,7 @@ public class CaptureTypeRegistry extends AbstractModule {
         try {
             for(Class<? extends Capper> clazz : getCaptureTypes().values()){
                 if(capperClazz.isAssignableFrom(clazz)){
-                    Capper capper =  clazz.getDeclaredConstructor(List.class).newInstance(players);
+                    Capper capper =  clazz.getDeclaredConstructor(CaptureTypeRegistry.class, List.class).newInstance(this, players);
                     if(capper.getObject() == null){
                         return null;
                     }

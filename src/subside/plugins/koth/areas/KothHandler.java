@@ -1,4 +1,4 @@
-package subside.plugins.koth;
+package subside.plugins.koth.areas;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,8 +13,8 @@ import org.json.simple.JSONObject;
 import com.google.common.collect.Lists;
 
 import lombok.Getter;
-import subside.plugins.koth.areas.Area;
-import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.AbstractModule;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.events.KothInitializeEvent;
 import subside.plugins.koth.events.KothPostUpdateEvent;
 import subside.plugins.koth.events.KothPreUpdateEvent;
@@ -29,6 +29,7 @@ import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
 import subside.plugins.koth.gamemodes.StartParams;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.utils.JSONLoader;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**

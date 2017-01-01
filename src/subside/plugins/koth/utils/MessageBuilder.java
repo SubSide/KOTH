@@ -11,11 +11,11 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.areas.Area;
 import subside.plugins.koth.areas.Capable;
 import subside.plugins.koth.areas.Koth;
-import subside.plugins.koth.capture.Capper;
+import subside.plugins.koth.areas.KothHandler;
+import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.gamemodes.TimeObject;
 import subside.plugins.koth.scheduler.Schedule;
 

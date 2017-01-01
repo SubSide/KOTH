@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.areas.Koth;
-import subside.plugins.koth.capture.Capper;
+import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
 

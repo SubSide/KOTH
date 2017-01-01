@@ -6,14 +6,19 @@ import java.util.List;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
-import subside.plugins.koth.capture.CaptureTypeRegistry;
+import subside.plugins.koth.areas.KothHandler;
+import subside.plugins.koth.captureentities.CaptureTypeRegistry;
 import subside.plugins.koth.commands.CommandHandler;
 import subside.plugins.koth.datatable.DataTable;
+import subside.plugins.koth.events.EventListener;
 import subside.plugins.koth.gamemodes.GamemodeRegistry;
 import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loot.LootHandler;
 import subside.plugins.koth.scheduler.MapRotation;
 import subside.plugins.koth.scheduler.ScheduleHandler;
+import subside.plugins.koth.utils.CacheHandler;
+import subside.plugins.koth.utils.ConfigHandler;
+import subside.plugins.koth.utils.Lang;
 
 public class KothPlugin extends JavaPlugin {
     

@@ -6,9 +6,9 @@ import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.Lang;
 import subside.plugins.koth.exceptions.KothException;
 import subside.plugins.koth.utils.JSONSerializable;
+import subside.plugins.koth.utils.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class Schedule implements JSONSerializable<Schedule> {
@@ -28,8 +28,8 @@ public class Schedule implements JSONSerializable<Schedule> {
     
     private @Getter ScheduleHandler scheduleHandler;
 
-    public Schedule(){
-        
+    public Schedule(ScheduleHandler scheduleHandler){
+        this.scheduleHandler = scheduleHandler;
     }
     
     public Schedule(ScheduleHandler scheduleHandler, String koth, Day day, String time) {
@@ -42,7 +42,7 @@ public class Schedule implements JSONSerializable<Schedule> {
     }
 
     public void calculateNextEvent() {
-        long eventTime = day.getDayStart() + Day.getTime(time) - WEEK;
+        long eventTime = day.getDayStart(scheduleHandler.getPlugin()) + Day.getTime(time) - WEEK;
 
         while (eventTime < System.currentTimeMillis()) {
             eventTime += WEEK;
