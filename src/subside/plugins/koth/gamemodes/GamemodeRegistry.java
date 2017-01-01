@@ -5,12 +5,15 @@ import java.util.HashMap;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.AbstractModule;
+import subside.plugins.koth.KothPlugin;
 
 public class GamemodeRegistry extends AbstractModule {
     private @Getter HashMap<String, Class<? extends RunningKoth>> gamemodes;
     private @Getter @Setter String currentMode;
     
-    public GamemodeRegistry(){
+    public GamemodeRegistry(KothPlugin plugin){
+        super(plugin);
+        
         gamemodes = new HashMap<>();
         currentMode = "classic";
     }

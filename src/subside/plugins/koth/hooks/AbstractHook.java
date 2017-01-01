@@ -1,16 +1,21 @@
 package subside.plugins.koth.hooks;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+
+import subside.plugins.koth.KothPlugin;
 
 public abstract class AbstractHook {
-    protected JavaPlugin plugin;
+    protected HookManager hookManager;
     
-    public AbstractHook(JavaPlugin plugin){
-        this.plugin = plugin;
+    public AbstractHook(HookManager hookManager){
+        this.hookManager = hookManager;
     }
     
     public boolean canCap(Player player){ return true; }
     public void tick(){}
     public abstract boolean isEnabled();
+    
+    public KothPlugin getPlugin(){
+        return hookManager.getPlugin();
+    }
 }

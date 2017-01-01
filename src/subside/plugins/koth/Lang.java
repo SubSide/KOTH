@@ -1,22 +1,17 @@
 package subside.plugins.koth;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import subside.plugins.koth.utils.Utils;
+import subside.plugins.koth.utils.JSONLoader;
 
-public class Lang {
+public class Lang extends AbstractModule {
+    
+    
 
     public static String[] KOTH_PLAYING_CAP_CHANNELING = new String[]{"&aChanneling started for %capper%, stay on the point for just %time% seconds!"};
     public static String[] KOTH_PLAYING_CAP_CHANNELING_CAPPER = new String[]{"&aYou started channeling the KoTH, just stay on the point for %time% seconds!"};
@@ -163,132 +158,117 @@ public class Lang {
     public static String[] COMMAND_NEXT_MESSAGE = new String[]{ "&aThe next KoTH \"%koth%\" will start in: %ttn%" };
     public static String[] COMMAND_NEXT_NO_NEXT_FOUND = new String[]{ "&aThere are no scheduled KoTH's!" };
 
+    
+    public Lang(KothPlugin plugin){
+        super(plugin);
+    }
+    
+    @Override
+    public void onLoad(){
+        try {
+            load(plugin);
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Override
+    public void onDisable(){
+        try {
+            save(plugin);
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+    
 	@SuppressWarnings("unchecked")
-    public static void load(JavaPlugin plugin) {
-		try {
+    public static void load(JavaPlugin plugin) throws IllegalArgumentException, IllegalAccessException {
+		Object obj = new JSONLoader(plugin, "lang.json").load();
+		
+		if(obj == null)
+		    return;
+		
+		JSONObject jsonObject2 = (JSONObject) obj;
 
-			if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json").exists()) {
-				save(plugin);
-				return;
+		Field[] fields = Lang.class.getFields();
+		for (Field field : fields) {
+			try {
+				if (!Modifier.isStatic(field.getModifiers()))
+				    continue;
+				
+				// This is just to check if it is able to find the JSON Object in the file //
+			    String[] fieldName = field.getName().split("_", 3);
+			    if(!jsonObject2.containsKey(fieldName[0]))
+			        continue;
+			    
+			    JSONObject jsonObject3 = (JSONObject)jsonObject2.get(fieldName[0]);
+			    if(!jsonObject3.containsKey(fieldName[1]))
+		            continue;
+			    
+		        JSONObject jsonObject = (JSONObject)jsonObject3.get(fieldName[1]);
+				if(!jsonObject.containsKey(fieldName[2]))
+		            continue;
+		        
+			    Object strObj = jsonObject.get(fieldName[2]);
+			    // //
+			    
+			    
+			    if(strObj instanceof String){
+                    field.set(null, new String[]{(String)strObj});
+			    } else {
+			        JSONArray strArray = (JSONArray)strObj;
+                    field.set(null, strArray.toArray(new String[strArray.size()]));
+			    }
+				
+			} catch(Exception e){
+			    e.printStackTrace();
 			}
-			JSONParser parser = new JSONParser();
-			//Object obj = parser.parse(new FileReader(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json"));
-			Object obj = parser.parse(new InputStreamReader(new FileInputStream(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json"), "UTF-8"));
-			JSONObject jsonObject2 = (JSONObject) obj;
-
-			Field[] fields = Lang.class.getFields();
-			for (Field field : fields) {
-				try {
-					if (!Modifier.isStatic(field.getModifiers()))
-					    continue;
-					
-					// This is just to check if it is able to find the JSON Object in the file //
-				    String[] fieldName = field.getName().split("_", 3);
-				    if(!jsonObject2.containsKey(fieldName[0]))
-				        continue;
-				    
-				    JSONObject jsonObject3 = (JSONObject)jsonObject2.get(fieldName[0]);
-				    if(!jsonObject3.containsKey(fieldName[1]))
-			            continue;
-				    
-			        JSONObject jsonObject = (JSONObject)jsonObject3.get(fieldName[1]);
-					if(!jsonObject.containsKey(fieldName[2]))
-			            continue;
-			        
-				    Object strObj = jsonObject.get(fieldName[2]);
-				    // //
-				    
-				    
-				    if(strObj instanceof String){
-                        field.set(null, new String[]{(String)strObj});
-				    } else {
-				        JSONArray strArray = (JSONArray)strObj;
-                        field.set(null, strArray.toArray(new String[strArray.size()]));
-				    }
-					
-			        
-				    
-					
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			save(plugin);
 		}
-		catch (Exception e) {
-		    KothPlugin.getPlugin().getLogger().warning("///// LANG FILE NOT FOUND OR NOT CORRECTLY SET UP ////");
-		    KothPlugin.getPlugin().getLogger().warning("Will use default variables instead.");
-		    KothPlugin.getPlugin().getLogger().warning("You could try to delete the lang.json in the plugin folder.");
-
-			e.printStackTrace();
-		}
+			
+		save(plugin);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void save(JavaPlugin plugin) {
-		try {
+	public static void save(JavaPlugin plugin) throws IllegalArgumentException, IllegalAccessException {
 
-			if (!new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json").exists()) {
-				plugin.getDataFolder().mkdirs();
-				new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json").createNewFile();
-			}
+		JSONObject obj = new JSONObject();
 
-			JSONObject obj = new JSONObject();
-
-			Field[] fields = Lang.class.getFields();
-			for (Field field : fields) {
-				if (!Modifier.isStatic(field.getModifiers())) {
-				    continue;
-				}
-				
-			    String[] fieldName = field.getName().split("_", 3);
-			    JSONObject obj2 = new JSONObject();
-			    if(obj.containsKey(fieldName[0])){
-			        obj2 = (JSONObject)obj.get(fieldName[0]);
-			    }
-			    
-			    JSONObject obj3 = new JSONObject();
-			    if(obj2.containsKey(fieldName[1])){
-			        obj3 = (JSONObject)obj2.get(fieldName[1]);
-			    }
-			    
-			    
-			    String[] strObj = (String[])field.get(null);
-			    if(strObj.length > 1){
-			        JSONArray obj4 = new JSONArray();
-			        String[] fieldObj = (String[])field.get(null);
-			        for(String str : fieldObj){
-			            obj4.add(str);
-			        }
-                    obj3.put(fieldName[2], obj4);
-			    } else if(strObj.length == 1) {
-			        obj3.put(fieldName[2], strObj[0]);
-			    } else {
-			        obj3.put(fieldName[2], new String[]{});
-			    }
-			    
-			    obj2.put(fieldName[1], obj3);
-			    obj.put(fieldName[0], obj2);
-				
+		Field[] fields = Lang.class.getFields();
+		for (Field field : fields) {
+			if (!Modifier.isStatic(field.getModifiers())) {
+			    continue;
 			}
-
-			FileOutputStream fileStream = new FileOutputStream(new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + "lang.json"));
-			OutputStreamWriter file = new OutputStreamWriter(fileStream, "UTF-8");
-			try {
-				file.write(Utils.getGson(obj.toJSONString()));
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-
-			}
-			finally {
-				file.flush();
-				file.close();
-			}
+			
+		    String[] fieldName = field.getName().split("_", 3);
+		    JSONObject obj2 = new JSONObject();
+		    if(obj.containsKey(fieldName[0])){
+		        obj2 = (JSONObject)obj.get(fieldName[0]);
+		    }
+		    
+		    JSONObject obj3 = new JSONObject();
+		    if(obj2.containsKey(fieldName[1])){
+		        obj3 = (JSONObject)obj2.get(fieldName[1]);
+		    }
+		    
+		    
+		    String[] strObj = (String[])field.get(null);
+		    if(strObj.length > 1){
+		        JSONArray obj4 = new JSONArray();
+		        String[] fieldObj = (String[])field.get(null);
+		        for(String str : fieldObj){
+		            obj4.add(str);
+		        }
+                obj3.put(fieldName[2], obj4);
+		    } else if(strObj.length == 1) {
+		        obj3.put(fieldName[2], strObj[0]);
+		    } else {
+		        obj3.put(fieldName[2], new String[]{});
+		    }
+		    
+		    obj2.put(fieldName[1], obj3);
+		    obj.put(fieldName[0], obj2);
 		}
-		catch (Exception e) {
-		    e.printStackTrace();
-		}
+		
+		new JSONLoader(plugin, "lang.json").save(obj);
 	}
 }

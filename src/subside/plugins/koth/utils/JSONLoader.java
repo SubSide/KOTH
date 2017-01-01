@@ -1,4 +1,4 @@
-package subside.plugins.koth.loaders;
+package subside.plugins.koth.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;

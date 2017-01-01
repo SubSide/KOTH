@@ -4,18 +4,17 @@ import java.util.Random;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.KothHandler;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.exceptions.KothNotExistException;
-import subside.plugins.koth.scheduler.MapRotation;
 
 public class StartParams {
         private @Getter @Setter Koth koth;
         private @Getter @Setter String gamemode = "classic";
         private @Getter @Setter int captureTime = 15*60;
         private @Getter @Setter int maxRunTime = -1;
-        private @Getter @Setter int lootAmount = ConfigHandler.getInstance().getLoot().getLootAmount();
+        private @Getter @Setter int lootAmount = 5;
         private @Setter String lootChest = null;
         private @Getter @Setter boolean isScheduled = false;
         private @Getter @Setter String entityType = null;
@@ -25,17 +24,21 @@ public class StartParams {
             return koth.getLoot();
         }
         
-        public StartParams(String kth){
-        	gamemode = KothHandler.getInstance().getGamemodeRegistry().getCurrentMode();
+        public StartParams(KothHandler kothHandler, String kth) throws KothNotExistException{
+            KothPlugin plugin = kothHandler.getPlugin();
+            
+            this.lootAmount = plugin.getConfigHandler().getLoot().getLootAmount();
+            
+        	gamemode = plugin.getGamemodeRegistry().getCurrentMode();
             if (kth.equalsIgnoreCase("$random")) {
-                if (KothHandler.getInstance().getAvailableKoths().size() > 0) {
-                    kth = KothHandler.getInstance().getAvailableKoths().get(new Random().nextInt(KothHandler.getInstance().getAvailableKoths().size())).getName();
+                if (plugin.getKothHandler().getAvailableKoths().size() > 0) {
+                    kth = plugin.getKothHandler().getAvailableKoths().get(new Random().nextInt(plugin.getKothHandler().getAvailableKoths().size())).getName();
                 }
             } else if(kth.equalsIgnoreCase("$rotation")){
-                kth = MapRotation.getInstance().getNext();
+                kth = plugin.getScheduleHandler().getMapRotation().getNext();
             }
 
-            for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
+            for (Koth koth : plugin.getKothHandler().getAvailableKoths()) {
                 if (koth.getName().equalsIgnoreCase(kth)) {
                     this.koth = koth;
                     return;

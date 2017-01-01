@@ -4,21 +4,18 @@ import org.bukkit.Bukkit;
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
-import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.KothHandler;
-import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.capture.CapInfo;
-import subside.plugins.koth.capture.Capper;
 import subside.plugins.koth.capture.CapInfo.CapStatus;
+import subside.plugins.koth.capture.Capper;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
  * @author Thomas "SubSide" van den Bulk
  */
-public class KothClassic implements RunningKoth {
+public class KothClassic extends RunningKoth {
     private @Getter Koth koth;
     private @Getter CapInfo capInfo;
     private int captureTime;
@@ -33,6 +30,10 @@ public class KothClassic implements RunningKoth {
     
     private CapStatus prevStatus = CapStatus.EMPTY;
     
+    public KothClassic(GamemodeRegistry gamemodeRegistry){
+        super(gamemodeRegistry);
+    }
+    
     @Override
     public void init(StartParams params){
         this.koth = params.getKoth();
@@ -43,8 +44,8 @@ public class KothClassic implements RunningKoth {
         this.maxRunTime = params.getMaxRunTime() * 60;
         
         this.timeNotCapped = 0;
-        this.capInfo = new CapInfo(this, this.koth, KothHandler.getInstance().getCapEntityRegistry().getCaptureTypeClass(params.getEntityType()));
-        if(ConfigHandler.getInstance().getKoth().isRemoveChestAtStart()){
+        this.capInfo = new CapInfo(this, this.koth, getPlugin().getCaptureTypeRegistry().getCaptureTypeClass(params.getEntityType()));
+        if(getPlugin().getConfigHandler().getKoth().isRemoveChestAtStart()){
             koth.removeLootChest();
         }
         koth.setLastWinner(null);
@@ -73,7 +74,7 @@ public class KothClassic implements RunningKoth {
             }
         } else if (reason == EndReason.TIMEUP) {
             new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP).maxTime(maxRunTime).koth(koth).buildAndBroadcast();
-            shouldTriggerLoot = ConfigHandler.getInstance().getKoth().isFfaChestTimeLimit();
+            shouldTriggerLoot = getPlugin().getConfigHandler().getKoth().isFfaChestTimeLimit();
         } else if(reason == EndReason.FORCED){
             shouldTriggerLoot = false;
         }
@@ -86,7 +87,7 @@ public class KothClassic implements RunningKoth {
 
         koth.setLastWinner(capInfo.getCapper());
         if (event.isTriggerLoot()) {
-            Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
+            Bukkit.getScheduler().runTask(getPlugin(), new Runnable() {
                 public void run() {
                     koth.triggerLoot(lootAmount, lootChest);
                 }
@@ -95,9 +96,9 @@ public class KothClassic implements RunningKoth {
         
         
         final KothClassic thisObj = this;
-        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
+        Bukkit.getScheduler().runTask(getPlugin(), new Runnable() {
             public void run() {
-                KothHandler.getInstance().remove(thisObj);
+                getPlugin().getKothHandler().removeRunningKoth(thisObj);
             }
         });
     }
@@ -116,7 +117,7 @@ public class KothClassic implements RunningKoth {
         CapStatus status = capInfo.update();
         
         if(prevStatus == CapStatus.CAPPING && status == CapStatus.EMPTY){
-            captureCooldown = ConfigHandler.getInstance().getKoth().getCaptureCooldown();
+            captureCooldown = getPlugin().getConfigHandler().getKoth().getCaptureCooldown();
         }
         prevStatus = status;
         
@@ -138,7 +139,7 @@ public class KothClassic implements RunningKoth {
             return;
         }
         
-        if(ConfigHandler.getInstance().getGlobal().getNoCapBroadcastInterval() != 0 && timeNotCapped % ConfigHandler.getInstance().getGlobal().getNoCapBroadcastInterval() == 0) {
+        if(getPlugin().getConfigHandler().getGlobal().getNoCapBroadcastInterval() != 0 && timeNotCapped % getPlugin().getConfigHandler().getGlobal().getNoCapBroadcastInterval() == 0) {
             new MessageBuilder(Lang.KOTH_PLAYING_NOT_CAPPING).maxTime(maxRunTime).time(getTimeObject()).koth(koth).buildAndBroadcast();
         }
 
@@ -160,7 +161,7 @@ public class KothClassic implements RunningKoth {
     public JSONObject save(){
         JSONObject obj = new JSONObject();
         obj.put("koth", koth.getName());
-        obj.put("capperType", KothHandler.getInstance().getCapEntityRegistry().getIdentifierFromClass(capInfo.getOfType()));
+        obj.put("capperType", getPlugin().getCaptureTypeRegistry().getIdentifierFromClass(capInfo.getOfType()));
         obj.put("capperTime", capInfo.getTimeCapped());
         if(capInfo.getCapper() != null){
             obj.put("capperEntity", capInfo.getCapper().getUniqueObjectIdentifier());
@@ -177,11 +178,11 @@ public class KothClassic implements RunningKoth {
     }
     
     public KothClassic load(JSONObject obj){
-        this.koth = KothHandler.getInstance().getKoth((String)obj.get("koth"));
-        this.capInfo = new CapInfo(this, this.koth, KothHandler.getInstance().getCapEntityRegistry().getCaptureClass((String)obj.get("capperType")));
+        this.koth = getPlugin().getKothHandler().getKoth((String)obj.get("koth"));
+        this.capInfo = new CapInfo(this, this.koth, getPlugin().getCaptureTypeRegistry().getCaptureClass((String)obj.get("capperType")));
         this.capInfo.setTimeCapped((int) (long) obj.get("capperTime"));
         if(obj.containsKey("capperEntity")){
-            this.capInfo.setCapper(KothHandler.getInstance().getCapEntityRegistry().getCapperFromType((String)obj.get("capperType"), (String)obj.get("capperEntity")));
+            this.capInfo.setCapper(getPlugin().getCaptureTypeRegistry().getCapperFromType((String)obj.get("capperType"), (String)obj.get("capperEntity")));
         }
         
         this.captureTime = (int) (long) obj.get("captureTime");

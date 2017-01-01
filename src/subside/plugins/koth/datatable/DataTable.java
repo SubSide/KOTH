@@ -10,23 +10,21 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
 import lombok.Getter;
+import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.KothHandler;
-import subside.plugins.koth.KothHandler.CapEntityRegistry;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.capture.Capper;
+import subside.plugins.koth.capture.CaptureTypeRegistry;
 
-public class DataTable {
-    private @Getter JavaPlugin plugin;
+public class DataTable extends AbstractModule {
     private @Getter IDatabase databaseProvider;
     
-    public DataTable(JavaPlugin plugin){
-        this.plugin = plugin;
+    public DataTable(KothPlugin plugin){
+        super(plugin);
         
         try {
-            ConfigHandler.Database cDB = ConfigHandler.getInstance().getDatabase();
+            ConfigHandler.Database cDB = plugin.getConfigHandler().getDatabase();
             if(cDB.getStoragetype().equalsIgnoreCase("sqlite")){
                 databaseProvider = new SQLite(plugin);
                 this.plugin.getLogger().log(Level.INFO, "Connected to the SQLite server!");
@@ -119,7 +117,7 @@ public class DataTable {
             
             ResultSet result = sQB.execute();
             
-            CaptureTypeRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
+            CaptureTypeRegistry cER = plugin.getCaptureTypeRegistry();
             while(result.next()){
                 top.add(new SimpleEntry<Capper, Integer>(cER.getCapperFromType(result.getString("capper_type"), result.getString("capper_uuid")), result.getInt("result")));
             }

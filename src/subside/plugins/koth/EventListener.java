@@ -1,5 +1,7 @@
 package subside.plugins.koth;
 
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Chest;
@@ -14,16 +16,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.events.KothOpenChestEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
-import subside.plugins.koth.loaders.LootLoader;
 import subside.plugins.koth.loot.Loot;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
-import subside.plugins.koth.utils.Utils;
 
 public class EventListener extends AbstractModule implements Listener {
     
@@ -56,7 +55,7 @@ public class EventListener extends AbstractModule implements Listener {
 
         Chest chest = (Chest) e.getInventory().getHolder();
         Location loc = chest.getLocation();
-        for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
+        for (Koth koth : plugin.getKothHandler().getAvailableKoths()) {
             try {
                 Location vec = koth.getLootPos();
                 if (vec == null || loc.getWorld() != vec.getWorld() || loc.getBlockX() != vec.getBlockX() || loc.getBlockY() != vec.getBlockY() || loc.getBlockZ() != vec.getBlockZ())
@@ -65,12 +64,11 @@ public class EventListener extends AbstractModule implements Listener {
                 KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
                 event.setCancelled(true);
                 try {
-                    if(Perm.Admin.BYPASS.has((Player) e.getPlayer()) || (ConfigHandler.getInstance().getKoth().isFfaChestTimeLimit() && koth.getLastWinner() == null && koth.getRunningKoth() == null) || (koth.getLastWinner() != null && koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer()))){
+                    if(Perm.Admin.BYPASS.has((Player) e.getPlayer()) || (plugin.getConfigHandler().getKoth().isFfaChestTimeLimit() && koth.getLastWinner() == null && koth.getRunningKoth() == null) || (koth.getLastWinner() != null && koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer()))){
                         event.setCancelled(false);
                     }
                 } catch(Exception f){
-                    Utils.log("Whoops, something went wrong, please contact the developer!");
-                    f.printStackTrace();
+                    plugin.getLogger().log(Level.WARNING, "Whoops, something went wrong, please contact the developer!", f);
                 }
                 
                 Bukkit.getServer().getPluginManager().callEvent(event);
@@ -94,7 +92,7 @@ public class EventListener extends AbstractModule implements Listener {
         if (Perm.Admin.BYPASS.has((Player) e.getPlayer())) return;
 
         Location loc = e.getBlock().getLocation();
-        for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
+        for (Koth koth : plugin.getKothHandler().getAvailableKoths()) {
             Location vec = koth.getLootPos();
             if (vec == null) continue;
             if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
@@ -108,7 +106,7 @@ public class EventListener extends AbstractModule implements Listener {
     public void onBlockPlace(BlockPlaceEvent e) {
         if (Perm.Admin.BYPASS.has((Player) e.getPlayer())) return;
         Location loc = e.getBlock().getLocation();
-        for (Koth koth : KothHandler.getInstance().getAvailableKoths()) {
+        for (Koth koth : plugin.getKothHandler().getAvailableKoths()) {
             Location vec = koth.getLootPos();
             if (vec == null) continue;
             if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
@@ -123,7 +121,7 @@ public class EventListener extends AbstractModule implements Listener {
             return;
         }
         
-        for(Loot loot : KothHandler.getInstance().getLoots()){
+        for(Loot loot : plugin.getLootHandler().getLoots()){
             if(event.getInventory().equals(loot.getInventory())){
                 event.setCancelled(true);
             }
@@ -137,9 +135,9 @@ public class EventListener extends AbstractModule implements Listener {
             return;
         }
         
-        for (Loot loot : KothHandler.getInstance().getLoots()) {
+        for (Loot loot : plugin.getLootHandler().getLoots()) {
             if (event.getInventory().equals(loot.getInventory())) {
-                LootLoader.save();
+                plugin.getLootHandler().save();
                 return;
             }
         }
@@ -148,8 +146,8 @@ public class EventListener extends AbstractModule implements Listener {
     
     @EventHandler(priority=EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event){
-        if(KothHandler.getInstance().getRunningKoth() != null){
-            RunningKoth koth = KothHandler.getInstance().getRunningKoth();
+        if(plugin.getKothHandler().getRunningKoth() != null){
+            RunningKoth koth = plugin.getKothHandler().getRunningKoth();
             new MessageBuilder(Lang.KOTH_PLAYING_PLAYER_JOINING).koth(koth.getKoth()).buildAndSend(event.getPlayer());
         }
     }

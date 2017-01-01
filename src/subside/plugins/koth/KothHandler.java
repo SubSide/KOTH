@@ -22,16 +22,16 @@ import subside.plugins.koth.events.KothStartEvent;
 import subside.plugins.koth.exceptions.AnotherKothAlreadyRunningException;
 import subside.plugins.koth.exceptions.KothAlreadyExistException;
 import subside.plugins.koth.exceptions.KothAlreadyRunningException;
+import subside.plugins.koth.exceptions.KothException;
 import subside.plugins.koth.exceptions.KothNotExistException;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
 import subside.plugins.koth.gamemodes.StartParams;
 import subside.plugins.koth.hooks.HookManager;
-import subside.plugins.koth.loaders.JSONLoader;
-import subside.plugins.koth.loaders.KothLoader;
 import subside.plugins.koth.loot.Loot;
 import subside.plugins.koth.scheduler.Schedule;
 import subside.plugins.koth.scheduler.ScheduleHandler;
+import subside.plugins.koth.utils.JSONLoader;
 import subside.plugins.koth.utils.MessageBuilder;
 
 /**
@@ -126,8 +126,8 @@ public class KothHandler extends AbstractModule implements Runnable {
         runningKoths.add(runningKoth);
     }
     
-    public void startKoth(Schedule schedule){
-        StartParams params = new StartParams(schedule.getKoth());
+    public void startKoth(Schedule schedule) throws KothException {
+        StartParams params = new StartParams(this, schedule.getKoth());
         params.setCaptureTime(schedule.getCaptureTime()*60);
         params.setMaxRunTime(schedule.getMaxRunTime());
         params.setLootAmount(schedule.getLootAmount());
@@ -148,8 +148,9 @@ public class KothHandler extends AbstractModule implements Runnable {
      * @param lootChest         The lootchest it should use (null for default config settings)
      * @param entityType        The entity type that should be able to cap the KoTH (Players, Factions etc.)
      * @param isScheduled       This is used to see if it should obey stuff like minimumPlayers
+     * @throws                  KothException 
      */
-    public void startKoth(StartParams params) {
+    public void startKoth(StartParams params) throws KothException {
         synchronized (runningKoths) {
             for (RunningKoth rKoth : runningKoths) {
                 if (rKoth.getKoth() == params.getKoth()) {
@@ -159,13 +160,13 @@ public class KothHandler extends AbstractModule implements Runnable {
             KothStartEvent event = new KothStartEvent(params.getKoth(), params.getCaptureTime(), params.getMaxRunTime(), params.isScheduled(), params.getEntityType());
             
             boolean anotherAlreadyRunning = false;
-            if(this.getRunningKoth() != null && !ConfigHandler.getInstance().getGlobal().isMultipleKothsAtOnce()){
+            if(this.getRunningKoth() != null && !plugin.getConfigHandler().getGlobal().isMultipleKothsAtOnce()){
                 event.setCancelled(true);
                 anotherAlreadyRunning = true;
             }
             
             boolean minimumNotMet = false;
-            if (params.isScheduled() && Lists.newArrayList(Bukkit.getOnlinePlayers()).size() < ConfigHandler.getInstance().getKoth().getMinimumPlayersNeeded()) {
+            if (params.isScheduled() && Lists.newArrayList(Bukkit.getOnlinePlayers()).size() < plugin.getConfigHandler().getKoth().getMinimumPlayersNeeded()) {
                 event.setCancelled(true);
                 minimumNotMet = true;
             }
@@ -173,7 +174,7 @@ public class KothHandler extends AbstractModule implements Runnable {
             Bukkit.getServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
-                RunningKoth rKoth = this.getGamemodeRegistry().createGame(params.getGamemode());
+                RunningKoth rKoth = plugin.getGamemodeRegistry().createGame(params.getGamemode());
                 rKoth.init(params);
                 addRunningKoth(rKoth);
             } else if(anotherAlreadyRunning) {
@@ -198,7 +199,7 @@ public class KothHandler extends AbstractModule implements Runnable {
             Koth koth = new Koth(this, name);
             koth.getAreas().add(new Area(name, min, max));
             availableKoths.add(koth);
-            KothLoader.save();
+            saveKoths();
         } else {
             throw new KothAlreadyExistException(name);
         }
@@ -217,23 +218,7 @@ public class KothHandler extends AbstractModule implements Runnable {
         }
 
         availableKoths.remove(koth);
-        KothLoader.save();
-    }
-
-
-    /** Get a loot by name
-     * 
-     * @param name      The name of the loot chest
-     * @return          The loot object
-     */
-    public Loot getLoot(String name){
-        if(name == null) return null;
-        for(Loot loot : loots){
-            if(loot.getName().equalsIgnoreCase(name)){
-                return loot;
-            }
-        }
-        return null;
+        saveKoths();
     }
 
     /** Get a KoTH by name

@@ -1,16 +1,15 @@
 package subside.plugins.koth.scheduler;
 
+import java.util.logging.Level;
+
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.exceptions.KothAlreadyRunningException;
+import subside.plugins.koth.exceptions.KothException;
 import subside.plugins.koth.utils.JSONSerializable;
 import subside.plugins.koth.utils.MessageBuilder;
-import subside.plugins.koth.utils.Utils;
 
 public class Schedule implements JSONSerializable<Schedule> {
     private long nextEventMillis;
@@ -26,12 +25,15 @@ public class Schedule implements JSONSerializable<Schedule> {
     private @Getter boolean isBroadcasted = false;
     
     private static final long WEEK = 7 * 24 * 60 * 60 * 1000;
+    
+    private @Getter ScheduleHandler scheduleHandler;
 
     public Schedule(){
         
     }
     
-    public Schedule(String koth, Day day, String time) {
+    public Schedule(ScheduleHandler scheduleHandler, String koth, Day day, String time) {
+        this.scheduleHandler = scheduleHandler;
         this.koth = koth;
         this.day = day;
         this.time = time;
@@ -47,15 +49,15 @@ public class Schedule implements JSONSerializable<Schedule> {
         }
         nextEventMillis = eventTime;
         
-        if(ConfigHandler.getInstance().getGlobal().isDebug()){
-            Utils.log("Schedule created for: "+day+" "+time+" "+nextEventMillis);
+        if(scheduleHandler.getPlugin().getConfigHandler().getGlobal().isDebug()){
+            scheduleHandler.getPlugin().getLogger().log(Level.WARNING, "Schedule created for: "+day+" "+time+" "+nextEventMillis);
         }
     }
 
     public void tick() {
-        if (ConfigHandler.getInstance().getGlobal().getPreBroadcast() != 0) {
+        if (scheduleHandler.getPlugin().getConfigHandler().getGlobal().getPreBroadcast() != 0) {
             if(!isBroadcasted){
-                if (System.currentTimeMillis() + 1000 * 60 * ConfigHandler.getInstance().getGlobal().getPreBroadcast() > nextEventMillis) {
+                if (System.currentTimeMillis() + 1000 * 60 * scheduleHandler.getPlugin().getConfigHandler().getGlobal().getPreBroadcast() > nextEventMillis) {
                     isBroadcasted = true;
                     new MessageBuilder(Lang.KOTH_PLAYING_PRE_BROADCAST).maxTime(maxRunTime).captureTime(captureTime).lootAmount(lootAmount).koth(koth).buildAndBroadcast();
                 }
@@ -66,9 +68,9 @@ public class Schedule implements JSONSerializable<Schedule> {
             setNextEventTime();
             isBroadcasted = false;
             try {
-                KothHandler.getInstance().startKoth(this);
-            } catch(KothAlreadyRunningException e){
-                Utils.log("Koth is already running");
+                scheduleHandler.getPlugin().getKothHandler().startKoth(this);
+            } catch(KothException e){
+                scheduleHandler.getPlugin().getLogger().log(Level.WARNING, "Koth is already running");
             }
         }
     }
@@ -127,7 +129,7 @@ public class Schedule implements JSONSerializable<Schedule> {
             obj.put("maxRunTime", this.maxRunTime); // maxRunTime
         }
 
-        if (lootAmount != -1 || lootAmount == ConfigHandler.getInstance().getLoot().getLootAmount()) {
+        if (lootAmount != -1 || lootAmount == scheduleHandler.getPlugin().getConfigHandler().getLoot().getLootAmount()) {
             obj.put("lootAmount", this.lootAmount); // lootAmount
         }
 

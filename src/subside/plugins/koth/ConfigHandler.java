@@ -1,12 +1,12 @@
 package subside.plugins.koth;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import lombok.Getter;
-import subside.plugins.koth.scheduler.MapRotation;
 
 public class ConfigHandler extends AbstractModule {
     
@@ -134,6 +134,7 @@ public class ConfigHandler extends AbstractModule {
         private @Getter boolean ffaChestTimeLimit = false;
         private @Getter int minimumPlayersNeeded = 0;
         private @Getter String defaultCaptureType = "Player";
+        private @Getter List<String> mapRotation = new ArrayList<>();
         
         public Koth(ConfigurationSection section){
             removeChestAtStart = section.getBoolean("remove-chest-at-start");
@@ -144,7 +145,7 @@ public class ConfigHandler extends AbstractModule {
             captureCooldown = section.getInt("capture-cooldown");
             minimumPlayersNeeded = section.getInt("minimum-players");
             defaultCaptureType = section.getString("default-capturetype");
-            new MapRotation(section.getStringList("map-rotation"));
+            mapRotation = section.getStringList("map-rotation");
         }
     }
     

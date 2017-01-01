@@ -1,24 +1,25 @@
 package subside.plugins.koth.hooks.plugins;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import me.clip.placeholderapi.external.EZPlaceholderHook;
-import subside.plugins.koth.KothHandler;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.gamemodes.TimeObject;
 import subside.plugins.koth.scheduler.Schedule;
-import subside.plugins.koth.scheduler.ScheduleHandler;
 
 /**
 * Made in collaboration with F64_Rx <3
 */
 public class PlaceholderAPIHook extends EZPlaceholderHook {
-
-    public PlaceholderAPIHook(Plugin plugin) {
+    KothPlugin plugin;
+    
+    public PlaceholderAPIHook(KothPlugin plugin) {
         super(plugin, "koth");
+        
+        this.plugin = plugin;
     }
 
     @Override
@@ -29,14 +30,14 @@ public class PlaceholderAPIHook extends EZPlaceholderHook {
         
         
         // Loop over all all live KoTH's
-        for(Koth koth : KothHandler.getInstance().getAvailableKoths()){
+        for(Koth koth : plugin.getKothHandler().getAvailableKoths()){
             String replacer = replaceHolders(identifier, "live_"+koth.getName().toLowerCase()+"_", koth, player);
             if(replacer != null) return replacer;
         }
         
         // Loop over all schedules.
-        if(ScheduleHandler.getInstance().getNextEvent() != null){
-            Schedule schedule = ScheduleHandler.getInstance().getNextEvent();
+        if(plugin.getScheduleHandler().getNextEvent() != null){
+            Schedule schedule = plugin.getScheduleHandler().getNextEvent();
             if(schedule == null) return "";
             
             if(schedule.getKoth().startsWith("$")){
@@ -46,7 +47,7 @@ public class PlaceholderAPIHook extends EZPlaceholderHook {
                 return "???";
             }
             
-            Koth koth = KothHandler.getInstance().getKoth(schedule.getKoth());
+            Koth koth = plugin.getKothHandler().getKoth(schedule.getKoth());
             if(koth == null) return "";
             
             String replacer = replaceHolders(identifier, "next_", koth, player);
@@ -54,9 +55,9 @@ public class PlaceholderAPIHook extends EZPlaceholderHook {
         }
         
         // Check if  there is a running KoTH
-        if (KothHandler.getInstance().getRunningKoth() == null) return "";
+        if (plugin.getKothHandler().getRunningKoth() == null) return "";
         
-        RunningKoth rKoth = KothHandler.getInstance().getRunningKoth();
+        RunningKoth rKoth = plugin.getKothHandler().getRunningKoth();
         if (rKoth == null) return "";
         
         String replacer = replaceHolders(identifier, "", rKoth.getKoth(), player);

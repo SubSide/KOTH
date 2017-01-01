@@ -10,8 +10,6 @@ import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.KothHandler;
-import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Area;
 import subside.plugins.koth.areas.Koth;
@@ -25,7 +23,7 @@ import subside.plugins.koth.utils.MessageBuilder;
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class KothConquest implements RunningKoth {
+public class KothConquest extends RunningKoth {
     private @Getter Koth koth;
     private @Getter String lootChest;
     private @Getter int lootAmount;
@@ -37,7 +35,10 @@ public class KothConquest implements RunningKoth {
     private @Getter List<FactionScore> fScores;
     private int runTime;
 
-
+    public KothConquest(GamemodeRegistry gamemodeRegistry){
+        super(gamemodeRegistry);
+    }
+    
     @Override
     public void init(StartParams params) {
         this.koth = params.getKoth();
@@ -100,7 +101,7 @@ public class KothConquest implements RunningKoth {
 
         koth.setLastWinner(faction);
         if (event.isTriggerLoot()) {
-            Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
+            Bukkit.getScheduler().runTask(getPlugin(), new Runnable() {
                 public void run() {
                     koth.triggerLoot(lootAmount, lootChest);
                 }
@@ -109,9 +110,9 @@ public class KothConquest implements RunningKoth {
         
         
         final RunningKoth thisObj = this;
-        Bukkit.getScheduler().runTask(KothPlugin.getPlugin(), new Runnable() {
+        Bukkit.getScheduler().runTask(getPlugin(), new Runnable() {
             public void run() {
-                KothHandler.getInstance().remove(thisObj);
+                getPlugin().getKothHandler().removeRunningKoth(thisObj);
             }
         });
     }

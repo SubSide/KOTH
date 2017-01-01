@@ -8,12 +8,11 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.AbstractModule;
-import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.gamemodes.KothConquest;
 
 public class CaptureTypeRegistry extends AbstractModule {
@@ -21,12 +20,10 @@ public class CaptureTypeRegistry extends AbstractModule {
     private @Getter Map<String, Class<? extends Capper>> captureTypes;
     private @Getter @Setter Class<? extends Capper> preferedClass;
     
-    private JavaPlugin plugin;
-
-    public CaptureTypeRegistry(JavaPlugin plugin){
+    public CaptureTypeRegistry(KothPlugin plugin){
+        super(plugin);
         captureTypes = new HashMap<>();
         captureClasses = new HashMap<>();
-        this.plugin = plugin;
     }
     
     @Override
@@ -40,7 +37,7 @@ public class CaptureTypeRegistry extends AbstractModule {
         registerCaptureType("player", CappingPlayer.class);
         setPreferedClass(CappingPlayer.class);
         boolean hasGroupPlugin = false;
-        if(ConfigHandler.getInstance().getHooks().isFactions() && getServer().getPluginManager().getPlugin("Factions") != null){
+        if(plugin.getConfigHandler().getHooks().isFactions() && plugin.getServer().getPluginManager().getPlugin("Factions") != null){
             try {
                 // If this class is not found it means that Factions is not in the server
                 Class.forName("com.massivecraft.factions.entity.FactionColl");
@@ -57,7 +54,7 @@ public class CaptureTypeRegistry extends AbstractModule {
             }
         }
         
-        if(ConfigHandler.getInstance().getHooks().isKingdoms() && getServer().getPluginManager().getPlugin("Kingdoms") != null){
+        if(plugin.getConfigHandler().getHooks().isKingdoms() && plugin.getServer().getPluginManager().getPlugin("Kingdoms") != null){
             registerCaptureType("kingdoms", CappingKingdom.class);
             setPreferedClass(CappingKingdom.class);
             hasGroupPlugin = true;
@@ -71,8 +68,8 @@ public class CaptureTypeRegistry extends AbstractModule {
             plugin.getGamemodeRegistry().register("conquest", KothConquest.class);
         }
         
-        if(getCaptureTypeClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()) != null)
-            setPreferedClass(getCaptureTypeClass(ConfigHandler.getInstance().getKoth().getDefaultCaptureType()));
+        if(getCaptureTypeClass(plugin.getConfigHandler().getKoth().getDefaultCaptureType()) != null)
+            setPreferedClass(getCaptureTypeClass(plugin.getConfigHandler().getKoth().getDefaultCaptureType()));
     }
     
     public void registerCaptureType(String captureTypeIdentifier, Class<? extends Capper> clazz){

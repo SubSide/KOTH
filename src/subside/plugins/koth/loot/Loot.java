@@ -12,7 +12,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
-import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.capture.Capper;
@@ -30,18 +29,21 @@ public class Loot implements JSONSerializable<Loot> {
     private @Getter String name;
     private @Getter List<String> commands;
     
-    public Loot(){
+    private @Getter LootHandler lootHandler;
+    
+    public Loot(LootHandler lootHandler){
+        this.lootHandler = lootHandler;
         commands = new ArrayList<>();
         inventory = Bukkit.createInventory(null, 54, "Loot chest!");
     }
     
-    public Loot(String name){
-        this();
+    public Loot(LootHandler lootHandler, String name){
+        this(lootHandler);
         setName(name);
     }
     
-    public Loot(String name, List<String> commands){
-        this(name);
+    public Loot(LootHandler lootHandler, String name, List<String> commands){
+        this(lootHandler, name);
         this.commands = commands;
     }
     
@@ -70,7 +72,7 @@ public class Loot implements JSONSerializable<Loot> {
     }
     
     public void triggerCommands(Koth koth, Capper capper){
-        if(!ConfigHandler.getInstance().getLoot().isCmdEnabled()){
+        if(!lootHandler.getPlugin().getConfigHandler().getLoot().isCmdEnabled()){
             return;
         }
         
