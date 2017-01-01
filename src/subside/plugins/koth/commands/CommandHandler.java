@@ -74,11 +74,7 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
         try {
             if(args.length < 1){
-                if(fallback.getPermission().has(sender)){
-                    fallback.run(sender, args);
-                } else {
-                    throw new CommandMessageException(Lang.COMMAND_GLOBAL_NO_PERMISSION);
-                }
+                buildHelp(sender);
                 return true;
             }
             
@@ -98,12 +94,7 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
                     }
                 }
             }
-    
-            if(fallback.getPermission().has(sender)){
-                fallback.run(sender, newArgs);
-            } else {
-                throw new CommandMessageException(Lang.COMMAND_GLOBAL_NO_PERMISSION);
-            }
+            buildHelp(sender);
         } catch(CommandMessageException e){
             Utils.sendMessage(sender, true, (Object[])e.getMsg());
         }
@@ -129,6 +120,9 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
     
     public void buildHelp(CommandSender sender){
         if (!Perm.Admin.HELP.has(sender)) {
+            if(!fallback.getPermission().has(sender)){
+                throw new CommandMessageException(Lang.COMMAND_GLOBAL_NO_PERMISSION);
+            }
             fallback.run(sender, new String[]{});
             return;
         }

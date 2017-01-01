@@ -231,11 +231,11 @@ public class KothHandler extends AbstractModule implements Runnable {
     /** Gracefully ends all running KoTHs
      * 
      */
-    public void endAllKoths() {
+    public void endAllKoths(EndReason endReason) {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
-                it.next().endKoth(EndReason.GRACEFUL);
+                it.next().endKoth(endReason);
             }
         }
     }
@@ -245,43 +245,17 @@ public class KothHandler extends AbstractModule implements Runnable {
      * @param name      The name of the KoTH to end
      * @throws          KothNotExistException 
      */
-    public void endKoth(String name) throws KothNotExistException {
+    public void endKoth(String name, EndReason endReason) throws KothNotExistException {
         synchronized (runningKoths) {
             Iterator<RunningKoth> it = runningKoths.iterator();
             while (it.hasNext()) {
                 RunningKoth koth = it.next();
                 if (koth.getKoth().getName().equalsIgnoreCase(name)) {
-                    koth.endKoth(EndReason.GRACEFUL);
+                    koth.endKoth(endReason);
                     return;
                 }
             }
             throw new KothNotExistException(this, name);
-        }
-    }
-    
-    /** Stop a specific koth
-     * 
-     * @param name      Stop a KoTH by a certain name
-     */
-    public void stopKoth(String name) {
-        Iterator<RunningKoth> it = runningKoths.iterator();
-        while (it.hasNext()) {
-            RunningKoth koth = it.next();
-            if (koth.getKoth().getName().equalsIgnoreCase(name)) {
-                koth.endKoth(EndReason.FORCED);
-            }
-        }
-    }
-
-    /** Stop all running koths
-     * 
-     */
-    public void stopAllKoths() {
-        synchronized (runningKoths) {
-            Iterator<RunningKoth> it = runningKoths.iterator();
-            while (it.hasNext()) {
-                it.next().endKoth(EndReason.FORCED);
-            }
         }
     }
     

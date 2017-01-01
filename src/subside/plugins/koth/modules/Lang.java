@@ -30,6 +30,7 @@ public class Lang extends AbstractModule {
     public static String[] KOTH_PLAYING_MINIMUM_PLAYERS_NOT_MET = new String[] { "&aThe minimum required of players is not met, KoTH will not continue." };
 	public static String[] KOTH_PLAYING_LOOT_CHEST = new String[]{"&1&l%koth%s &8&lloot"};
     public static String[] KOTH_PLAYING_TIME_UP = new String[]{"&aAfter %mt% minute noone capped the KoTH! Event is over!"};
+    public static String[] KOTH_PLAYING_TIME_UP_FREEFORALL = new String[]{"&aAfter %mt% minute noone capped the KoTH! Entering Free For All mode!"};
     
     public static String[] HOOKS_PLACEHOLDERAPI_NOONECAPPING = new String[]{ "No One" };
     public static String[] HOOKS_PLACEHOLDERAPI_TIMETILL = new String[]{ "%hh%:%mm%:%ss%" };

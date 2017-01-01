@@ -73,8 +73,15 @@ public class KothClassic extends RunningKoth {
                 new MessageBuilder(Lang.KOTH_PLAYING_WON_CAPPER).maxTime(maxRunTime).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(capInfo.getCapper(), koth);
             }
         } else if (reason == EndReason.TIMEUP) {
-            new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP).maxTime(maxRunTime).koth(koth).buildAndBroadcast();
-            shouldTriggerLoot = getPlugin().getConfigHandler().getKoth().isFfaChestTimeLimit();
+            MessageBuilder mB;
+            if(getPlugin().getConfigHandler().getKoth().isFfaChestTimeLimit()){
+                mB = new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP_FREEFORALL);
+            } else {
+                mB = new MessageBuilder(Lang.KOTH_PLAYING_TIME_UP);
+                shouldTriggerLoot = false;
+            }
+            
+            mB.maxTime(maxRunTime).koth(koth).buildAndBroadcast();
         } else if(reason == EndReason.FORCED){
             shouldTriggerLoot = false;
         }

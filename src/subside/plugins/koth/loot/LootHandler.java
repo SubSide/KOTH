@@ -52,7 +52,7 @@ public class LootHandler extends AbstractModule {
             Iterator<?> it = koths.iterator();
             while(it.hasNext()){
                 try {
-                    Loot loot = new Loot(null);
+                    Loot loot = new Loot(this);
                     loot.load((JSONObject)it.next());
                     loots.add(loot);
                 } catch(Exception e){

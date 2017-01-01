@@ -1,6 +1,7 @@
 package subside.plugins.koth.gamemodes;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -35,10 +36,10 @@ public class GamemodeRegistry extends AbstractModule {
     public RunningKoth createGame(String gamemode){
         if(gamemodes.containsKey(gamemode)){
             try {
-                return gamemodes.get(gamemode).newInstance();
+                return gamemodes.get(gamemode).getConstructor(GamemodeRegistry.class).newInstance(this);
             }
-            catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+            catch (Exception e) {
+                plugin.getLogger().log(Level.SEVERE, "An error occured while attempting to create a RunningKoth object!", e);
             }
         }
         return null;
