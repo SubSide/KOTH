@@ -2,14 +2,19 @@ package subside.plugins.koth.commands;
 
 import org.bukkit.command.CommandSender;
 
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandAsMember implements AbstractCommand {
+public class CommandAsMember extends AbstractCommand {
+
+    public CommandAsMember(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
-        CommandHelp.asMember(sender, args);
+        category.getCommandHandler().helpAsMember(sender);
     }
 
     @Override
@@ -20,6 +25,16 @@ public class CommandAsMember implements AbstractCommand {
     @Override
     public String[] getCommands() {
         return new String[]{"asmember"};
+    }
+
+    @Override
+    public String getUsage() {
+        return "/koth asmember";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Shows the help menu as a normal player";
     }
 
 }

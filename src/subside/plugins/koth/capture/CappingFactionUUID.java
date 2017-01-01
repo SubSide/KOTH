@@ -12,13 +12,26 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 
 import subside.plugins.koth.areas.Capable;
-import subside.plugins.koth.hooks.HookManager;
 
 public class CappingFactionUUID extends CappingGroup {
     private Faction faction;
     
-    public CappingFactionUUID(Faction faction){
+    public CappingFactionUUID(CaptureTypeRegistry captureTypeRegistry, Faction faction){
+        super(captureTypeRegistry);
         this.faction = faction;
+    }
+    
+    public CappingFactionUUID(CaptureTypeRegistry captureTypeRegistry, List<Player> playerList2){
+        super(captureTypeRegistry);
+        List<Player> playerList = new ArrayList<Player>(playerList2);
+        Collections.shuffle(playerList);
+        for(Player player : playerList){
+            Faction fac = FPlayers.getInstance().getByPlayer(player).getFaction();
+            if(fac.isNormal()){
+                faction = fac;
+                break;
+            }
+        }
     }
 
     @Override
@@ -40,18 +53,6 @@ public class CappingFactionUUID extends CappingGroup {
     public String getName(){
         return faction.getTag();
     }
-    
-    public CappingFactionUUID(List<Player> playerList2){
-        List<Player> playerList = new ArrayList<Player>(playerList2);
-        Collections.shuffle(playerList);
-        for(Player player : playerList){
-            Faction fac = FPlayers.getInstance().getByPlayer(player).getFaction();
-            if(fac.isNormal()){
-                faction = fac;
-                break;
-            }
-        }
-    }
 
     public Faction getObject(){
         return faction;
@@ -61,9 +62,8 @@ public class CappingFactionUUID extends CappingGroup {
     public boolean areaCheck(Capable cap) {
     	if(faction == null)
     		return false;
-    	
         for(Player player : faction.getOnlinePlayers()){
-            if(HookManager.getHookManager().canCap(player) && cap.isInArea(player)){
+            if(cap.isInArea(player) && captureTypeRegistry.getPlugin().getHookManager().canCap(player)){
                 return true;
             }
         }
@@ -76,7 +76,7 @@ public class CappingFactionUUID extends CappingGroup {
         return faction.getOnlinePlayers();
     }
 
-    public static Capper getFromUniqueName(String name){
-        return new CappingFactionUUID(Factions.getInstance().getFactionById(name));
+    public static Capper getFromUniqueName(CaptureTypeRegistry captureTypeRegistry, String name){
+        return new CappingFactionUUID(captureTypeRegistry, Factions.getInstance().getFactionById(name));
     }
 }

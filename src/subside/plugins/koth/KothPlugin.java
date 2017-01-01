@@ -85,10 +85,6 @@ public class KothPlugin extends JavaPlugin {
         scheduleHandler = new ScheduleHandler(this);
         activeModules.add(scheduleHandler);
         
-        // Add MapRotation
-        mapRotation = new MapRotation(this);
-        activeModules.add(mapRotation);
-        
         
         /* Now add all the dynamic modules */
         // Add DataTable
@@ -130,7 +126,7 @@ public class KothPlugin extends JavaPlugin {
 	    }
 	}
     
-	enum LoadingType {
+	public enum LoadingType {
 	    LOAD, ENABLE, DISABLE;
 	}
 }

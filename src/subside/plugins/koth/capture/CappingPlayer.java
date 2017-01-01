@@ -9,15 +9,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.areas.Capable;
-import subside.plugins.koth.hooks.HookManager;
 
 public class CappingPlayer extends Capper {
     private OfflinePlayer player;
     
-    public CappingPlayer(OfflinePlayer player){
+    public CappingPlayer(CaptureTypeRegistry captureTypeRegistry, OfflinePlayer player){
+        super(captureTypeRegistry);
         this.player = player;
+    }
+    
+    public CappingPlayer(CaptureTypeRegistry captureTypeRegistry, List<Player> playerList){
+        super(captureTypeRegistry);
+        player = playerList.get(new Random().nextInt(playerList.size()));
     }
     
     @Override
@@ -38,11 +42,7 @@ public class CappingPlayer extends Capper {
     @Override
     public String getName(){
         if(!player.isOnline()) return player.getName();
-        return ConfigHandler.getInstance().getGlobal().isUseFancyPlayerName()?player.getPlayer().getDisplayName():player.getName();
-    }
-    
-    public CappingPlayer(List<Player> playerList){
-        player = playerList.get(new Random().nextInt(playerList.size()));
+        return captureTypeRegistry.getPlugin().getConfigHandler().getGlobal().isUseFancyPlayerName()?player.getPlayer().getDisplayName():player.getName();
     }
     
     public OfflinePlayer getObject(){
@@ -51,7 +51,7 @@ public class CappingPlayer extends Capper {
     
     @Override
     public boolean areaCheck(Capable cap){
-        if(cap.isInArea(player) && HookManager.getHookManager().canCap(player.getPlayer())){
+        if(cap.isInArea(player) && captureTypeRegistry.getPlugin().getHookManager().canCap(player.getPlayer())){
             return true;
         }
         
@@ -67,7 +67,7 @@ public class CappingPlayer extends Capper {
         return list;
     }
     
-    public static Capper getFromUniqueName(String name){
-        return new CappingPlayer(Bukkit.getOfflinePlayer(UUID.fromString(name)));
+    public static Capper getFromUniqueName(CaptureTypeRegistry captureTypeRegistry, String name){
+        return new CappingPlayer(captureTypeRegistry, Bukkit.getOfflinePlayer(UUID.fromString(name)));
     }
 }

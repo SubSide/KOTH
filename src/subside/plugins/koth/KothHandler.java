@@ -27,10 +27,7 @@ import subside.plugins.koth.exceptions.KothNotExistException;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
 import subside.plugins.koth.gamemodes.StartParams;
-import subside.plugins.koth.hooks.HookManager;
-import subside.plugins.koth.loot.Loot;
 import subside.plugins.koth.scheduler.Schedule;
-import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.utils.JSONLoader;
 import subside.plugins.koth.utils.MessageBuilder;
 
@@ -87,8 +84,8 @@ public class KothHandler extends AbstractModule implements Runnable {
                     plugin.getServer().getPluginManager().callEvent(new KothPostUpdateEvent(preEvent.getRunningKoth()));
                 }
             }
-            ScheduleHandler.getInstance().tick();
-            HookManager.getHookManager().tick();
+            getPlugin().getScheduleHandler().tick();
+            getPlugin().getHookManager().tick();
         }
     }
 

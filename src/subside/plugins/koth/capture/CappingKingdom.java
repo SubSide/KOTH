@@ -12,16 +12,17 @@ import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
 import subside.plugins.koth.areas.Capable;
-import subside.plugins.koth.hooks.HookManager;
 
 public class CappingKingdom extends CappingGroup {
     private Kingdom kingdom;
     
-    public CappingKingdom(Kingdom kingdom){
+    public CappingKingdom(CaptureTypeRegistry captureTypeRegistry, Kingdom kingdom){
+        super(captureTypeRegistry);
         this.kingdom = kingdom;
     }
     
-    public CappingKingdom(List<Player> playerList2){
+    public CappingKingdom(CaptureTypeRegistry captureTypeRegistry, List<Player> playerList2){
+        super(captureTypeRegistry);
         List<Player> playerList = new ArrayList<>(playerList2);
         Collections.shuffle(playerList);
         for(Player player : playerList){
@@ -63,7 +64,7 @@ public class CappingKingdom extends CappingGroup {
     public boolean areaCheck(Capable cap) {
         for(KingdomPlayer kPlayer : kingdom.getOnlineMembers()){
             Player player = kPlayer.getPlayer();
-            if(HookManager.getHookManager().canCap(player) && cap.isInArea(player)){
+            if(cap.isInArea(player) && captureTypeRegistry.getPlugin().getHookManager().canCap(player)){
                 return true;
             }
         }
@@ -80,7 +81,7 @@ public class CappingKingdom extends CappingGroup {
         return list;
     }
 
-    public static Capper getFromUniqueName(String name){
-        return new CappingKingdom(GameManagement.getKingdomManager().getOrLoadKingdom(name));
+    public static Capper getFromUniqueName(CaptureTypeRegistry captureTypeRegistry, String name){
+        return new CappingKingdom(captureTypeRegistry, GameManagement.getKingdomManager().getOrLoadKingdom(name));
     }
 }

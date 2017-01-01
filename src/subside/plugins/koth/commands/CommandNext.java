@@ -3,17 +3,21 @@ package subside.plugins.koth.commands;
 import org.bukkit.command.CommandSender;
 
 import subside.plugins.koth.Lang;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.scheduler.Schedule;
-import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandNext implements AbstractCommand {
+public class CommandNext extends AbstractCommand {
+
+    public CommandNext(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
-        Schedule schedule = ScheduleHandler.getInstance().getNextEvent();
+        Schedule schedule = getPlugin().getScheduleHandler().getNextEvent();
         if(schedule != null)
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_NEXT_MESSAGE).koth(schedule.getKoth()).timeTillNext(schedule));
 
@@ -28,6 +32,16 @@ public class CommandNext implements AbstractCommand {
     @Override
     public String[] getCommands() {
         return new String[]{"next"};
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/koth next";
+    }
+
+    @Override
+    public String getDescription() {
+        return "info about the next upcoming KoTH";
     }
 
 }

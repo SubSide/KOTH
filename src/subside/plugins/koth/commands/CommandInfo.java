@@ -8,25 +8,27 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
-import subside.plugins.koth.KothHandler;
-import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Area;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.capture.Capper;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.KothNotExistException;
 import subside.plugins.koth.exceptions.LootNotExistException;
 import subside.plugins.koth.gamemodes.TimeObject;
 import subside.plugins.koth.loot.Loot;
 import subside.plugins.koth.scheduler.Schedule;
-import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
-public class CommandInfo implements AbstractCommand {
+public class CommandInfo extends AbstractCommand {
+
+    public CommandInfo(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -60,7 +62,7 @@ public class CommandInfo implements AbstractCommand {
             list.add(" ");
             list.addAll(new MessageBuilder("&8========> &2INFO &8<========").buildArray());
             list.addAll(new MessageBuilder("&2Author: &aSubSide").buildArray());
-            list.addAll(new MessageBuilder("&2Version: &a" + KothPlugin.getPlugin().getDescription().getVersion()).buildArray());
+            list.addAll(new MessageBuilder("&2Version: &a" + getPlugin().getDescription().getVersion()).buildArray());
             list.addAll(new MessageBuilder("&2Site: &ahttp://bit.ly/1Pyxu2N").buildArray());
             sender.sendMessage(list.toArray(new String[list.size()]));
         } else {
@@ -69,7 +71,7 @@ public class CommandInfo implements AbstractCommand {
     }
     
     public void kothInfo(CommandSender sender, String[] args){
-        Koth koth = KothHandler.getInstance().getKoth(args[0]);
+        Koth koth = getPlugin().getKothHandler().getKoth(args[0]);
         if (koth == null) {
             throw new KothNotExistException(args[0]);
         }
@@ -108,8 +110,8 @@ public class CommandInfo implements AbstractCommand {
         
         
         String linkedSchedules = "";
-        for(int x = 0; x < ScheduleHandler.getInstance().getSchedules().size(); x++){
-            Schedule schedule = ScheduleHandler.getInstance().getSchedules().get(x);
+        for(int x = 0; x < getPlugin().getScheduleHandler().getSchedules().size(); x++){
+            Schedule schedule = getPlugin().getScheduleHandler().getSchedules().get(x);
             if(koth.getName().equalsIgnoreCase(schedule.getKoth())){
                 linkedSchedules += "#"+x+", ";
             }
@@ -146,7 +148,7 @@ public class CommandInfo implements AbstractCommand {
     }
     
     public void lootInfo(CommandSender sender, String[] args){
-        Loot loot = KothHandler.getInstance().getLoot(args[0]);
+        Loot loot = getPlugin().getLootHandler().getLoot(args[0]);
         if (loot == null) {
             throw new LootNotExistException(args[0]);
         }
@@ -169,7 +171,7 @@ public class CommandInfo implements AbstractCommand {
 
 
         String linkedKoths = "";
-        for(Koth koth : KothHandler.getInstance().getAvailableKoths()){
+        for(Koth koth : getPlugin().getKothHandler().getAvailableKoths()){
             if(loot.getName().equalsIgnoreCase(koth.getLoot())){
                 linkedKoths += koth.getName()+", ";
             }
@@ -184,8 +186,8 @@ public class CommandInfo implements AbstractCommand {
         
         
         String linkedSchedules = "";
-        for(int x = 0; x < ScheduleHandler.getInstance().getSchedules().size(); x++){
-            Schedule schedule = ScheduleHandler.getInstance().getSchedules().get(x);
+        for(int x = 0; x < getPlugin().getScheduleHandler().getSchedules().size(); x++){
+            Schedule schedule = getPlugin().getScheduleHandler().getSchedules().get(x);
             if(loot.getName().equalsIgnoreCase(schedule.getLootChest())){
                 linkedSchedules += "#"+x+", ";
             }
@@ -220,7 +222,7 @@ public class CommandInfo implements AbstractCommand {
     public void scheduleInfo(CommandSender sender, String[] args){
         Schedule sched;
         try {
-            sched = ScheduleHandler.getInstance().getSchedules().get(Integer.parseInt(args[0]));
+            sched = getPlugin().getScheduleHandler().getSchedules().get(Integer.parseInt(args[0]));
         } catch(NumberFormatException e){
             throw new CommandMessageException(Lang.COMMAND_SCHEDULE_NOTANUMBER);
         } catch(IndexOutOfBoundsException f){
@@ -252,7 +254,7 @@ public class CommandInfo implements AbstractCommand {
         if(sched.getEntityType() != null){
             captureType = sched.getEntityType();
             try {
-                Class<? extends Capper> clazz = KothHandler.getInstance().getCapEntityRegistry().getCaptureTypeClass(sched.getEntityType());
+                Class<? extends Capper> clazz = getPlugin().getCaptureTypeRegistry().getCaptureTypeClass(sched.getEntityType());
                 captureType += " (Java class: "+clazz.getSimpleName()+")";
             } catch(Exception e){
                 captureType += " (Invalid CaptureType)";
@@ -297,6 +299,16 @@ public class CommandInfo implements AbstractCommand {
         return new String[] {
             "info"
         };
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/koth info";
+    }
+
+    @Override
+    public String getDescription() {
+        return "info about various things (helpful!)";
     }
 
 }

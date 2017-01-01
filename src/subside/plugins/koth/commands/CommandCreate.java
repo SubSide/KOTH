@@ -3,18 +3,21 @@ package subside.plugins.koth.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import subside.plugins.koth.KothHandler;
-import subside.plugins.koth.KothPlugin;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.Selection;
+
 import subside.plugins.koth.Lang;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.Selection;
+public class CommandCreate extends AbstractCommand {
 
-public class CommandCreate implements AbstractCommand {
+    public CommandCreate(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -26,16 +29,16 @@ public class CommandCreate implements AbstractCommand {
         if (args.length < 1) {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth create <name>");
         }
-        if (KothHandler.getInstance().getKoth(args[0]) != null) {
+        if (getPlugin().getKothHandler().getKoth(args[0]) != null) {
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_ALREADYEXISTS).koth(args[0]));
         }
 
-        Selection sel = ((WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit")).getSelection(player);
+        Selection sel = ((WorldEditPlugin) getPlugin().getServer().getPluginManager().getPlugin("WorldEdit")).getSelection(player);
         if (sel == null) {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_WESELECT);
         }
         
-        KothHandler.getInstance().createKoth(args[0], sel.getMinimumPoint(), sel.getMaximumPoint());
+        getPlugin().getKothHandler().createKoth(args[0], sel.getMinimumPoint(), sel.getMaximumPoint());
         throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_CREATED).koth(args[0]));
     }
 
@@ -49,6 +52,16 @@ public class CommandCreate implements AbstractCommand {
         return new String[] {
             "create"
         };
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/koth create <koth>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "creates a new koth";
     }
 
 }

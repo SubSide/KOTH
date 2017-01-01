@@ -8,14 +8,11 @@ import org.bukkit.entity.Player;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Capable;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
-import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class CapInfo {
@@ -42,7 +39,7 @@ public class CapInfo {
         if(ofType != null){
             this.ofType = ofType;
         } else {
-            this.ofType = KothHandler.getInstance().getCapEntityRegistry().getPreferedClass();
+            this.ofType = runningKoth.getPlugin().getCaptureTypeRegistry().getPreferedClass();
         }
     }
     
@@ -60,7 +57,7 @@ public class CapInfo {
      * @return the correct capper type
      */
     public Capper getRandomCapper(List<Player> playerList){
-        return KothHandler.getInstance().getCapEntityRegistry().getCapper(ofType, playerList);
+        return runningKoth.getPlugin().getCaptureTypeRegistry().getCapper(ofType, playerList);
     }
     
     /** Gets updated every single tick
@@ -79,11 +76,11 @@ public class CapInfo {
         
         // If the capper is still in the area, check channelingTime and add a second to the time
         if(capper.areaCheck(captureZone)){
-            knockTime = ConfigHandler.getInstance().getKoth().getKnockTime();
+            knockTime = runningKoth.getPlugin().getConfigHandler().getKoth().getKnockTime();
             // Channeling time
             if (channelTime >= 0) {
                 if(channelTime > 0){
-                    int configChannelTime = ConfigHandler.getInstance().getKoth().getChannelTime();
+                    int configChannelTime = runningKoth.getPlugin().getConfigHandler().getKoth().getChannelTime();
                     
                     if (configChannelTime != 0 && channelTime == configChannelTime && sendMessages) {
                         new MessageBuilder(Lang.KOTH_PLAYING_CAP_CHANNELING).capper(getName()).time(""+channelTime).exclude(capper, captureZone).buildAndBroadcast();
@@ -141,7 +138,7 @@ public class CapInfo {
      */
     public void addTime(){
         // Handles contestFreeze by looping over all players to check if someone else is in
-        if(ConfigHandler.getInstance().getKoth().isContestFreeze()){
+        if(runningKoth.getPlugin().getConfigHandler().getKoth().isContestFreeze()){
             for(Player player : getInsidePlayers()){
                 if(!capper.isInOrEqualTo(player)){
                     return;
@@ -178,7 +175,7 @@ public class CapInfo {
         
         // Change the capper
         this.capper = event.getNextCapper();
-        this.channelTime = ConfigHandler.getInstance().getKoth().getChannelTime();
+        this.channelTime = runningKoth.getPlugin().getConfigHandler().getKoth().getChannelTime();
         
     }
     
@@ -190,7 +187,7 @@ public class CapInfo {
         List<Player> insideArea = new ArrayList<>();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (captureZone.isInArea(player)) {
-                if(HookManager.getHookManager().canCap(player)) {
+                if(runningKoth.getPlugin().getHookManager().canCap(player)) {
                     insideArea.add(player);
                 }
             }

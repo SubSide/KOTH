@@ -6,16 +6,20 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
-import subside.plugins.koth.KothHandler.CapEntityRegistry;
-import subside.plugins.koth.KothHandler.GamemodeRegistry;
+import subside.plugins.koth.capture.CaptureTypeRegistry;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.gamemodes.GamemodeRegistry;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandMode implements AbstractCommand {
+public class CommandMode extends AbstractCommand {
+
+    public CommandMode(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -38,7 +42,7 @@ public class CommandMode implements AbstractCommand {
     }
     
     public void captureType(CommandSender sender, String[] args){
-        CaptureTypeRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
+        CaptureTypeRegistry cER = getPlugin().getCaptureTypeRegistry();
         if(args.length > 0){
             if(cER.getCaptureTypes().containsKey(args[0].toLowerCase())){
                 cER.setPreferedClass(cER.getCaptureTypes().get(args[0].toLowerCase()));
@@ -57,7 +61,7 @@ public class CommandMode implements AbstractCommand {
     }
 
     public void gameMode(CommandSender sender, String[] args) {
-        GamemodeRegistry gR = KothHandler.getInstance().getGamemodeRegistry();
+        GamemodeRegistry gR = getPlugin().getGamemodeRegistry();
         if (args.length > 0) {
             if (gR.getGamemodes().containsKey(args[0].toLowerCase())) {
                 gR.setCurrentMode(args[0]);
@@ -84,6 +88,16 @@ public class CommandMode implements AbstractCommand {
         return new String[] {
                 "mode"
         };
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/koth mode [mode]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "change the gamemode";
     }
 
 }

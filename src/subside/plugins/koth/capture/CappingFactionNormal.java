@@ -12,13 +12,26 @@ import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayerColl;
 
 import subside.plugins.koth.areas.Capable;
-import subside.plugins.koth.hooks.HookManager;
 
 public class CappingFactionNormal extends CappingGroup {
 private Faction faction;
     
-    public CappingFactionNormal(Faction faction){
+    public CappingFactionNormal(CaptureTypeRegistry captureTypeRegistry, Faction faction){
+        super(captureTypeRegistry);
         this.faction = faction;
+    }
+    
+    public CappingFactionNormal(CaptureTypeRegistry captureTypeRegistry, List<Player> playerList2){
+        super(captureTypeRegistry);
+        List<Player> playerList = new ArrayList<Player>(playerList2);
+        Collections.shuffle(playerList);
+        for(Player player : playerList){
+            Faction fac = MPlayerColl.get().get(player).getFaction();
+            if(fac.isNormal()){
+                faction = fac;
+                break;
+            }
+        }
     }
     
     @Override
@@ -45,18 +58,6 @@ private Faction faction;
         return faction.getName();
     }
     
-    public CappingFactionNormal(List<Player> playerList2){
-        List<Player> playerList = new ArrayList<Player>(playerList2);
-        Collections.shuffle(playerList);
-        for(Player player : playerList){
-            Faction fac = MPlayerColl.get().get(player).getFaction();
-            if(fac.isNormal()){
-                faction = fac;
-                break;
-            }
-        }
-    }
-    
     public Faction getObject(){
         return faction;
     }
@@ -64,7 +65,7 @@ private Faction faction;
     @Override
     public boolean areaCheck(Capable cap) {
         for(Player player : faction.getOnlinePlayers()){
-            if(HookManager.getHookManager().canCap(player) && cap.isInArea(player)){
+            if(cap.isInArea(player) && captureTypeRegistry.getPlugin().getHookManager().canCap(player)){
                 return true;
             }
         }
@@ -77,7 +78,7 @@ private Faction faction;
     }
     
 
-    public static Capper getFromUniqueName(String name){
-        return new CappingFactionNormal(FactionColl.get().get(name));
+    public static Capper getFromUniqueName(CaptureTypeRegistry captureTypeRegistry, String name){
+        return new CappingFactionNormal(captureTypeRegistry, FactionColl.get().get(name));
     }
 }

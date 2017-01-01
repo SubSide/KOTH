@@ -7,10 +7,15 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
-import subside.plugins.koth.KothHandler;
+import lombok.Getter;
 import subside.plugins.koth.areas.Capable;
 
 public abstract class Capper {
+    protected @Getter CaptureTypeRegistry captureTypeRegistry;
+    
+    public Capper(CaptureTypeRegistry captureTypeRegistry){
+        this.captureTypeRegistry = captureTypeRegistry;
+    }
     
     public abstract String getUniqueClassIdentifier();
     public abstract String getUniqueObjectIdentifier();
@@ -34,8 +39,8 @@ public abstract class Capper {
     }
     
     
-    public static Capper load(JSONObject obj){
-        return KothHandler.getInstance().getCapEntityRegistry().getCapperFromType((String)obj.get("capperType"), (String)obj.get("uniqueId"));
+    public static Capper load(CaptureTypeRegistry captureTypeRegistry, JSONObject obj){
+        return captureTypeRegistry.getCapperFromType((String)obj.get("capperType"), (String)obj.get("uniqueId"));
     }
 
     @SuppressWarnings("unchecked")

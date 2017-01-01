@@ -4,10 +4,10 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import subside.plugins.koth.KothHandler;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.areas.Area;
 import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.AreaNotExistException;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.KothNotExistException;
@@ -15,7 +15,11 @@ import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandTp implements AbstractCommand {
+public class CommandTp extends AbstractCommand {
+
+    public CommandTp(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -27,7 +31,7 @@ public class CommandTp implements AbstractCommand {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth tp <koth> [area]");
         }
 
-        Koth koth = KothHandler.getInstance().getKoth(args[0]);
+        Koth koth = getPlugin().getKothHandler().getKoth(args[0]);
         if (koth == null) {
             throw new KothNotExistException(args[0]);
         }
@@ -60,6 +64,16 @@ public class CommandTp implements AbstractCommand {
     @Override
     public String[] getCommands() {
         return new String[]{"tp"};
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/koth tp <koth> [area]";
+    }
+
+    @Override
+    public String getDescription() {
+        return "teleport to a koth (area)";
     }
 
 }

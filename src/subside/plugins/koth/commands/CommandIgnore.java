@@ -4,12 +4,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import subside.plugins.koth.Lang;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
-public class CommandIgnore implements AbstractCommand {
+public class CommandIgnore extends AbstractCommand {
+
+    public CommandIgnore(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -28,6 +33,16 @@ public class CommandIgnore implements AbstractCommand {
     @Override
     public String[] getCommands() {
         return new String[]{"ignore", "stfu", "shutup"};
+    }
+
+    @Override
+    public String getUsage() {
+        return "/koth ignore";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Ignore KoTH's messages";
     }
 
 }

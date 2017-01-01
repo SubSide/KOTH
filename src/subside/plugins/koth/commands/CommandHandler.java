@@ -8,16 +8,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import lombok.Getter;
 import subside.plugins.koth.AbstractModule;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.Lang;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.utils.MessageBuilder;
+import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
 public class CommandHandler extends AbstractModule implements CommandExecutor {
 
-    private List<AbstractCommand> commands;
-    private AbstractCommand fallback;
+    private @Getter List<CommandCategory> categories;
+    private CommandAsMember fallback;
 
     public CommandHandler(KothPlugin plugin) {
         super(plugin);
@@ -25,29 +28,34 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
     
     @Override
     public void onLoad(){
-        commands = new ArrayList<>();
-        commands.add(new CommandLoot());
-        commands.add(new CommandStart());
-        commands.add(new CommandCreate());
-        commands.add(new CommandReload());
-        commands.add(new CommandEdit());
-        commands.add(new CommandList());
-        commands.add(new CommandStop());
-        commands.add(new CommandEnd());
-        commands.add(new CommandSchedule());
-        commands.add(new CommandRemove());
-        commands.add(new CommandVersion());
-        commands.add(new CommandAsMember());
-        commands.add(new CommandInfo());
-        commands.add(new CommandTp());
-        commands.add(new CommandMode());
-        commands.add(new CommandChange());
-        commands.add(new CommandIgnore());
-        commands.add(new CommandNext());
-        commands.add(new CommandDatatable());
+        this.categories = new ArrayList<>();
+
+        CommandCategory basic = registerCategory("basic", "KoTH Basic Commands");
+        fallback = new CommandAsMember(basic); // This one should be used for fallback
         
-        fallback = new CommandHelp();
-        commands.add(fallback);
+        basic.addCommand(new CommandList(basic));
+        basic.addCommand(fallback);
+        basic.addCommand(new CommandVersion(basic));
+        basic.addCommand(new CommandReload(basic));
+        basic.addCommand(new CommandTp(basic));
+        basic.addCommand(new CommandInfo(basic));
+        basic.addCommand(new CommandNext(basic));
+        basic.addCommand(new CommandIgnore(basic));
+        
+        CommandCategory control = registerCategory("control", "KoTH Control Commands");
+        control.addCommand(new CommandStart(control));
+        control.addCommand(new CommandStop(control));
+        control.addCommand(new CommandEnd(control));
+        control.addCommand(new CommandMode(control));
+        control.addCommand(new CommandChange(control));
+        
+        
+        CommandCategory editor = registerCategory("editor", "Koth Editor Commands");
+        editor.addCommand(new CommandCreate(editor));
+        editor.addCommand(new CommandRemove(editor));
+        editor.addCommand(new CommandEdit(editor));
+        editor.addCommand(new CommandLoot(editor));
+        editor.addCommand(new CommandSchedule(editor));
     }
     
     @Override
@@ -68,17 +76,19 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
             }
             
             String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
-            for (AbstractCommand command : commands) {
-                for (String com : command.getCommands()) {
-                    if (!com.equalsIgnoreCase(args[0])) {
-                        continue;
+            for (CommandCategory category : categories) {
+                for(AbstractCommand command : category.getCommands()) {
+                    for (String com : command.getCommands()) {
+                        if (!com.equalsIgnoreCase(args[0])) {
+                            continue;
+                        }
+        
+                        if (command.getPermission().has(sender)) {
+                            command.run(sender, newArgs);
+                            return true;
+                        }
+        
                     }
-    
-                    if (command.getPermission().has(sender)) {
-                        command.run(sender, newArgs);
-                        return true;
-                    }
-    
                 }
             }
     
@@ -92,6 +102,76 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
         }
 
         return true;
+    }
+    
+    public CommandCategory registerCategory(String categoryName, String categoryInfo){
+        CommandCategory category = new CommandCategory(this, categoryName, categoryInfo);
+        categories.add(category);
+        
+        return category;
+    }
+    
+    public CommandCategory getCategory(String categoryName){
+        for(CommandCategory category : categories){
+            if(category.getCategoryName().equalsIgnoreCase(categoryName))
+                return category;
+        }
+        
+        return null;
+    }
+    
+    public void buildHelp(CommandSender sender){
+        if (!Perm.Admin.HELP.has(sender)) {
+            fallback.run(sender, new String[]{});
+            return;
+        }
+
+        List<String> list = new ArrayList<>();
+        list.add("");
+        for(CommandCategory category : categories){
+            list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title(category.getCategoryInfo()).buildArray());
+            for(AbstractCommand command : category.getCommands()){
+                list.addAll(new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command(command.getUsage()).commandInfo(command.getDescription()).buildArray());
+            }
+            list.add("");
+        }
+        sender.sendMessage(list.toArray(new String[list.size()]));
+    }
+    
+    public void helpAsMember(CommandSender sender){
+        List<String> list = plugin.getConfigHandler().getGlobal().getHelpCommand();
+        List<String> list2 = new ArrayList<>();
+        for (String hlp : list) {
+            MessageBuilder mB = new MessageBuilder(hlp);
+            try {
+                mB.koth(plugin.getKothHandler().getRunningKoth().getKoth());
+                mB.time(plugin.getKothHandler().getRunningKoth().getTimeObject());
+            }
+            catch (Exception e) {
+                mB.koth("None").time("00:00").capper("None");
+            }
+            list2.addAll(mB.buildArray());
+        }
+        sender.sendMessage(list2.toArray(new String[list2.size()]));
+    }
+    
+    public class CommandCategory {
+        private @Getter String categoryName;
+        private @Getter String categoryInfo;
+        private @Getter List<AbstractCommand> commands;
+        private @Getter CommandHandler commandHandler;
+        
+        public CommandCategory(CommandHandler commandHandler, String categoryName, String categoryInfo){
+            commands = new ArrayList<>();
+
+            this.commandHandler = commandHandler;
+            this.categoryName = categoryName;
+            this.categoryInfo = categoryInfo;
+        }
+        
+        public void addCommand(AbstractCommand command){
+            commands.add(command);
+        }
     }
 
 }

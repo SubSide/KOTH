@@ -5,11 +5,15 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandVersion implements AbstractCommand {
+public class CommandVersion extends AbstractCommand {
+
+    public CommandVersion(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -17,7 +21,7 @@ public class CommandVersion implements AbstractCommand {
         list.add(" ");
         list.addAll(new MessageBuilder("&8========> &2INFO &8<========").buildArray());
         list.addAll(new MessageBuilder("&2Author: &aSubSide").buildArray());
-        list.addAll(new MessageBuilder("&2Version: &a" + KothPlugin.getPlugin().getDescription().getVersion()).buildArray());
+        list.addAll(new MessageBuilder("&2Version: &a" + getPlugin().getDescription().getVersion()).buildArray());
         list.addAll(new MessageBuilder("&2Site: &ahttp://bit.ly/1Pyxu2N").buildArray());
         sender.sendMessage(list.toArray(new String[list.size()]));
     }
@@ -30,6 +34,16 @@ public class CommandVersion implements AbstractCommand {
     @Override
     public String[] getCommands() {
         return new String[]{"version"};
+    }
+
+    @Override
+    public String getUsage() {
+        return "/koth version";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Shows the version of this plugin";
     }
 
 }
