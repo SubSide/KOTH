@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import subside.plugins.koth.captureentities.Capper;
@@ -42,37 +43,45 @@ public class CommandDatatable extends AbstractCommand {
     }
     
     public void debug(CommandSender sender, String[] args){
-        if(args.length < 1)
-            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth debug <maxrows> [time] [capturetype] [gamemode] [koth]");
+        if(args.length < 2)
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth debug (0|1) <maxrows> [time] [capturetype] [gamemode] [koth]");
         
-        int rows = Integer.parseInt(args[0]);
+        int rows = Integer.parseInt(args[1]);
         int time = 0;
         String captureType = null;
         String gameMode = null;
         String koth = null;
         
-        if(args.length > 1){
-            time = Integer.parseInt(args[1]);
-        }
-        
         if(args.length > 2){
-            captureType = (args[2] != "0") ? args[2] : null;
+            time = Integer.parseInt(args[2]);
         }
         
         if(args.length > 3){
-            gameMode = (args[3] != "0") ? args[3] : null;
+            captureType = (args[3] != "0") ? args[3] : null;
         }
         
         if(args.length > 4){
-            koth = (args[4] != "0") ? args[4] : null;
+            gameMode = (args[4] != "0") ? args[4] : null;
         }
         
-        List<Entry<Capper, Integer>> list = getPlugin().getDataTable().getTop(rows, time, captureType, gameMode, koth);
+        if(args.length > 5){
+            koth = (args[5] != "0") ? args[5] : null;
+        }
         
-        Utils.sendMessage(sender, true, "Info returned:");
-        
-        for(Entry<Capper, Integer> entry : list){
-            Utils.sendMessage(sender, true, entry.getKey().getName() + " : " + entry.getValue());
+        if(args[0].equalsIgnoreCase("0")){
+            Utils.sendMessage(sender, true, "Global results returned:");
+    
+            List<Entry<Capper, Integer>> list = getPlugin().getDataTable().getTop(rows, time, captureType, gameMode, koth);
+            for(Entry<Capper, Integer> entry : list){
+                Utils.sendMessage(sender, true, entry.getKey().getName() + " : " + entry.getValue());
+            }
+        } else {
+            Utils.sendMessage(sender, true, "Player results returned:");
+            
+            List<Entry<OfflinePlayer, Integer>> list = getPlugin().getDataTable().getPlayerTop(rows, time, captureType, gameMode, koth);
+            for(Entry<OfflinePlayer, Integer> entry : list){
+                Utils.sendMessage(sender, true, entry.getKey().getName() + " : " + entry.getValue());
+            }
         }
     }
     
