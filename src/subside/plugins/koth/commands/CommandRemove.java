@@ -2,14 +2,18 @@ package subside.plugins.koth.commands;
 
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.KothHandler;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandRemove implements ICommand {
+public class CommandRemove extends AbstractCommand {
+
+    public CommandRemove(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -17,8 +21,8 @@ public class CommandRemove implements ICommand {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth remove <name>");
         }
         
-        KothHandler.getInstance().removeKoth(args[0]);
-        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_REMOVED).koth(args[0]));
+        getPlugin().getKothHandler().removeKoth(args[0]);
+        throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_KOTH_REMOVED).koth(getPlugin().getKothHandler(), args[0]));
 
     }
 
@@ -32,6 +36,16 @@ public class CommandRemove implements ICommand {
         return new String[] {
             "remove"
         };
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/koth remove <koth>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "removes an existing koth";
     }
 
 }

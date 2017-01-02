@@ -1,29 +1,26 @@
 package subside.plugins.koth.events;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import subside.plugins.koth.adapter.Koth;
+import lombok.Getter;
+import lombok.Setter;
+import subside.plugins.koth.areas.Koth;
 
 /**
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class KothStartEvent extends Event implements IEvent, Cancellable {
+public class KothStartEvent extends AbstractEvent implements Cancellable {
     private @Getter @Setter int captureTime;
     private @Getter @Setter int maxLength;
-    private @Getter Koth koth;
     private @Getter boolean scheduled;
     private @Getter @Setter String entityType;
     
     private boolean isCancelled;
     
     public KothStartEvent(Koth koth, int captureTime, int maxLength, boolean scheduled, String entityType){
-        this.koth = koth;
+        super(koth);
         this.captureTime = captureTime;
         this.maxLength = maxLength;
         this.scheduled = scheduled;

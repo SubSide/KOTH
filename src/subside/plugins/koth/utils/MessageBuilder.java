@@ -11,12 +11,12 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import subside.plugins.koth.adapter.Area;
-import subside.plugins.koth.adapter.Capable;
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.TimeObject;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.areas.Area;
+import subside.plugins.koth.areas.Capable;
+import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.captureentities.Capper;
+import subside.plugins.koth.gamemodes.TimeObject;
+import subside.plugins.koth.modules.KothHandler;
 import subside.plugins.koth.scheduler.Schedule;
 
 public class MessageBuilder {
@@ -47,10 +47,6 @@ public class MessageBuilder {
         }
 
         protected String[] build() {
-            // Static calls //
-            replaceAll("%ttn%", TimeObject.getTimeTillNextEvent());
-            //
-            
             for (int x = 0; x < message.length; x++) {
                 message[x] = ChatColor.translateAlternateColorCodes('&', message[x]);
             }
@@ -67,8 +63,8 @@ public class MessageBuilder {
         this.message = new StrObj(new String[]{msg});
     }
 
-    public MessageBuilder koth(String koth) {
-        Koth kth = KothHandler.getInstance().getKoth(koth);
+    public MessageBuilder koth(KothHandler kothHandler, String koth) {
+        Koth kth = kothHandler.getKoth(koth);
         if (kth != null) {
             koth(kth);
         } else {
