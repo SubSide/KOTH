@@ -65,6 +65,7 @@ public class DataTable extends AbstractModule {
     
     private void initialize(){
         try {
+            // Result table
             Connection con = databaseProvider.getConnection();
             PreparedStatement ptsd = con.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS results ("
@@ -75,6 +76,18 @@ public class DataTable extends AbstractModule {
                     + "capper_uuid VARCHAR(36) NOT NULL, "
                     + "capper_displayname VARCHAR(64) NOT NULL, "
                     + "capper_type VARCHAR(32) NOT NULL"
+                    + ((databaseProvider instanceof SQLite)?"":", PRIMARY KEY (id)")
+                    + ")");
+            
+            ptsd.execute();
+            
+            // Player based table
+            ptsd = con.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS player_results ("
+                    + ((databaseProvider instanceof SQLite)?"id INTEGER PRIMARY KEY":"id INT(16) NOT NULL AUTO_INCREMENT") + ", "
+                    + "result_id VARCHAR(32) NOT NULL, "
+                    + "player_uuid VARCHAR(36) NOT NULL, "
+                    + "player_displayname VARCHAR(64) NOT NULL"
                     + ((databaseProvider instanceof SQLite)?"":", PRIMARY KEY (id)")
                     + ")");
             

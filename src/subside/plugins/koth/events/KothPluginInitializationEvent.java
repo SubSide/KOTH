@@ -4,6 +4,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.KothPlugin.LoadingState;
 
 /**
@@ -13,8 +14,10 @@ import subside.plugins.koth.KothPlugin.LoadingState;
 public class KothPluginInitializationEvent extends Event {
     
     private @Getter LoadingState loadingState;
+    private @Getter KothPlugin plugin;
     
-    public KothPluginInitializationEvent(LoadingState loadingState){
+    public KothPluginInitializationEvent(KothPlugin plugin, LoadingState loadingState){
+        this.plugin = plugin;
         this.loadingState = loadingState;
     }
     

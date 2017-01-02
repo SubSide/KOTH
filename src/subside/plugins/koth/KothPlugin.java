@@ -108,6 +108,9 @@ public class KothPlugin extends JavaPlugin {
             cacheHandler = new CacheHandler(this);
             activeModules.add(cacheHandler);
         }
+        
+        // Trigger SETUP event for eventual hooking
+        trigger(LoadingState.SETUP);
 	}
 	
 	@Override
@@ -132,13 +135,15 @@ public class KothPlugin extends JavaPlugin {
 	            case DISABLE:
 	                module.onDisable();
 	                break;
+                default:
+                    break;
 	        }
 	    }
 
-        getServer().getPluginManager().callEvent(new KothPluginInitializationEvent(state));
+        getServer().getPluginManager().callEvent(new KothPluginInitializationEvent(this, state));
 	}
     
 	public enum LoadingState {
-	    LOAD, ENABLE, DISABLE;
+	    SETUP, LOAD, ENABLE, DISABLE;
 	}
 }

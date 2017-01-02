@@ -36,7 +36,7 @@ public class CommandAsMember extends AbstractCommand {
 
     @Override
     public IPerm getPermission() {
-        return Perm.Admin.HELP;
+        return Perm.HELP;
     }
 
     @Override

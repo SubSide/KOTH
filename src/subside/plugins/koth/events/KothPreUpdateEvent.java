@@ -1,22 +1,21 @@
 package subside.plugins.koth.events;
 
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
-import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.gamemodes.RunningKoth;
 
 /**
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class KothPreUpdateEvent extends Event implements IEvent, Cancellable {
+public class KothPreUpdateEvent extends AbstractEvent implements Cancellable {
     private @Getter RunningKoth runningKoth;
     private boolean cancelled = false;
     
     public KothPreUpdateEvent(RunningKoth runningKoth){
+        super(runningKoth.getKoth());
         this.runningKoth = runningKoth;
     }
     private static final HandlerList handlers = new HandlerList();
@@ -41,11 +40,5 @@ public class KothPreUpdateEvent extends Event implements IEvent, Cancellable {
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
-    }
-
-
-    @Override
-    public Koth getKoth() {
-        return runningKoth.getKoth();
     }
 }

@@ -1,25 +1,23 @@
 package subside.plugins.koth.events;
 
-import lombok.Getter;
-import subside.plugins.koth.areas.Koth;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
+import lombok.Getter;
+import subside.plugins.koth.areas.Koth;
 
 /**
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class KothOpenChestEvent extends Event implements IEvent, Cancellable {
+public class KothOpenChestEvent extends AbstractEvent implements Cancellable {
 
     private @Getter Player player;
     private boolean isCancelled;
-    private @Getter Koth koth;
     
     public KothOpenChestEvent(Koth koth, Player player) {
-        this.koth = koth;
+        super(koth);
         this.player = player;
     }
 
