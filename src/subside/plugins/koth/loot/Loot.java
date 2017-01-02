@@ -93,7 +93,7 @@ public class Loot implements JSONSerializable<Loot> {
             }
         }
     }
-    
+  
     public Loot load(JSONObject obj) {
         this.name = (String)obj.get("name");
         this.setName(this.name);

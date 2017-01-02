@@ -169,5 +169,4 @@ public class ConfigHandler extends AbstractModule {
             password = section.getString("password");
         }
     }
-	
 }

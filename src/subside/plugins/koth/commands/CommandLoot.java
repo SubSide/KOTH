@@ -183,10 +183,11 @@ public class CommandLoot extends AbstractCommand {
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> add <command>").commandInfo("Add a command").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> list").commandInfo("Show a list of commands").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> remove <id>").commandInfo("Remove a command").build());
+
             if(!getPlugin().getConfigHandler().getLoot().isCmdEnabled()){
                 new MessageBuilder(Lang.COMMAND_LOOT_CMD_CONFIG_NOT_ENABLED).buildAndSend(sender);
             }
-        return;
+            return;
         }
         String lootName = args[0];
 

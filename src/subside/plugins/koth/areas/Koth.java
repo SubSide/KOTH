@@ -305,7 +305,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
         }
         return null;
     }
-    
+  
     public Koth load(JSONObject obj){
         this.name = (String)obj.get("name"); //name
         

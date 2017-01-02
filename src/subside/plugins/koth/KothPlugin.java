@@ -117,7 +117,7 @@ public class KothPlugin extends JavaPlugin {
 	public void onEnable() {
         trigger(LoadingState.ENABLE);
 	}
-	
+
 	@Override
 	public void onDisable() {
 		trigger(LoadingState.DISABLE);
