@@ -10,23 +10,27 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
-import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.KothHandler.CapEntityRegistry;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.captureentities.Capper;
+import subside.plugins.koth.captureentities.CaptureTypeRegistry;
+import subside.plugins.koth.modules.AbstractModule;
+import subside.plugins.koth.modules.ConfigHandler;
 
-public class DataTable {
-    private @Getter JavaPlugin plugin;
+public class DataTable extends AbstractModule {
     private @Getter IDatabase databaseProvider;
+    private DataTableEventListener eventListener;
     
-    public DataTable(JavaPlugin plugin){
-        this.plugin = plugin;
-        
+    public DataTable(KothPlugin plugin){
+        super(plugin);
+    }
+    
+    @Override
+    public void onEnable(){
         try {
-            ConfigHandler.Database cDB = ConfigHandler.getInstance().getDatabase();
+            ConfigHandler.Database cDB = plugin.getConfigHandler().getDatabase();
             if(cDB.getStoragetype().equalsIgnoreCase("sqlite")){
                 databaseProvider = new SQLite(plugin);
                 this.plugin.getLogger().log(Level.INFO, "Connected to the SQLite server!");
@@ -50,12 +54,18 @@ public class DataTable {
         
         
         initialize();
-        
-        plugin.getServer().getPluginManager().registerEvents(new DataTableEventListener(this), plugin);
+        eventListener = new DataTableEventListener(this);
+        plugin.getServer().getPluginManager().registerEvents(eventListener, plugin);
+    }
+    
+    @Override
+    public void onDisable(){
+        HandlerList.unregisterAll(eventListener);
     }
     
     private void initialize(){
         try {
+            // Result table
             Connection con = databaseProvider.getConnection();
             PreparedStatement ptsd = con.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS results ("
@@ -66,6 +76,18 @@ public class DataTable {
                     + "capper_uuid VARCHAR(36) NOT NULL, "
                     + "capper_displayname VARCHAR(64) NOT NULL, "
                     + "capper_type VARCHAR(32) NOT NULL"
+                    + ((databaseProvider instanceof SQLite)?"":", PRIMARY KEY (id)")
+                    + ")");
+            
+            ptsd.execute();
+            
+            // Player based table
+            ptsd = con.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS player_results ("
+                    + ((databaseProvider instanceof SQLite)?"id INTEGER PRIMARY KEY":"id INT(16) NOT NULL AUTO_INCREMENT") + ", "
+                    + "result_id VARCHAR(32) NOT NULL, "
+                    + "player_uuid VARCHAR(36) NOT NULL, "
+                    + "player_displayname VARCHAR(64) NOT NULL"
                     + ((databaseProvider instanceof SQLite)?"":", PRIMARY KEY (id)")
                     + ")");
             
@@ -119,7 +141,7 @@ public class DataTable {
             
             ResultSet result = sQB.execute();
             
-            CapEntityRegistry cER = KothHandler.getInstance().getCapEntityRegistry();
+            CaptureTypeRegistry cER = plugin.getCaptureTypeRegistry();
             while(result.next()){
                 top.add(new SimpleEntry<Capper, Integer>(cER.getCapperFromType(result.getString("capper_type"), result.getString("capper_uuid")), result.getInt("result")));
             }

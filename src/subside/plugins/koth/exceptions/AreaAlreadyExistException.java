@@ -1,6 +1,6 @@
 package subside.plugins.koth.exceptions;
 
-import subside.plugins.koth.Lang;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
 public class AreaAlreadyExistException extends CommandMessageException {

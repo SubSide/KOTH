@@ -6,17 +6,22 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.KothConquest;
-import subside.plugins.koth.adapter.KothConquest.FactionScore;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.RunningKoth;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.gamemodes.KothConquest;
+import subside.plugins.koth.gamemodes.KothConquest.FactionScore;
+import subside.plugins.koth.modules.Lang;
+import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 
-public class CommandChange implements ICommand {
+public class CommandChange extends AbstractCommand {
+
+    public CommandChange(CommandCategory category) {
+        super(category);
+    }
+
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -25,7 +30,7 @@ public class CommandChange implements ICommand {
             return;
         }
         
-        RunningKoth rKoth = KothHandler.getInstance().getRunningKoth();
+        RunningKoth rKoth = getPlugin().getKothHandler().getRunningKoth();
         if (rKoth == null) {
             throw new CommandMessageException(new MessageBuilder(Lang.KOTH_ERROR_NONE_RUNNING));
         }
@@ -168,6 +173,17 @@ public class CommandChange implements ICommand {
         return new String[] {
                 "change"
         };
+    }
+
+    @Override
+    public String getUsage() {
+        return "/koth change";
+    }
+
+
+    @Override
+    public String getDescription() {
+        return "Gives control over a running koth";
     }
 
 }

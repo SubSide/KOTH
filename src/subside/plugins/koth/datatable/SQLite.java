@@ -7,15 +7,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
-import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.KothPlugin;
 
 public class SQLite implements IDatabase {
     private Connection connection;
-    private JavaPlugin plugin;
+    private KothPlugin plugin;
     
-    public SQLite(JavaPlugin plugin){
+    public SQLite(KothPlugin plugin){
         this.plugin = plugin;
     }
     
@@ -23,14 +21,14 @@ public class SQLite implements IDatabase {
         if(connection != null && !connection.isClosed())
             return connection;
         
-        File dataFile = new File(plugin.getDataFolder(), ConfigHandler.getInstance().getDatabase().getDatabase() + ".db");
+        File dataFile = new File(plugin.getDataFolder(), plugin.getConfigHandler().getDatabase().getDatabase() + ".db");
         
         // If the file doesn't exists, create it.
         if (!dataFile.exists()){
             try {
                 dataFile.createNewFile();
             } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Couldn't create the file: \"" + ConfigHandler.getInstance().getDatabase().getDatabase() + ".db\".");
+                plugin.getLogger().log(Level.SEVERE, "Couldn't create the file: \"" + plugin.getConfigHandler().getDatabase().getDatabase() + ".db\".");
                 return null;
             }
         }
@@ -40,7 +38,7 @@ public class SQLite implements IDatabase {
             this.connection = DriverManager.getConnection("jdbc:sqlite:" + dataFile.getPath());
             return this.connection;
         } catch (ClassNotFoundException e) {
-            plugin.getLogger().log(Level.SEVERE, "Couldn't find the SQLite library!");
+            plugin.getLogger().log(Level.SEVERE, "Couldn't find the SQLite library!", e);
         }
         
         return null;

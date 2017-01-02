@@ -7,15 +7,19 @@ import java.util.Map.Entry;
 
 import org.bukkit.command.CommandSender;
 
-import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.captureentities.Capper;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
-public class CommandDatatable implements ICommand {
+public class CommandDatatable extends AbstractCommand {
+
+    public CommandDatatable(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -63,7 +67,7 @@ public class CommandDatatable implements ICommand {
             koth = (args[4] != "0") ? args[4] : null;
         }
         
-        List<Entry<Capper, Integer>> list = KothPlugin.getPlugin().getDataTable().getTop(rows, time, captureType, gameMode, koth);
+        List<Entry<Capper, Integer>> list = getPlugin().getDataTable().getTop(rows, time, captureType, gameMode, koth);
         
         Utils.sendMessage(sender, true, "Info returned:");
         
@@ -82,7 +86,7 @@ public class CommandDatatable implements ICommand {
     
     public void close(CommandSender sender, String[] args){
         try {
-            KothPlugin.getPlugin().getDataTable().getDatabaseProvider().getConnection().close();
+            getPlugin().getDataTable().getDatabaseProvider().getConnection().close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -98,6 +102,16 @@ public class CommandDatatable implements ICommand {
     @Override
     public String[] getCommands() {
         return new String[]{"datatable"};
+    }
+
+    @Override
+    public String getUsage() {
+        return "/koth datatable";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Manage/manipulate the datatable";
     }
 
 }

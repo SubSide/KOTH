@@ -4,31 +4,29 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.adapter.Capable;
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.RunningKoth;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.areas.Capable;
+import subside.plugins.koth.captureentities.Capper;
+import subside.plugins.koth.gamemodes.RunningKoth;
 
 /**
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class KothCapEvent extends Event implements IEvent, Cancellable {
+public class KothCapEvent extends AbstractEvent implements Cancellable {
     private @Getter @Setter Capper nextCapper;
     private @Getter List<Player> playersInArea;
     private boolean isCancelled;
     private @Getter RunningKoth runningKoth;
-    private @Getter Koth koth;
     private @Getter Capable captureZone;
     
     public KothCapEvent(RunningKoth runningKoth, Capable captureZone, List<Player> playersInArea, Capper nextCapper){
+        super(runningKoth.getKoth());
+        
         this.runningKoth = runningKoth;
-        this.koth = this.runningKoth.getKoth();
         this.playersInArea = playersInArea;
         this.nextCapper = nextCapper;
         this.captureZone = captureZone;

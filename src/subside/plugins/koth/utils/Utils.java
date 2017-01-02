@@ -18,9 +18,8 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.json.simple.JSONObject;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import subside.plugins.koth.ConfigHandler;
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.Lang;
+import subside.plugins.koth.modules.Lang;
 
 public class Utils {
     static String KOTH_IGNORE_KEY = "KOTH_IGNORING";
@@ -40,12 +39,12 @@ public class Utils {
      * @param player the player to toggle ignore for
      * @return true if the player is now ignoring the messages
      */
-    public static boolean toggleIgnoring(Player player){
+    public static boolean toggleIgnoring(KothPlugin plugin, Player player){
         if(player.hasMetadata(KOTH_IGNORE_KEY)){
-            player.removeMetadata(KOTH_IGNORE_KEY, KothPlugin.getPlugin());
+            player.removeMetadata(KOTH_IGNORE_KEY, plugin);
             return false;
         } else {
-            player.setMetadata(KOTH_IGNORE_KEY, new FixedMetadataValue(KothPlugin.getPlugin(), true));
+            player.setMetadata(KOTH_IGNORE_KEY, new FixedMetadataValue(plugin, true));
             return true;
         }
     }
@@ -53,15 +52,6 @@ public class Utils {
     
 	public static void msg(CommandSender sender, String msg){
 		new MessageBuilder(Lang.COMMAND_GLOBAL_PREFIX+msg).buildAndSend(sender);
-	}
-	
-	public static String getGson(String str){
-		try {
-			return new com.google.gson.GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new com.google.gson.JsonParser().parse(str));
-		} catch(NoClassDefFoundError e){
-			return new org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new org.bukkit.craftbukkit.libs.com.google.gson.JsonParser().parse(str));
-		}
-		
 	}
 
     @SuppressWarnings("unchecked")
@@ -154,17 +144,13 @@ public class Utils {
         return t;
     }
     
-    public static void log(String log){
-        KothPlugin.getPlugin().getLogger().info("KoTH - "+log);
-    }
-    
     public static String parseDate(long millis){
         SimpleDateFormat sdf = new SimpleDateFormat();
         return sdf.format(new Date(millis));
     }
     
-    public static String parseCurrentDate(){
-        return parseDate(System.currentTimeMillis() + ConfigHandler.getInstance().getGlobal().getMinuteOffset()*60*1000);
+    public static String parseCurrentDate(KothPlugin plugin){
+        return parseDate(System.currentTimeMillis() + plugin.getConfigHandler().getGlobal().getMinuteOffset()*60*1000);
     }
     
     public static Location getLocFromObject(JSONObject loc) {

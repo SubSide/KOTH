@@ -6,24 +6,25 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import subside.plugins.koth.ConfigHandler;
-import subside.plugins.koth.Lang;
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.KothHandler;
-import subside.plugins.koth.adapter.Loot;
-import subside.plugins.koth.adapter.RunningKoth;
+import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.LootAlreadyExistException;
 import subside.plugins.koth.exceptions.LootNotExistException;
-import subside.plugins.koth.loaders.LootLoader;
+import subside.plugins.koth.gamemodes.RunningKoth;
+import subside.plugins.koth.loot.Loot;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.scheduler.Schedule;
-import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
 
-public class CommandLoot implements ICommand {
+public class CommandLoot extends AbstractCommand {
+
+    public CommandLoot(CommandCategory category) {
+        super(category);
+    }
 
     @Override
     public void run(CommandSender sender, String[] args) {
@@ -82,7 +83,7 @@ public class CommandLoot implements ICommand {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth loot rename <loot> <newname>");
         }
         
-        Loot loot = KothHandler.getInstance().getLoot(args[0]);
+        Loot loot = getPlugin().getLootHandler().getLoot(args[0]);
         if(loot == null){
             throw new LootNotExistException(args[0]);
         }
@@ -93,34 +94,34 @@ public class CommandLoot implements ICommand {
     
     private void asMember(CommandSender sender, String[] args){
         Player player = (Player)sender;
-        RunningKoth rKoth = KothHandler.getInstance().getRunningKoth();
+        RunningKoth rKoth = getPlugin().getKothHandler().getRunningKoth();
         String loot;
         if(rKoth == null || rKoth.getKoth() == null){
-            Schedule sched = ScheduleHandler.getInstance().getNextEvent();
+            Schedule sched = getPlugin().getScheduleHandler().getNextEvent();
             if(sched == null){
                 return;
             }
             if(sched.getLootChest() != null){
                 loot = sched.getLootChest();
             } else {
-                Koth koth = KothHandler.getInstance().getKoth(sched.getKoth());
+                Koth koth = getPlugin().getKothHandler().getKoth(sched.getKoth());
                 if(koth == null){
-                    if(!ConfigHandler.getInstance().getLoot().getDefaultLoot().equalsIgnoreCase("")){
-                        loot = ConfigHandler.getInstance().getLoot().getDefaultLoot();
+                    if(!getPlugin().getConfigHandler().getLoot().getDefaultLoot().equalsIgnoreCase("")){
+                        loot = getPlugin().getConfigHandler().getLoot().getDefaultLoot();
                     } else {
                         return;
                     }
                 } else if(koth.getLoot() != null){
                     loot = koth.getLoot();
                 } else {
-                    loot = ConfigHandler.getInstance().getLoot().getDefaultLoot();
+                    loot = getPlugin().getConfigHandler().getLoot().getDefaultLoot();
                 }
             }
             
         } else {
             if(rKoth.getLootChest() == null){
                 if(rKoth.getKoth().getLoot() == null){
-                    loot = ConfigHandler.getInstance().getLoot().getDefaultLoot();
+                    loot = getPlugin().getConfigHandler().getLoot().getDefaultLoot();
                 } else {
                     loot = rKoth.getKoth().getLoot();
                 }
@@ -129,7 +130,7 @@ public class CommandLoot implements ICommand {
             }
         }
         if(loot != null){
-            Loot lt = KothHandler.getInstance().getLoot(loot);
+            Loot lt = getPlugin().getLootHandler().getLoot(loot);
             if(lt != null){
                 player.openInventory(lt.getInventory());
             }
@@ -142,13 +143,13 @@ public class CommandLoot implements ICommand {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth loot create <loot>");
         }
         
-        Loot loot = KothHandler.getInstance().getLoot(args[0]);
+        Loot loot = getPlugin().getLootHandler().getLoot(args[0]);
         if(loot != null){
             throw new LootAlreadyExistException(args[0]);
         }
         
-        KothHandler.getInstance().getLoots().add(new Loot(args[0]));
-        LootLoader.save();
+        getPlugin().getLootHandler().getLoots().add(new Loot(getPlugin().getLootHandler(), args[0]));
+        getPlugin().getLootHandler().save();
         throw new CommandMessageException(Lang.COMMAND_LOOT_CREATE);
     }
     
@@ -157,7 +158,7 @@ public class CommandLoot implements ICommand {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth loot edit <loot> (commands)");
         }
         
-        Loot loot = KothHandler.getInstance().getLoot(args[0]);
+        Loot loot = getPlugin().getLootHandler().getLoot(args[0]);
         if(loot == null){
             throw new LootNotExistException(args[0]);
         }
@@ -168,11 +169,11 @@ public class CommandLoot implements ICommand {
     }
     
     private void commands(CommandSender sender, String[] args){
-        if(!ConfigHandler.getInstance().getLoot().isCmdIngame()){
+        if(!getPlugin().getConfigHandler().getLoot().isCmdIngame()){
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_INGAME_DISABLED));
         }
         
-        if(!sender.isOp() && ConfigHandler.getInstance().getLoot().isCmdNeedOp()){
+        if(!sender.isOp() && getPlugin().getConfigHandler().getLoot().isCmdNeedOp()){
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_OPONLY));
         }
         
@@ -182,15 +183,15 @@ public class CommandLoot implements ICommand {
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> add <command>").commandInfo("Add a command").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> list").commandInfo("Show a list of commands").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> remove <id>").commandInfo("Remove a command").build());
-          
-            if(!ConfigHandler.getInstance().getLoot().isCmdEnabled()){
+
+            if(!getPlugin().getConfigHandler().getLoot().isCmdEnabled()){
                 new MessageBuilder(Lang.COMMAND_LOOT_CMD_CONFIG_NOT_ENABLED).buildAndSend(sender);
             }
             return;
         }
         String lootName = args[0];
 
-        Loot loot = KothHandler.getInstance().getLoot(lootName);
+        Loot loot = getPlugin().getLootHandler().getLoot(lootName);
         if(loot == null){
             throw new CommandMessageException(new MessageBuilder(Lang.LOOT_ERROR_NOTEXIST).loot(lootName));
         }
@@ -200,7 +201,7 @@ public class CommandLoot implements ICommand {
                 throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth loot cmd <loot> add <command>");
             
             loot.getCommands().add(String.join(" ", Arrays.copyOfRange(args, 2, args.length)));
-            LootLoader.save();
+            getPlugin().getLootHandler().save();
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_CREATED).loot(lootName));
         } else if(args[1].equalsIgnoreCase("remove")){
             if(args.length < 2)
@@ -208,7 +209,7 @@ public class CommandLoot implements ICommand {
             try {
                 int id = Integer.parseInt(args[2]);
                 loot.getCommands().remove(id);
-                LootLoader.save();
+                getPlugin().getLootHandler().save();
                 throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_REMOVED).loot(lootName).id(id));
             } catch(NumberFormatException e){
                 throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_NOTANUMBER));
@@ -225,7 +226,7 @@ public class CommandLoot implements ICommand {
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> add").commandInfo("Create loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> list").commandInfo("Edit loot chest").build(),  
                     new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth loot cmd <loot> remove <id>").commandInfo("Remove loot chest").build());
-            if(ConfigHandler.getInstance().getLoot().isCmdEnabled()){
+            if(getPlugin().getConfigHandler().getLoot().isCmdEnabled()){
                 Utils.sendMessage(sender, true, "&cNote: commands are disabled in the config!");
             }
             return;
@@ -234,7 +235,7 @@ public class CommandLoot implements ICommand {
     
     private void list(CommandSender sender, String[] args){
         new MessageBuilder(Lang.COMMAND_LISTS_LOOT_TITLE).buildAndSend(sender);
-        for (Loot loot : KothHandler.getInstance().getLoots()) {
+        for (Loot loot : getPlugin().getLootHandler().getLoots()) {
             new MessageBuilder(Lang.COMMAND_LISTS_LOOT_ENTRY).loot(loot.getName()).buildAndSend(sender);
         }
     }
@@ -244,13 +245,13 @@ public class CommandLoot implements ICommand {
             throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth loot remove <loot>");
         }
         
-        Loot loot = KothHandler.getInstance().getLoot(args[0]);
+        Loot loot = getPlugin().getLootHandler().getLoot(args[0]);
         if(loot == null){
             throw new LootNotExistException(args[0]);
         }
         
-        KothHandler.getInstance().getLoots().remove(loot);
-        LootLoader.save();
+        getPlugin().getLootHandler().getLoots().remove(loot);
+        getPlugin().getLootHandler().save();
         
         throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_REMOVE).loot(loot.getName()));
     }
@@ -265,6 +266,16 @@ public class CommandLoot implements ICommand {
         return new String[] {
             "loot"
         };
+    }
+    
+    @Override
+    public String getUsage() {
+        return "/koth loot";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Shows the loot menu";
     }
 
 }

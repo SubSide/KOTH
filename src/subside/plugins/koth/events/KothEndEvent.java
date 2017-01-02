@@ -1,35 +1,30 @@
 package subside.plugins.koth.events;
 
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.adapter.Koth;
-import subside.plugins.koth.adapter.RunningKoth;
-import subside.plugins.koth.adapter.RunningKoth.EndReason;
-import subside.plugins.koth.adapter.captypes.Capper;
+import subside.plugins.koth.captureentities.Capper;
+import subside.plugins.koth.gamemodes.RunningKoth;
+import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
 
 /**
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class KothEndEvent extends Event implements IEvent {
+public class KothEndEvent extends AbstractEvent {
     private @Getter Capper winner;
     private @Getter @Setter boolean triggerLoot;
     private @Getter EndReason reason;
     private @Getter RunningKoth runningKoth;
     
     
-    public KothEndEvent(RunningKoth koth, Capper capper, EndReason reason){
-        this.runningKoth = koth;
+    public KothEndEvent(RunningKoth runningKoth, Capper capper, EndReason reason){
+        super(runningKoth.getKoth());
+        this.runningKoth = runningKoth;
         this.winner = capper;
         this.triggerLoot = true;
         this.reason = reason;
-    }
-    
-    public Koth getKoth(){
-        return runningKoth.getKoth();
     }
     
     @Deprecated

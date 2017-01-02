@@ -5,15 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
-import subside.plugins.koth.ConfigHandler;
+import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.modules.ConfigHandler;
 
 public class MySQL implements IDatabase {
     private Connection connection;
-    private JavaPlugin plugin;
+    private KothPlugin plugin;
     
-    public MySQL(JavaPlugin plugin){
+    public MySQL(KothPlugin plugin){
         this.plugin = plugin;
     }
     
@@ -23,12 +22,12 @@ public class MySQL implements IDatabase {
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            ConfigHandler.Database cDB = ConfigHandler.getInstance().getDatabase();
+            ConfigHandler.Database cDB = plugin.getConfigHandler().getDatabase();
             String url = "//" + cDB.getHost() +  ":" + cDB.getPort() + "/" + cDB.getDatabase();
             this.connection = DriverManager.getConnection("jdbc:mysql:" + url, cDB.getUsername(), cDB.getPassword());
             return this.connection;
         } catch (ClassNotFoundException e) {
-            plugin.getLogger().log(Level.SEVERE, "Couldn't find the MySQL library!");
+            plugin.getLogger().log(Level.SEVERE, "Couldn't find the MySQL library!", e);
         }
         
         return null;
