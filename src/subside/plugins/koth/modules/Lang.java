@@ -173,12 +173,9 @@ public class Lang extends AbstractModule {
         } catch (IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-    
-    @Override
-    public void onDisable(){
+        
         try {
-            save(plugin);
+            save(plugin); // Save here instead on onDisable so we can actually edit it between reloads
         } catch (IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -191,35 +188,38 @@ public class Lang extends AbstractModule {
 		if(obj == null)
 		    return;
 		
-		JSONObject jsonObject2 = (JSONObject) obj;
+		JSONObject parentFieldNodes = (JSONObject) obj;
 
+		// Get all the *static fields
 		Field[] fields = Lang.class.getFields();
 		for (Field field : fields) {
 			try {
-				if (!Modifier.isStatic(field.getModifiers()))
+				if (!Modifier.isStatic(field.getModifiers())) // This is where we check if it is actually static
 				    continue;
 				
-				// This is just to check if it is able to find the JSON Object in the file //
-			    String[] fieldName = field.getName().split("_", 3);
-			    if(!jsonObject2.containsKey(fieldName[0]))
+				// The file follows the structure parentNode.middleNode.fieldNode
+			    String[] nodePart = field.getName().split("_", 3);
+			    
+                // This is just to check if it is able to find the JSON Object in the file //
+			    if(!parentFieldNodes.containsKey(nodePart[0]))
 			        continue;
 			    
-			    JSONObject jsonObject3 = (JSONObject)jsonObject2.get(fieldName[0]);
-			    if(!jsonObject3.containsKey(fieldName[1]))
+			    JSONObject middleFieldNodes = (JSONObject)parentFieldNodes.get(nodePart[0]);
+			    if(!middleFieldNodes.containsKey(nodePart[1]))
 		            continue;
 			    
-		        JSONObject jsonObject = (JSONObject)jsonObject3.get(fieldName[1]);
-				if(!jsonObject.containsKey(fieldName[2]))
+		        JSONObject fieldNodes = (JSONObject)middleFieldNodes.get(nodePart[1]);
+				if(!fieldNodes.containsKey(nodePart[2]))
 		            continue;
+				// End checking if it can be found //
+				
 		        
-			    Object strObj = jsonObject.get(fieldName[2]);
-			    // //
+			    Object node = fieldNodes.get(nodePart[2]);
 			    
-			    
-			    if(strObj instanceof String){
-                    field.set(null, new String[]{(String)strObj});
+			    if(node instanceof String){
+                    field.set(null, new String[]{(String)node});
 			    } else {
-			        JSONArray strArray = (JSONArray)strObj;
+			        JSONArray strArray = (JSONArray)node;
                     field.set(null, strArray.toArray(new String[strArray.size()]));
 			    }
 				
@@ -227,51 +227,54 @@ public class Lang extends AbstractModule {
 			    e.printStackTrace();
 			}
 		}
-			
-		save(plugin);
 	}
 
 	@SuppressWarnings("unchecked")
 	public static void save(JavaPlugin plugin) throws IllegalArgumentException, IllegalAccessException {
 
-		JSONObject obj = new JSONObject();
+		JSONObject parentFieldNodes = new JSONObject();
 
 		Field[] fields = Lang.class.getFields();
 		for (Field field : fields) {
 			if (!Modifier.isStatic(field.getModifiers())) {
 			    continue;
 			}
-			
-		    String[] fieldName = field.getName().split("_", 3);
-		    JSONObject obj2 = new JSONObject();
-		    if(obj.containsKey(fieldName[0])){
-		        obj2 = (JSONObject)obj.get(fieldName[0]);
+
+            // The file follows the structure parentNode.middleNode.fieldNode
+		    String[] nodePart = field.getName().split("_", 3);
+		    
+		    // Check if the nodes exist and otherwise create it
+		    JSONObject middleFieldNodes = new JSONObject();
+		    if(parentFieldNodes.containsKey(nodePart[0])){
+		        middleFieldNodes = (JSONObject)parentFieldNodes.get(nodePart[0]);
 		    }
 		    
-		    JSONObject obj3 = new JSONObject();
-		    if(obj2.containsKey(fieldName[1])){
-		        obj3 = (JSONObject)obj2.get(fieldName[1]);
+		    JSONObject fieldNodes = new JSONObject();
+		    if(middleFieldNodes.containsKey(nodePart[1])){
+		        fieldNodes = (JSONObject)middleFieldNodes.get(nodePart[1]);
 		    }
+            // Done creating nodes
 		    
 		    
-		    String[] strObj = (String[])field.get(null);
-		    if(strObj.length > 1){
-		        JSONArray obj4 = new JSONArray();
+		    String[] fieldObject = (String[])field.get(null);
+		    if(fieldObject.length > 1){
+		        JSONArray jsonArray = new JSONArray();
 		        String[] fieldObj = (String[])field.get(null);
-		        for(String str : fieldObj){
-		            obj4.add(str);
+		        for(String string : fieldObj){
+		            jsonArray.add(string);
 		        }
-                obj3.put(fieldName[2], obj4);
-		    } else if(strObj.length == 1) {
-		        obj3.put(fieldName[2], strObj[0]);
+                fieldNodes.put(nodePart[2], jsonArray);
+		    } else if(fieldObject.length == 1) {
+		        fieldNodes.put(nodePart[2], fieldObject[0]);
 		    } else {
-		        obj3.put(fieldName[2], new String[]{});
+		        fieldNodes.put(nodePart[2], new String[]{});
 		    }
 		    
-		    obj2.put(fieldName[1], obj3);
-		    obj.put(fieldName[0], obj2);
+		    // Adding it back to the parentNodes
+		    middleFieldNodes.put(nodePart[1], fieldNodes);
+		    parentFieldNodes.put(nodePart[0], middleFieldNodes);
 		}
 		
-		new JSONLoader(plugin, "lang.json").save(obj);
+		new JSONLoader(plugin, "lang.json").save(parentFieldNodes);
 	}
 }
