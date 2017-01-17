@@ -13,6 +13,7 @@ public abstract class AbstractHook {
     
     public boolean canCap(Player player){ return true; }
     public void tick(){}
+    public void onDisable(){}
     public abstract boolean isEnabled();
     
     public KothPlugin getPlugin(){

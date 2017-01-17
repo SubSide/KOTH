@@ -29,6 +29,13 @@ public class HookManager extends AbstractModule {
         }
     }
     
+    @Override
+    public void onDisable(){
+        for(AbstractHook hook : hooks){
+            hook.onDisable();
+        }
+    }
+    
     public void registerHook(AbstractHook hook){
         hooks.add(hook);
         if(hook instanceof Listener){
