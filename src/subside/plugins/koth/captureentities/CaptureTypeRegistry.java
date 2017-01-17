@@ -104,7 +104,11 @@ public class CaptureTypeRegistry extends AbstractModule {
             return null;
         }
         try {
-            return (Capper)captureTypes.get(captureTypeIdentifier).getDeclaredMethod("getFromUniqueName", CaptureTypeRegistry.class, String.class).invoke(null, this, objectUniqueId);
+            Capper capper = (Capper)captureTypes.get(captureTypeIdentifier).getDeclaredMethod("getFromUniqueName", CaptureTypeRegistry.class, String.class).invoke(null, this, objectUniqueId);
+            if(capper.getObject() == null){
+                return null;
+            }
+            return capper;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             return null;
         }
