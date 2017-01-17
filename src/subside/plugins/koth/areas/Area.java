@@ -50,9 +50,7 @@ public class Area implements Capable {
         this.middle = min.clone().add(max.clone()).multiply(0.5);
     }
 
-    private boolean isInAABB(Location loc, Location pos1, Location pos2) {
-        Location min = getMinimum(pos1, pos2);
-        Location max = getMaximum(pos1, pos2);
+    private boolean isInAABB(Location loc) {
         if (min.getBlockX() <= loc.getBlockX() && max.getBlockX() >= loc.getBlockX() && min.getBlockY() <= loc.getBlockY() && max.getBlockY() >= loc.getBlockY() && min.getBlockZ() <= loc.getBlockZ() && max.getBlockZ() >= loc.getBlockZ()) {
             return true;
         }
@@ -81,7 +79,7 @@ public class Area implements Capable {
         }
         
         Location loc = player.getLocation();
-        if (isInAABB(loc, min, max)) {
+        if (isInAABB(loc)) {
             return true;
         }
 

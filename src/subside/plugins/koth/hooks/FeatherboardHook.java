@@ -9,15 +9,18 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import lombok.Getter;
+import subside.plugins.koth.KothPlugin.LoadingState;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.events.KothEndEvent;
-import subside.plugins.koth.events.KothStartEvent;
+import subside.plugins.koth.events.KothInitializeEvent;
+import subside.plugins.koth.events.KothPluginInitializationEvent;
 import subside.plugins.koth.modules.ConfigHandler.Hooks.Featherboard;
 
 public class FeatherboardHook extends AbstractHook implements Listener {
@@ -46,13 +49,18 @@ public class FeatherboardHook extends AbstractHook implements Listener {
         getPlugin().getLogger().log(Level.INFO, "Featherboard hook: "+(enabled?"Enabled":"Disabled"));
     }
     
+    @Override
+    public void onDisable(){
+        HandlerList.unregisterAll(this);
+    }
+    
     @EventHandler(ignoreCancelled = true)
-    public void onKothStart(KothStartEvent event){
+    public void onKothInitialize(KothInitializeEvent event){
         koth = event.getKoth();
         if(range < 0){
             for(Player player : Bukkit.getOnlinePlayers()){
                 inRange.add(player);
-                setBoard(player, board);
+                forceSyncSetBoard(player);
             }
         }
     }
@@ -60,12 +68,14 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     @EventHandler
     public void onKothEnd(KothEndEvent event){
         if(!isEnabled() || koth == null) return;
+        resetAll();
+    }
+    
+    @EventHandler
+    public void onKothPluginInitialization(KothPluginInitializationEvent event){
+        if((!isEnabled() || koth == null) && event.getLoadingState() != LoadingState.DISABLE) return;
         
-        for(OfflinePlayer player : inRange){
-            if(player.isOnline())
-                resetBoard(player.getPlayer(), board);
-        }
-        inRange.clear();
+        resetAll();
     }
     
     @EventHandler(ignoreCancelled = true)
@@ -79,13 +89,13 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
-        inRange.remove(event.getPlayer());
+        resetBoard(event.getPlayer(), board);
     }
 
     
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event){
-        inRange.remove(event.getPlayer());
+        resetBoard(event.getPlayer(), board);
     }
     
     
@@ -97,7 +107,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
 
             for(OfflinePlayer player : inRange){
                 if(player.isOnline())
-                    resetBoard(player.getPlayer(), board);
+                    forceSyncSetBoard(player.getPlayer());
             }
             inRange.clear();
             koth = null;
@@ -109,15 +119,42 @@ public class FeatherboardHook extends AbstractHook implements Listener {
             if(!inRange.contains(player)){
                 if(loc.getWorld() == player.getLocation().getWorld() && loc.distance(player.getLocation()) <= range-rangeMargin){
                     inRange.add(player);
-                    setBoard(player, board);
+                    forceSyncSetBoard(player);
                 }
             } else {
                 if(loc.getWorld() != player.getLocation().getWorld() || loc.distance(player.getLocation()) >= range+rangeMargin){
                     inRange.remove(player);
-                    resetBoard(player, board);
+                    forceSyncResetBoard(player);
                 }
             }
         }
+    }
+    
+    public void resetAll(){
+        for(OfflinePlayer player : inRange){
+            if(player.isOnline())
+                forceSyncResetBoard(player.getPlayer());
+        }
+        inRange.clear();
+        koth = null;
+    }
+    
+    public void forceSyncSetBoard(final Player player){
+        Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable(){
+            @Override
+            public void run() {
+                setBoard(player, board);
+            }
+        }, 1);
+    }
+    
+    public void forceSyncResetBoard(final Player player){
+        Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable(){
+            @Override
+            public void run() {
+                resetBoard(player, board);
+            }
+        }, 1);
     }
 
     
