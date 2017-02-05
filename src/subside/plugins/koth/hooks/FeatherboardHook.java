@@ -56,6 +56,7 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     
     @EventHandler(ignoreCancelled = true)
     public void onKothInitialize(KothInitializeEvent event){
+        if(!isEnabled()) return;
         koth = event.getKoth();
         if(range < 0){
             for(Player player : Bukkit.getOnlinePlayers()){
@@ -89,12 +90,14 @@ public class FeatherboardHook extends AbstractHook implements Listener {
     
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
+        if(!isEnabled()) return;
         resetBoard(event.getPlayer(), board);
     }
 
     
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event){
+        if(!isEnabled()) return;
         resetBoard(event.getPlayer(), board);
     }
     
