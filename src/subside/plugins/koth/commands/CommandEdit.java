@@ -188,12 +188,12 @@ public class CommandEdit extends AbstractCommand {
     
     @Override
     public String getUsage() {
-        return "/koth remove <koth>";
+        return "/koth edit <koth>";
     }
 
     @Override
     public String getDescription() {
-        return "removes an existing koth";
+        return "Edits an existing koth";
     }
 
 }
