@@ -37,6 +37,7 @@ hooks:
   vanishnopacket: true
   factions: true
   kingdoms: true
+  pvpmanager: true
   featherboard:
     enabled: false
     board: "koth"
