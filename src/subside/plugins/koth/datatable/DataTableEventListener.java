@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
@@ -39,7 +40,7 @@ public class DataTableEventListener implements Listener {
             
             PreparedStatement ptsd = connection.prepareStatement(
                     "INSERT INTO results(id, koth, gamemode, date, capper_uuid, capper_displayname, capper_type) "
-                    + "VALUES (NULL, ?, ?, ?, ?, ?, ?)");
+                    + "VALUES (NULL, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             ptsd.setString(1, event.getKoth().getName());
             ptsd.setString(2, event.getRunningKoth().getType());
             ptsd.setInt(3, (int)System.currentTimeMillis()/1000);
