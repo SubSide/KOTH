@@ -23,6 +23,7 @@ public class HookManager extends AbstractModule {
     public void onEnable(){
         registerHook(new VanishHook(this));
         registerHook(new FeatherboardHook(this));
+        registerHook(new PvPManagerHook(this));
         
         if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")){
             new PlaceholderAPIHook(plugin).hook();

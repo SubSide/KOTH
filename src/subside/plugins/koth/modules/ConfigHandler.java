@@ -69,12 +69,14 @@ public class ConfigHandler extends AbstractModule {
 	    private @Getter boolean vanishNoPacket = true;
 	    private @Getter boolean factions = true;
 	    private @Getter boolean kingdoms = true;
+        private @Getter boolean pvpManager = true;
 	    private @Getter Featherboard featherboard;
 	    
 	    public Hooks(ConfigurationSection section){
             vanishNoPacket = section.getBoolean("vanishnopacket");
             factions = section.getBoolean("factions");
             kingdoms = section.getBoolean("kingdoms");
+            pvpManager = section.getBoolean("pvpmanager");
             featherboard = new Featherboard(section.getConfigurationSection("featherboard"));
 	    }
 	    
