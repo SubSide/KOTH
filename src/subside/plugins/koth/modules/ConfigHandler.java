@@ -43,6 +43,7 @@ public class ConfigHandler extends AbstractModule {
 	    private @Getter String timeZone = "Europe/Amsterdam";
         private @Getter int minuteOffset = 0;
         private @Getter int startWeekMinuteOffset = 0;
+        private @Getter String dateFormat = "dd/MM/yyyy";
 	    private @Getter int preBroadcast = 0;
 	    private @Getter int noCapBroadcastInterval = 30;
 	    private @Getter List<String> helpCommand = null;
@@ -56,6 +57,7 @@ public class ConfigHandler extends AbstractModule {
 	        timeZone = section.getString("schedule-timezone");
             minuteOffset = section.getInt("minuteoffset");
             startWeekMinuteOffset = section.getInt("startweekminuteoffset");
+            dateFormat = section.getString("date-format");
 	        preBroadcast = section.getInt("pre-broadcast");
 	        noCapBroadcastInterval = section.getInt("nocap-broadcast-interval");
 	        helpCommand = section.getStringList("helpcommand");

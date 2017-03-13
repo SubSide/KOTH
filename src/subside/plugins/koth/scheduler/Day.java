@@ -69,7 +69,7 @@ public enum Day {
     
             startOfWeek = calendar.getTimeInMillis();
             if(plugin.getConfigHandler().getGlobal().isDebug()){
-                plugin.getLogger().log(Level.INFO, "Schedule start of week has been set to: "+Utils.parseDate(startOfWeek)+" ("+startOfWeek+")");
+                plugin.getLogger().log(Level.INFO, "Schedule start of week has been set to: "+Utils.parseDate(startOfWeek, plugin)+" ("+startOfWeek+")");
             }
         }
         return startOfWeek;

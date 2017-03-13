@@ -144,13 +144,14 @@ public class Utils {
         return t;
     }
     
-    public static String parseDate(long millis){
+    public static String parseDate(long millis, KothPlugin plugin){
         SimpleDateFormat sdf = new SimpleDateFormat();
+        sdf.applyPattern(plugin.getConfigHandler().getGlobal().getDateFormat());
         return sdf.format(new Date(millis));
     }
     
     public static String parseCurrentDate(KothPlugin plugin){
-        return parseDate(System.currentTimeMillis() + plugin.getConfigHandler().getGlobal().getMinuteOffset()*60*1000);
+        return parseDate(System.currentTimeMillis() + plugin.getConfigHandler().getGlobal().getMinuteOffset()*60*1000, plugin);
     }
     
     public static Location getLocFromObject(JSONObject loc) {
