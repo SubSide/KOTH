@@ -43,7 +43,7 @@ public class DataTableEventListener implements Listener {
                     + "VALUES (NULL, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             ptsd.setString(1, event.getKoth().getName());
             ptsd.setString(2, event.getRunningKoth().getType());
-            ptsd.setInt(3, (int)System.currentTimeMillis()/1000);
+            ptsd.setInt(3, (int)(System.currentTimeMillis()/1000));
             ptsd.setString(4, event.getWinner().getUniqueObjectIdentifier());
             ptsd.setString(5, event.getWinner().getName());
             ptsd.setString(6, event.getWinner().getUniqueClassIdentifier());
