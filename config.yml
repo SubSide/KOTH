@@ -11,6 +11,7 @@ global:
   date-format: "dd/MM/yyyy"
   minuteoffset: 0
   startweekminuteoffset: 0
+  scheduleminuteoffset: 0
   pre-broadcast: 0
   nocap-broadcast-interval: 30
   helpcommand:
