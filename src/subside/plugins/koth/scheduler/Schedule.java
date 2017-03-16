@@ -43,6 +43,8 @@ public class Schedule implements JSONSerializable<Schedule> {
 
     public void calculateNextEvent() {
         long eventTime = day.getDayStart(scheduleHandler.getPlugin()) + Day.getTime(time) - WEEK;
+        
+        eventTime += scheduleHandler.getPlugin().getConfigHandler().getGlobal().getScheduleMinuteOffset()*60*1000;
 
         while (eventTime < System.currentTimeMillis()) {
             eventTime += WEEK;
