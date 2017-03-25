@@ -22,7 +22,6 @@ public abstract class Capper {
     public abstract boolean isInOrEqualTo(OfflinePlayer oPlayer);
     public abstract String getName();
     public abstract Object getObject();
-    public abstract boolean areaCheck(Capable cap);
     public abstract List<Player> getAllOnlinePlayers();
 
     
@@ -36,6 +35,15 @@ public abstract class Capper {
         }
         
         return list;
+    }
+
+    public boolean areaCheck(Capable cap) {
+        for(Player player : getAllOnlinePlayers()){
+            if(cap.isInArea(player) && captureTypeRegistry.getPlugin().getHookManager().canCap(player)){
+                return true;
+            }
+        }
+        return false;
     }
     
     

@@ -11,8 +11,6 @@ import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 
-import subside.plugins.koth.areas.Capable;
-
 public class CappingFactionUUID extends CappingGroup {
     private Faction faction;
     
@@ -56,18 +54,6 @@ public class CappingFactionUUID extends CappingGroup {
 
     public Faction getObject(){
         return faction;
-    }
-    
-    @Override
-    public boolean areaCheck(Capable cap) {
-    	if(faction == null)
-    		return false;
-        for(Player player : faction.getOnlinePlayers()){
-            if(cap.isInArea(player) && captureTypeRegistry.getPlugin().getHookManager().canCap(player)){
-                return true;
-            }
-        }
-        return false;
     }
 
     

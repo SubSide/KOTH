@@ -11,8 +11,6 @@ import org.kingdoms.constants.player.KingdomPlayer;
 import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
-import subside.plugins.koth.areas.Capable;
-
 public class CappingKingdom extends CappingGroup {
     private Kingdom kingdom;
     
@@ -58,17 +56,6 @@ public class CappingKingdom extends CappingGroup {
     
     public Kingdom getObject(){
         return kingdom;
-    }
-
-    @Override
-    public boolean areaCheck(Capable cap) {
-        for(KingdomPlayer kPlayer : kingdom.getOnlineMembers()){
-            Player player = kPlayer.getPlayer();
-            if(cap.isInArea(player) && captureTypeRegistry.getPlugin().getHookManager().canCap(player)){
-                return true;
-            }
-        }
-        return false;
     }
     
     @Override 

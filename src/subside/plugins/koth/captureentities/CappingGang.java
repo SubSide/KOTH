@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import net.brcdev.gangs.GangsPlugin;
 import net.brcdev.gangs.gang.Gang;
 import net.brcdev.gangs.gang.GangManager;
-import subside.plugins.koth.areas.Capable;
 
 public class CappingGang extends CappingGroup {
     private Gang gang;
@@ -58,16 +57,6 @@ public class CappingGang extends CappingGroup {
     
     public Gang getObject(){
         return gang;
-    }
-
-    @Override
-    public boolean areaCheck(Capable cap) {
-        for(Player player : gang.getOnlineMembers()){
-            if(cap.isInArea(player) && captureTypeRegistry.getPlugin().getHookManager().canCap(player)){
-                return true;
-            }
-        }
-        return false;
     }
     
     @Override 
