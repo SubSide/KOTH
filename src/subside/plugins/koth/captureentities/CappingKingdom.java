@@ -26,8 +26,8 @@ public class CappingKingdom extends CappingGroup<Kingdom> {
         );
     }
 
-    public CappingKingdom(CaptureTypeRegistry captureTypeRegistry, String name){
-        this(captureTypeRegistry, GameManagement.getKingdomManager().getOrLoadKingdom(name));
+    public CappingKingdom(CaptureTypeRegistry captureTypeRegistry, String uuid){
+        this(captureTypeRegistry, GameManagement.getKingdomManager().getOrLoadKingdom(uuid));
     }
     
     @Override

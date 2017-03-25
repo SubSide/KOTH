@@ -20,8 +20,8 @@ public class CappingPlayer extends Capper<OfflinePlayer> {
         this(captureTypeRegistry, (Player)playerList.toArray()[new Random().nextInt(playerList.size())]);
     }
     
-    public CappingPlayer(CaptureTypeRegistry captureTypeRegistry, String name){
-        this(captureTypeRegistry, Bukkit.getOfflinePlayer(UUID.fromString(name)));
+    public CappingPlayer(CaptureTypeRegistry captureTypeRegistry, String uuid){
+        this(captureTypeRegistry, Bukkit.getOfflinePlayer(UUID.fromString(uuid)));
     }
     
     @Override

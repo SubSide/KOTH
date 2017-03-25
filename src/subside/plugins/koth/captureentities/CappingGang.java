@@ -24,8 +24,8 @@ public class CappingGang extends CappingGroup<Gang> {
         );
     }
 
-    public CappingGang(CaptureTypeRegistry captureTypeRegistry, String name){
-        this(captureTypeRegistry, GangsPlugin.getInstance().gangManager.getGang(Integer.parseInt(name)));
+    public CappingGang(CaptureTypeRegistry captureTypeRegistry, String uuid){
+        this(captureTypeRegistry, GangsPlugin.getInstance().gangManager.getGang(Integer.parseInt(uuid)));
     }
     
     @Override

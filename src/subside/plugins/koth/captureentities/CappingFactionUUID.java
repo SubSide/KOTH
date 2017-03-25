@@ -26,8 +26,8 @@ public class CappingFactionUUID extends CappingGroup<Faction> {
         );
     }
 
-    public CappingFactionUUID(CaptureTypeRegistry captureTypeRegistry, String name){
-        this(captureTypeRegistry, Factions.getInstance().getFactionById(name));
+    public CappingFactionUUID(CaptureTypeRegistry captureTypeRegistry, String uuid){
+        this(captureTypeRegistry, Factions.getInstance().getFactionById(uuid));
     }
     
     @Override
