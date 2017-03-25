@@ -16,13 +16,12 @@ public class CappingGang extends CappingGroup<Gang> {
     
     public CappingGang(CaptureTypeRegistry captureTypeRegistry, Collection<Player> playerList){
         this(captureTypeRegistry,
-            GangsPlugin.getInstance().gangManager.getPlayersGang(
-                playerList.stream()
-                .filter(player -> GangsPlugin.getInstance().gangManager.isInGang(player))
-                .findAny()
-                .orElse(null)
-            )
-       );
+                playerList.stream() // Create a stream
+                .filter(player -> GangsPlugin.getInstance().gangManager.isInGang(player)) // Filter to only players in a gang
+                .map(player -> GangsPlugin.getInstance().gangManager.getPlayersGang(player)) // Create a new stream containing gangs
+                .findAny() // Grab a single gang
+                .orElse(null) // If no gang exists return null
+        );
     }
 
     public CappingGang(CaptureTypeRegistry captureTypeRegistry, String name){

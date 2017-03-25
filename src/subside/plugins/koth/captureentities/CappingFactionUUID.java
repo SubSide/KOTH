@@ -17,12 +17,12 @@ public class CappingFactionUUID extends CappingGroup<Faction> {
     }
     
     public CappingFactionUUID(CaptureTypeRegistry captureTypeRegistry, Collection<Player> playerList){
-        this(captureTypeRegistry, FPlayers.getInstance().getByPlayer(
-                playerList.stream()
-                .filter(player -> FPlayers.getInstance().getByPlayer(player).getFaction().isNormal())
-                .findAny()
-                .orElse(null)
-            ).getFaction()
+        this(captureTypeRegistry,
+                playerList.stream() // Create a stream
+                .filter(player -> FPlayers.getInstance().getByPlayer(player).getFaction().isNormal()) // Filter to only normal factions
+                .map(player -> FPlayers.getInstance().getByPlayer(player).getFaction()) // Create a new stream containing factions
+                .findAny() // Grab a single faction
+                .orElse(null) // If no faction exists return null
         );
     }
 

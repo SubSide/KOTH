@@ -17,15 +17,13 @@ public class CappingKingdom extends CappingGroup<Kingdom> {
     }
     
     public CappingKingdom(CaptureTypeRegistry captureTypeRegistry, Collection<Player> playerList){
-        this(
-            captureTypeRegistry, 
-                GameManagement.getPlayerManager().getSession(
-                    playerList.stream()
-                    .filter(player -> GameManagement.getPlayerManager().getSession(player) != null)
-                    .findAny()
-                    .orElse(null)
-                ).getKingdom()
-            );
+        this(captureTypeRegistry,
+                playerList.stream() // Create a stream
+                .filter(player -> GameManagement.getPlayerManager().getSession(player) != null) // Filter to only players in a kingdom
+                .map(player -> GameManagement.getPlayerManager().getSession(player).getKingdom()) // Create a new stream containing kingdoms
+                .findAny() // Grab a single kingdom
+                .orElse(null) // If no kingdom exists return null
+        );
     }
 
     public CappingKingdom(CaptureTypeRegistry captureTypeRegistry, String name){

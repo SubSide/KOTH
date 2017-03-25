@@ -1,5 +1,6 @@
 package subside.plugins.koth.captureentities;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,14 +57,14 @@ public class CaptureTypeRegistry extends AbstractModule {
         
         // Kingdoms
         if(plugin.getConfigHandler().getHooks().isKingdoms() && plugin.getServer().getPluginManager().getPlugin("Kingdoms") != null){
-            registerCaptureType("kingdoms", CappingKingdom.class);
+            registerCaptureType("kingdom", CappingKingdom.class);
             setPreferedClass(CappingKingdom.class);
             hasGroupPlugin = true;
         }
         
         // Gangs
         if(plugin.getConfigHandler().getHooks().isGangs() && plugin.getServer().getPluginManager().getPlugin("GangsPlus") != null){
-            registerCaptureType("gangs", CappingGang.class);
+            registerCaptureType("gang", CappingGang.class);
             setPreferedClass(CappingGang.class);
             hasGroupPlugin = true;
         }
@@ -128,7 +129,7 @@ public class CaptureTypeRegistry extends AbstractModule {
         try {
             for(Class<? extends Capper> clazz : getCaptureTypes().values()){
                 if(capperClazz.isAssignableFrom(clazz)){
-                    Capper capper =  clazz.getDeclaredConstructor(CaptureTypeRegistry.class, List.class).newInstance(this, players);
+                    Capper capper =  clazz.getDeclaredConstructor(CaptureTypeRegistry.class, Collection.class).newInstance(this, players);
                     if(capper.getObject() == null){
                         return null;
                     }

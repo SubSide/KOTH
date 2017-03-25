@@ -16,12 +16,12 @@ public class CappingFactionNormal extends CappingGroup<Faction> {
     }
     
     public CappingFactionNormal(CaptureTypeRegistry captureTypeRegistry, Collection<Player> playerList){
-        this(captureTypeRegistry, MPlayerColl.get().get(
-                playerList.stream()
-                .filter(player -> MPlayerColl.get().get(player).getFaction().isNormal())
-                .findAny()
-                .orElse(null)
-            ).getFaction()
+        this(captureTypeRegistry,
+                playerList.stream() // Create a stream
+                .filter(player -> MPlayerColl.get().get(player).getFaction().isNormal()) // Filter to only normal factions
+                .map(player -> MPlayerColl.get().get(player).getFaction()) // Create a new stream containing factions
+                .findAny() // Grab a single faction
+                .orElse(null) // If no faction exists return null
         );
     }
     
