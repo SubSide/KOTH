@@ -39,6 +39,7 @@ hooks:
   vanishnopacket: true
   factions: true
   kingdoms: true
+  gangs: true
   pvpmanager: true
   featherboard:
     enabled: false

@@ -54,9 +54,17 @@ public class CaptureTypeRegistry extends AbstractModule {
             }
         }
         
+        // Kingdoms
         if(plugin.getConfigHandler().getHooks().isKingdoms() && plugin.getServer().getPluginManager().getPlugin("Kingdoms") != null){
             registerCaptureType("kingdoms", CappingKingdom.class);
             setPreferedClass(CappingKingdom.class);
+            hasGroupPlugin = true;
+        }
+        
+        // Gangs
+        if(plugin.getConfigHandler().getHooks().isGangs() && plugin.getServer().getPluginManager().getPlugin("GangsPlus") != null){
+            registerCaptureType("gangs", CappingGang.class);
+            setPreferedClass(CappingGang.class);
             hasGroupPlugin = true;
         }
         
