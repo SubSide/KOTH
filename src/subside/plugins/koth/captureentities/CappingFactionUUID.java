@@ -1,7 +1,6 @@
 package subside.plugins.koth.captureentities;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.OfflinePlayer;
@@ -11,58 +10,43 @@ import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 
-public class CappingFactionUUID extends CappingGroup {
-    private Faction faction;
+public class CappingFactionUUID extends CappingGroup<Faction> {
     
     public CappingFactionUUID(CaptureTypeRegistry captureTypeRegistry, Faction faction){
-        super(captureTypeRegistry);
-        this.faction = faction;
+        super(captureTypeRegistry, "factionuuid", faction);
     }
     
-    public CappingFactionUUID(CaptureTypeRegistry captureTypeRegistry, List<Player> playerList2){
-        super(captureTypeRegistry);
-        List<Player> playerList = new ArrayList<Player>(playerList2);
-        Collections.shuffle(playerList);
-        for(Player player : playerList){
-            Faction fac = FPlayers.getInstance().getByPlayer(player).getFaction();
-            if(fac.isNormal()){
-                faction = fac;
-                break;
-            }
-        }
+    public CappingFactionUUID(CaptureTypeRegistry captureTypeRegistry, Collection<Player> playerList){
+        this(captureTypeRegistry, FPlayers.getInstance().getByPlayer(
+                playerList.stream()
+                .filter(player -> FPlayers.getInstance().getByPlayer(player).getFaction().isNormal())
+                .findAny()
+                .orElse(null)
+            ).getFaction()
+        );
     }
 
-    @Override
-    public String getUniqueClassIdentifier(){
-        return "factionuuid";
+    public CappingFactionUUID(CaptureTypeRegistry captureTypeRegistry, String name){
+        this(captureTypeRegistry, Factions.getInstance().getFactionById(name));
     }
     
     @Override
     public String getUniqueObjectIdentifier(){
-        return faction.getId();
+        return getObject().getId();
     }
     
     @Override
     public boolean isInOrEqualTo(OfflinePlayer oPlayer){
-        return FPlayers.getInstance().getByOfflinePlayer(oPlayer).getFactionId().equals(faction.getId());
+        return FPlayers.getInstance().getByOfflinePlayer(oPlayer).getFactionId().equals(getObject().getId());
     }
     
     @Override
     public String getName(){
-        return faction.getTag();
+        return getObject().getTag();
     }
 
-    public Faction getObject(){
-        return faction;
-    }
-
-    
     @Override 
     public List<Player> getAllOnlinePlayers(){
-        return faction.getOnlinePlayers();
-    }
-
-    public static Capper getFromUniqueName(CaptureTypeRegistry captureTypeRegistry, String name){
-        return new CappingFactionUUID(captureTypeRegistry, Factions.getInstance().getFactionById(name));
+        return getObject().getOnlinePlayers();
     }
 }

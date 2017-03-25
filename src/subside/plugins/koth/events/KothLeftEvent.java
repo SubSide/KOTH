@@ -14,14 +14,14 @@ import subside.plugins.koth.gamemodes.RunningKoth;
  *
  */
 public class KothLeftEvent extends AbstractEvent implements Cancellable {
-    private @Getter Capper capper;
+    private @Getter Capper<?> capper;
     private boolean isCancelled;
     private @Getter int amountSecondsCapped;
-    private @Getter @Setter Capper nextCapper;
+    private @Getter @Setter Capper<?> nextCapper;
     private @Getter RunningKoth runningKoth;
     private @Getter Capable captureZone;
     
-    public KothLeftEvent(RunningKoth runningKoth, Capable captureZone, Capper capper, int amountSecondsCapped){
+    public KothLeftEvent(RunningKoth runningKoth, Capable captureZone, Capper<?> capper, int amountSecondsCapped){
         super(runningKoth.getKoth());
         this.runningKoth = runningKoth;
         this.captureZone = captureZone;

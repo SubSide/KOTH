@@ -1,70 +1,52 @@
 package subside.plugins.koth.captureentities;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import net.brcdev.gangs.GangsPlugin;
 import net.brcdev.gangs.gang.Gang;
-import net.brcdev.gangs.gang.GangManager;
 
-public class CappingGang extends CappingGroup {
-    private Gang gang;
+public class CappingGang extends CappingGroup<Gang> {
     
     public CappingGang(CaptureTypeRegistry captureTypeRegistry, Gang gang){
-        super(captureTypeRegistry);
-        this.gang = gang;
+        super(captureTypeRegistry, "gang", gang);
     }
     
-    public CappingGang(CaptureTypeRegistry captureTypeRegistry, List<Player> playerList2){
-        super(captureTypeRegistry);
-        List<Player> playerList = new ArrayList<>(playerList2);
-        Collections.shuffle(playerList);
-        
-        GangManager gM = GangsPlugin.getInstance().gangManager;
-        
-        for(Player player : playerList){
-            if(gM.isInGang(player)){
-                this.gang = gM.getPlayersGang(player);
-                break;
-            }
-        }
+    public CappingGang(CaptureTypeRegistry captureTypeRegistry, Collection<Player> playerList){
+        this(captureTypeRegistry,
+            GangsPlugin.getInstance().gangManager.getPlayersGang(
+                playerList.stream()
+                .filter(player -> GangsPlugin.getInstance().gangManager.isInGang(player))
+                .findAny()
+                .orElse(null)
+            )
+       );
+    }
+
+    public CappingGang(CaptureTypeRegistry captureTypeRegistry, String name){
+        this(captureTypeRegistry, GangsPlugin.getInstance().gangManager.getGang(Integer.parseInt(name)));
     }
     
     @Override
     public boolean isInOrEqualTo(OfflinePlayer oPlayer){
         if(!oPlayer.isOnline()) return false;
-        return gang.equals(GangsPlugin.getInstance().gangManager.getPlayersGang(oPlayer));
-    }
-
-    @Override
-    public String getUniqueClassIdentifier(){
-        return "gang";
+        return getObject().equals(GangsPlugin.getInstance().gangManager.getPlayersGang(oPlayer));
     }
     
     @Override
     public String getUniqueObjectIdentifier(){
-        return ""+gang.getId();
+        return ""+getObject().getId();
     }
     
     @Override
     public String getName(){
-        return gang.getName();
-    }
-    
-    public Gang getObject(){
-        return gang;
+        return getObject().getName();
     }
     
     @Override 
-    public List<Player> getAllOnlinePlayers(){
-        return new ArrayList<>(gang.getOnlineMembers());
-    }
-
-    public static Capper getFromUniqueName(CaptureTypeRegistry captureTypeRegistry, String name){
-        return new CappingGang(captureTypeRegistry, GangsPlugin.getInstance().gangManager.getGang(Integer.parseInt(name)));
+    public Collection<Player> getAllOnlinePlayers(){
+        return getObject().getOnlineMembers();
     }
 }

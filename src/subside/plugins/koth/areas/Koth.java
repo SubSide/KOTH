@@ -2,6 +2,7 @@ package subside.plugins.koth.areas;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -37,7 +38,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
     private @Getter @Setter String name;
     private @Getter @Setter Location lootPos = null;
     private @Setter String loot = null;
-    private Capper lastWinner;
+    private Capper<?> lastWinner;
     private @Getter List<Area> areas = new ArrayList<>();
     
     private @Getter KothHandler kothHandler;
@@ -98,7 +99,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
      * 
      * @param player    The new winner
      */
-    public void setLastWinner(Capper capper) {
+    public void setLastWinner(Capper<?> capper) {
         lastWinner = capper;
     }
 
@@ -107,7 +108,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
      * 
      * @return          the last winner of the KoTH
      */
-    public Capper getLastWinner() {
+    public Capper<?> getLastWinner() {
         return lastWinner;
     }
 
@@ -202,8 +203,8 @@ public class Koth implements Capable, JSONSerializable<Koth> {
             }
 
             if (kothHandler.getPlugin().getConfigHandler().getLoot().isInstantLoot()) {
-                List<Player> players = this.lastWinner.getAvailablePlayers(this);
-                Player player = players.get(new Random().nextInt(players.size()));
+                Collection<Player> players = this.lastWinner.getAvailablePlayers(this);
+                Player player = new ArrayList<Player>(players).get(players.size());
                 
                 
                 if (player != null) {

@@ -53,7 +53,7 @@ public class KothConquest extends RunningKoth {
     }
 
     @Override
-    public Capper getCapper(){
+    public Capper<?> getCapper(){
         if(fScores.size() > 0){
             Arrays.sort(fScores.toArray());
             return fScores.get(fScores.size()-1).getFaction();
@@ -81,7 +81,7 @@ public class KothConquest extends RunningKoth {
     @Override
     public void endKoth(EndReason reason) {
         Arrays.sort(fScores.toArray());
-        CappingGroup faction = fScores.get(fScores.size()-1).getFaction();
+        CappingGroup<?> faction = fScores.get(fScores.size()-1).getFaction();
         if (reason == EndReason.WON || reason == EndReason.GRACEFUL) {
             
             if (faction != null) {
@@ -118,7 +118,7 @@ public class KothConquest extends RunningKoth {
     }
     
     
-    public FactionScore getFactionScore(CappingGroup faction){
+    public FactionScore getFactionScore(CappingGroup<?> faction){
         for(FactionScore score : fScores){
             if(score.getFaction().getObject().equals(faction.getObject())){
                 return score;
@@ -143,7 +143,7 @@ public class KothConquest extends RunningKoth {
         public void update(){
             	capInfo.update();
             	if(capInfo.getCapper() != null){
-            		getFactionScore((CappingGroup)capInfo.getCapper()).addPoint();
+            		getFactionScore((CappingGroup<?>)capInfo.getCapper()).addPoint();
             	} else {
         			List<Player> insideArea = new ArrayList<>();
             		for (Player player : Bukkit.getOnlinePlayers()) {
@@ -160,11 +160,11 @@ public class KothConquest extends RunningKoth {
     }
     
     public class FactionScore implements Comparable<FactionScore> {
-        private @Getter CappingGroup faction;
+        private @Getter CappingGroup<?> faction;
         private @Getter @Setter int points;
         private int updateTime = 0;
         private int holdingTime = 0;
-        FactionScore(CappingGroup faction){
+        FactionScore(CappingGroup<?> faction){
             this.faction = faction;
             this.points = 0;
         }

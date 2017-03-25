@@ -71,8 +71,8 @@ public class CommandDatatable extends AbstractCommand {
         if(args[0].equalsIgnoreCase("0")){
             Utils.sendMessage(sender, true, "Global results returned:");
     
-            List<Entry<Capper, Integer>> list = getPlugin().getDataTable().getTop(rows, time, captureType, gameMode, koth);
-            for(Entry<Capper, Integer> entry : list){
+            List<Entry<Capper<?>, Integer>> list = getPlugin().getDataTable().getTop(rows, time, captureType, gameMode, koth);
+            for(Entry<Capper<?>, Integer> entry : list){
                 Utils.sendMessage(sender, true, entry.getKey().getName() + " : " + entry.getValue());
             }
         } else {

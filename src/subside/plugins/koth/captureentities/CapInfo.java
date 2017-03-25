@@ -15,6 +15,7 @@ import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
+@SuppressWarnings("rawtypes")
 public class CapInfo {
     private @Getter @Setter int timeCapped;
 
@@ -53,6 +54,7 @@ public class CapInfo {
 
     
     /** Override this if you want to use a different type of capper
+     * 
      * @param playerList a list of players to choose from
      * @return the correct capper type
      */

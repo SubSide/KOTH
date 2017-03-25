@@ -13,13 +13,13 @@ import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
  *
  */
 public class KothEndEvent extends AbstractEvent {
-    private @Getter Capper winner;
+    private @Getter Capper<?> winner;
     private @Getter @Setter boolean triggerLoot;
     private @Getter EndReason reason;
     private @Getter RunningKoth runningKoth;
     
     
-    public KothEndEvent(RunningKoth runningKoth, Capper capper, EndReason reason){
+    public KothEndEvent(RunningKoth runningKoth, Capper<?> capper, EndReason reason){
         super(runningKoth.getKoth());
         this.runningKoth = runningKoth;
         this.winner = capper;

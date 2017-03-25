@@ -1,6 +1,5 @@
 package subside.plugins.koth.captureentities;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,7 @@ import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.gamemodes.KothConquest;
 import subside.plugins.koth.modules.AbstractModule;
 
+@SuppressWarnings("rawtypes")
 public class CaptureTypeRegistry extends AbstractModule {
     private @Getter Map<String, Class<? extends Capper>> captureClasses;
     private @Getter Map<String, Class<? extends Capper>> captureTypes;
@@ -112,12 +112,13 @@ public class CaptureTypeRegistry extends AbstractModule {
             return null;
         }
         try {
-            Capper capper = (Capper)captureTypes.get(captureTypeIdentifier).getDeclaredMethod("getFromUniqueName", CaptureTypeRegistry.class, String.class).invoke(null, this, objectUniqueId);
+            Capper capper =  captureTypes.get(captureTypeIdentifier).getDeclaredConstructor(CaptureTypeRegistry.class, String.class).newInstance(this, objectUniqueId);
             if(capper.getObject() == null){
                 return null;
             }
             return capper;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

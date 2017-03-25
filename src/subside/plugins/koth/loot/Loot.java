@@ -71,7 +71,7 @@ public class Loot implements JSONSerializable<Loot> {
         return title;
     }
     
-    public void triggerCommands(Koth koth, Capper capper){
+    public void triggerCommands(Koth koth, Capper<?> capper){
         if(!lootHandler.getPlugin().getConfigHandler().getLoot().isCmdEnabled()){
             return;
         }
@@ -81,7 +81,7 @@ public class Loot implements JSONSerializable<Loot> {
         }
         
         for(String command : commands){
-            List<Player> players = capper.getAvailablePlayers(koth);
+            List<Player> players = new ArrayList<>(capper.getAvailablePlayers(koth));
             if(command.contains("%player%")){
                 for(Player player : players){
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%player%", player.getName()));

@@ -1,74 +1,60 @@
 package subside.plugins.koth.captureentities;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.kingdoms.constants.kingdom.Kingdom;
 import org.kingdoms.constants.player.KingdomPlayer;
-import org.kingdoms.main.Kingdoms;
 import org.kingdoms.manager.game.GameManagement;
 
-public class CappingKingdom extends CappingGroup {
-    private Kingdom kingdom;
+public class CappingKingdom extends CappingGroup<Kingdom> {
     
     public CappingKingdom(CaptureTypeRegistry captureTypeRegistry, Kingdom kingdom){
-        super(captureTypeRegistry);
-        this.kingdom = kingdom;
+        super(captureTypeRegistry, "kingdom", kingdom);
     }
     
-    public CappingKingdom(CaptureTypeRegistry captureTypeRegistry, List<Player> playerList2){
-        super(captureTypeRegistry);
-        List<Player> playerList = new ArrayList<>(playerList2);
-        Collections.shuffle(playerList);
-        for(Player player : playerList){
-            Kingdoms.getManagers();
-            KingdomPlayer kp = GameManagement.getPlayerManager().getSession(player);
-            if(kp.getKingdom() != null){
-                this.kingdom = kp.getKingdom();
-                break;
-            }
-        }
+    public CappingKingdom(CaptureTypeRegistry captureTypeRegistry, Collection<Player> playerList){
+        this(
+            captureTypeRegistry, 
+                GameManagement.getPlayerManager().getSession(
+                    playerList.stream()
+                    .filter(player -> GameManagement.getPlayerManager().getSession(player) != null)
+                    .findAny()
+                    .orElse(null)
+                ).getKingdom()
+            );
+    }
+
+    public CappingKingdom(CaptureTypeRegistry captureTypeRegistry, String name){
+        this(captureTypeRegistry, GameManagement.getKingdomManager().getOrLoadKingdom(name));
     }
     
     @Override
     public boolean isInOrEqualTo(OfflinePlayer oPlayer){
         if(!oPlayer.isOnline()) return false;
-        return kingdom.equals(GameManagement.getPlayerManager().getSession(oPlayer.getPlayer()).getKingdom());
+        return getObject().equals(GameManagement.getPlayerManager().getSession(oPlayer.getPlayer()).getKingdom());
     }
 
     @Override
-    public String getUniqueClassIdentifier(){
-        return "kingdom";
-    }
-    
-    @Override
     public String getUniqueObjectIdentifier(){
-        return kingdom.getKingdomName();
+        return getObject().getKingdomName();
     }
     
     @Override
     public String getName(){
-        return kingdom.getKingdomName();
-    }
-    
-    public Kingdom getObject(){
-        return kingdom;
+        return getObject().getKingdomName();
     }
     
     @Override 
-    public List<Player> getAllOnlinePlayers(){
+    public Collection<Player> getAllOnlinePlayers(){
         List<Player> list = new ArrayList<>();
-        for(KingdomPlayer player : kingdom.getOnlineMembers()){
+        for(KingdomPlayer player : getObject().getOnlineMembers()){
             list.add(player.getPlayer());
         }
         
         return list;
-    }
-
-    public static Capper getFromUniqueName(CaptureTypeRegistry captureTypeRegistry, String name){
-        return new CappingKingdom(captureTypeRegistry, GameManagement.getKingdomManager().getOrLoadKingdom(name));
     }
 }
