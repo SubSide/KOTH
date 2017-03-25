@@ -32,6 +32,14 @@ public class Lang extends AbstractModule {
     public static String[] KOTH_PLAYING_TIME_UP = new String[]{"&aAfter %mt% minute noone capped the KoTH! Event is over!"};
     public static String[] KOTH_PLAYING_TIME_UP_FREEFORALL = new String[]{"&aAfter %mt% minute noone capped the KoTH! Entering Free For All mode!"};
     
+    public static String[] KOTH_DAY_MONDAY = new String[]{ "Monday" };
+    public static String[] KOTH_DAY_TUESDAY = new String[]{ "Tuesday" };
+    public static String[] KOTH_DAY_WEDNESDAY = new String[]{ "Wednesday" };
+    public static String[] KOTH_DAY_THURSDAY = new String[]{ "Thursday" };
+    public static String[] KOTH_DAY_FRIDAY = new String[]{ "Friday" };
+    public static String[] KOTH_DAY_SATURDAY = new String[]{ "Saturday" };
+    public static String[] KOTH_DAY_SUNDAY = new String[]{ "Sunday" };
+    
     public static String[] HOOKS_PLACEHOLDERAPI_NOONECAPPING = new String[]{ "No One" };
     public static String[] HOOKS_PLACEHOLDERAPI_TIMETILL = new String[]{ "%hh%:%mm%:%ss%" };
     

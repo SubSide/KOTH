@@ -5,6 +5,7 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 
 import subside.plugins.koth.KothPlugin;
+import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.Utils;
 
 public enum Day {
@@ -14,19 +15,19 @@ public enum Day {
     public String getDay() {
         switch (this) {
             case MONDAY:
-                return "Monday";
+                return Lang.KOTH_DAY_MONDAY[0];
             case TUESDAY:
-                return "Tuesday";
+                return Lang.KOTH_DAY_TUESDAY[0];
             case WEDNESDAY:
-                return "Wednesday";
+                return Lang.KOTH_DAY_WEDNESDAY[0];
             case THURSDAY:
-                return "Thursday";
+                return Lang.KOTH_DAY_THURSDAY[0];
             case FRIDAY:
-                return "Friday";
+                return Lang.KOTH_DAY_FRIDAY[0];
             case SATURDAY:
-                return "Saturday";
+                return Lang.KOTH_DAY_SATURDAY[0];
             case SUNDAY:
-                return "Sunday";
+                return Lang.KOTH_DAY_SUNDAY[0];
         }
         return null;
     }
@@ -76,19 +77,19 @@ public enum Day {
     }
 
     public static Day getDay(String str) {
-        if (str.equalsIgnoreCase("monday")) {
+        if (str.equalsIgnoreCase(Lang.KOTH_DAY_MONDAY[0])) {
             return MONDAY;
-        } else if (str.equalsIgnoreCase("tuesday")) {
+        } else if (str.equalsIgnoreCase(Lang.KOTH_DAY_TUESDAY[0])) {
             return TUESDAY;
-        } else if (str.equalsIgnoreCase("wednesday")) {
+        } else if (str.equalsIgnoreCase(Lang.KOTH_DAY_WEDNESDAY[0])) {
             return WEDNESDAY;
-        } else if (str.equalsIgnoreCase("thursday")) {
+        } else if (str.equalsIgnoreCase(Lang.KOTH_DAY_THURSDAY[0])) {
             return THURSDAY;
-        } else if (str.equalsIgnoreCase("friday")) {
+        } else if (str.equalsIgnoreCase(Lang.KOTH_DAY_FRIDAY[0])) {
             return FRIDAY;
-        } else if (str.equalsIgnoreCase("saturday")) {
+        } else if (str.equalsIgnoreCase(Lang.KOTH_DAY_SATURDAY[0])) {
             return SATURDAY;
-        } else if (str.equalsIgnoreCase("sunday")) {
+        } else if (str.equalsIgnoreCase(Lang.KOTH_DAY_SUNDAY[0])) {
             return SUNDAY;
         }
         return null;
