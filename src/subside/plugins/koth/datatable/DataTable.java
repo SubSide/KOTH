@@ -104,8 +104,8 @@ public class DataTable extends AbstractModule {
      *            The koth to filter on (null to ignore)
      * @return A list with cappers and how many times they won
      **/
-    public List<Entry<Capper, Integer>> getTop(int maxRows, int fromTime, String captureType, String gameMode, String koth) {
-        List<Entry<Capper, Integer>> top = new ArrayList<Entry<Capper, Integer>>();
+    public List<Entry<Capper<?>, Integer>> getTop(int maxRows, int fromTime, String captureType, String gameMode, String koth) {
+        List<Entry<Capper<?>, Integer>> top = new ArrayList<Entry<Capper<?>, Integer>>();
 
         try {
             SimpleQueryBuilder sQB = new SimpleQueryBuilder("count(capper_uuid) as result, capper_uuid, capper_type", "results");
@@ -126,7 +126,7 @@ public class DataTable extends AbstractModule {
 
             CaptureTypeRegistry cER = plugin.getCaptureTypeRegistry();
             while (result.next()) {
-                top.add(new SimpleEntry<Capper, Integer>(cER.getCapperFromType(result.getString("capper_type"), result.getString("capper_uuid")), result.getInt("result")));
+                top.add(new SimpleEntry<Capper<?>, Integer>(cER.getCapperFromType(result.getString("capper_type"), result.getString("capper_uuid")), result.getInt("result")));
             }
             return top;
         }

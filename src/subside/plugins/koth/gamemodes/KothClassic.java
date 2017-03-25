@@ -53,7 +53,7 @@ public class KothClassic extends RunningKoth {
     }
     
     @Override
-    public Capper getCapper(){
+    public Capper<?> getCapper(){
         return getCapInfo().getCapper();
     }
 

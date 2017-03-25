@@ -55,7 +55,7 @@ public abstract class RunningKoth implements JSONSerializable<RunningKoth> {
      * 
      * @return          The current capper
      */
-    public abstract Capper getCapper();
+    public abstract Capper<?> getCapper();
     
     /** Get the lootchest for the KoTH that is currently running
      * 

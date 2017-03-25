@@ -8,7 +8,7 @@ global:
   multiplekothsatonce: true
   schedule-show-current-day-only: false
   schedule-timezone: "Europe/Amsterdam"
-  date-format: "dd/MM/yyyy"
+  date-format: "dd/MM/yyyy HH:mm:ss"
   minuteoffset: 0
   startweekminuteoffset: 0
   scheduleminuteoffset: 0
@@ -39,6 +39,7 @@ hooks:
   vanishnopacket: true
   factions: true
   kingdoms: true
+  gangs: true
   pvpmanager: true
   featherboard:
     enabled: false

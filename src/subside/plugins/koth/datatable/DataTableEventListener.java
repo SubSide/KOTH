@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
@@ -61,7 +63,9 @@ public class DataTableEventListener implements Listener {
                     + "VALUES (NULL, ?, ?, ?)");
 
             ptsd.setLong(1, resultId);
-            for(Player player : event.getWinner().getAvailablePlayers(event.getKoth())){
+            
+            List<Player> players = new ArrayList<>(event.getWinner().getAvailablePlayers(event.getKoth()));
+            for(Player player : players){
                 ptsd.setString(2, player.getUniqueId().toString());
                 ptsd.setString(3, player.getName());
                 ptsd.execute();

@@ -73,6 +73,7 @@ public class ConfigHandler extends AbstractModule {
 	    private @Getter boolean vanishNoPacket = true;
 	    private @Getter boolean factions = true;
 	    private @Getter boolean kingdoms = true;
+	    private @Getter boolean gangs = true;
         private @Getter boolean pvpManager = true;
 	    private @Getter Featherboard featherboard;
 	    

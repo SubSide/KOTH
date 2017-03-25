@@ -21,7 +21,7 @@ import subside.plugins.koth.scheduler.Schedule;
 
 public class MessageBuilder {
     private StrObj message;
-    private List<Player> excluders;
+    private Collection<Player> excluders;
 
     private class StrObj {
         private String[] message;
@@ -181,7 +181,7 @@ public class MessageBuilder {
         return this;
     }
     
-    public MessageBuilder exclude(Capper capper, Capable area){
+    public MessageBuilder exclude(Capper<?> capper, Capable area){
         if(capper != null)
             this.excluders = capper.getAvailablePlayers(area);
         
@@ -197,7 +197,7 @@ public class MessageBuilder {
         buildAndSend(players);
     }
     
-    public void buildAndSend(Capper capper, Capable area){
+    public void buildAndSend(Capper<?> capper, Capable area){
         if(capper != null)
             buildAndSend(capper.getAvailablePlayers(area));
     }

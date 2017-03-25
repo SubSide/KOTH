@@ -254,6 +254,7 @@ public class CommandInfo extends AbstractCommand {
         if(sched.getEntityType() != null){
             captureType = sched.getEntityType();
             try {
+                @SuppressWarnings("rawtypes")
                 Class<? extends Capper> clazz = getPlugin().getCaptureTypeRegistry().getCaptureTypeClass(sched.getEntityType());
                 captureType += " (Java class: "+clazz.getSimpleName()+")";
             } catch(Exception e){

@@ -1,6 +1,6 @@
 package subside.plugins.koth.captureentities;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +15,7 @@ import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.gamemodes.KothConquest;
 import subside.plugins.koth.modules.AbstractModule;
 
+@SuppressWarnings("rawtypes")
 public class CaptureTypeRegistry extends AbstractModule {
     private @Getter Map<String, Class<? extends Capper>> captureClasses;
     private @Getter Map<String, Class<? extends Capper>> captureTypes;
@@ -54,9 +55,17 @@ public class CaptureTypeRegistry extends AbstractModule {
             }
         }
         
+        // Kingdoms
         if(plugin.getConfigHandler().getHooks().isKingdoms() && plugin.getServer().getPluginManager().getPlugin("Kingdoms") != null){
-            registerCaptureType("kingdoms", CappingKingdom.class);
+            registerCaptureType("kingdom", CappingKingdom.class);
             setPreferedClass(CappingKingdom.class);
+            hasGroupPlugin = true;
+        }
+        
+        // Gangs
+        if(plugin.getConfigHandler().getHooks().isGangs() && plugin.getServer().getPluginManager().getPlugin("GangsPlus") != null){
+            registerCaptureType("gang", CappingGang.class);
+            setPreferedClass(CappingGang.class);
             hasGroupPlugin = true;
         }
         
@@ -104,12 +113,13 @@ public class CaptureTypeRegistry extends AbstractModule {
             return null;
         }
         try {
-            Capper capper = (Capper)captureTypes.get(captureTypeIdentifier).getDeclaredMethod("getFromUniqueName", CaptureTypeRegistry.class, String.class).invoke(null, this, objectUniqueId);
+            Capper capper =  captureTypes.get(captureTypeIdentifier).getDeclaredConstructor(CaptureTypeRegistry.class, String.class).newInstance(this, objectUniqueId);
             if(capper.getObject() == null){
                 return null;
             }
             return capper;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -119,7 +129,7 @@ public class CaptureTypeRegistry extends AbstractModule {
         try {
             for(Class<? extends Capper> clazz : getCaptureTypes().values()){
                 if(capperClazz.isAssignableFrom(clazz)){
-                    Capper capper =  clazz.getDeclaredConstructor(CaptureTypeRegistry.class, List.class).newInstance(this, players);
+                    Capper capper =  clazz.getDeclaredConstructor(CaptureTypeRegistry.class, Collection.class).newInstance(this, players);
                     if(capper.getObject() == null){
                         return null;
                     }
