@@ -279,7 +279,7 @@ public class CommandInfo extends AbstractCommand {
 
         list.add(" ");
         list.addAll(new MessageBuilder(C1+"Using loot: "+C2+lootChest).buildArray());
-        list.addAll(new MessageBuilder(C1+"With: "+lootAmount+" items").buildArray());
+        list.addAll(new MessageBuilder(C1+"With: "+C2+lootAmount+" items").buildArray());
         
         list.add(" ");
         list.addAll(new MessageBuilder(C1+"Capturetype: "+C2+captureType).buildArray());
