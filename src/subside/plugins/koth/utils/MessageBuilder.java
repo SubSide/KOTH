@@ -64,6 +64,9 @@ public class MessageBuilder {
     }
 
     public MessageBuilder koth(KothHandler kothHandler, String koth) {
+        // Make sure that $ placeholders aren't causing issues
+        koth = koth.replaceAll("\\$", "\\\\\\$");
+        
         Koth kth = kothHandler.getKoth(koth);
         if (kth != null) {
             koth(kth);

@@ -190,9 +190,14 @@ public class DataTable extends AbstractModule {
     
     public int getPlayerStats(OfflinePlayer player, int fromTime){
         try {
-            SimpleQueryBuilder sQB = new SimpleQueryBuilder("count(id) as result", "player_results");
+            SimpleQueryBuilder sQB = new SimpleQueryBuilder("count(player_results.id) as result", "player_results");
+            
+            sQB.addWhere("player_results.player_uuid = ?", player.getUniqueId().toString());
     
-            if (fromTime > 0) sQB.addWhere("results.date >= ?", fromTime);
+            if (fromTime > 0){
+                sQB.leftJoin("results", "player_results.result_id=results.id");
+                sQB.addWhere("results.date >= ?", fromTime);
+            }
 
             ResultSet result = sQB.execute();
             if(result.next()){

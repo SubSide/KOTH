@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
@@ -44,7 +45,15 @@ public class CommandDatatable extends AbstractCommand {
     
     public void debug(CommandSender sender, String[] args){
         if(args.length < 2)
-            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth debug (0|1) <maxrows> [time] [capturetype] [gamemode] [koth]");
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth debug (0|1|2) <maxrows> [time] [capturetype] [gamemode] [koth]");
+        
+        if(args[0].equalsIgnoreCase("2")){
+            Utils.sendMessage(sender, true, "Player results returned:");
+            
+            int wins = getPlugin().getDataTable().getPlayerStats(Bukkit.getPlayer(args[1]), 0);
+            Utils.sendMessage(sender, true, args[1]+ " has " + wins + " wins.");
+            return;
+        }
         
         int rows = Integer.parseInt(args[1]);
         int time = 0;

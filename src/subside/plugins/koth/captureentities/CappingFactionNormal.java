@@ -17,7 +17,9 @@ import com.massivecraft.factions.entity.MPlayerColl;
  * Make sure to register your capture type in the onLoad Phase. 
  * This can easily be done by using the KothPluginInitializationEvent.
  * You can then use setPreferedClass so KoTH will prefer your class.
- * If it's a group plugin, make sure to register KoTH's CappingGroup.class as well.
+ * <s>If it's a group plugin, make sure to register KoTH's CappingGroup.class as well.</s>
+ * You don't need to register KoTH's CappingGroup anymore, as it will automatically
+ * detect if your class is a CappingGroup class
  */
 public class CappingFactionNormal extends CappingGroup<Faction> {
     

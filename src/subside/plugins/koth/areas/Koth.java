@@ -2,7 +2,6 @@ package subside.plugins.koth.areas;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -203,9 +202,8 @@ public class Koth implements Capable, JSONSerializable<Koth> {
             }
 
             if (kothHandler.getPlugin().getConfigHandler().getLoot().isInstantLoot()) {
-                Collection<Player> players = this.lastWinner.getAvailablePlayers(this);
-                Player player = new ArrayList<Player>(players).get(players.size());
-                
+                Player player = this.lastWinner.getAvailablePlayers(this).stream()
+                        .findAny().orElse(null);
                 
                 if (player != null) {
                     List<ItemStack> dropItems = new ArrayList<>();
