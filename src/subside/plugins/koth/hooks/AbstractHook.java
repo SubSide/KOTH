@@ -11,6 +11,7 @@ public abstract class AbstractHook {
         this.hookManager = hookManager;
     }
     
+    public void initialize(){}
     public boolean canCap(Player player){ return true; }
     public void tick(){}
     public void onDisable(){}
