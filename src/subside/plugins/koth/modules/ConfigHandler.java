@@ -111,6 +111,7 @@ public class ConfigHandler extends AbstractModule {
 	    private @Getter long removeLootAfterSeconds = 0;
 	    private @Getter boolean dropLootOnRemoval = false;
 	    private @Getter boolean instantLoot = false;
+	    private @Getter boolean rewardEveryone = false;
 
         private @Getter boolean cmdEnabled = false;
         private @Getter boolean cmdIngame = false;
@@ -126,6 +127,7 @@ public class ConfigHandler extends AbstractModule {
 	        removeLootAfterSeconds = section.getInt("remove-after");
 	        dropLootOnRemoval = section.getBoolean("drop-on-removal");
 	        instantLoot = section.getBoolean("give-instantly");
+	        rewardEveryone = section.getBoolean("reward-everyone");
 
             cmdEnabled = section.getBoolean("commands.enabled");
             cmdNeedOp = section.getBoolean("commands.needop");

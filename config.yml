@@ -30,6 +30,7 @@ loot:
   remove-after: 0
   drop-on-removal: false
   give-instantly: false
+  reward-everyone: false
   commands:
     enabled: false
     changeingame: false
