@@ -131,13 +131,14 @@ public class KothClassic extends RunningKoth {
         
         if(status == CapStatus.CHANNELING) prevStatus = CapStatus.EMPTY;
         if(status == CapStatus.KNOCKED) prevStatus = CapStatus.CAPPING;
+        if(status == CapStatus.CONTESTED) prevStatus = CapStatus.CAPPING;
         ////////
 
         
         if (capInfo.getCapper() != null) {
             timeNotCapped = 0;
             if (capInfo.getTimeCapped() < captureTime) {
-                if (capInfo.getTimeCapped() % 30 == 0 && capInfo.getTimeCapped() != 0) {
+                if (capInfo.getTimeCapped() % 30 == 0 && capInfo.getTimeCapped() != 0 && status != CapStatus.CONTESTED) {
                     new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).exclude(capInfo.getCapper(), koth).buildAndBroadcast();
                     new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(capInfo.getCapper(), koth);
                 }
