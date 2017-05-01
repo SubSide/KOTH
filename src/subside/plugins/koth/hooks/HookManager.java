@@ -24,6 +24,7 @@ public class HookManager extends AbstractModule {
     public void onEnable(){
         registerHook(new VanishHook(this));
         registerHook(new FeatherboardHook(this));
+        registerHook(new BossbarHook(this));
         registerHook(new PvPManagerHook(this));
         
         if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")){
@@ -34,8 +35,9 @@ public class HookManager extends AbstractModule {
     @Override
     public void onDisable(){
         for(AbstractHook hook : hooks){
-            hook.onDisable();
-            
+            try {
+                hook.onDisable();
+            } catch(Exception e){}
             if(hook instanceof Listener){
                 HandlerList.unregisterAll((Listener)hook);
             }

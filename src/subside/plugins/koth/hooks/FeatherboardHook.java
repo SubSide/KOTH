@@ -30,26 +30,36 @@ public class FeatherboardHook extends AbstractRangeHook {
     @Override
     public void entersRange(Player player) {
         // Set board
-        Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable(){
-            @Override
-            public void run() {
-                be.maximvdw.featherboard.api.FeatherBoardAPI.showScoreboard(player, board);
-            }
-        }, 1);
+        // To reduce randomly creating threads we check if it is the primary thread or otherwise create a sync thread
+        if(Bukkit.isPrimaryThread()){
+            be.maximvdw.featherboard.api.FeatherBoardAPI.showScoreboard(player, board);
+        } else {
+            Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable(){
+                @Override
+                public void run() {
+                    be.maximvdw.featherboard.api.FeatherBoardAPI.showScoreboard(player, board);
+                }
+            }, 1);
+        }
         
     }
 
     @Override
     public void leavesRange(Player player) {
         // Reset board
-        Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable(){
-            @Override
-            public void run() {
-                be.maximvdw.featherboard.api.FeatherBoardAPI.removeScoreboardOverride(player, board);
-                be.maximvdw.featherboard.api.FeatherBoardAPI.resetDefaultScoreboard(player);
-            }
-        }, 1);
-        
+        // To reduce randomly creating threads we check if it is the primary thread or otherwise create a sync thread
+        if(Bukkit.isPrimaryThread()){
+            be.maximvdw.featherboard.api.FeatherBoardAPI.removeScoreboardOverride(player, board);
+            be.maximvdw.featherboard.api.FeatherBoardAPI.resetDefaultScoreboard(player);
+        } else {
+            Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable(){
+                @Override
+                public void run() {
+                    be.maximvdw.featherboard.api.FeatherBoardAPI.removeScoreboardOverride(player, board);
+                    be.maximvdw.featherboard.api.FeatherBoardAPI.resetDefaultScoreboard(player);
+                }
+            }, 1);
+        }
     }
     
 }

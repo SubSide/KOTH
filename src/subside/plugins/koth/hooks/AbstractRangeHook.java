@@ -14,14 +14,12 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import lombok.Getter;
-import subside.plugins.koth.KothPlugin.LoadingState;
-import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.events.KothInitializeEvent;
-import subside.plugins.koth.events.KothPluginInitializationEvent;
+import subside.plugins.koth.gamemodes.RunningKoth;
 
 public abstract class AbstractRangeHook extends AbstractHook implements Listener {
-    private Koth koth;
+    private @Getter RunningKoth koth;
     
     private @Getter int range;
     private @Getter int rangeMargin;
@@ -42,6 +40,21 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
         this.range = range;
         this.rangeMargin = rangeMargin;
     }
+    
+    /**
+     * Use this when a KoTH gets initialized
+     */
+    public void initialize(RunningKoth koth){}
+    
+    /**
+     * Use this when a KoTH gets uninitialized
+     */
+    public void uninitialize(){}
+    
+    /**
+     * Update method so we don't override the tick method
+     */
+    public void update(){}
     
     /**
      * This is called when the player enters the range.
@@ -68,7 +81,10 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     public void onKothInitialize(KothInitializeEvent event){
         if(koth != null) return; // If we are already tracking a KoTH, stop.
         
-        koth = event.getKoth();
+        koth = event.getRunningKoth();
+        
+        // Initialize everything (if we need to)
+        initialize(event.getRunningKoth());
         
         // We want to delay the addition of players so other plugins can be properly initialized
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
@@ -89,6 +105,8 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     public void onKothEnd(KothEndEvent event){
         if(koth == null) return; // If we aren't tracking a KoTH, stop.
         resetAll();
+        
+        uninitialize();
     }
     
     /**
@@ -97,10 +115,12 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
      * 
      * @param event
      */
-    @EventHandler
-    public void onKothPluginInitialization(KothPluginInitializationEvent event){
-        if(koth == null || event.getLoadingState() != LoadingState.DISABLE) return;
+    @Override
+    public void onDisable(){
+        if(koth == null) return;
         resetAll();
+
+        uninitialize();
     }
     
     /**
@@ -138,8 +158,11 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
      * The main tick function. Which we won't use if the range is unlimited.
      */
     @Override
-    public void tick(){
-        if(range < 0) return;
+    public final void tick(){
+        if(range < 0 || koth == null) return;
+        
+        // Run the update for extending classes
+        update();
         
         for(Player player : Bukkit.getOnlinePlayers()){
             updatePlayer(player);
@@ -149,7 +172,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     /**
      * Reset all players. Triggered when the KoTH ends.
      */
-    public void resetAll(){
+    public final void resetAll(){
         for(OfflinePlayer player : inRange){
             if(player.isOnline())
                 removePlayer((Player) player);
@@ -194,7 +217,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
      * 
      * @param player
      */
-    private void updatePlayer(Player player){
+    private final void updatePlayer(Player player){
         boolean wasInRange = containsPlayer(player);
         boolean isInRange = isInRange(player, wasInRange);
         
@@ -213,12 +236,12 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
      * @param wasInRange if the player was already in range
      * @return
      */
-    public boolean isInRange(Player player, boolean wasInRange){
+    public final boolean isInRange(Player player, boolean wasInRange){
         if(koth == null) return false; // You can't be in range if there's no KoTH running
         if(range < 0) return true; // Always return true if the range is -1 (or lower)
         if(!player.isOnline()) return false; // He's not online!
         
-        Location loc = koth.getMiddle();
+        Location loc = koth.getKoth().getMiddle();
         
         if(wasInRange){
             // If the player was already in range, we accept the range + rangeMargin to stay in range.
