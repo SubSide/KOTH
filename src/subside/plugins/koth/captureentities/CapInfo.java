@@ -99,8 +99,7 @@ public class CapInfo {
             }
             // end channeling time
 
-            addTime();
-            return CapStatus.CAPPING;
+            return addTime() ? CapStatus.CONTESTED : CapStatus.CAPPING;
         }
         
         // Knocktime
@@ -114,8 +113,8 @@ public class CapInfo {
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             // If the event is cancelled we still need to add the time.
-            addTime();
-            return CapStatus.CAPPING;
+
+            return addTime() ? CapStatus.CONTESTED : CapStatus.CAPPING;
         }
         
         // if the event is null it means the entity left the KoTH
@@ -130,26 +129,28 @@ public class CapInfo {
         } else {
             // If for some reason it has a next capper, we just want it to change to the next capper and then add time
             capper = event.getNextCapper();
-            addTime();
-            return CapStatus.CAPPING;
+
+            return addTime() ? CapStatus.CONTESTED : CapStatus.CAPPING;
         }
     }
     
     /** Check for contesting (if other players/factions are on the point)
      *  and then add a second to timeCapped.
      */
-    public void addTime(){
+    public boolean addTime(){
         // Handles contestFreeze by looping over all players to check if someone else is in
         if(runningKoth.getPlugin().getConfigHandler().getKoth().isContestFreeze()){
             for(Player player : getInsidePlayers()){
                 if(!capper.isInOrEqualTo(player)){
-                    return;
+                    return false;
                 }
             }
         }
         
         // Add to timeCapped
         timeCapped++;
+        
+        return true;
     }
     
     /** finds a new entity that can capture, and sets it.
@@ -209,6 +210,6 @@ public class CapInfo {
     }
     
     public enum CapStatus {
-        EMPTY, CHANNELING, CAPPING, KNOCKED
+        EMPTY, CHANNELING, CONTESTED, CAPPING, KNOCKED
     }
 }

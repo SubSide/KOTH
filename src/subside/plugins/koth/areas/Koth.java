@@ -2,9 +2,11 @@ package subside.plugins.koth.areas;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,6 +25,7 @@ import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.events.KothChestCreationEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.loot.Loot;
+import subside.plugins.koth.modules.ConfigHandler;
 import subside.plugins.koth.modules.KothHandler;
 import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.JSONSerializable;
@@ -151,6 +154,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
      * @param lootChest         The lootChest to use
      */
     public void triggerLoot(int lootAmount, String lootChst) {
+        ConfigHandler cfgHandler = kothHandler.getPlugin().getConfigHandler();
         try {
             Loot lootChest = getLootChest(lootChst);
             
@@ -173,7 +177,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
             if (usableLoot.size() < 1) return;
 
             Inventory inv = Bukkit.createInventory(null, 54);
-            if (kothHandler.getPlugin().getConfigHandler().getLoot().isRandomizeLoot()) {
+            if (cfgHandler.getLoot().isRandomizeLoot()) {
                 for (int x = 0; x < lootAmount; x++) {
                     if (usableLoot.size() < 1) {
                         break;
@@ -181,12 +185,12 @@ public class Koth implements Capable, JSONSerializable<Koth> {
 
                     // UseItemsMultipleTimes
                     ItemStack uLoot = usableLoot.get(new Random().nextInt(usableLoot.size()));
-                    if (!kothHandler.getPlugin().getConfigHandler().getLoot().isUseItemsMultipleTimes()) {
+                    if (!cfgHandler.getLoot().isUseItemsMultipleTimes()) {
                         usableLoot.remove(uLoot);
                     }
 
                     // Randomize amount of loot or not?
-                    if (kothHandler.getPlugin().getConfigHandler().getLoot().isRandomizeStackSize()) {
+                    if (cfgHandler.getLoot().isRandomizeStackSize()) {
                         int amount = uLoot.getAmount();
                         ItemStack stack = uLoot.clone();
                         stack.setAmount(new Random().nextInt(amount) + 1);
@@ -201,22 +205,24 @@ public class Koth implements Capable, JSONSerializable<Koth> {
                 }
             }
 
-            if (kothHandler.getPlugin().getConfigHandler().getLoot().isInstantLoot()) {
-                Player player = this.lastWinner.getAvailablePlayers(this).stream()
-                        .findAny().orElse(null);
-                
-                if (player != null) {
-                    List<ItemStack> dropItems = new ArrayList<>();
-                    for (ItemStack is : inv.getContents()) {
-                        if (is == null) continue;
-                        if (player.getInventory().addItem(is).size() > 0) {
-                            dropItems.add(is);
+            if (cfgHandler.getLoot().isInstantLoot()) {
+                Collection<Player> players = this.lastWinner.getAvailablePlayers(this).stream()
+                        .limit(cfgHandler.getLoot().isRewardEveryone()?999:1)
+                        .collect(Collectors.toSet());
+                if(players.size() > 0){
+                    for (Player player : players) {
+                        List<ItemStack> dropItems = new ArrayList<>();
+                        for (ItemStack is : inv.getContents()) {
+                            if (is == null) continue;
+                            if (player.getInventory().addItem(is).size() > 0) {
+                                dropItems.add(is);
+                            }
                         }
-                    }
-                    if (dropItems.size() > 0) {
-                        new MessageBuilder(Lang.KOTH_PLAYING_WON_DROPPING_ITEMS).buildAndSend(player);
-                        for (ItemStack item : dropItems) {
-                            player.getWorld().dropItemNaturally(player.getLocation(), item);
+                        if (dropItems.size() > 0) {
+                            new MessageBuilder(Lang.KOTH_PLAYING_WON_DROPPING_ITEMS).buildAndSend(player);
+                            for (ItemStack item : dropItems) {
+                                player.getWorld().dropItemNaturally(player.getLocation(), item);
+                            }
                         }
                     }
                 } else {
@@ -309,7 +315,9 @@ public class Koth implements Capable, JSONSerializable<Koth> {
         this.name = (String)obj.get("name"); //name
         
         if(obj.containsKey("lastWinner")){
-            this.lastWinner = Capper.load(kothHandler.getPlugin().getCaptureTypeRegistry(), (JSONObject)obj.get("lastWinner")); //lastwinner
+            try {
+                this.lastWinner = Capper.load(kothHandler.getPlugin().getCaptureTypeRegistry(), (JSONObject)obj.get("lastWinner")); //lastwinner
+            } catch(Exception e){}
         }
         
         if(obj.containsKey("loot")){

@@ -75,7 +75,9 @@ public class ConfigHandler extends AbstractModule {
 	    private @Getter boolean kingdoms = true;
 	    private @Getter boolean gangs = true;
         private @Getter boolean pvpManager = true;
+        
 	    private @Getter Featherboard featherboard;
+        private @Getter BossBar bossBar;
 	    
 	    public Hooks(ConfigurationSection section){
             vanishNoPacket = section.getBoolean("vanishnopacket");
@@ -83,22 +85,56 @@ public class ConfigHandler extends AbstractModule {
             kingdoms = section.getBoolean("kingdoms");
             pvpManager = section.getBoolean("pvpmanager");
             featherboard = new Featherboard(section.getConfigurationSection("featherboard"));
+            bossBar = new BossBar(section.getConfigurationSection("bossbar"));
 	    }
-	    
-	    public class Featherboard {
-	        private @Getter boolean enabled = false;
-	        private @Getter int range = 100;
-	        private @Getter int rangeMargin = 5;
-	        private @Getter String board = "KoTH";
-	        
-	        public Featherboard(ConfigurationSection section){
-	            enabled = section.getBoolean("enabled");
-	            range = section.getInt("range");
-	            rangeMargin = section.getInt("rangemargin");
-	            board = section.getString("board");
-	        }
-	        
-	    }
+        
+        public class Featherboard {
+            private @Getter boolean enabled = false;
+            private @Getter int range = 100;
+            private @Getter int rangeMargin = 5;
+            private @Getter String board = "KoTH";
+            
+            public Featherboard(ConfigurationSection section){
+                enabled = section.getBoolean("enabled");
+                range = section.getInt("range");
+                rangeMargin = section.getInt("rangemargin");
+                board = section.getString("board");
+            }
+        }
+        
+        public class BossBar {
+            private @Getter boolean enabled = false;
+            private @Getter int range = 100;
+            private @Getter int rangeMargin = 5;
+            private @Getter String text = "&a%koth% currently captured by: %capper%";
+            private @Getter String barColor = "BLUE";
+            private @Getter int barsegments = 10;
+            private @Getter boolean countingDown = false;
+            private @Getter Flags flags;
+            
+            public BossBar(ConfigurationSection section){
+                enabled = section.getBoolean("enabled");
+                range = section.getInt("range");
+                rangeMargin = section.getInt("rangemargin");
+                text = section.getString("text");
+                barColor = section.getString("barcolor");
+                barsegments = section.getInt("barsegments");
+                countingDown = section.getBoolean("countingDown");
+                flags = new Flags(section.getConfigurationSection("flags"));
+            }
+            
+            public class Flags {
+                private @Getter boolean createfog = false;
+                private @Getter boolean darkensky = false;
+                private @Getter boolean playmusic = false;
+                
+                public Flags(ConfigurationSection section){
+                    createfog = section.getBoolean("createfog");
+                    darkensky = section.getBoolean("darkensky");
+                    playmusic = section.getBoolean("playmusic");
+                }
+            }
+        }
 	}
 	
 	public class Loot {
@@ -111,6 +147,7 @@ public class ConfigHandler extends AbstractModule {
 	    private @Getter long removeLootAfterSeconds = 0;
 	    private @Getter boolean dropLootOnRemoval = false;
 	    private @Getter boolean instantLoot = false;
+	    private @Getter boolean rewardEveryone = false;
 
         private @Getter boolean cmdEnabled = false;
         private @Getter boolean cmdIngame = false;
@@ -126,6 +163,7 @@ public class ConfigHandler extends AbstractModule {
 	        removeLootAfterSeconds = section.getInt("remove-after");
 	        dropLootOnRemoval = section.getBoolean("drop-on-removal");
 	        instantLoot = section.getBoolean("give-instantly");
+	        rewardEveryone = section.getBoolean("reward-everyone");
 
             cmdEnabled = section.getBoolean("commands.enabled");
             cmdNeedOp = section.getBoolean("commands.needop");

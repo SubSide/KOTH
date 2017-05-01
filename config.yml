@@ -30,6 +30,7 @@ loot:
   remove-after: 0
   drop-on-removal: false
   give-instantly: false
+  reward-everyone: false
   commands:
     enabled: false
     changeingame: false
@@ -41,6 +42,18 @@ hooks:
   kingdoms: true
   gangs: true
   pvpmanager: true
+  bossbar: 
+    enabled: false
+    range: 100
+    rangemargin: 5
+    text: "&a%koth% currently captured by: %capper%"
+    barsegments: 10 # ONLY 1, 6, 10, 12 and 20 are supported by Minecraft
+    barcolor: "BLUE" # Can ONLY be: BLUE, GREEN, PURPLE, PINK, WHITE, RED, YELLOW
+    countingDown: false # Put this to true if you want the bar to drain instead of filling
+    flags: # Those are some random flags I was able to toggle. Some don't seem to be working though. :(
+      createfog: false
+      darkensky: false
+      playmusic: false
   featherboard:
     enabled: false
     board: "koth"

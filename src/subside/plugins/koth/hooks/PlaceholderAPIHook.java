@@ -30,28 +30,32 @@ public class PlaceholderAPIHook extends EZPlaceholderHook {
         
         
         // Loop over all all live KoTH's
-        for(Koth koth : plugin.getKothHandler().getAvailableKoths()){
-            String replacer = replaceHolders(identifier, "live_"+koth.getName().toLowerCase()+"_", koth, player);
-            if(replacer != null) return replacer;
+        if(identifier.startsWith("live_")){
+            for(Koth koth : plugin.getKothHandler().getAvailableKoths()){
+                String replacer = replaceHolders(identifier, "live_"+koth.getName().toLowerCase()+"_", koth, player);
+                if(replacer != null) return replacer;
+            }
         }
         
         // Loop over all schedules.
-        if(plugin.getScheduleHandler().getNextEvent() != null){
-            Schedule schedule = plugin.getScheduleHandler().getNextEvent();
-            if(schedule == null) return "";
-            
-            if(schedule.getKoth().startsWith("$")){
-                String scheduleReplacer = replaceSchedulingHolders(identifier, "next_", schedule);
-                if(scheduleReplacer != null) return scheduleReplacer;
+        if(identifier.startsWith("next_")){
+            if(plugin.getScheduleHandler().getNextEvent() != null){
+                Schedule schedule = plugin.getScheduleHandler().getNextEvent();
+                if(schedule == null) return "";
                 
-                return "???";
+                if(schedule.getKoth().startsWith("$")){
+                    String scheduleReplacer = replaceSchedulingHolders(identifier, "next_", schedule);
+                    if(scheduleReplacer != null) return scheduleReplacer;
+                    
+                    return "???";
+                }
+                
+                Koth koth = plugin.getKothHandler().getKoth(schedule.getKoth());
+                if(koth == null) return "";
+                
+                String replacer = replaceHolders(identifier, "next_", koth, player);
+                if(replacer != null) return replacer;
             }
-            
-            Koth koth = plugin.getKothHandler().getKoth(schedule.getKoth());
-            if(koth == null) return "";
-            
-            String replacer = replaceHolders(identifier, "next_", koth, player);
-            if(replacer != null) return replacer;
         }
         
         // Check if  there is a running KoTH
