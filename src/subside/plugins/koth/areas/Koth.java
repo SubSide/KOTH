@@ -315,7 +315,9 @@ public class Koth implements Capable, JSONSerializable<Koth> {
         this.name = (String)obj.get("name"); //name
         
         if(obj.containsKey("lastWinner")){
-            this.lastWinner = Capper.load(kothHandler.getPlugin().getCaptureTypeRegistry(), (JSONObject)obj.get("lastWinner")); //lastwinner
+            try {
+                this.lastWinner = Capper.load(kothHandler.getPlugin().getCaptureTypeRegistry(), (JSONObject)obj.get("lastWinner")); //lastwinner
+            } catch(Exception e){}
         }
         
         if(obj.containsKey("loot")){
