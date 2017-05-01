@@ -11,12 +11,38 @@ public abstract class AbstractHook {
         this.hookManager = hookManager;
     }
     
+    /**
+     * Initialize everything, this is important for hooks that require instances.
+     */
     public void initialize(){}
+    
+    /**
+     * Check if this hook allows (or disallows) a certain player for capping
+     * @param player the player to check
+     * @return true if the player can cap
+     */
     public boolean canCap(Player player){ return true; }
+    
+    /**
+     * Something that is executed every tick.
+     */
     public void tick(){}
+    
+    /**
+     * Overridable for if something should happen when the KoTH plugin gets disabled
+     */
     public void onDisable(){}
+    
+    /**
+     * Checks if the Hook should still be enabled.
+     * @return
+     */
     public abstract boolean isEnabled();
     
+    /**
+     * Convinience method. Returns the KothPlugin object.
+     * @return
+     */
     public KothPlugin getPlugin(){
         return hookManager.getPlugin();
     }

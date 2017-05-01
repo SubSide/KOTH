@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 import lombok.Getter;
@@ -34,11 +35,24 @@ public class HookManager extends AbstractModule {
     public void onDisable(){
         for(AbstractHook hook : hooks){
             hook.onDisable();
+            
+            if(hook instanceof Listener){
+                HandlerList.unregisterAll((Listener)hook);
+            }
         }
     }
     
     public void registerHook(AbstractHook hook){
+        if(!hook.isEnabled()){
+            hook.onDisable();
+            return;
+        }
+        
+        hook.initialize();
+        
         hooks.add(hook);
+        
+        // Register events if they might contain events.
         if(hook instanceof Listener){
             Bukkit.getServer().getPluginManager().registerEvents((Listener)hook, plugin);
         }
@@ -46,7 +60,6 @@ public class HookManager extends AbstractModule {
     
     public boolean canCap(Player player){
         for(AbstractHook hook : hooks){
-            if(!hook.isEnabled()) continue;
             if(!hook.canCap(player)) return false;
         }
         
@@ -55,7 +68,6 @@ public class HookManager extends AbstractModule {
     
     public void tick(){
         for(AbstractHook hook : hooks){
-            if(!hook.isEnabled()) continue;
             hook.tick();
         }
     }
