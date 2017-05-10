@@ -99,7 +99,7 @@ public class CapInfo {
             }
             // end channeling time
 
-            return addTime() ? CapStatus.CONTESTED : CapStatus.CAPPING;
+            return addTime() ? CapStatus.CAPPING : CapStatus.CONTESTED;
         }
         
         // Knocktime
@@ -114,7 +114,7 @@ public class CapInfo {
         if (event.isCancelled()) {
             // If the event is cancelled we still need to add the time.
 
-            return addTime() ? CapStatus.CONTESTED : CapStatus.CAPPING;
+            return addTime() ? CapStatus.CAPPING : CapStatus.CONTESTED;
         }
         
         // if the event is null it means the entity left the KoTH
@@ -130,7 +130,7 @@ public class CapInfo {
             // If for some reason it has a next capper, we just want it to change to the next capper and then add time
             capper = event.getNextCapper();
 
-            return addTime() ? CapStatus.CONTESTED : CapStatus.CAPPING;
+            return addTime() ? CapStatus.CAPPING : CapStatus.CONTESTED;
         }
     }
     
