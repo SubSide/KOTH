@@ -34,17 +34,21 @@ public class CaptureTypeRegistry extends AbstractModule {
         registerCaptureClass("capperclass", Capper.class);
         registerCaptureType("player", CappingPlayer.class, true);
         
-        // Factions & FactionsUUID
-        if(plugin.getConfigHandler().getHooks().isFactions() && plugin.getServer().getPluginManager().getPlugin("Factions") != null){
-            try {
-                // If this class is not found it means that Factions is not in the server
-                Class.forName("com.massivecraft.factions.entity.FactionColl");
-                registerCaptureType("faction", CappingFactionNormal.class, true);
-            } catch(ClassNotFoundException e){
-                // So if the class is not found, we add FactionsUUID instead
-                registerCaptureType("factionuuid", CappingFactionUUID.class, true);
-            } catch(Exception e){
-                e.printStackTrace();
+        // LegacyFactions, Factions, and FactionsUUID
+        if(plugin.getConfigHandler().getHooks().isFactions()) {
+            if(plugin.getServer().getPluginManager().getPlugin("LegacyFactions") != null){
+                registerCaptureType("legacyfactions", CappingLegacyFactions.class, true);
+            } else if(plugin.getServer().getPluginManager().getPlugin("Factions") != null){
+                try {
+                    // If this class is not found it means that Factions is not in the server
+                    Class.forName("com.massivecraft.factions.entity.FactionColl");
+                    registerCaptureType("faction", CappingFactionNormal.class, true);
+                } catch(ClassNotFoundException e){
+                    // So if the class is not found, we add FactionsUUID instead
+                    registerCaptureType("factionuuid", CappingFactionUUID.class, true);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         }
         
