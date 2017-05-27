@@ -46,11 +46,7 @@ public class KothPlugin extends JavaPlugin {
 	// if they want to register their own entities and such.
 	@Override
 	public void onLoad(){
-	    // Load and set up all modules
-	    setupModules();
-	    
-        // Trigger loading event on the modules
-        trigger(LoadingState.LOAD);
+		// Moved all of this on the top of onEnable() to fix Factions load issues
 	}
 	
 	public void setupModules(){
@@ -115,7 +111,12 @@ public class KothPlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-        trigger(LoadingState.ENABLE);
+		// Load and set up all modules
+		setupModules();
+		
+        	// Trigger loading event on the modules
+        	trigger(LoadingState.LOAD);
+        	trigger(LoadingState.ENABLE);
 	}
 
 	@Override
