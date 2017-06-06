@@ -61,6 +61,11 @@ public class CaptureTypeRegistry extends AbstractModule {
         if(plugin.getConfigHandler().getHooks().isGangs() && plugin.getServer().getPluginManager().getPlugin("GangsPlus") != null){
             registerCaptureType("gang", CappingGang.class, true);
         }
+        
+        // mcMMO parties
+        if(plugin.getConfigHandler().getHooks().isMcMMO() && plugin.getServer().getPluginManager().getPlugin("mcMMO") != null){
+        	registerCaptureType("mcmmoparty", CappingMCMMOParty.class, true);
+        }
     }
     
     @Override

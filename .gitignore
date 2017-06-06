@@ -53,3 +53,5 @@ target/*
 .gitattributes
 javadoc.xml
 .settings/*
+/bin/
+/target/
