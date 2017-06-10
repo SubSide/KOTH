@@ -20,22 +20,23 @@ http://dev.thomasvdbulk.nl/KoTH/
 ## Current supported plugins
 #### Group plugins:
 \- Factions  
-\- FactionsUUID  
 \- FactionsOne  
-\- LegacyFactions (Special thanks to @MarkehMe for adding that)  
+\- FactionsUUID  
 \- GangsPlus  
 \- Kingdoms  
+\- LegacyFactions (Special thanks to @MarkehMe for adding that)  
+\- McMMO (party system)
   
 Is the group plugin you use on your server not supported?   
 Don't hesitate to ask me to add support for it :)
 
 
 #### Other supported plugins:
+\- BossBarAPI (For showing a bossbar containing the KoTH information)  
+\- Featherboard (Both Placeholder support and scoreboard switching support)  
+\- PlaceholderAPI (For placeholder support over a huge amount of plugins)  
 \- PvPManager (for blocking people with Newbie protection)  
 \- VanishNoPacket (for blocking people in vanish)  
-\- BossBarAPI (For showing a bossbar containing the KoTH information)  
-\- PlaceholderAPI (For placeholder support over a huge amount of plugins)  
-\- Featherboard (Both Placeholder support and scoreboard switching support)  
   
 Same rule applies, want support for a plugin?  
 Don't hesitate to ask :)<br /><br />  
@@ -98,6 +99,7 @@ Here is a list of all the current dependencies used in KoTH:
 \- LegacyFactions  
 \- Lombok (Required)  
 \- MassiveCore (As a dependency of Factions)  
+\- McMMO  
 \- PlaceholderAPI (Through Maven)  
 \- PvPManager  
 \- Spigot 1.11.2 (Through maven)  
