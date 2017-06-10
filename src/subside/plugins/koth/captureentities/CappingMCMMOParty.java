@@ -2,6 +2,7 @@ package subside.plugins.koth.captureentities;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -18,6 +19,7 @@ public class CappingMCMMOParty extends CappingGroup<Party> {
         this(captureTypeRegistry,
                 playerList.stream() // Create a stream
                 .map(player -> PartyManager.getParty(player)) // Create a new stream containing parties
+                .filter(Objects::nonNull)
                 .findAny() // Grab a single party
                 .orElse(null) // If no party exists return null
         );
@@ -34,7 +36,7 @@ public class CappingMCMMOParty extends CappingGroup<Party> {
     
     @Override
     public boolean isInOrEqualTo(OfflinePlayer oPlayer){
-        return getObject().hasMember(oPlayer.getUniqueId().toString());
+        return getObject().hasMember(oPlayer.getUniqueId());
     }
     
     @Override

@@ -55,3 +55,6 @@ javadoc.xml
 .settings/*
 /bin/
 /target/
+.idea/
+classes/
+*.iml
