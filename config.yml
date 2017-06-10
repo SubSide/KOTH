@@ -41,6 +41,7 @@ hooks:
   factions: true
   kingdoms: true
   gangs: true
+  mcmmo: true
   pvpmanager: true
   bossbar: 
     enabled: false

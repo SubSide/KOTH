@@ -17,6 +17,7 @@ import lombok.Getter;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.events.KothInitializeEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
+import com.google.common.collect.Sets;
 
 public abstract class AbstractRangeHook extends AbstractHook implements Listener {
     private @Getter RunningKoth koth;
@@ -173,7 +174,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
      * Reset all players. Triggered when the KoTH ends.
      */
     public final void resetAll(){
-        for(OfflinePlayer player : inRange){
+        for(OfflinePlayer player : Sets.newHashSet(inRange)){
             if(player.isOnline())
                 removePlayer((Player) player);
         }

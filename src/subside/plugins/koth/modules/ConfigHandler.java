@@ -74,6 +74,7 @@ public class ConfigHandler extends AbstractModule {
 	    private @Getter boolean factions = true;
 	    private @Getter boolean kingdoms = true;
 	    private @Getter boolean gangs = true;
+        private @Getter boolean mcMMO = true;
         private @Getter boolean pvpManager = true;
         
 	    private @Getter Featherboard featherboard;
@@ -84,6 +85,8 @@ public class ConfigHandler extends AbstractModule {
             factions = section.getBoolean("factions");
             kingdoms = section.getBoolean("kingdoms");
             pvpManager = section.getBoolean("pvpmanager");
+            gangs = section.getBoolean("gangs");
+            mcMMO = section.getBoolean("mcmmo");
             featherboard = new Featherboard(section.getConfigurationSection("featherboard"));
             bossBar = new BossBar(section.getConfigurationSection("bossbar"));
 	    }
