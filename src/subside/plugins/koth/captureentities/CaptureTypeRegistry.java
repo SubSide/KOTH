@@ -64,7 +64,7 @@ public class CaptureTypeRegistry extends AbstractModule {
         
         // mcMMO parties
         if(plugin.getConfigHandler().getHooks().isMcMMO() && plugin.getServer().getPluginManager().getPlugin("mcMMO") != null){
-        	registerCaptureType("mcmmoparty", CappingMCMMOParty.class, true);
+        	registerCaptureType("mcmmoparty", CappingMCMMOParty.class, false);
         }
     }
     
