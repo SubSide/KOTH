@@ -33,6 +33,7 @@ Don't hesitate to ask me to add support for it :)
 
 #### Other supported plugins:
 \- BossBarAPI (For showing a bossbar containing the KoTH information)  
+\- Essentials (for blocking people in vanish)  
 \- Featherboard (Both Placeholder support and scoreboard switching support)  
 \- PlaceholderAPI (For placeholder support over a huge amount of plugins)  
 \- PvPManager (for blocking people with Newbie protection)  
@@ -90,6 +91,7 @@ Worldedit is only used for selecting the area. After you do /koth create it is s
 
 ### Current (soft and hard) dependencies used in the project
 Here is a list of all the current dependencies used in KoTH:  
+\- Essentials  
 \- Factions  
 \- FactionsUUID  
 \- Featherboard  
