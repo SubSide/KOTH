@@ -92,6 +92,7 @@ public class ConfigHandler extends AbstractModule {
 	}
 	
 	public class Hooks {
+	    private @Getter boolean essentialsVanish = true;
 	    private @Getter boolean vanishNoPacket = true;
 	    private @Getter boolean factions = true;
 	    private @Getter boolean kingdoms = true;
@@ -103,6 +104,7 @@ public class ConfigHandler extends AbstractModule {
         private @Getter BossBar bossBar;
 	    
 	    public Hooks(ConfigurationSection section){
+	        essentialsVanish = section.getBoolean("essentialsvanish");
             vanishNoPacket = section.getBoolean("vanishnopacket");
             factions = section.getBoolean("factions");
             kingdoms = section.getBoolean("kingdoms");

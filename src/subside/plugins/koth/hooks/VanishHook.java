@@ -23,7 +23,7 @@ public class VanishHook extends AbstractHook {
                 vanishManager = ((VanishPlugin)Bukkit.getServer().getPluginManager().getPlugin("VanishNoPacket")).getManager();
             }
         }
-        getPlugin().getLogger().log(Level.INFO, "Vanish hook: "+(enabled?"Enabled":"Disabled"));
+        getPlugin().getLogger().log(Level.INFO, "VanishNoPacket hook: "+(enabled?"Enabled":"Disabled"));
     }
     
     @Override

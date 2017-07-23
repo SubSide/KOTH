@@ -45,6 +45,7 @@ loot:
     needop: true
 
 hooks:
+  essentialsvanish: true
   vanishnopacket: true
   factions: true
   kingdoms: true
