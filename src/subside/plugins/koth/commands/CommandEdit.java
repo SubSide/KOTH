@@ -165,13 +165,27 @@ public class CommandEdit extends AbstractCommand {
                 koth.setLoot(args[1]);
                 getPlugin().getKothHandler().saveKoths();
                 throw new CommandMessageException(Lang.COMMAND_EDITOR_LOOT_LINK);
+            } else if(args[0].equalsIgnoreCase("second")){
+                if(args.length < 2){
+                    throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> loot second (none|north|east|south|west)");
+                }
+                try {
+                    koth.setSecondLootDirection(Koth.LootDirection.valueOf(args[1].toUpperCase()));
+                } catch(Exception e){
+                    throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth edit <koth> loot second (none|north|east|south|west)");
+                }
+
+                getPlugin().getKothHandler().saveKoths();
+                throw new CommandMessageException(Lang.COMMAND_EDITOR_LOOT_SECOND_CHEST);
             }
         }
 
         Utils.sendMessage(sender, true,
-                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("loot commands").build(), 
-                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> loot setpos").commandInfo("sets the position to the block looking at").build(), 
-                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> loot link <loot>").commandInfo("links a loot chest").build());
+                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_TITLE).title("loot commands").build(),
+                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> loot setpos").commandInfo("sets the position to the block looking at").build(),
+                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> loot link <loot>").commandInfo("links a loot chest").build(),
+                new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> loot second (none|north|east|south|west)").commandInfo("set where second chest will spawn").build()
+        );
     }
 
     @Override

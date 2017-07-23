@@ -128,6 +128,7 @@ public class Lang extends AbstractModule {
     public static String[] COMMAND_EDITOR_LOOT_SETNOBLOCK = new String[]{"&aYou need to look at the block where the chest should spawn!"};
     public static String[] COMMAND_EDITOR_LOOT_POSITION_SET = new String[]{"&aLoot position succesfully set!"};
     public static String[] COMMAND_EDITOR_LOOT_LINK = new String[]{"&aChanged the link of the loot!"};
+    public static String[] COMMAND_EDITOR_LOOT_SECOND_CHEST = new String[]{"&aChanged the side the second lootchest will spawn!"};
     public static String[] COMMAND_EDITOR_NAME_CHANGE = new String[]{"&aChanged the name of the koth!"};
 	
 	
