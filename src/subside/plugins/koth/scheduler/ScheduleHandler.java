@@ -14,6 +14,7 @@ import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.modules.AbstractModule;
 import subside.plugins.koth.utils.JSONLoader;
+import subside.plugins.koth.utils.MessageBuilder;
 
 public class ScheduleHandler extends AbstractModule {
     private @Getter List<Schedule> schedules;
@@ -101,11 +102,17 @@ public class ScheduleHandler extends AbstractModule {
                 }
             }
         }
+
+        // Some nasty code to be able to use %ttn% everywhere
+        MessageBuilder.setScheduleHandler(this);
     }
 
     @Override
     public void onDisable() {
         saveSchedules();
+
+        // Some code to clean up static instances of this object
+        MessageBuilder.setScheduleHandler(null);
     }
 
     @SuppressWarnings("unchecked")

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,10 +19,12 @@ import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.gamemodes.TimeObject;
 import subside.plugins.koth.modules.KothHandler;
 import subside.plugins.koth.scheduler.Schedule;
+import subside.plugins.koth.scheduler.ScheduleHandler;
 
 public class MessageBuilder {
     private StrObj message;
     private Collection<Player> excluders;
+    private static @Setter ScheduleHandler scheduleHandler;
 
     private class StrObj {
         private String[] message;
@@ -47,6 +50,11 @@ public class MessageBuilder {
         }
 
         protected String[] build() {
+            // A way to allow %ttn% to be used everywhere
+            if(scheduleHandler != null){
+                this.replaceAll("%ttn%", TimeObject.getTimeTillNextEvent(scheduleHandler.getPlugin()));
+            }
+
             for (int x = 0; x < message.length; x++) {
                 message[x] = ChatColor.translateAlternateColorCodes('&', message[x]);
             }
