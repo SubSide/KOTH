@@ -12,7 +12,14 @@ global:
   minuteoffset: 0
   startweekminuteoffset: 0
   scheduleminuteoffset: 0
-  pre-broadcast: 0
+  pre-broadcast: false
+  pre-broadcast-messages:
+    - "600:&aThe koth %koth% will start in 10 minutes!"
+    - "120:&aThe koth %koth% will start in 2 minutes!"
+    - "60:&aThe koth %koth% will start in 1 minute!"
+    - "30:&aThe koth %koth% will start in 30 seconds!"
+    - "15:&aThe koth %koth% will start in 15 seconds!"
+
   nocap-broadcast-interval: 30
   helpcommand:
     - "&8========> &2Koth &8<========"

@@ -1,7 +1,7 @@
 package subside.plugins.koth.modules;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -45,12 +45,15 @@ public class ConfigHandler extends AbstractModule {
         private @Getter int startWeekMinuteOffset = 0;
         private @Getter int scheduleMinuteOffset = 0;
         private @Getter String dateFormat = "dd/MM/yyyy";
-	    private @Getter int preBroadcast = 0;
 	    private @Getter int noCapBroadcastInterval = 30;
 	    private @Getter List<String> helpCommand = null;
         private @Getter boolean useFancyPlayerName = false;
         private @Getter boolean multipleKothsAtOnce = true;
 	    private @Getter boolean debug = false;
+
+        private @Getter boolean preBroadcast = false;
+        private @Getter Map<Integer, String> preBroadcastMessages;
+        private @Getter List<Integer> preBroadcastTimes;
 	    
 	    public Global(ConfigurationSection section){
 	        useCache = section.getBoolean("use-cache");
@@ -60,12 +63,29 @@ public class ConfigHandler extends AbstractModule {
             startWeekMinuteOffset = section.getInt("startweekminuteoffset");
             scheduleMinuteOffset = section.getInt("scheduleminuteoffset");
             dateFormat = section.getString("date-format");
-	        preBroadcast = section.getInt("pre-broadcast");
 	        noCapBroadcastInterval = section.getInt("nocap-broadcast-interval");
 	        helpCommand = section.getStringList("helpcommand");
             useFancyPlayerName = section.getBoolean("fancyplayername");
             multipleKothsAtOnce = section.getBoolean("multiplekothsatonce");
 	        debug = section.getBoolean("debug");
+
+            preBroadcast = section.getBoolean("pre-broadcast");
+
+
+            // Broadcast stuff
+            preBroadcastMessages = new HashMap<>();
+            for(String broadcast : section.getStringList("pre-broadcast-messages")){
+                String[] expl = broadcast.split(":", 2);
+                try {
+                    preBroadcastMessages.put(Integer.parseInt(expl[0]), expl[1]);
+                } catch(NumberFormatException e){
+                    plugin.getLogger().warning("pre-broadcast-messages: "+ expl[0] + " could not be converted to a number!");
+                }
+            }
+
+            preBroadcastTimes = new ArrayList<>(preBroadcastMessages.keySet());
+            // Sorting here is VERY important
+            Collections.sort(preBroadcastTimes);
 	    }
 	}
 	
