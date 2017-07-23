@@ -43,7 +43,6 @@ public class Lang extends AbstractModule {
     public static String[] HOOKS_PLACEHOLDERAPI_NOONECAPPING = new String[]{ "No One" };
     public static String[] HOOKS_PLACEHOLDERAPI_TIMETILL = new String[]{ "%hh%:%mm%:%ss%" };
     
-    public static String[] KOTH_PLAYING_PRE_BROADCAST = new String[]{"&aThe koth %koth% will start in 30 minutes!"};
     public static String[] KOTH_PLAYING_PLAYER_JOINING = new String[]{"&aThere is currently a KoTH running! How about a fight!?" };
 
     public static String[] KOTH_ERROR_ALREADYRUNNING = new String[]{"&aThe koth %koth% is already running!"};
@@ -128,6 +127,7 @@ public class Lang extends AbstractModule {
     public static String[] COMMAND_EDITOR_LOOT_SETNOBLOCK = new String[]{"&aYou need to look at the block where the chest should spawn!"};
     public static String[] COMMAND_EDITOR_LOOT_POSITION_SET = new String[]{"&aLoot position succesfully set!"};
     public static String[] COMMAND_EDITOR_LOOT_LINK = new String[]{"&aChanged the link of the loot!"};
+    public static String[] COMMAND_EDITOR_LOOT_SECOND_CHEST = new String[]{"&aChanged the side the second lootchest will spawn!"};
     public static String[] COMMAND_EDITOR_NAME_CHANGE = new String[]{"&aChanged the name of the koth!"};
 	
 	

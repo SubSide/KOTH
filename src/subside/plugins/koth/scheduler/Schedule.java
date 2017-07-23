@@ -1,5 +1,6 @@
 package subside.plugins.koth.scheduler;
 
+import java.util.List;
 import java.util.logging.Level;
 
 import org.json.simple.JSONObject;
@@ -7,6 +8,7 @@ import org.json.simple.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.exceptions.KothException;
+import subside.plugins.koth.modules.ConfigHandler;
 import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.JSONSerializable;
 import subside.plugins.koth.utils.MessageBuilder;
@@ -22,7 +24,7 @@ public class Schedule implements JSONSerializable<Schedule> {
     private @Getter @Setter String lootChest;
     private @Getter @Setter String entityType;
 
-    private @Getter boolean isBroadcasted = false;
+    private int preBroadcastIndex = 0;
     
     private static final long WEEK = 7 * 24 * 60 * 60 * 1000;
     
@@ -38,9 +40,11 @@ public class Schedule implements JSONSerializable<Schedule> {
         this.day = day;
         this.time = time;
         calculateNextEvent();
-
     }
 
+    /**
+     * Calculate when the next event should happen
+     */
     public void calculateNextEvent() {
         long eventTime = day.getDayStart(scheduleHandler.getPlugin()) + Day.getTime(time) - WEEK;
         
@@ -54,25 +58,42 @@ public class Schedule implements JSONSerializable<Schedule> {
         if(scheduleHandler.getPlugin().getConfigHandler().getGlobal().isDebug()){
             scheduleHandler.getPlugin().getLogger().log(Level.WARNING, "Schedule created for: "+day+" "+time+" "+nextEventMillis);
         }
+
+        // Broadcast stuff
+        List<Integer> times = scheduleHandler.getPlugin().getConfigHandler().getGlobal().getPreBroadcastTimes();
+        this.preBroadcastIndex = times.size()-1;
+        while(preBroadcastIndex >= 0 && (nextEventMillis - times.get(preBroadcastIndex) * 1000 < System.currentTimeMillis())){
+            preBroadcastIndex--;
+        }
     }
 
+    /**
+     * This method is executed every second,
+     * it checks if it should broadcast anything and if it should run
+     */
     public void tick() {
-        if (scheduleHandler.getPlugin().getConfigHandler().getGlobal().getPreBroadcast() != 0) {
-            if(!isBroadcasted){
-                if (System.currentTimeMillis() + 1000 * 60 * scheduleHandler.getPlugin().getConfigHandler().getGlobal().getPreBroadcast() > nextEventMillis) {
-                    isBroadcasted = true;
-                    new MessageBuilder(Lang.KOTH_PLAYING_PRE_BROADCAST).maxTime(maxRunTime).captureTime(captureTime).lootAmount(lootAmount).koth(scheduleHandler.getPlugin().getKothHandler(), koth).buildAndBroadcast();
-                }
+        // Broadcast stuff
+        ConfigHandler.Global cGlobal = scheduleHandler.getPlugin().getConfigHandler().getGlobal();
+        if (cGlobal.isPreBroadcast() && preBroadcastIndex >= 0) {
+            int time = cGlobal.getPreBroadcastTimes().get(preBroadcastIndex);
+            long nextBroadcast = nextEventMillis - time * 1000;
+            if (System.currentTimeMillis() > nextBroadcast) {
+                new MessageBuilder(cGlobal.getPreBroadcastMessages().get(time)).maxTime(maxRunTime).captureTime(captureTime).lootAmount(lootAmount).koth(scheduleHandler.getPlugin().getKothHandler(), koth).buildAndBroadcast();
+                preBroadcastIndex--;
             }
         }
 
+        // Code for when a KoTH should start
         if (System.currentTimeMillis() > nextEventMillis) {
+            // Reset prebroadcasting
+            preBroadcastIndex = scheduleHandler.getPlugin().getConfigHandler().getGlobal().getPreBroadcastTimes().size()-1;
+
+            // Set the next event time
             setNextEventTime();
-            isBroadcasted = false;
             try {
                 scheduleHandler.getPlugin().getKothHandler().startKoth(this);
             } catch(KothException e){
-                scheduleHandler.getPlugin().getLogger().log(Level.WARNING, "Koth is already running");
+                scheduleHandler.getPlugin().getLogger().warning("Koth is already running");
             }
         }
     }
@@ -81,6 +102,10 @@ public class Schedule implements JSONSerializable<Schedule> {
         nextEventMillis += WEEK;
     }
 
+    /**
+     * Simple getter for nextEventMillis
+     * @return When the next event should run (in milliseconds)
+     */
     public long getNextEvent() {
         return nextEventMillis;
     }

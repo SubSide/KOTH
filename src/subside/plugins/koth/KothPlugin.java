@@ -21,6 +21,7 @@ import subside.plugins.koth.modules.KothHandler;
 import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.scheduler.MapRotation;
 import subside.plugins.koth.scheduler.ScheduleHandler;
+import subside.plugins.koth.utils.MessageBuilder;
 
 public class KothPlugin extends JavaPlugin {
     
@@ -116,11 +117,17 @@ public class KothPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
         trigger(LoadingState.ENABLE);
+        
+        // Some nasty code to be able to use %ttn% everywhere and to access the config handler
+        MessageBuilder.setPlugin(this);
 	}
 
 	@Override
 	public void onDisable() {
 		trigger(LoadingState.DISABLE);
+
+		// Some code to clean up static references (The only one)
+		MessageBuilder.setPlugin(null);
 	}
 	
 	public void trigger(LoadingState state){

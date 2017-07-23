@@ -58,14 +58,13 @@ public class EventListener extends AbstractModule implements Listener {
         Location loc = chest.getLocation();
         for (Koth koth : plugin.getKothHandler().getAvailableKoths()) {
             try {
-                Location vec = koth.getLootPos();
-                if (vec == null || loc.getWorld() != vec.getWorld() || loc.getBlockX() != vec.getBlockX() || loc.getBlockY() != vec.getBlockY() || loc.getBlockZ() != vec.getBlockZ())
+                if (!koth.isLootChest(loc))
                     continue;
     
                 KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
                 event.setCancelled(true);
                 try {
-                    if(Perm.Admin.BYPASS.has((Player) e.getPlayer()) || (plugin.getConfigHandler().getKoth().isFfaChestTimeLimit() && koth.getLastWinner() == null && koth.getRunningKoth() == null) || (koth.getLastWinner() != null && koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer()))){
+                    if(Perm.Admin.BYPASS.has(e.getPlayer()) || (plugin.getConfigHandler().getKoth().isFfaChestTimeLimit() && koth.getLastWinner() == null && koth.getRunningKoth() == null) || (koth.getLastWinner() != null && koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer()))){
                         event.setCancelled(false);
                     }
                 } catch(Exception f){
@@ -90,13 +89,10 @@ public class EventListener extends AbstractModule implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
-        if (Perm.Admin.BYPASS.has((Player) e.getPlayer())) return;
+        if (Perm.Admin.BYPASS.has(e.getPlayer())) return;
 
-        Location loc = e.getBlock().getLocation();
         for (Koth koth : plugin.getKothHandler().getAvailableKoths()) {
-            Location vec = koth.getLootPos();
-            if (vec == null) continue;
-            if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
+            if (koth.isLootChest(e.getBlock().getLocation())) {
                 e.setCancelled(true);
             }
 
@@ -105,12 +101,10 @@ public class EventListener extends AbstractModule implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
-        if (Perm.Admin.BYPASS.has((Player) e.getPlayer())) return;
-        Location loc = e.getBlock().getLocation();
+        if (Perm.Admin.BYPASS.has(e.getPlayer())) return;
+
         for (Koth koth : plugin.getKothHandler().getAvailableKoths()) {
-            Location vec = koth.getLootPos();
-            if (vec == null) continue;
-            if (loc.getWorld() == vec.getWorld() && loc.getBlockX() == vec.getBlockX() && loc.getBlockY() == vec.getBlockY() && loc.getBlockZ() == vec.getBlockZ()) {
+            if (koth.isLootChest(e.getBlock().getLocation())) {
                 e.setCancelled(true);
             }
         }
@@ -118,7 +112,7 @@ public class EventListener extends AbstractModule implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInventoryChange(InventoryClickEvent event) {
-        if(!(event.getWhoClicked() instanceof Player) || Perm.Admin.LOOT.has((Player)event.getWhoClicked())){
+        if(!(event.getWhoClicked() instanceof Player) || Perm.Admin.LOOT.has(event.getWhoClicked())){
             return;
         }
         
@@ -132,7 +126,7 @@ public class EventListener extends AbstractModule implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        if (!Perm.Admin.LOOT.has((Player) event.getPlayer())) {
+        if (!Perm.Admin.LOOT.has(event.getPlayer())) {
             return;
         }
         

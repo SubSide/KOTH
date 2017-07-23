@@ -9,10 +9,18 @@ global:
   schedule-show-current-day-only: false
   schedule-timezone: "Europe/Amsterdam"
   date-format: "dd/MM/yyyy HH:mm:ss"
+  world-filter: false
   minuteoffset: 0
   startweekminuteoffset: 0
   scheduleminuteoffset: 0
-  pre-broadcast: 0
+  pre-broadcast: false
+  pre-broadcast-messages:
+    - "600:&aThe koth %koth% will start in 10 minutes!"
+    - "120:&aThe koth %koth% will start in 2 minutes!"
+    - "60:&aThe koth %koth% will start in 1 minute!"
+    - "30:&aThe koth %koth% will start in 30 seconds!"
+    - "15:&aThe koth %koth% will start in 15 seconds!"
+
   nocap-broadcast-interval: 30
   helpcommand:
     - "&8========> &2Koth &8<========"
@@ -37,6 +45,7 @@ loot:
     needop: true
 
 hooks:
+  essentialsvanish: true
   vanishnopacket: true
   factions: true
   kingdoms: true
@@ -70,12 +79,19 @@ koth:
   channel-time: 0
   knock-time: 0
   minimum-players: 0
+  broadcast-interval: 30
+  captime-decrementation: # This is to decrease the captime as time passes
+    enabled: false
+    every-x-seconds: 600
+    decrease-by: 60
+    minimum: 300
   map-rotation:
     - "map1"
     - "map2"
     - "map3"
     - "map2"
     - "etc"
+
 
 # If you use SQLite only database will be used, as name for the file to create
 # change storagetype to mysql if you want to use MySQL instead.
@@ -87,3 +103,6 @@ database:
   port: 3306
   username: "root"
   password: ""
+  modules:
+    saveKothWins: true
+    savePlayerIgnores: true

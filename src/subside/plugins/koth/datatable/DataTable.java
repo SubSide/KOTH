@@ -16,15 +16,18 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
+import org.bukkit.event.Listener;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.captureentities.CaptureTypeRegistry;
+import subside.plugins.koth.datatable.listener.KothWinListener;
+import subside.plugins.koth.datatable.listener.PlayerIgnoreListener;
 import subside.plugins.koth.modules.AbstractModule;
 import subside.plugins.koth.modules.ConfigHandler;
 
 public class DataTable extends AbstractModule {
     private @Getter IDatabase databaseProvider;
-    private DataTableEventListener eventListener;
+    private List<Listener> eventListeners;
 
     public DataTable(KothPlugin plugin) {
         super(plugin);
@@ -58,30 +61,59 @@ public class DataTable extends AbstractModule {
         catch (SQLException e) {}
 
         initialize();
-        eventListener = new DataTableEventListener(this);
-        plugin.getServer().getPluginManager().registerEvents(eventListener, plugin);
+
+        eventListeners = new ArrayList<>();
+        ConfigHandler.Database.Modules moduleConfig = getPlugin().getConfigHandler().getDatabase().getModules();
+        if(moduleConfig.isSaveKothWins())       eventListeners.add(new KothWinListener(this));
+        if(moduleConfig.isSavePlayerIgnores())  eventListeners.add(new PlayerIgnoreListener(this));
+
+        for(Listener listener : eventListeners) {
+            plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+        }
     }
 
     @Override
     public void onDisable() {
-        HandlerList.unregisterAll(eventListener);
+        for(Listener listener : eventListeners) {
+            HandlerList.unregisterAll(listener);
+        }
     }
 
     private void initialize() {
         try {
             // Result table
             Connection con = databaseProvider.getConnection();
-            PreparedStatement ptsd = con.prepareStatement("CREATE TABLE IF NOT EXISTS results (" + ((databaseProvider instanceof SQLite) ? "id INTEGER PRIMARY KEY" : "id INT(16) NOT NULL AUTO_INCREMENT") + ", " + "koth VARCHAR(32) NOT NULL, " + "gamemode VARCHAR(32) NOT NULL, " + "date INT(16) NOT NULL, " + "capper_uuid VARCHAR(36) NOT NULL, " + "capper_displayname VARCHAR(64) NOT NULL, " + "capper_type VARCHAR(32) NOT NULL" + ((databaseProvider instanceof SQLite) ? "" : ", PRIMARY KEY (id)") + ")");
+            PreparedStatement ptsd = con.prepareStatement("CREATE TABLE IF NOT EXISTS results (" +
+                    ((databaseProvider instanceof SQLite) ? "id INTEGER PRIMARY KEY" : "id INT(16) NOT NULL AUTO_INCREMENT") + ", " +
+                    "koth VARCHAR(32) NOT NULL, " +
+                    "gamemode VARCHAR(32) NOT NULL, " +
+                    "date INT(16) NOT NULL, " +
+                    "capper_uuid VARCHAR(36) NOT NULL, " +
+                    "capper_displayname VARCHAR(64) NOT NULL, " +
+                    "capper_type VARCHAR(32) NOT NULL" +
+                    ((databaseProvider instanceof SQLite) ? "" : ", PRIMARY KEY (id)") + ")");
 
             ptsd.execute();
 
             // Player based table
-            ptsd = con.prepareStatement("CREATE TABLE IF NOT EXISTS player_results (" + ((databaseProvider instanceof SQLite) ? "id INTEGER PRIMARY KEY" : "id INT(16) NOT NULL AUTO_INCREMENT") + ", " + "result_id VARCHAR(32) NOT NULL, " + "player_uuid VARCHAR(36) NOT NULL, " + "player_displayname VARCHAR(64) NOT NULL" + ((databaseProvider instanceof SQLite) ? "" : ", PRIMARY KEY (id)") + ")");
+            ptsd = con.prepareStatement("CREATE TABLE IF NOT EXISTS player_results (" +
+                    ((databaseProvider instanceof SQLite) ? "id INTEGER PRIMARY KEY" : "id INT(16) NOT NULL AUTO_INCREMENT") + ", " +
+                    "result_id VARCHAR(32) NOT NULL, " +
+                    "player_uuid VARCHAR(36) NOT NULL, " +
+                    "player_displayname VARCHAR(64) NOT NULL" +
+                    ((databaseProvider instanceof SQLite) ? "" : ", PRIMARY KEY (id)") + ")");
+
+            ptsd.execute();
+
+            // Player permanent ignore
+            ptsd = con.prepareStatement("CREATE TABLE IF NOT EXISTS player_ignore (" +
+                    ((databaseProvider instanceof SQLite) ? "id INTEGER PRIMARY KEY" : "id INT(16) NOT NULL AUTO_INCREMENT") + ", " +
+                    "player_uuid VARCHAR(36) NOT NULL" + ((databaseProvider instanceof SQLite) ? "" : ", PRIMARY KEY (id)") + ")");
 
             ptsd.execute();
         }
         catch (SQLException e) {
-            this.plugin.getLogger().log(Level.SEVERE, "Error: Couldn't create the database table: results", e);
+            this.plugin.getLogger().log(Level.SEVERE, "Error: Couldn't create the database table", e);
         }
     }
 

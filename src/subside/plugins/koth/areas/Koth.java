@@ -13,8 +13,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -39,6 +41,7 @@ import subside.plugins.koth.utils.Utils;
 public class Koth implements Capable, JSONSerializable<Koth> {
     private @Getter @Setter String name;
     private @Getter @Setter Location lootPos = null;
+    private @Getter @Setter LootDirection secondLootDirection = LootDirection.NONE;
     private @Setter String loot = null;
     private Capper<?> lastWinner;
     private @Getter List<Area> areas = new ArrayList<>();
@@ -99,7 +102,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
 
     /** Change the Last winner of this KoTH
      * 
-     * @param player    The new winner
+     * @param capper    The new winner
      */
     public void setLastWinner(Capper<?> capper) {
         lastWinner = capper;
@@ -116,7 +119,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
 
     /** Checks if the player is inside any area of the KoTH
      * 
-     * @param player    OfflinePlayer to check
+     * @param oPlayer   OfflinePlayer to check
      * @return          true if player is in any KoTH area
      */
     @Override
@@ -151,7 +154,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
     /** Creates the loot chest and trigger the commands
      * 
      * @param lootAmount        The amount of loot that should be created
-     * @param lootChest         The lootChest to use
+     * @param lootChst          The lootChest to use
      */
     public void triggerLoot(int lootAmount, String lootChst) {
         ConfigHandler cfgHandler = kothHandler.getPlugin().getConfigHandler();
@@ -241,23 +244,23 @@ public class Koth implements Capable, JSONSerializable<Koth> {
                 }
 
                 lootPos.getBlock().setType(Material.CHEST);
-                if (!(lootPos.getBlock().getState() instanceof Chest)) {
-                    return;
+
+                if(getSideChest() != null){
+                    getSideChest().getBlock().setType(Material.CHEST);
                 }
 
-                Chest chest = (Chest) lootPos.getBlock().getState();
-                chest.getInventory().setContents(Arrays.copyOf(inv.getContents(), 27));
+                if (!(lootPos.getBlock().getState() instanceof Chest || lootPos.getBlock().getState() instanceof DoubleChest)) {
+                    return;
+                }
+                InventoryHolder chest2 = (InventoryHolder) lootPos.getBlock().getState();
+                chest2.getInventory().setContents(Arrays.copyOf(inv.getContents(), chest2.getInventory().getSize()));
 
                 if (kothHandler.getPlugin().getConfigHandler().getLoot().getRemoveLootAfterSeconds() < 1) {
                     return;
                 }
 
-                Bukkit.getScheduler().runTaskLater(kothHandler.getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        removeLootChest();
-                    }
-                }, kothHandler.getPlugin().getConfigHandler().getLoot().getRemoveLootAfterSeconds() * 20);
+                Bukkit.getScheduler().runTaskLater(kothHandler.getPlugin(), () -> removeLootChest()
+                , kothHandler.getPlugin().getConfigHandler().getLoot().getRemoveLootAfterSeconds() * 20);
 
             }
 
@@ -272,34 +275,33 @@ public class Koth implements Capable, JSONSerializable<Koth> {
      */
     public void removeLootChest() {
         final Koth koth = this;
-        Bukkit.getScheduler().runTask(kothHandler.getPlugin(), new Runnable() {
-            public void run() {
-                if (koth.getLootPos() == null) {
-                    return;
-                }
+        Bukkit.getScheduler().runTask(kothHandler.getPlugin(), () -> {
+            if (koth.getLootPos() == null) {
+                return;
+            }
 
-                if (koth.getLootPos().getBlock() == null) {
-                    return;
-                }
+            if (koth.getLootPos().getBlock() == null) {
+                return;
+            }
 
-                if (!kothHandler.getPlugin().getConfigHandler().getLoot().isDropLootOnRemoval()) {
-                    if (koth.getLootPos().getBlock().getState() instanceof Chest) {
-                        Chest chest = (Chest) koth.getLootPos().getBlock().getState();
-                        Inventory inv = chest.getInventory();
-                        inv.clear();
-                    }
+            if (!kothHandler.getPlugin().getConfigHandler().getLoot().isDropLootOnRemoval()) {
+                if (koth.getLootPos().getBlock().getState() instanceof Chest) {
+                    Chest chest = (Chest) koth.getLootPos().getBlock().getState();
+                    Inventory inv = chest.getInventory();
+                    inv.clear();
                 }
-                koth.getLootPos().getBlock().setType(Material.AIR);
-
+            }
+            koth.getLootPos().getBlock().setType(Material.AIR);
+            if(getSideChest() != null){
+                getSideChest().getBlock().setType(Material.AIR);
             }
 
         });
-
     }
 
     /** Gets an area by name
      * 
-     * @param area      The area name
+     * @param ar      The area name
      * @return          The area object
      */
     public Area getArea(String ar){
@@ -309,6 +311,57 @@ public class Koth implements Capable, JSONSerializable<Koth> {
             }
         }
         return null;
+    }
+
+    /**
+     * Get the location of the side chest
+     * @return the location
+     */
+    private Location getSideChest(){
+        if(secondLootDirection == LootDirection.NONE)
+            return null;
+
+        Location lootPos2 = lootPos.clone();
+        switch(secondLootDirection){
+            case NORTH:
+                lootPos2.add(0, 0, -1);
+                break;
+            case EAST:
+                lootPos2.add(1, 0, 0);
+                break;
+            case SOUTH:
+                lootPos2.add(0, 0, 1);
+                break;
+            case WEST:
+                lootPos2.add(-1, 0, 0);
+                break;
+        }
+
+        return lootPos2;
+    }
+
+    /**
+     * A simple function to check if the given location is the lootchest of this KoTH
+     * @param loc location to check
+     * @return true if the given location is the lootchest
+     */
+    public boolean isLootChest(Location loc){
+        if (lootPos != null
+                && loc.getWorld() == lootPos.getWorld()
+                && loc.getBlockX() == lootPos.getBlockX()
+                && loc.getBlockY() == lootPos.getBlockY()
+                && loc.getBlockZ() == lootPos.getBlockZ())
+            return true;
+
+        Location side = getSideChest();
+        if (side != null
+                && loc.getWorld() == side.getWorld()
+                && loc.getBlockX() == side.getBlockX()
+                && loc.getBlockY() == side.getBlockY()
+                && loc.getBlockZ() == side.getBlockZ())
+            return true;
+
+        return false;
     }
   
     public Koth load(JSONObject obj){
@@ -324,6 +377,12 @@ public class Koth implements Capable, JSONSerializable<Koth> {
             JSONObject lootObj = (JSONObject)obj.get("loot");
             if(lootObj.containsKey("position")){
                 this.lootPos = Utils.getLocFromObject((JSONObject)lootObj.get("position")); //lootpos
+                try {
+                    if(lootObj.containsKey("secondLootDirection"))
+                        this.secondLootDirection = LootDirection.valueOf((String)lootObj.get("secondLootDirection"));
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             }
             if(lootObj.containsKey("name")){
                 this.loot = (String)lootObj.get("name"); //loot
@@ -354,6 +413,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
             JSONObject lootObj = new JSONObject();
             if(this.lootPos != null){
                 lootObj.put("position", Utils.createLocObject(this.lootPos)); //lootpos
+                lootObj.put("secondLootDirection", this.secondLootDirection.toString());
             }
             if(this.loot != null && !this.loot.equalsIgnoreCase("")){
                 lootObj.put("name", this.loot); // loot
@@ -372,4 +432,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
         return obj;
     }
 
+    public enum LootDirection {
+        NONE, NORTH, EAST, SOUTH, WEST;
+    }
 }

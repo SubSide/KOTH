@@ -1,7 +1,7 @@
 package subside.plugins.koth.modules;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -45,12 +45,16 @@ public class ConfigHandler extends AbstractModule {
         private @Getter int startWeekMinuteOffset = 0;
         private @Getter int scheduleMinuteOffset = 0;
         private @Getter String dateFormat = "dd/MM/yyyy";
-	    private @Getter int preBroadcast = 0;
 	    private @Getter int noCapBroadcastInterval = 30;
 	    private @Getter List<String> helpCommand = null;
         private @Getter boolean useFancyPlayerName = false;
         private @Getter boolean multipleKothsAtOnce = true;
+        private @Getter boolean worldFilter = false;
 	    private @Getter boolean debug = false;
+
+        private @Getter boolean preBroadcast = false;
+        private @Getter Map<Integer, String> preBroadcastMessages;
+        private @Getter List<Integer> preBroadcastTimes;
 	    
 	    public Global(ConfigurationSection section){
 	        useCache = section.getBoolean("use-cache");
@@ -60,16 +64,35 @@ public class ConfigHandler extends AbstractModule {
             startWeekMinuteOffset = section.getInt("startweekminuteoffset");
             scheduleMinuteOffset = section.getInt("scheduleminuteoffset");
             dateFormat = section.getString("date-format");
-	        preBroadcast = section.getInt("pre-broadcast");
 	        noCapBroadcastInterval = section.getInt("nocap-broadcast-interval");
 	        helpCommand = section.getStringList("helpcommand");
             useFancyPlayerName = section.getBoolean("fancyplayername");
             multipleKothsAtOnce = section.getBoolean("multiplekothsatonce");
+            worldFilter = section.getBoolean("world-filter");
 	        debug = section.getBoolean("debug");
+
+            preBroadcast = section.getBoolean("pre-broadcast");
+
+
+            // Broadcast stuff
+            preBroadcastMessages = new HashMap<>();
+            for(String broadcast : section.getStringList("pre-broadcast-messages")){
+                String[] expl = broadcast.split(":", 2);
+                try {
+                    preBroadcastMessages.put(Integer.parseInt(expl[0]), expl[1]);
+                } catch(NumberFormatException e){
+                    plugin.getLogger().warning("pre-broadcast-messages: "+ expl[0] + " could not be converted to a number!");
+                }
+            }
+
+            preBroadcastTimes = new ArrayList<>(preBroadcastMessages.keySet());
+            // Sorting here is VERY important
+            Collections.sort(preBroadcastTimes);
 	    }
 	}
 	
 	public class Hooks {
+	    private @Getter boolean essentialsVanish = true;
 	    private @Getter boolean vanishNoPacket = true;
 	    private @Getter boolean factions = true;
 	    private @Getter boolean kingdoms = true;
@@ -81,6 +104,7 @@ public class ConfigHandler extends AbstractModule {
         private @Getter BossBar bossBar;
 	    
 	    public Hooks(ConfigurationSection section){
+	        essentialsVanish = section.getBoolean("essentialsvanish");
             vanishNoPacket = section.getBoolean("vanishnopacket");
             factions = section.getBoolean("factions");
             kingdoms = section.getBoolean("kingdoms");
@@ -181,9 +205,12 @@ public class ConfigHandler extends AbstractModule {
         private @Getter boolean contestFreeze = false;
         private @Getter boolean removeChestAtStart = true;
         private @Getter boolean ffaChestTimeLimit = false;
+        private @Getter int broadcastInterval = 30;
         private @Getter int minimumPlayersNeeded = 0;
         private @Getter String defaultCaptureType = "Player";
         private @Getter List<String> mapRotation = new ArrayList<>();
+
+        private @Getter CapDecrementation capDecrementation;
         
         public Koth(ConfigurationSection section){
             removeChestAtStart = section.getBoolean("remove-chest-at-start");
@@ -191,10 +218,27 @@ public class ConfigHandler extends AbstractModule {
             contestFreeze = section.getBoolean("contest-freeze");
             channelTime = section.getInt("channel-time");
             knockTime = section.getInt("knock-time");
+            broadcastInterval = section.getInt("broadcast-interval");
             captureCooldown = section.getInt("capture-cooldown");
             minimumPlayersNeeded = section.getInt("minimum-players");
             defaultCaptureType = section.getString("default-capturetype");
             mapRotation = section.getStringList("map-rotation");
+
+            capDecrementation = new CapDecrementation(section.getConfigurationSection("captime-decrementation"));
+        }
+
+        public class CapDecrementation {
+            private @Getter boolean enabled = false;
+            private @Getter int everyXSeconds = 600;
+            private @Getter int decreaseBy = 60;
+            private @Getter int minimum = 300;
+
+            public CapDecrementation(ConfigurationSection section){
+                enabled = section.getBoolean("enabled");
+                everyXSeconds = section.getInt("every-x-seconds");
+                decreaseBy = section.getInt("decrease-by");
+                minimum = section.getInt("minimum");
+            }
         }
     }
     
@@ -206,6 +250,7 @@ public class ConfigHandler extends AbstractModule {
         private @Getter int port = 3306;
         private @Getter String username = "root";
         private @Getter String password = "";
+        private @Getter Modules modules;
         
         public Database(ConfigurationSection section){
             enabled = section.getBoolean("enabled");
@@ -215,6 +260,17 @@ public class ConfigHandler extends AbstractModule {
             port = section.getInt("port");
             username = section.getString("username");
             password = section.getString("password");
+            modules = new Modules(section.getConfigurationSection("modules"));
+        }
+
+        public class Modules {
+            private @Getter boolean saveKothWins = true;
+            private @Getter boolean savePlayerIgnores = true;
+
+            public Modules(ConfigurationSection section){
+                saveKothWins = section.getBoolean("save-koth-wins");
+                savePlayerIgnores = section.getBoolean("save-player-ignores");
+            }
         }
     }
 }
