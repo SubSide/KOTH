@@ -205,6 +205,7 @@ public class ConfigHandler extends AbstractModule {
         private @Getter boolean contestFreeze = false;
         private @Getter boolean removeChestAtStart = true;
         private @Getter boolean ffaChestTimeLimit = false;
+        private @Getter int broadcastInterval = 30;
         private @Getter int minimumPlayersNeeded = 0;
         private @Getter String defaultCaptureType = "Player";
         private @Getter List<String> mapRotation = new ArrayList<>();
@@ -217,6 +218,7 @@ public class ConfigHandler extends AbstractModule {
             contestFreeze = section.getBoolean("contest-freeze");
             channelTime = section.getInt("channel-time");
             knockTime = section.getInt("knock-time");
+            broadcastInterval = section.getInt("broadcast-interval");
             captureCooldown = section.getInt("capture-cooldown");
             minimumPlayersNeeded = section.getInt("minimum-players");
             defaultCaptureType = section.getString("default-capturetype");

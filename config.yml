@@ -79,6 +79,7 @@ koth:
   channel-time: 0
   knock-time: 0
   minimum-players: 0
+  broadcast-interval: 30
   captime-decrementation: # This is to decrease the captime as time passes
     enabled: false
     every-x-seconds: 600

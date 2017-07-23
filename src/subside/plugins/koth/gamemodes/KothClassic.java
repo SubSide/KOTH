@@ -142,7 +142,7 @@ public class KothClassic extends RunningKoth {
         if (capInfo.getCapper() != null) {
             timeNotCapped = 0;
             if (capInfo.getTimeCapped() < captureTime) {
-                if (capInfo.getTimeCapped() % 1 == 0 && capInfo.getTimeCapped() != 0 && status != CapStatus.CONTESTED) {
+                if (capInfo.getTimeCapped() % getPlugin().getConfigHandler().getKoth().getBroadcastInterval() == 0 && capInfo.getTimeCapped() != 0 && status != CapStatus.CONTESTED) {
                     new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).exclude(capInfo.getCapper(), koth).buildAndBroadcast();
                     new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(capInfo.getCapper(), koth);
                 }
@@ -156,7 +156,7 @@ public class KothClassic extends RunningKoth {
         ConfigHandler.Koth.CapDecrementation capDec = getPlugin().getConfigHandler().getKoth().getCapDecrementation();
         if(capDec.isEnabled()){
             captureTime = staticCaptureTime - (int)Math.floor(timeRunning/capDec.getEveryXSeconds()) * capDec.getDecreaseBy();
-            captureTime = (captureTime < capDec.getMinimum()) ? capDec.getMinimum() : captureTime;
+            captureTime = Math.max(captureTime, capDec.getMinimum());
         }
         
         if(getPlugin().getConfigHandler().getGlobal().getNoCapBroadcastInterval() != 0 && timeNotCapped % getPlugin().getConfigHandler().getGlobal().getNoCapBroadcastInterval() == 0) {
