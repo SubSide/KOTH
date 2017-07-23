@@ -49,6 +49,7 @@ public class ConfigHandler extends AbstractModule {
 	    private @Getter List<String> helpCommand = null;
         private @Getter boolean useFancyPlayerName = false;
         private @Getter boolean multipleKothsAtOnce = true;
+        private @Getter boolean worldFilter = false;
 	    private @Getter boolean debug = false;
 
         private @Getter boolean preBroadcast = false;
@@ -67,6 +68,7 @@ public class ConfigHandler extends AbstractModule {
 	        helpCommand = section.getStringList("helpcommand");
             useFancyPlayerName = section.getBoolean("fancyplayername");
             multipleKothsAtOnce = section.getBoolean("multiplekothsatonce");
+            worldFilter = section.getBoolean("world-filter");
 	        debug = section.getBoolean("debug");
 
             preBroadcast = section.getBoolean("pre-broadcast");

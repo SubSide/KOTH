@@ -9,9 +9,11 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Area;
 import subside.plugins.koth.areas.Capable;
 import subside.plugins.koth.areas.Koth;
@@ -24,7 +26,8 @@ import subside.plugins.koth.scheduler.ScheduleHandler;
 public class MessageBuilder {
     private StrObj message;
     private Collection<Player> excluders;
-    private static @Setter ScheduleHandler scheduleHandler;
+    private Collection<Player> includers;
+    private static @Setter KothPlugin plugin;
 
     private class StrObj {
         private String[] message;
@@ -51,8 +54,8 @@ public class MessageBuilder {
 
         protected String[] build() {
             // A way to allow %ttn% to be used everywhere
-            if(scheduleHandler != null){
-                this.replaceAll("%ttn%", TimeObject.getTimeTillNextEvent(scheduleHandler.getPlugin()));
+            if(plugin != null){
+                this.replaceAll("%ttn%", TimeObject.getTimeTillNextEvent(plugin));
             }
 
             for (int x = 0; x < message.length; x++) {
@@ -79,32 +82,50 @@ public class MessageBuilder {
         if (kth != null) {
             koth(kth);
         } else {
-            message.replaceAll("%koth%", koth.replaceAll("\\\\\\\\", "%5C").replaceAll("([^\\\\])_", "$1 ").replaceAll("\\\\_", "_").replaceAll("%5C", "\\\\\\\\"));
+            message.replaceAll("%koth%",
+                    koth.replaceAll("\\\\\\\\", "%5C")
+                            .replaceAll("([^\\\\])_", "$1 ")
+                            .replaceAll("\\\\_", "_")
+                            .replaceAll("%5C", "\\\\\\\\"));
+        }
+        return this;
+    }
+
+    public MessageBuilder location(Location location){
+        if (location != null) {
+            message.replaceAll("%x%", "" + location.getBlockX())
+                    .replaceAll("%y%", "" + location.getBlockY())
+                    .replaceAll("%z%", "" + location.getBlockZ());
+            try {
+                message.replaceAll("%world%", location.getWorld().getName());
+
+                if(plugin.getConfigHandler().getGlobal().isWorldFilter()){
+                    this.include(location.getWorld().getPlayers());
+                }
+
+            } catch (Exception e) { e.printStackTrace(); }
         }
         return this;
     }
     
     public MessageBuilder koth(Koth koth){
-        message.replaceAll("%koth%", koth.getName().replaceAll("\\\\\\\\", "%5C").replaceAll("([^\\\\])_", "$1 ").replaceAll("\\\\_", "_").replaceAll("%5C", "\\\\\\\\"));
-        Location loc = koth.getMiddle();
-        if (loc != null) {
-            message.replaceAll("%x%", "" + loc.getBlockX()).replaceAll("%y%", "" + loc.getBlockY()).replaceAll("%z%", "" + loc.getBlockZ());
-            try {
-                message.replaceAll("%world%", loc.getWorld().getName());
-            }
-            catch (Exception e) {}
-        }
-        return this;
-    }
-    
-    public MessageBuilder area(String area){
-        message.replaceAll("%area%", area);
+        message.replaceAll("%koth%", koth.getName()
+                .replaceAll("\\\\\\\\", "%5C")
+                .replaceAll("([^\\\\])_", "$1 ")
+                .replaceAll("\\\\_", "_")
+                .replaceAll("%5C", "\\\\\\\\"));
+        this.location(koth.getMiddle());
         return this;
     }
     
     public MessageBuilder area(Area area){
-        Location mid = area.getMiddle();
-        message.replaceAll("%area%", area.getName()).replaceAll("%x%", ""+mid.getBlockX()).replaceAll("%y%", ""+mid.getBlockY()).replaceAll("%z%", ""+mid.getBlockZ());
+        message.replaceAll("%area%", area.getName());
+        this.location(area.getMiddle());
+        return this;
+    }
+
+    public MessageBuilder area(String area){
+        message.replaceAll("%area%", area);
         return this;
     }
     
@@ -186,21 +207,32 @@ public class MessageBuilder {
         message.replaceAll("%command_info%", commandInfo);
         return this;
     }
-    
-    public MessageBuilder exclude(List<Player> excluders){
-        this.excluders = excluders;
+
+    public MessageBuilder exclude(Collection<Player> excluders){
+        if(this.excluders == null)
+            this.excluders = new ArrayList<>();
+
+        this.excluders.addAll(excluders);
         return this;
     }
-    
+
+    public MessageBuilder include(Collection<Player> includers){
+        if(this.includers == null)
+            this.includers = new ArrayList<>();
+
+        this.includers.addAll(includers);
+        return this;
+    }
+
     public MessageBuilder exclude(Capper<?> capper, Capable area){
         if(capper != null)
-            this.excluders = capper.getAvailablePlayers(area);
-        
+            this.exclude(capper.getAvailablePlayers(area));
+
         return this;
     }
 
     public void buildAndBroadcast() {
-        Collection<? extends Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        Collection<? extends Player> players = (includers == null) ? new ArrayList<>(Bukkit.getOnlinePlayers()) : includers;
         
         if(excluders != null){
             players.removeAll(excluders);

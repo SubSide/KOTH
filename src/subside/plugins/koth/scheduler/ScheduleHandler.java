@@ -102,17 +102,11 @@ public class ScheduleHandler extends AbstractModule {
                 }
             }
         }
-
-        // Some nasty code to be able to use %ttn% everywhere
-        MessageBuilder.setScheduleHandler(this);
     }
 
     @Override
     public void onDisable() {
         saveSchedules();
-
-        // Some code to clean up static instances of this object
-        MessageBuilder.setScheduleHandler(null);
     }
 
     @SuppressWarnings("unchecked")
