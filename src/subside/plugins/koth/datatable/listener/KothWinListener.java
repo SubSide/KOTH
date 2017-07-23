@@ -1,4 +1,4 @@
-package subside.plugins.koth.datatable;
+package subside.plugins.koth.datatable.listener;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,12 +14,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import org.bukkit.event.player.PlayerQuitEvent;
+import subside.plugins.koth.datatable.DataTable;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
 
-public class DataTableEventListener implements Listener {
+public class KothWinListener implements Listener {
     DataTable dataTable;
-    public DataTableEventListener(DataTable dataTable){
+    public KothWinListener(DataTable dataTable){
         this.dataTable = dataTable;
     }
     
@@ -33,7 +35,7 @@ public class DataTableEventListener implements Listener {
         if(event.getWinner() == null || event.getWinner().getObject() == null){
             return;
         }
-        
+
 
         try {
             Connection connection = dataTable.getDatabaseProvider().getConnection();
@@ -53,6 +55,7 @@ public class DataTableEventListener implements Listener {
             
             ResultSet keys = ptsd.getGeneratedKeys();
             if(!keys.next()){
+                connection.rollback();
                 throw new SQLException("Something went wrong! Couldn't get the insterted ID!");
             }
             

@@ -87,3 +87,6 @@ database:
   port: 3306
   username: "root"
   password: ""
+  modules:
+    saveKothWins: true
+    savePlayerIgnores: true

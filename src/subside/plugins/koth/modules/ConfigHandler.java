@@ -206,6 +206,7 @@ public class ConfigHandler extends AbstractModule {
         private @Getter int port = 3306;
         private @Getter String username = "root";
         private @Getter String password = "";
+        private @Getter Modules modules;
         
         public Database(ConfigurationSection section){
             enabled = section.getBoolean("enabled");
@@ -215,6 +216,17 @@ public class ConfigHandler extends AbstractModule {
             port = section.getInt("port");
             username = section.getString("username");
             password = section.getString("password");
+            modules = new Modules(section.getConfigurationSection("modules"));
+        }
+
+        public class Modules {
+            private @Getter boolean saveKothWins = true;
+            private @Getter boolean savePlayerIgnores = true;
+
+            public Modules(ConfigurationSection section){
+                saveKothWins = section.getBoolean("save-koth-wins");
+                savePlayerIgnores = section.getBoolean("save-player-ignores");
+            }
         }
     }
 }
