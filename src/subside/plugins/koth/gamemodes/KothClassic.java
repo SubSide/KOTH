@@ -9,6 +9,7 @@ import subside.plugins.koth.captureentities.CapInfo;
 import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.captureentities.CapInfo.CapStatus;
 import subside.plugins.koth.events.KothEndEvent;
+import subside.plugins.koth.modules.ConfigHandler;
 import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
 
@@ -18,6 +19,8 @@ import subside.plugins.koth.utils.MessageBuilder;
 public class KothClassic extends RunningKoth {
     private @Getter Koth koth;
     private @Getter CapInfo capInfo;
+
+    private int staticCaptureTime;
     private int captureTime;
     
     private @Getter String lootChest;
@@ -38,7 +41,8 @@ public class KothClassic extends RunningKoth {
     public void init(StartParams params){
         this.koth = params.getKoth();
         this.captureCooldown = 0;
-        this.captureTime = params.getCaptureTime();
+        this.staticCaptureTime = params.getCaptureTime();
+        this.captureTime = this.staticCaptureTime;
         this.lootChest = params.getLootChest();
         this.lootAmount = params.getLootAmount();
         this.maxRunTime = params.getMaxRunTime() * 60;
@@ -138,7 +142,7 @@ public class KothClassic extends RunningKoth {
         if (capInfo.getCapper() != null) {
             timeNotCapped = 0;
             if (capInfo.getTimeCapped() < captureTime) {
-                if (capInfo.getTimeCapped() % 30 == 0 && capInfo.getTimeCapped() != 0 && status != CapStatus.CONTESTED) {
+                if (capInfo.getTimeCapped() % 1 == 0 && capInfo.getTimeCapped() != 0 && status != CapStatus.CONTESTED) {
                     new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).exclude(capInfo.getCapper(), koth).buildAndBroadcast();
                     new MessageBuilder(Lang.KOTH_PLAYING_CAPTIME_CAPPER).maxTime(maxRunTime).time(getTimeObject()).capper(capInfo.getCapper().getName()).koth(koth).buildAndSend(capInfo.getCapper(), koth);
                 }
@@ -146,6 +150,13 @@ public class KothClassic extends RunningKoth {
                 endKoth(EndReason.WON);
             }
             return;
+        }
+
+        // Capture Decrementation!
+        ConfigHandler.Koth.CapDecrementation capDec = getPlugin().getConfigHandler().getKoth().getCapDecrementation();
+        if(capDec.isEnabled()){
+            captureTime = staticCaptureTime - (int)Math.floor(timeRunning/capDec.getEveryXSeconds()) * capDec.getDecreaseBy();
+            captureTime = (captureTime < capDec.getMinimum()) ? capDec.getMinimum() : captureTime;
         }
         
         if(getPlugin().getConfigHandler().getGlobal().getNoCapBroadcastInterval() != 0 && timeNotCapped % getPlugin().getConfigHandler().getGlobal().getNoCapBroadcastInterval() == 0) {

@@ -79,12 +79,18 @@ koth:
   channel-time: 0
   knock-time: 0
   minimum-players: 0
+  captime-decrementation: # This is to decrease the captime as time passes
+    enabled: false
+    every-x-seconds: 600
+    decrease-by: 60
+    minimum: 300
   map-rotation:
     - "map1"
     - "map2"
     - "map3"
     - "map2"
     - "etc"
+
 
 # If you use SQLite only database will be used, as name for the file to create
 # change storagetype to mysql if you want to use MySQL instead.

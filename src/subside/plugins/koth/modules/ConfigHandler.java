@@ -208,6 +208,8 @@ public class ConfigHandler extends AbstractModule {
         private @Getter int minimumPlayersNeeded = 0;
         private @Getter String defaultCaptureType = "Player";
         private @Getter List<String> mapRotation = new ArrayList<>();
+
+        private @Getter CapDecrementation capDecrementation;
         
         public Koth(ConfigurationSection section){
             removeChestAtStart = section.getBoolean("remove-chest-at-start");
@@ -219,6 +221,22 @@ public class ConfigHandler extends AbstractModule {
             minimumPlayersNeeded = section.getInt("minimum-players");
             defaultCaptureType = section.getString("default-capturetype");
             mapRotation = section.getStringList("map-rotation");
+
+            capDecrementation = new CapDecrementation(section.getConfigurationSection("captime-decrementation"));
+        }
+
+        public class CapDecrementation {
+            private @Getter boolean enabled = false;
+            private @Getter int everyXSeconds = 600;
+            private @Getter int decreaseBy = 60;
+            private @Getter int minimum = 300;
+
+            public CapDecrementation(ConfigurationSection section){
+                enabled = section.getBoolean("enabled");
+                everyXSeconds = section.getInt("every-x-seconds");
+                decreaseBy = section.getInt("decrease-by");
+                minimum = section.getInt("minimum");
+            }
         }
     }
     
