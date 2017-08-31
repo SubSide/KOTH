@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -50,38 +51,54 @@ public class EventListener extends AbstractModule implements Listener {
             return;
         }
 
-        if (!(e.getInventory().getHolder() instanceof Chest)) {
+        // We want to only filter single and double chests
+        Location loc = null;
+        if(e.getInventory().getHolder() instanceof Chest){
+            loc = ((Chest) e.getInventory().getHolder()).getLocation();
+        } else if(e.getInventory().getHolder() instanceof DoubleChest){
+            loc = ((DoubleChest) e.getInventory().getHolder()).getLocation();
+        } else {
+            // So if it's neither of those we want to stop immediately
             return;
         }
 
-        Chest chest = (Chest) e.getInventory().getHolder();
-        Location loc = chest.getLocation();
         for (Koth koth : plugin.getKothHandler().getAvailableKoths()) {
+            // We check if the chest we access is the actual loot chest
+            // This function checks for both single and double chests
+            if (!koth.isLootChest(loc))
+                continue;
+
+            // Create a new event and set the event on cancelled on default
+            KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
+            event.setCancelled(true);
             try {
-                if (!koth.isLootChest(loc))
-                    continue;
-    
-                KothOpenChestEvent event = new KothOpenChestEvent(koth, (Player) e.getPlayer());
-                event.setCancelled(true);
-                try {
-                    if(Perm.Admin.BYPASS.has(e.getPlayer()) || (plugin.getConfigHandler().getKoth().isFfaChestTimeLimit() && koth.getLastWinner() == null && koth.getRunningKoth() == null) || (koth.getLastWinner() != null && koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer()))){
-                        event.setCancelled(false);
-                    }
-                } catch(Exception f){
-                    plugin.getLogger().log(Level.WARNING, "Whoops, something went wrong, please contact the developer!", f);
+                // Does the player bypass this with a permission
+                boolean hasBypass = Perm.Admin.BYPASS.has(e.getPlayer());
+                // Do we have FFA enabled? If so, are we sure we didn't have a winner and that the koth isn't still running?
+                boolean timeLimitTriggered = plugin.getConfigHandler().getKoth().isFfaChestTimeLimit() && koth.getLastWinner() == null && koth.getRunningKoth() == null;
+                // Or is the player that is opening the chest the winner? Make sure lastWinner isn't null against NPE's.
+                boolean isWinner = koth.getLastWinner() != null && koth.getLastWinner().isInOrEqualTo((Player)e.getPlayer());
+
+                // Now check against all of the above, and if one of those is true, we should be able to open the chest
+                // So in that case we set cancelled on false
+                if(hasBypass || timeLimitTriggered || isWinner){
+                    event.setCancelled(false);
                 }
-                
-                Bukkit.getServer().getPluginManager().callEvent(event);
-                if(!event.isCancelled()){
-                    e.setCancelled(false);
-                    return;
-                }
-                
-                e.setCancelled(true);
-            
-            } catch(Exception ex){
-                ex.printStackTrace();
+            } catch(Exception f){
+                plugin.getLogger().log(Level.WARNING, "Whoops, something went wrong, please contact the developer!", f);
             }
+
+            // We trigger our custom events so other plugins will have a say in what happens
+            Bukkit.getServer().getPluginManager().callEvent(event);
+            // If our custom event is not cancelled we allow the player to open the chest
+            if(!event.isCancelled()){
+                e.setCancelled(false);
+                return;
+            }
+
+            // And else we cancel the opening of the chest
+            e.setCancelled(true);
+
 
         }
 
