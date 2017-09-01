@@ -57,21 +57,6 @@ public class VersionChecker extends AbstractModule implements Listener {
             // Otherwise we update newVersion to what we read online
             newVersion = inputLine;
 
-            // Then we broadcast it to both the console as every player that has the admin.admin perm.
-            String[] msgs = {
-                    ChatColor.translateAlternateColorCodes('&', "&aAn update for &2KoTH (KoTH 1.5.1) &ais available at"),
-                    ChatColor.translateAlternateColorCodes('&', "&bhttps://www.spigotmc.org/resources/KoTH.7689/")
-            };
-
-            getPlugin().getLogger().info(msgs[0]);
-            getPlugin().getLogger().info(msgs[1]);
-
-            for(Player player : Bukkit.getOnlinePlayers()){
-                if(Perm.Admin.ADMIN.has(player)){
-                    player.sendMessage(msgs);
-                }
-            }
-
         } catch (Exception e) {
             this.getPlugin().getLogger().info("Couldn't check for updates");
         }
@@ -82,8 +67,8 @@ public class VersionChecker extends AbstractModule implements Listener {
         // We also want the message to pop up when a player that has the admin.admin perm joins.
         if(newVersion != null && Perm.Admin.ADMIN.has(event.getPlayer())){
             String[] msgs = {
-                    ChatColor.translateAlternateColorCodes('&', "&aAn update for &2KoTH (KoTH 1.5.1) &ais available at"),
-                    ChatColor.translateAlternateColorCodes('&', "&bhttps://www.spigotmc.org/resources/KoTH.7689/")
+                    ChatColor.translateAlternateColorCodes('&', "&aAn update for &2KoTH (KoTH "+newVersion+") &ais available at:"),
+                    ChatColor.translateAlternateColorCodes('&', "&ahttps://www.spigotmc.org/resources/KoTH.7689/")
             };
             event.getPlayer().sendMessage(msgs);
         }
