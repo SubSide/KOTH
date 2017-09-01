@@ -21,7 +21,10 @@ public class CommandVersion extends AbstractCommand {
         list.add(" ");
         list.addAll(new MessageBuilder("&8========> &2INFO &8<========").buildArray());
         list.addAll(new MessageBuilder("&2Author: &aSubSide").buildArray());
-        list.addAll(new MessageBuilder("&2Version: &a" + getPlugin().getDescription().getVersion()).buildArray());
+
+        String version = "&a" + getPlugin().getDescription().getVersion()
+                + (getPlugin().getVersionChecker().getNewVersion() != null ? " &7(outdated)" : "");
+        list.addAll(new MessageBuilder("&2Version: &a"+ version).buildArray());
         list.addAll(new MessageBuilder("&2Site: &ahttp://bit.ly/1Pyxu2N").buildArray());
         sender.sendMessage(list.toArray(new String[list.size()]));
     }
