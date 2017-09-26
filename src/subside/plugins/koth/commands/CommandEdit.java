@@ -150,7 +150,7 @@ public class CommandEdit extends AbstractCommand {
         Player player = (Player)sender;
         if(args.length > 0){
             if(args[0].equalsIgnoreCase("setpos")){
-                Block block = player.getTargetBlock((HashSet<Byte>)null, 8);
+                Block block = player.getTargetBlock(null, 8);
                 
                 if(block == null){
                     throw new CommandMessageException(Lang.COMMAND_EDITOR_LOOT_SETNOBLOCK);
