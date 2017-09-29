@@ -39,7 +39,7 @@ public class Lang extends AbstractModule {
     public static String[] KOTH_DAY_FRIDAY = new String[]{ "Friday" };
     public static String[] KOTH_DAY_SATURDAY = new String[]{ "Saturday" };
     public static String[] KOTH_DAY_SUNDAY = new String[]{ "Sunday" };
-    
+
     public static String[] HOOKS_PLACEHOLDERAPI_NOONECAPPING = new String[]{ "No One" };
     public static String[] HOOKS_PLACEHOLDERAPI_TIMETILL = new String[]{ "%hh%:%mm%:%ss%" };
     
@@ -67,6 +67,11 @@ public class Lang extends AbstractModule {
     public static String[] COMMAND_GLOBAL_WESELECT = new String[]{"&aYou need to select an koth with worldedit!"};
     public static String[] COMMAND_GLOBAL_HELP_TITLE = new String[]{"&8========> &2%title% &8<========"};
     public static String[] COMMAND_GLOBAL_HELP_INFO = new String[]{"&a%command% &7%command_info%"};
+
+    public static String[] COMMAND_TOP_TITLE = new String[]{ "&8========> &2KoTH top wins &8<========" };
+    public static String[] COMMAND_TOP_ENTRY = new String[]{ "&7#%id% - &a%capper% [%times% wins]" };
+    public static String[] COMMAND_TOP_PAGE = new String[]{"", "&7Page %times%"};
+    public static String[] COMMAND_TOP_NOTANUMBER = new String[]{ "This is not a number!" };
 
     public static String[] COMMAND_IGNORE_START = new String[]{ "&aChat messages from &2KoTH &aare now ignored." };
     public static String[] COMMAND_IGNORE_STOP = new String[]{ "&aChat messages from &2KoTH &aare now shown." };

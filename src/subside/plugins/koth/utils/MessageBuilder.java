@@ -164,6 +164,11 @@ public class MessageBuilder {
         return this;
     }
 
+    public MessageBuilder times(String times){
+        message.replaceAll("%times%", times);
+        return this;
+    }
+
     public MessageBuilder captureTime(int captureTime) {
         message.replaceAll("%ct%", "" + captureTime);
         return this;

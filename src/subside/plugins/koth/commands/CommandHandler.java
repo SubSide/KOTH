@@ -45,6 +45,7 @@ public class CommandHandler extends AbstractModule implements CommandExecutor {
         
         if(getPlugin().getDataTable() != null){
             basic.addCommand(new CommandDatatable(basic));
+            basic.addCommand(new CommandTop(basic));
         }
         
         // Control commands
