@@ -272,8 +272,8 @@ public class ConfigHandler extends AbstractModule {
             private @Getter boolean savePlayerIgnores = true;
 
             public Modules(ConfigurationSection section){
-                saveKothWins = section.getBoolean("save-koth-wins");
-                savePlayerIgnores = section.getBoolean("save-player-ignores");
+                saveKothWins = section.getBoolean("saveKothWins");
+                savePlayerIgnores = section.getBoolean("savePlayerIgnores");
             }
         }
     }
