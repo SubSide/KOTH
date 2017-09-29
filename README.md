@@ -22,6 +22,7 @@ http://dev.thomasvdbulk.nl/KoTH/
 \- Factions  
 \- FactionsOne  
 \- FactionsUUID  
+\- Feudal Kingdoms  
 \- GangsPlus  
 \- Kingdoms  
 \- LegacyFactions (Special thanks to @MarkehMe for adding that)  
@@ -51,13 +52,12 @@ Although my plugin is completely modular in a way that dependencies aren't inter
 #### Java 1.8+
 To use the Java Lambda feature, Java 1.8 or higher is required.
 
-#### Spigot 1.9+ (and 1.7 (??))
+#### Spigot 1.9+
 Although you might not find this worthy to place here, I feel like I want to cover everything.  
   
 1.9+ is needed for BossBarAPI support. As mentioned above, I have a separate plugin that adds support to the **plugin** BossBarAPI, but I **also** support the integrated API by spigot in this plugin itself. Since this was introduced in 1.9 you need 1.9 or higher for this support.  
 I'm always trying to use the latest build, so I do recommend you doing that too.  
   
-1.7 is only used for the JSON beautifier, below is shown how you can easily remove this dependency if you want to.  
 
 #### Lombok
 _Tip: Lombok is the only required dependency that is not automatically imported by Maven!_  
@@ -95,6 +95,7 @@ Here is a list of all the current dependencies used in KoTH:
 \- Factions  
 \- FactionsUUID  
 \- Featherboard  
+\- Feudal Kingdoms  
 \- GangsPlus  
 \- GLib (As a dependency of Kingdoms)  
 \- Kingdoms  
@@ -104,8 +105,7 @@ Here is a list of all the current dependencies used in KoTH:
 \- McMMO  
 \- PlaceholderAPI (Through Maven)  
 \- PvPManager  
-\- Spigot 1.11.2 (Through maven)  
-\- Spigot 1.7  
+\- Spigot 1.12.2 (Through maven)  
 \- VanishNoPacket  
 \- Worldedit (Through maven)  
   
