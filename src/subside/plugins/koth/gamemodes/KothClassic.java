@@ -52,7 +52,6 @@ public class KothClassic extends RunningKoth {
         if(getPlugin().getConfigHandler().getKoth().isRemoveChestAtStart()){
             koth.removeLootChest();
         }
-        koth.setLastWinner(null);
         new MessageBuilder(Lang.KOTH_PLAYING_STARTING).maxTime(maxRunTime).time(getTimeObject()).koth(koth).buildAndBroadcast();
     }
     

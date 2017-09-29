@@ -209,6 +209,7 @@ public class ConfigHandler extends AbstractModule {
         private @Getter boolean ffaChestTimeLimit = false;
         private @Getter int broadcastInterval = 30;
         private @Getter int minimumPlayersNeeded = 0;
+        private @Getter boolean startNewOnEnd = false;
         private @Getter String defaultCaptureType = "Player";
         private @Getter List<String> mapRotation = new ArrayList<>();
 
@@ -223,6 +224,7 @@ public class ConfigHandler extends AbstractModule {
             broadcastInterval = section.getInt("broadcast-interval");
             captureCooldown = section.getInt("capture-cooldown");
             minimumPlayersNeeded = section.getInt("minimum-players");
+            startNewOnEnd = section.getBoolean("start-new-on-end");
             defaultCaptureType = section.getString("default-capturetype");
             mapRotation = section.getStringList("map-rotation");
 

@@ -6,17 +6,27 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Koth;
+import subside.plugins.koth.events.KothEndEvent;
+import subside.plugins.koth.exceptions.KothException;
+import subside.plugins.koth.gamemodes.RunningKoth;
+import subside.plugins.koth.gamemodes.StartParams;
 import subside.plugins.koth.modules.AbstractModule;
+import subside.plugins.koth.modules.KothHandler;
 import subside.plugins.koth.utils.JSONLoader;
 import subside.plugins.koth.utils.MessageBuilder;
 
-public class ScheduleHandler extends AbstractModule {
+public class ScheduleHandler extends AbstractModule implements Listener {
     private @Getter List<Schedule> schedules;
     private @Getter MapRotation mapRotation;
     
@@ -68,10 +78,38 @@ public class ScheduleHandler extends AbstractModule {
             schedule.tick();
         }
     }
-    
+
+
+
+    @EventHandler(priority= EventPriority.MONITOR)
+    public void onKothEnd(final KothEndEvent event){
+        if(!getPlugin().getConfigHandler().getKoth().isStartNewOnEnd())
+            return;
+
+        if(event.getReason() == RunningKoth.EndReason.FORCED)
+            return;
+
+        // Make sure we wait a moment (Since the event is triggered BEFORE it is removed from the runningKoths list)
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+            KothHandler kothHandler = getPlugin().getKothHandler();
+            if(kothHandler.getRunningKoths().size() > 1){
+                return;
+            }
+            StartParams params = new StartParams(kothHandler, mapRotation.getNext());
+            try {
+                kothHandler.startKoth(params);
+            } catch(KothException e){
+                e.printStackTrace();
+            }
+        }, 20);
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void onEnable() {
+        // Register the events
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
         schedules = new ArrayList<>();
         
         Object object = new JSONLoader(plugin, "schedule.json").load();
@@ -106,6 +144,9 @@ public class ScheduleHandler extends AbstractModule {
 
     @Override
     public void onDisable() {
+        // Remove all previous event handlers
+        HandlerList.unregisterAll(this);
+
         saveSchedules();
     }
 
