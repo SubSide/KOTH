@@ -96,6 +96,7 @@ public class ConfigHandler extends AbstractModule {
 	    private @Getter boolean vanishNoPacket = true;
 	    private @Getter boolean factions = true;
 	    private @Getter boolean kingdoms = true;
+        private @Getter boolean feudalKingdoms = true;
 	    private @Getter boolean gangs = true;
         private @Getter boolean mcMMO = true;
         private @Getter boolean pvpManager = true;
@@ -108,6 +109,7 @@ public class ConfigHandler extends AbstractModule {
             vanishNoPacket = section.getBoolean("vanishnopacket");
             factions = section.getBoolean("factions");
             kingdoms = section.getBoolean("kingdoms");
+            feudalKingdoms = section.getBoolean("feudalkingdoms");
             pvpManager = section.getBoolean("pvpmanager");
             gangs = section.getBoolean("gangs");
             mcMMO = section.getBoolean("mcmmo");

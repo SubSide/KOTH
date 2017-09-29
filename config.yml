@@ -49,6 +49,7 @@ hooks:
   vanishnopacket: true
   factions: true
   kingdoms: true
+  feudalkingdoms: true
   gangs: true
   mcmmo: true
   pvpmanager: true
