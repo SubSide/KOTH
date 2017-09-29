@@ -97,7 +97,7 @@ public class CaptureTypeRegistry extends AbstractModule {
         captureTypes.put(captureTypeIdentifier, clazz);
         
         // Automatically register the CappingGroup class if the registered class is from the CappingGroup type
-        if(CappingGroup.class.isInstance(clazz)){
+        if(CappingGroup.class.isAssignableFrom(clazz)){
             registerCaptureClass("groupclass", CappingGroup.class);
             
             // Since we know we have a group plugin, we can also register Conquest in the GamemodeRegistry
