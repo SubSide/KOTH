@@ -16,12 +16,7 @@ public class CacheHandler extends AbstractModule {
     
     @Override
     public void onEnable(){
-        Bukkit.getScheduler().runTask(plugin, new Runnable(){
-            @Override
-            public void run(){
-                lateEnable();
-            }
-        });
+        Bukkit.getScheduler().runTask(plugin, this::lateEnable);
     }
     
     private void lateEnable() {
@@ -37,7 +32,7 @@ public class CacheHandler extends AbstractModule {
             for(Object rObject : runningKoths){
                 JSONObject rObj = (JSONObject)rObject;
                 RunningKoth rKoth = plugin.getGamemodeRegistry().createGame((String)rObj.get("kothType"));
-                rKoth.load((JSONObject)rObj);
+                rKoth.load(rObj);
                 plugin.getKothHandler().addRunningKoth(rKoth);
             }
         }

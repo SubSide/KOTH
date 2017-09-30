@@ -10,7 +10,7 @@ public abstract class AbstractModule {
         this.plugin = plugin;
     }
     
-    public void onLoad(){};
-    public void onEnable(){};
-    public void onDisable(){};
+    public void onLoad(){}
+    public void onEnable(){}
+    public void onDisable(){}
 }

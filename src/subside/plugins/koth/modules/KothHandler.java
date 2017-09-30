@@ -36,8 +36,8 @@ import subside.plugins.koth.utils.MessageBuilder;
  *
  */
 public class KothHandler extends AbstractModule implements Runnable {
-    private @Getter List<RunningKoth> runningKoths;
-    private @Getter List<Koth> availableKoths;
+    private final @Getter List<RunningKoth> runningKoths;
+    private final @Getter List<Koth> availableKoths;
     
     private @Getter int taskId;
     
@@ -105,7 +105,7 @@ public class KothHandler extends AbstractModule implements Runnable {
     
     /** Remove a RunningKoth from runningKoths list
      * 
-     * @param koth the runningKoth object
+     * @param runningKoth the runningKoth object to remove
      */
     public void removeRunningKoth(RunningKoth runningKoth){
         synchronized (runningKoths) {
@@ -114,7 +114,7 @@ public class KothHandler extends AbstractModule implements Runnable {
     }
     /** Add a runningKoth to the runningKoths list
      * 
-     * @param rKoth
+     * @param runningKoth the RunningKoth object to add
      */
     public void addRunningKoth(RunningKoth runningKoth){
         KothInitializeEvent event = new KothInitializeEvent(runningKoth);
@@ -138,14 +138,8 @@ public class KothHandler extends AbstractModule implements Runnable {
 
     /** Start a certain KoTH
      * 
-     * @param koth              The KoTH to run
-     * @param captureTime       The captureTime
-     * @param maxRunTime        The maximum time this KoTH can run (-1 for unlimited time)
-     * @param lootAmount        The amount of loot that should spawn (-1 for default config settings)
-     * @param lootChest         The lootchest it should use (null for default config settings)
-     * @param entityType        The entity type that should be able to cap the KoTH (Players, Factions etc.)
-     * @param isScheduled       This is used to see if it should obey stuff like minimumPlayers
-     * @throws                  KothException 
+     * @param params The params opject containing all the start params
+     * @throws AnotherKothAlreadyRunningException Throws this when another KoTH is already running
      */
     public void startKoth(StartParams params) throws KothException {
         synchronized (runningKoths) {
@@ -200,8 +194,8 @@ public class KothHandler extends AbstractModule implements Runnable {
 
     /** Remove a certain KoTH
      * 
-     * @param koth              The KoTH to remove
-     * @throws                  KothNotExistException 
+     * @param name The name of the KoTH to remove
+     * @throws KothNotExistException Throws this if the KoTH doesn't exists
      */
     public void removeKoth(String name) throws KothNotExistException {
         Koth koth = getKoth(name);
@@ -215,8 +209,8 @@ public class KothHandler extends AbstractModule implements Runnable {
 
     /** Get a KoTH by name
      * 
-     * @param name      The name of the KoTH
-     * @return          The KoTH object
+     * @param name  The name of the KoTH
+     * @return  The KoTH object
      */
     public Koth getKoth(String name) {
         for (Koth koth : availableKoths) {
@@ -242,8 +236,8 @@ public class KothHandler extends AbstractModule implements Runnable {
 
     /** Gracefully ends a certain KoTH
      * 
-     * @param name      The name of the KoTH to end
-     * @throws          KothNotExistException 
+     * @param name The name of the KoTH to end
+     * @throws KothNotExistException Throws this if the KoTH doesn't exist
      */
     public void endKoth(String name, EndReason endReason) throws KothNotExistException {
         synchronized (runningKoths) {
@@ -261,7 +255,7 @@ public class KothHandler extends AbstractModule implements Runnable {
     
     /* Save/Load time */
     public void loadKoths() {
-        availableKoths = new ArrayList<>();
+        availableKoths.clear();
         
         Object obj = new JSONLoader(plugin, "koths.json").load();
         if(obj == null)

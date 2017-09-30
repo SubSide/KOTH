@@ -18,7 +18,7 @@ public class CappingMCMMOParty extends CappingGroup<Party> {
     public CappingMCMMOParty(CaptureTypeRegistry captureTypeRegistry, Collection<Player> playerList){
         this(captureTypeRegistry,
                 playerList.stream() // Create a stream
-                .map(player -> PartyManager.getParty(player)) // Create a new stream containing parties
+                .map(PartyManager::getParty) // Create a new stream containing parties
                 .filter(Objects::nonNull)
                 .findAny() // Grab a single party
                 .orElse(null) // If no party exists return null

@@ -43,7 +43,7 @@ public class JSONLoader {
     }
 
     public void save(Object object) {
-        OutputStreamWriter osw = null;
+        OutputStreamWriter osw;
         try {
             File file = new File(plugin.getDataFolder().getAbsolutePath() + File.separatorChar + fileName);
             if (!file.exists()) {

@@ -29,9 +29,9 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     /**
      * The constructor!
      * 
-     * @param hookManager
-     * @param range
-     * @param rangeMargin
+     * @param hookManager the parent HookManager
+     * @param range the range it should toggle
+     * @param rangeMargin the margin it should use to block annoying switching
      */
     public AbstractRangeHook(HookManager hookManager, int range, int rangeMargin){
         super(hookManager); // First call the constructor of the parent class
@@ -60,14 +60,14 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     /**
      * This is called when the player enters the range.
      * 
-     * @param player
+     * @param player the player that enters the range
      */
     public abstract void entersRange(Player player);
     
     /**
      * This is called when the player leaves the range.
      * 
-     * @param player
+     * @param player the player that leaves the range
      */
     public abstract void leavesRange(Player player);
     
@@ -76,7 +76,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
      * The reason we want to use KothInitializeEvent instead of KothStartEvent
      * is that KothStartEvent isn't triggered on reload in combination with the cache system
      * 
-     * @param event
+     * @param event the KothInitializeEvent
      */
     @EventHandler(ignoreCancelled = true)
     public void onKothInitialize(KothInitializeEvent event){
@@ -100,7 +100,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     /**
      * When the KoTH ends we want to reset everyone
      * 
-     * @param event
+     * @param event the KothEndEvent
      */
     @EventHandler
     public void onKothEnd(KothEndEvent event){
@@ -113,8 +113,6 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     /**
      * When the plugin gets disabled (through reload or /koth reload)
      * we want to reset everyone
-     * 
-     * @param event
      */
     @Override
     public void onDisable(){
@@ -127,7 +125,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     /**
      * When a player joins we want to check if the player is in range, and if so,
      * add the player to the list
-     * @param event
+     * @param event the PlayerJoinEvent
      */
     @EventHandler(ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event){
@@ -137,7 +135,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     /**
      * When a player leaves, remove the player.
      * 
-     * @param event
+     * @param event the PlayerQuitEvent
      */
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
@@ -148,7 +146,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
      * I remember a point where when a player is kicked, it didn't trigger the PlayerQuitEvent
      * so just to make sure, we handle the PlayerKickEvent as well.
      * 
-     * @param event
+     * @param event the PlayerKickEvent
      */
     @EventHandler
     public void onPlayerKick(PlayerKickEvent event){
@@ -184,7 +182,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     
     /**
      * We use this to add a player to the list and to trigger entersRange
-     * @param player
+     * @param player the Player that gets added
      */
     private final void addPlayer(Player player){
         if(containsPlayer(player)) return;
@@ -195,7 +193,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     
     /**
      * We use this to remove a player from the list and to trigger leavesRange
-     * @param player
+     * @param player the player that gets removed
      */
     private final void removePlayer(Player player){
         if(!containsPlayer(player)) return;
@@ -206,7 +204,8 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     
     /**
      * A simple method we use to check if the list contains a player.
-     * @param player
+     * @param player the player to check
+     *
      * @return true if the player is in the list
      */
     public final boolean containsPlayer(Player player){
@@ -216,7 +215,7 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     /**
      * Main update method for a player
      * 
-     * @param player
+     * @param player the player to update
      */
     private final void updatePlayer(Player player){
         boolean wasInRange = containsPlayer(player);
@@ -231,11 +230,11 @@ public abstract class AbstractRangeHook extends AbstractHook implements Listener
     
     /**
      * We use this function to see if the player is in range or not.
-     * 
-     * @param loc The location of primarily the KoTH center
+     *
      * @param player the player to check
      * @param wasInRange if the player was already in range
-     * @return
+     *
+     * @return true if the Player is in range
      */
     public final boolean isInRange(Player player, boolean wasInRange){
         if(koth == null) return false; // You can't be in range if there's no KoTH running

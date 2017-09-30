@@ -204,7 +204,7 @@ public class CommandLoot extends AbstractCommand {
             getPlugin().getLootHandler().save();
             throw new CommandMessageException(new MessageBuilder(Lang.COMMAND_LOOT_CMD_CREATED).loot(lootName));
         } else if(args[1].equalsIgnoreCase("remove")){
-            if(args.length < 2)
+            if(args.length < 3)
                 throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0]+"/koth loot cmd <loot> remove <id>");
             try {
                 int id = Integer.parseInt(args[2]);
@@ -229,7 +229,6 @@ public class CommandLoot extends AbstractCommand {
             if(getPlugin().getConfigHandler().getLoot().isCmdEnabled()){
                 Utils.sendMessage(sender, true, "&cNote: commands are disabled in the config!");
             }
-            return;
         }
     }
     

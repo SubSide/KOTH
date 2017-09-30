@@ -98,29 +98,29 @@ public class CommandInfo extends AbstractCommand {
         if(lootLoc != null)
             lootLocation = "("+lootLoc.getWorld().getName()+", "+lootLoc.getBlockX()+", "+lootLoc.getBlockY()+", "+lootLoc.getBlockZ()+")";
         
-        String areas = "";
+        StringBuilder areas = new StringBuilder();
         for(Area area : koth.getAreas()){
-            areas += area.getName()+", ";
+            areas.append(area.getName()).append(", ");
         }
         if(areas.length() > 2){
-            areas = areas.substring(0, areas.length()-2);
+            areas.delete(areas.length()-2, areas.length());
         } else {
-            areas = "None";
+            areas = new StringBuilder("None");
         }
         
         
-        String linkedSchedules = "";
+        StringBuilder linkedSchedules = new StringBuilder();
         for(int x = 0; x < getPlugin().getScheduleHandler().getSchedules().size(); x++){
             Schedule schedule = getPlugin().getScheduleHandler().getSchedules().get(x);
             if(koth.getName().equalsIgnoreCase(schedule.getKoth())){
-                linkedSchedules += "#"+x+", ";
+                linkedSchedules.append("#").append(x).append(", ");
             }
         }
         
         if(linkedSchedules.length() > 2){
-            linkedSchedules = linkedSchedules.substring(0, linkedSchedules.length()-2);
+            linkedSchedules.delete(linkedSchedules.length()-2, linkedSchedules.length());
         } else {
-            linkedSchedules = "None";
+            linkedSchedules = new StringBuilder("None");
         }
         
         
@@ -136,11 +136,11 @@ public class CommandInfo extends AbstractCommand {
         list.addAll(new MessageBuilder(C1+"Loot position: "+C2+lootLocation).buildArray());
         list.add(" ");
         list.addAll(new MessageBuilder(C1+"Areas:").buildArray());
-        list.addAll(new MessageBuilder(C2+areas).buildArray());
+        list.addAll(new MessageBuilder(C2+areas.toString()).buildArray());
         
         list.add(" ");
         list.addAll(new MessageBuilder(C1+"Schedules linked:").buildArray());
-        list.addAll(new MessageBuilder(C2+linkedSchedules).buildArray());
+        list.addAll(new MessageBuilder(C2+linkedSchedules.toString()).buildArray());
         
         
         sender.sendMessage(list.toArray(new String[list.size()]));
@@ -170,33 +170,33 @@ public class CommandInfo extends AbstractCommand {
         }
 
 
-        String linkedKoths = "";
+        StringBuilder linkedKoths = new StringBuilder();
         for(Koth koth : getPlugin().getKothHandler().getAvailableKoths()){
             if(loot.getName().equalsIgnoreCase(koth.getLoot())){
-                linkedKoths += koth.getName()+", ";
+                linkedKoths.append(koth.getName()).append(", ");
             }
         }
         
         if(linkedKoths.length() > 2){
-            linkedKoths = linkedKoths.substring(0, linkedKoths.length()-2);
+            linkedKoths.delete(linkedKoths.length()-2, linkedKoths.length());
         } else {
-            linkedKoths = "None";
+            linkedKoths = new StringBuilder("None");
         }
 
         
         
-        String linkedSchedules = "";
+        StringBuilder linkedSchedules = new StringBuilder();
         for(int x = 0; x < getPlugin().getScheduleHandler().getSchedules().size(); x++){
             Schedule schedule = getPlugin().getScheduleHandler().getSchedules().get(x);
             if(loot.getName().equalsIgnoreCase(schedule.getLootChest())){
-                linkedSchedules += "#"+x+", ";
+                linkedSchedules.append("#").append(x).append(", ");
             }
         }
         
         if(linkedSchedules.length() > 2){
-            linkedSchedules = linkedSchedules.substring(0, linkedSchedules.length()-2);
+            linkedSchedules.delete(linkedSchedules.length()-2, linkedSchedules.length());
         } else {
-            linkedSchedules = "None";
+            linkedSchedules = new StringBuilder("None");
         }
         
         
@@ -208,11 +208,11 @@ public class CommandInfo extends AbstractCommand {
 
         list.add(" ");
         list.addAll(new MessageBuilder(C1+"Koths linked:").buildArray());
-        list.addAll(new MessageBuilder(C2+linkedKoths).buildArray());
+        list.addAll(new MessageBuilder(C2+linkedKoths.toString()).buildArray());
         
         list.add(" ");
         list.addAll(new MessageBuilder(C1+"Schedules linked:").buildArray());
-        list.addAll(new MessageBuilder(C2+linkedSchedules).buildArray());
+        list.addAll(new MessageBuilder(C2+linkedSchedules.toString()).buildArray());
         sender.sendMessage(list.toArray(new String[list.size()]));
         
     }

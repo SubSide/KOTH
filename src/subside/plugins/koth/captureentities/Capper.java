@@ -61,7 +61,7 @@ public abstract class Capper<T> {
      * @return a Collection of players that are currently standing in the area
      */
     public Collection<Player> getAvailablePlayers(Capable area){
-        Collection<Player> list = new ArrayList<Player>();
+        Collection<Player> list = new ArrayList<>();
         
         for(Player player : getAllOnlinePlayers()){
             if(area.isInArea(player)){

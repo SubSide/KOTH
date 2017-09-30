@@ -35,11 +35,11 @@ public class TimeObject {
     }
     
     public int getMinutesCapped(){
-        return (int)(timeCapped/60);
+        return timeCapped/60;
     }
 
     public int getPercentageCapped(){
-        return (int)((timeCapped*100)/(captureTime));
+        return (timeCapped*100)/(captureTime);
     }
     
     

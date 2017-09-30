@@ -1,15 +1,10 @@
 package subside.plugins.koth.gamemodes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
-
-import lombok.Getter;
-import lombok.Setter;
 import subside.plugins.koth.areas.Area;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.captureentities.CapInfo;
@@ -18,6 +13,10 @@ import subside.plugins.koth.captureentities.CappingGroup;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.MessageBuilder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Thomas "SubSide" van den Bulk

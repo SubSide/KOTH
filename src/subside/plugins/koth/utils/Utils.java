@@ -51,7 +51,7 @@ public class Utils {
     
     
 	public static void msg(CommandSender sender, String msg){
-		new MessageBuilder(Lang.COMMAND_GLOBAL_PREFIX+msg).buildAndSend(sender);
+		new MessageBuilder(Lang.COMMAND_GLOBAL_PREFIX[0]+msg).buildAndSend(sender);
 	}
 
     @SuppressWarnings("unchecked")

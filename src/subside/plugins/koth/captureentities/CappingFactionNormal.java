@@ -76,7 +76,7 @@ public class CappingFactionNormal extends CappingGroup<Faction> {
     @Override
     public boolean isInOrEqualTo(OfflinePlayer oPlayer){
         try {
-            return MPlayerColl.get().get(oPlayer).getFactionId().equals(getObject().getId());
+            return MPlayerColl.get().get(oPlayer).getFaction().getId().equals(getObject().getId());
         } catch(Exception e){
             return false;
         }

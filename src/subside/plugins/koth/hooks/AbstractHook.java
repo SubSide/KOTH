@@ -35,13 +35,13 @@ public abstract class AbstractHook {
     
     /**
      * Checks if the Hook should still be enabled.
-     * @return
+     * @return true if it should be enabled
      */
     public abstract boolean isEnabled();
     
     /**
      * Convinience method. Returns the KothPlugin object.
-     * @return
+     * @return the Koth Plugin
      */
     public KothPlugin getPlugin(){
         return hookManager.getPlugin();

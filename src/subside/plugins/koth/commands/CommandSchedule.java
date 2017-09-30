@@ -122,7 +122,7 @@ public class CommandSchedule extends AbstractCommand {
         
         String[] days = args[1].split(",");
         if(args[1].equalsIgnoreCase("daily")){
-            days = (String[]) (Arrays.asList(Day.values())).stream().map(day -> day.getDay()).toArray(size -> new String[Day.values().length]);
+            days = Arrays.stream(Day.values()).map(Day::getDay).toArray(size -> new String[Day.values().length]);
             
         }
         String[] times = args[2].split(",");

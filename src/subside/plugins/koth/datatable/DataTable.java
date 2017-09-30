@@ -137,7 +137,7 @@ public class DataTable extends AbstractModule {
      * @return A list with cappers and how many times they won
      **/
     public List<Entry<Capper<?>, Integer>> getTop(int maxRows, int fromTime, String captureType, String gameMode, String koth) {
-        List<Entry<Capper<?>, Integer>> top = new ArrayList<Entry<Capper<?>, Integer>>();
+        List<Entry<Capper<?>, Integer>> top = new ArrayList<>();
 
         try {
             SimpleQueryBuilder sQB = new SimpleQueryBuilder("count(capper_uuid) as result, capper_uuid, capper_type", "results");
@@ -202,7 +202,7 @@ public class DataTable extends AbstractModule {
             ResultSet result = sQB.execute();
 
             while (result.next()) {
-                top.add(new SimpleEntry<OfflinePlayer, Integer>(Bukkit.getOfflinePlayer(UUID.fromString(result.getString("player_uuid"))), result.getInt("result")));
+                top.add(new SimpleEntry<>(Bukkit.getOfflinePlayer(UUID.fromString(result.getString("player_uuid"))), result.getInt("result")));
             }
             return top;
         }

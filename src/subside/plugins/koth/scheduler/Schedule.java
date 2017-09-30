@@ -1,17 +1,15 @@
 package subside.plugins.koth.scheduler;
 
-import java.util.List;
-import java.util.logging.Level;
-
-import org.json.simple.JSONObject;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.json.simple.JSONObject;
 import subside.plugins.koth.exceptions.KothException;
 import subside.plugins.koth.modules.ConfigHandler;
-import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.JSONSerializable;
 import subside.plugins.koth.utils.MessageBuilder;
+
+import java.util.List;
+import java.util.logging.Level;
 
 public class Schedule implements JSONSerializable<Schedule> {
     private long nextEventMillis;

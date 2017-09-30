@@ -3,7 +3,6 @@ package subside.plugins.koth.modules;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -28,7 +27,7 @@ public class VersionChecker extends AbstractModule implements Listener {
     public void onEnable() {
         // Register the events
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> checkUpdate());
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), this::checkUpdate);
     }
 
     @Override

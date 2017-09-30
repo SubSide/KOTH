@@ -31,6 +31,7 @@ public class CappingGang extends CappingGroup<Gang> {
     @Override
     public boolean isInOrEqualTo(OfflinePlayer oPlayer){
         if(!oPlayer.isOnline()) return false;
+
         return getObject().equals(GangsPlugin.getInstance().gangManager.getPlayersGang(oPlayer));
     }
     

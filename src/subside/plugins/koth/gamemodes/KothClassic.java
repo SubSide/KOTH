@@ -98,20 +98,12 @@ public class KothClassic extends RunningKoth {
 
         koth.setLastWinner(capInfo.getCapper());
         if (event.isTriggerLoot()) {
-            Bukkit.getScheduler().runTask(getPlugin(), new Runnable() {
-                public void run() {
-                    koth.triggerLoot(lootAmount, lootChest);
-                }
-            });
+            Bukkit.getScheduler().runTask(getPlugin(), () -> koth.triggerLoot(lootAmount, lootChest));
         }
         
         
         final KothClassic thisObj = this;
-        Bukkit.getScheduler().runTask(getPlugin(), new Runnable() {
-            public void run() {
-                getPlugin().getKothHandler().removeRunningKoth(thisObj);
-            }
-        });
+        Bukkit.getScheduler().runTask(getPlugin(), () -> getPlugin().getKothHandler().removeRunningKoth(thisObj));
     }
 
     public void update() {
@@ -164,7 +156,6 @@ public class KothClassic extends RunningKoth {
 
         if (maxRunTime > 0 && timeRunning > maxRunTime) {
             endKoth(EndReason.TIMEUP);
-            return;
         }
     }
     

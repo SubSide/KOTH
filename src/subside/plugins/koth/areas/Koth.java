@@ -259,7 +259,7 @@ public class Koth implements Capable, JSONSerializable<Koth> {
                     return;
                 }
 
-                Bukkit.getScheduler().runTaskLater(kothHandler.getPlugin(), () -> removeLootChest()
+                Bukkit.getScheduler().runTaskLater(kothHandler.getPlugin(), this::removeLootChest
                 , kothHandler.getPlugin().getConfigHandler().getLoot().getRemoveLootAfterSeconds() * 20);
 
             }
@@ -433,6 +433,6 @@ public class Koth implements Capable, JSONSerializable<Koth> {
     }
 
     public enum LootDirection {
-        NONE, NORTH, EAST, SOUTH, WEST;
+        NONE, NORTH, EAST, SOUTH, WEST
     }
 }

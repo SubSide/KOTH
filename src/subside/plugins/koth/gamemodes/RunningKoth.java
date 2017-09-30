@@ -65,15 +65,13 @@ public abstract class RunningKoth implements JSONSerializable<RunningKoth> {
     
     /** Add data to the MessageBuilder
      * 
-     * @return
+     * @return the same MessageBuilder object
      */
     public abstract MessageBuilder fillMessageBuilder(MessageBuilder mB);
 
     public abstract void update();
     
     /** End the KoTH with a reason
-     * 
-     * @return
      */
     public abstract void endKoth(EndReason reason);
 

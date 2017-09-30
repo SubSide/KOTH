@@ -1,23 +1,17 @@
 package subside.plugins.koth.datatable.listener;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-
-import org.bukkit.event.player.PlayerQuitEvent;
 import subside.plugins.koth.datatable.DataTable;
 import subside.plugins.koth.events.KothEndEvent;
 import subside.plugins.koth.gamemodes.RunningKoth.EndReason;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 public class KothWinListener implements Listener {
     DataTable dataTable;

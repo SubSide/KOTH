@@ -52,7 +52,7 @@ public class EventListener extends AbstractModule implements Listener {
         }
 
         // We want to only filter single and double chests
-        Location loc = null;
+        Location loc;
         if(e.getInventory().getHolder() instanceof Chest){
             loc = ((Chest) e.getInventory().getHolder()).getLocation();
         } else if(e.getInventory().getHolder() instanceof DoubleChest){

@@ -110,8 +110,8 @@ public class CaptureTypeRegistry extends AbstractModule {
     
     /**
      * This function is a shortcut for registering the capturetype as well as prefering it
-     * @param captureTypeIdentifier
-     * @param clazz 
+     * @param captureTypeIdentifier The unique capturetype identifier
+     * @param clazz The class of the capturetype
      * @param isPrefered if the class should be prefered or not
      */
     public void registerCaptureType(String captureTypeIdentifier, Class<? extends Capper> clazz, boolean isPrefered){
@@ -157,7 +157,7 @@ public class CaptureTypeRegistry extends AbstractModule {
     public String getIdentifierFromClass(Class<? extends Capper> clazz){
         return captureClasses.entrySet().stream()
                 .filter(entry -> clazz.equals(entry.getValue()))
-                .map(obj -> obj.getKey())
+                .map(Map.Entry::getKey)
                 .findAny().orElse(null);
     }
     

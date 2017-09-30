@@ -1,11 +1,6 @@
 package subside.plugins.koth.scheduler;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,8 +8,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import lombok.Getter;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.events.KothEndEvent;
@@ -24,7 +17,12 @@ import subside.plugins.koth.gamemodes.StartParams;
 import subside.plugins.koth.modules.AbstractModule;
 import subside.plugins.koth.modules.KothHandler;
 import subside.plugins.koth.utils.JSONLoader;
-import subside.plugins.koth.utils.MessageBuilder;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
 
 public class ScheduleHandler extends AbstractModule implements Listener {
     private @Getter List<Schedule> schedules;
@@ -119,7 +117,7 @@ public class ScheduleHandler extends AbstractModule implements Listener {
         
             
         JSONObject obj = (JSONObject)object;
-        Set<Object> dayz = ((JSONObject) obj).keySet();
+        Set<Object> dayz = obj.keySet();
         for (Object dai : dayz) {
             Day day = Day.getDay((String) dai);
             
@@ -131,7 +129,7 @@ public class ScheduleHandler extends AbstractModule implements Listener {
                     Schedule schedule = new Schedule(this);
                     JSONObject schedObj = (JSONObject) it.next();
                     schedObj.put("day", day.getDay());
-                    schedule.load((JSONObject) schedObj);
+                    schedule.load(schedObj);
                     
                     schedules.add(schedule);
                 }

@@ -141,9 +141,7 @@ public class Loot implements JSONSerializable<Loot> {
         
         if(commands.size() > 0){
             JSONArray commandz = new JSONArray();
-            for(String command : commands){
-                commandz.add(command);
-            }
+            commandz.addAll(commands);
             
             obj.put("commands", commandz); // commands
         }

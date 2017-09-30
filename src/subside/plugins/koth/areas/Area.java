@@ -51,17 +51,17 @@ public class Area implements Capable {
     }
 
     private boolean isInAABB(Location loc) {
-        if (min.getBlockX() <= loc.getBlockX() && max.getBlockX() >= loc.getBlockX() && min.getBlockY() <= loc.getBlockY() && max.getBlockY() >= loc.getBlockY() && min.getBlockZ() <= loc.getBlockZ() && max.getBlockZ() >= loc.getBlockZ()) {
-            return true;
-        }
-        return false;
+        return
+                min.getBlockX() <= loc.getBlockX() && max.getBlockX() >= loc.getBlockX() &&
+                        min.getBlockY() <= loc.getBlockY() && max.getBlockY() >= loc.getBlockY() &&
+                        min.getBlockZ() <= loc.getBlockZ() && max.getBlockZ() >= loc.getBlockZ();
     }
 
     
 
     /** Checks if the player is inside the area
      * 
-     * @param player    Player to check
+     * @param oPlayer    Player to check
      * @return          true if player is in the area
      */
     public boolean isInArea(OfflinePlayer oPlayer) {
@@ -79,11 +79,8 @@ public class Area implements Capable {
         }
         
         Location loc = player.getLocation();
-        if (isInAABB(loc)) {
-            return true;
-        }
 
-        return false;
+        return isInAABB(loc);
     }
     
     public static Area load(JSONObject obj){

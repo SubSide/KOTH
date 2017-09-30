@@ -1,11 +1,7 @@
 package subside.plugins.koth;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.plugin.java.JavaPlugin;
-
 import lombok.Getter;
+import org.bukkit.plugin.java.JavaPlugin;
 import subside.plugins.koth.captureentities.CaptureTypeRegistry;
 import subside.plugins.koth.commands.CommandHandler;
 import subside.plugins.koth.datatable.DataTable;
@@ -14,9 +10,11 @@ import subside.plugins.koth.gamemodes.GamemodeRegistry;
 import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loot.LootHandler;
 import subside.plugins.koth.modules.*;
-import subside.plugins.koth.scheduler.MapRotation;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.utils.MessageBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class KothPlugin extends JavaPlugin {
     
@@ -29,7 +27,6 @@ public class KothPlugin extends JavaPlugin {
     private @Getter KothHandler kothHandler;
     private @Getter HookManager hookManager;
     private @Getter ScheduleHandler scheduleHandler;
-    private @Getter MapRotation mapRotation;
 	private @Getter DataTable dataTable;
 	private @Getter CacheHandler cacheHandler;
 	private @Getter VersionChecker versionChecker;
@@ -151,6 +148,6 @@ public class KothPlugin extends JavaPlugin {
 	}
     
 	public enum LoadingState {
-	    SETUP, LOAD, ENABLE, DISABLE;
+	    SETUP, LOAD, ENABLE, DISABLE
 	}
 }

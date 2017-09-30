@@ -33,6 +33,7 @@ public class CappingKingdom extends CappingGroup<Kingdom> {
     @Override
     public boolean isInOrEqualTo(OfflinePlayer oPlayer){
         if(!oPlayer.isOnline()) return false;
+        
         return getObject().equals(GameManagement.getPlayerManager().getSession(oPlayer.getPlayer()).getKingdom());
     }
 

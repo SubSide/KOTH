@@ -66,15 +66,15 @@ public class CommandDatatable extends AbstractCommand {
         }
         
         if(args.length > 3){
-            captureType = (args[3] != "0") ? args[3] : null;
+            captureType = (args[3].equalsIgnoreCase("0")) ? args[3] : null;
         }
         
         if(args.length > 4){
-            gameMode = (args[4] != "0") ? args[4] : null;
+            gameMode = (args[4].equalsIgnoreCase("0")) ? args[4] : null;
         }
         
         if(args.length > 5){
-            koth = (args[5] != "0") ? args[5] : null;
+            koth = (args[5].equalsIgnoreCase("0")) ? args[5] : null;
         }
         
         if(args[0].equalsIgnoreCase("0")){

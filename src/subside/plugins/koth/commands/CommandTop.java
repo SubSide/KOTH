@@ -1,35 +1,20 @@
 package subside.plugins.koth.commands;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
-
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.bukkit.selections.Selection;
-
-import subside.plugins.koth.areas.Area;
-import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.datatable.DataTable;
-import subside.plugins.koth.exceptions.AreaAlreadyExistException;
-import subside.plugins.koth.exceptions.AreaNotExistException;
-import subside.plugins.koth.exceptions.CommandMessageException;
-import subside.plugins.koth.exceptions.KothNotExistException;
 import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.IPerm;
 import subside.plugins.koth.utils.MessageBuilder;
 import subside.plugins.koth.utils.Perm;
 import subside.plugins.koth.utils.Utils;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class CommandTop extends AbstractCommand {
 

@@ -34,12 +34,7 @@ public class FeatherboardHook extends AbstractRangeHook {
         if(Bukkit.isPrimaryThread()){
             be.maximvdw.featherboard.api.FeatherBoardAPI.showScoreboard(player, board);
         } else {
-            Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable(){
-                @Override
-                public void run() {
-                    be.maximvdw.featherboard.api.FeatherBoardAPI.showScoreboard(player, board);
-                }
-            }, 1);
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () ->be.maximvdw.featherboard.api.FeatherBoardAPI.showScoreboard(player, board), 1);
         }
         
     }
@@ -52,13 +47,11 @@ public class FeatherboardHook extends AbstractRangeHook {
             be.maximvdw.featherboard.api.FeatherBoardAPI.removeScoreboardOverride(player, board);
             be.maximvdw.featherboard.api.FeatherBoardAPI.resetDefaultScoreboard(player);
         } else {
-            Bukkit.getScheduler().runTaskLater(getPlugin(), new Runnable(){
-                @Override
-                public void run() {
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () ->
+                {
                     be.maximvdw.featherboard.api.FeatherBoardAPI.removeScoreboardOverride(player, board);
                     be.maximvdw.featherboard.api.FeatherBoardAPI.resetDefaultScoreboard(player);
-                }
-            }, 1);
+                }, 1);
         }
     }
     

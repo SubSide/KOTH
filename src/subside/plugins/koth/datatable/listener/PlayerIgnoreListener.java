@@ -1,6 +1,5 @@
 package subside.plugins.koth.datatable.listener;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,8 +12,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 public class PlayerIgnoreListener implements Listener {
@@ -27,7 +24,6 @@ public class PlayerIgnoreListener implements Listener {
 
     /**
      * Used to save the player's ignore state
-     * @param event
      */
     @EventHandler(ignoreCancelled=true, priority= EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event){

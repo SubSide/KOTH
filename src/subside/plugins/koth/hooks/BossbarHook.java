@@ -56,10 +56,10 @@ public class BossbarHook extends AbstractRangeHook {
     public void initialize(RunningKoth koth){
         BarFlag[] flags = new BarFlag[(createfog ? 1 : 0) + (darkensky ? 1 : 0) + (playmusic ? 1 : 0)];
         
-        int fl = 0;
-        if(createfog) flags[fl++] = BarFlag.CREATE_FOG;
-        if(darkensky) flags[fl++] = BarFlag.DARKEN_SKY;
-        if(playmusic) flags[fl++] = BarFlag.PLAY_BOSS_MUSIC;
+        int fl = -1;
+        if(createfog) flags[++fl] = BarFlag.CREATE_FOG;
+        if(darkensky) flags[++fl] = BarFlag.DARKEN_SKY;
+        if(playmusic) flags[++fl] = BarFlag.PLAY_BOSS_MUSIC;
         
         BarColor color = BarColor.valueOf(barColor.toUpperCase());
         
