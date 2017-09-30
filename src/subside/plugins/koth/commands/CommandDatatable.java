@@ -45,7 +45,7 @@ public class CommandDatatable extends AbstractCommand {
     
     public void debug(CommandSender sender, String[] args){
         if(args.length < 2)
-            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth datatabe debug (0|1|2) <maxrows> [time] [capturetype] [gamemode] [koth]");
+            throw new CommandMessageException(Lang.COMMAND_GLOBAL_USAGE[0] + "/koth datatable debug (0|1|2) <maxrows> [time] [capturetype] [gamemode] [koth]");
         
         if(args[0].equalsIgnoreCase("2")){
             Utils.sendMessage(sender, true, "Player results returned:");
