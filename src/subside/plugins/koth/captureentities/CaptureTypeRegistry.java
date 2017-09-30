@@ -9,9 +9,11 @@ import org.bukkit.entity.Player;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.plugin.PluginManager;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.gamemodes.KothConquest;
 import subside.plugins.koth.modules.AbstractModule;
+import subside.plugins.koth.modules.ConfigHandler;
 
 @SuppressWarnings("rawtypes")
 public class CaptureTypeRegistry extends AbstractModule {
@@ -29,16 +31,19 @@ public class CaptureTypeRegistry extends AbstractModule {
     public void onLoad(){
         captureTypes.clear();
         captureClasses.clear();
+
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        ConfigHandler.Hooks hooks = plugin.getConfigHandler().getHooks();
         
         // Add the player entity
         registerCaptureClass("capperclass", Capper.class);
         registerCaptureType("player", CappingPlayer.class, true);
         
         // LegacyFactions, Factions, and FactionsUUID
-        if(plugin.getConfigHandler().getHooks().isFactions()) {
-            if(plugin.getServer().getPluginManager().getPlugin("LegacyFactions") != null){
+        if(hooks.isFactions()) {
+            if(pluginManager.getPlugin("LegacyFactions") != null){
                 registerCaptureType("legacyfactions", CappingLegacyFactions.class, true);
-            } else if(plugin.getServer().getPluginManager().getPlugin("Factions") != null){
+            } else if(pluginManager.getPlugin("Factions") != null){
                 try {
                     // If this class is not found it means that Factions is not in the server
                     Class.forName("com.massivecraft.factions.entity.FactionColl");
@@ -53,17 +58,22 @@ public class CaptureTypeRegistry extends AbstractModule {
         }
         
         // Kingdoms
-        if(plugin.getConfigHandler().getHooks().isKingdoms() && plugin.getServer().getPluginManager().getPlugin("Kingdoms") != null){
+        if(hooks.isKingdoms() && pluginManager.getPlugin("Kingdoms") != null){
             registerCaptureType("kingdom", CappingKingdom.class, true);
+        }
+
+        // Feudal Kingdoms
+        if(hooks.isFeudalKingdoms() && pluginManager.getPlugin("Feudal") != null){
+            registerCaptureType("kingdom", CappingFeudalKingdom.class, true);
         }
         
         // Gangs
-        if(plugin.getConfigHandler().getHooks().isGangs() && plugin.getServer().getPluginManager().getPlugin("GangsPlus") != null){
+        if(hooks.isGangs() && pluginManager.getPlugin("GangsPlus") != null){
             registerCaptureType("gang", CappingGang.class, true);
         }
         
         // mcMMO parties
-        if(plugin.getConfigHandler().getHooks().isMcMMO() && plugin.getServer().getPluginManager().getPlugin("mcMMO") != null){
+        if(hooks.isMcMMO() && pluginManager.getPlugin("mcMMO") != null){
         	registerCaptureType("mcmmoparty", CappingMCMMOParty.class, false);
         }
     }
@@ -87,7 +97,7 @@ public class CaptureTypeRegistry extends AbstractModule {
         captureTypes.put(captureTypeIdentifier, clazz);
         
         // Automatically register the CappingGroup class if the registered class is from the CappingGroup type
-        if(CappingGroup.class.isInstance(clazz)){
+        if(CappingGroup.class.isAssignableFrom(clazz)){
             registerCaptureClass("groupclass", CappingGroup.class);
             
             // Since we know we have a group plugin, we can also register Conquest in the GamemodeRegistry

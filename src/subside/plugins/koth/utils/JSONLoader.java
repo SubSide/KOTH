@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -75,7 +76,23 @@ public class JSONLoader {
         try {
             return new com.google.gson.GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new com.google.gson.JsonParser().parse(str));
         } catch(NoClassDefFoundError e){
-            return new org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new org.bukkit.craftbukkit.libs.com.google.gson.JsonParser().parse(str));
-        } 
+            try {
+                Object gsonBuilder = Class.forName("org.bukkit.craftbukkit.libs.com.google.gson.GsonBuilder").getDeclaredConstructor().newInstance();
+                Object jsonParser = Class.forName("org.bukkit.craftbukkit.libs.com.google.gson.JsonParser").getDeclaredConstructor().newInstance();
+                Class jsonElementClass = Class.forName("org.bukkit.craftbukkit.libs.com.google.gson.JsonElement");
+
+                gsonBuilder = gsonBuilder.getClass().getDeclaredMethod("setPrettyPrinting").invoke(gsonBuilder);
+                gsonBuilder = gsonBuilder.getClass().getDeclaredMethod("disableHtmlEscaping").invoke(gsonBuilder);
+                gsonBuilder = gsonBuilder.getClass().getDeclaredMethod("create").invoke(gsonBuilder);
+
+                jsonParser = jsonParser.getClass().getDeclaredMethod("parse", String.class).invoke(jsonParser, str);
+
+                return (String)gsonBuilder.getClass().getDeclaredMethod("toJson", jsonElementClass).invoke(gsonBuilder, jsonParser);
+            } catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException f){
+                plugin.getLogger().severe("Couldn't find GsonBuilder/JsonParser class!");
+                f.printStackTrace();
+            }
+        }
+        return "";
     }
 }

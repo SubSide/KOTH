@@ -96,6 +96,7 @@ public class ConfigHandler extends AbstractModule {
 	    private @Getter boolean vanishNoPacket = true;
 	    private @Getter boolean factions = true;
 	    private @Getter boolean kingdoms = true;
+        private @Getter boolean feudalKingdoms = true;
 	    private @Getter boolean gangs = true;
         private @Getter boolean mcMMO = true;
         private @Getter boolean pvpManager = true;
@@ -108,6 +109,7 @@ public class ConfigHandler extends AbstractModule {
             vanishNoPacket = section.getBoolean("vanishnopacket");
             factions = section.getBoolean("factions");
             kingdoms = section.getBoolean("kingdoms");
+            feudalKingdoms = section.getBoolean("feudalkingdoms");
             pvpManager = section.getBoolean("pvpmanager");
             gangs = section.getBoolean("gangs");
             mcMMO = section.getBoolean("mcmmo");
@@ -207,6 +209,7 @@ public class ConfigHandler extends AbstractModule {
         private @Getter boolean ffaChestTimeLimit = false;
         private @Getter int broadcastInterval = 30;
         private @Getter int minimumPlayersNeeded = 0;
+        private @Getter boolean startNewOnEnd = false;
         private @Getter String defaultCaptureType = "Player";
         private @Getter List<String> mapRotation = new ArrayList<>();
 
@@ -221,6 +224,7 @@ public class ConfigHandler extends AbstractModule {
             broadcastInterval = section.getInt("broadcast-interval");
             captureCooldown = section.getInt("capture-cooldown");
             minimumPlayersNeeded = section.getInt("minimum-players");
+            startNewOnEnd = section.getBoolean("start-new-on-end");
             defaultCaptureType = section.getString("default-capturetype");
             mapRotation = section.getStringList("map-rotation");
 
@@ -268,8 +272,8 @@ public class ConfigHandler extends AbstractModule {
             private @Getter boolean savePlayerIgnores = true;
 
             public Modules(ConfigurationSection section){
-                saveKothWins = section.getBoolean("save-koth-wins");
-                savePlayerIgnores = section.getBoolean("save-player-ignores");
+                saveKothWins = section.getBoolean("saveKothWins");
+                savePlayerIgnores = section.getBoolean("savePlayerIgnores");
             }
         }
     }

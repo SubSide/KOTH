@@ -70,13 +70,26 @@ public class CommandSchedule extends AbstractCommand {
     }
 
     private void asMember(CommandSender sender, String[] args) {
+        Day dayFilter = Day.getCurrentDay();
+        boolean showSingleDay = getPlugin().getConfigHandler().getGlobal().isCurrentDayOnly();
+
+        if(args.length > 0){
+            if(args[0].equalsIgnoreCase("today")) {
+                dayFilter = Day.getCurrentDay();
+            } else {
+                dayFilter = Day.getDay(args[0]);
+            }
+            showSingleDay = true;
+        }
+
         List<Schedule> schedules = getPlugin().getScheduleHandler().getSchedules();
         List<String> list = new ArrayList<>();
        
         list.add(" ");
         list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_CURRENTDATETIME).date(Utils.parseCurrentDate(getPlugin())).buildArray());
         for (Day day : Day.values()) {
-            if(getPlugin().getConfigHandler().getGlobal().isCurrentDayOnly() && day != Day.getCurrentDay())
+            // All filtering, like day arguments and such
+            if(showSingleDay && day != dayFilter)
                 continue;
             
             List<String> subList = new ArrayList<>();
@@ -88,6 +101,9 @@ public class CommandSchedule extends AbstractCommand {
             if (subList.size() > 0) {
                 list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_DAY).day(day.getDay()).buildArray());
                 list.addAll(subList);
+            } else if(showSingleDay){
+                list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_DAY).day(day.getDay()).buildArray());
+                list.addAll(new MessageBuilder(Lang.COMMAND_SCHEDULE_LIST_NOENTRYFOUND).day(day.getDay()).buildArray());
             }
         }
         if (schedules.size() < 1) {

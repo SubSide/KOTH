@@ -22,6 +22,7 @@ http://dev.thomasvdbulk.nl/KoTH/
 \- Factions  
 \- FactionsOne  
 \- FactionsUUID  
+\- Feudal Kingdoms  
 \- GangsPlus  
 \- Kingdoms  
 \- LegacyFactions (Special thanks to @MarkehMe for adding that)  
@@ -51,13 +52,12 @@ Although my plugin is completely modular in a way that dependencies aren't inter
 #### Java 1.8+
 To use the Java Lambda feature, Java 1.8 or higher is required.
 
-#### Spigot 1.9+ (and 1.7 (??))
+#### Spigot 1.9+
 Although you might not find this worthy to place here, I feel like I want to cover everything.  
   
 1.9+ is needed for BossBarAPI support. As mentioned above, I have a separate plugin that adds support to the **plugin** BossBarAPI, but I **also** support the integrated API by spigot in this plugin itself. Since this was introduced in 1.9 you need 1.9 or higher for this support.  
 I'm always trying to use the latest build, so I do recommend you doing that too.  
   
-1.7 is only used for the JSON beautifier, below is shown how you can easily remove this dependency if you want to.  
 
 #### Lombok
 _Tip: Lombok is the only required dependency that is not automatically imported by Maven!_  
@@ -95,6 +95,7 @@ Here is a list of all the current dependencies used in KoTH:
 \- Factions  
 \- FactionsUUID  
 \- Featherboard  
+\- Feudal Kingdoms  
 \- GangsPlus  
 \- GLib (As a dependency of Kingdoms)  
 \- Kingdoms  
@@ -104,19 +105,12 @@ Here is a list of all the current dependencies used in KoTH:
 \- McMMO  
 \- PlaceholderAPI (Through Maven)  
 \- PvPManager  
-\- Spigot 1.11.2 (Through maven)  
-\- Spigot 1.7  
+\- Spigot 1.12.2 (Through maven)  
 \- VanishNoPacket  
 \- Worldedit (Through maven)  
   
 _Small tip, whenever I re-import all jars, lots of times I have trouble with the CappingFactionsUUID. If this happens, remove the Factions dependency, wait for CappingFactionsUUID to stop showing errors, and then re-add it. Most of the time this fixes it._  
-  
-As you can see, Spigot 1.7 is not required, as you don't actually need it. By simply changing the `getGson(String str)` function in JSONLoader with the following code, you can completely remove 1.7 as a dependency:  
-```java
-private String getGson(String str){
-    return new com.google.gson.GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(new com.google.gson.JsonParser().parse(str));
-}
-```  
+   
   
 ### Current state of the code
 Don't be scared of the amount of code! After the refactorization of the beginning of 2017, the code has been a lot more cleaned up. If you want to change something with the code and you have something specific in mind, big chance it has been sorted for you and you can easily find it. Change something to the Gamemodes? It's in the gamemodes package. Commands? Commands package. Etc etc.  

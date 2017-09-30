@@ -191,22 +191,14 @@ public class DataTable extends AbstractModule {
         List<Entry<OfflinePlayer, Integer>> top = new ArrayList<>();
 
         try {
-            SimpleQueryBuilder sQB = new SimpleQueryBuilder("count(player_results.id) as result, player_results.player_uuid", "player_results");
-
-            sQB.leftJoin("results", "player_results.result_id=results.id");
+            SimpleQueryBuilder sQB = getSQLBuilder();
 
             if (fromTime > 0) sQB.addWhere("results.date >= ?", fromTime);
-
             if (captureType != null) sQB.addWhere("results.capper_type = ?", captureType);
-
             if (gameMode != null) sQB.addWhere("results.gamemode = ?", gameMode);
-
             if (koth != null) sQB.addWhere("results.koth = ?", koth);
 
-            sQB.groupBy("player_results.player_uuid");
-            sQB.orderBy("result DESC");
             sQB.limit(maxRows);
-
             ResultSet result = sQB.execute();
 
             while (result.next()) {
@@ -218,6 +210,16 @@ public class DataTable extends AbstractModule {
             plugin.getLogger().log(Level.SEVERE, "Error executing query", e);
         }
         return null;
+    }
+
+    public SimpleQueryBuilder getSQLBuilder(){
+            SimpleQueryBuilder sQB = new SimpleQueryBuilder("count(player_results.id) as result, player_results.player_uuid", "player_results");
+
+            sQB.leftJoin("results", "player_results.result_id=results.id");
+            sQB.groupBy("player_results.player_uuid");
+            sQB.orderBy("result DESC");
+
+            return sQB;
     }
     
     public int getPlayerStats(OfflinePlayer player, int fromTime){
@@ -242,7 +244,7 @@ public class DataTable extends AbstractModule {
         return 0;
     }
 
-    protected class SimpleQueryBuilder {
+    public class SimpleQueryBuilder {
         private String select;
         private String leftJoin;
 
@@ -253,40 +255,46 @@ public class DataTable extends AbstractModule {
         private List<Object> params;
 
         private int limit = -1;
+        private int offset = -1;
 
-        protected SimpleQueryBuilder(String select, String db) {
+        public SimpleQueryBuilder(String select, String db) {
             this.select = "SELECT " + select + " FROM " + db;
             wheres = new ArrayList<>();
             params = new ArrayList<>();
         }
 
-        protected SimpleQueryBuilder groupBy(String groupBy) {
+        public SimpleQueryBuilder groupBy(String groupBy) {
             this.groupBy = groupBy;
             return this;
         }
 
-        protected SimpleQueryBuilder orderBy(String orderBy) {
+        public SimpleQueryBuilder orderBy(String orderBy) {
             this.orderBy = orderBy;
             return this;
         }
 
-        protected SimpleQueryBuilder leftJoin(String table, String on) {
+        public SimpleQueryBuilder leftJoin(String table, String on) {
             this.leftJoin = "LEFT JOIN " + table + " ON " + on;
             return this;
         }
 
-        protected SimpleQueryBuilder limit(int limit) {
+        public SimpleQueryBuilder limit(int limit) {
             this.limit = limit;
             return this;
         }
 
-        protected SimpleQueryBuilder addWhere(String where, Object param) {
+        public SimpleQueryBuilder offset(int offset){
+            this.offset = offset;
+            return this;
+        }
+
+        public SimpleQueryBuilder addWhere(String where, Object param) {
             this.wheres.add(where);
             this.params.add(param);
             return this;
         }
 
-        protected ResultSet execute() throws SQLException {
+        public ResultSet execute() throws SQLException {
             String queryBuilder = select;
 
             if (leftJoin != null) {
@@ -313,6 +321,10 @@ public class DataTable extends AbstractModule {
 
             if (limit != -1) {
                 queryBuilder += " LIMIT " + limit;
+
+                if(offset != -1){
+                    queryBuilder += " OFFSET " + offset;
+                }
             }
 
             PreparedStatement ps = databaseProvider.getConnection().prepareStatement(queryBuilder);

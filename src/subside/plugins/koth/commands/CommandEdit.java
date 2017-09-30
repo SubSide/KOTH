@@ -1,11 +1,15 @@
 package subside.plugins.koth.commands;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -142,16 +146,30 @@ public class CommandEdit extends AbstractCommand {
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> area list").commandInfo("shows the area list").build(),
                 new MessageBuilder(Lang.COMMAND_GLOBAL_HELP_INFO).command("/koth edit <koth> area remove <area>").commandInfo("removes an area").build());
     }
-    
-    @SuppressWarnings({
-            "deprecation"
-    })
+
     private void loot(CommandSender sender, String[] args, Koth koth){
         Player player = (Player)sender;
         if(args.length > 0){
             if(args[0].equalsIgnoreCase("setpos")){
-                Block block = player.getTargetBlock((HashSet<Byte>)null, 8);
-                
+                Block block;
+                try {
+                    Method method;
+                    try {
+                        method = LivingEntity.class.getDeclaredMethod("getTargetBlock", Set.class, int.class);
+                    } catch(NoSuchMethodException e){
+                        method = LivingEntity.class.getDeclaredMethod("getTargetBlock", HashSet.class, int.class);
+                    }
+                    block = (Block)method.invoke(player, null, 8);
+                } catch(NoSuchMethodException e){
+                    getPlugin().getLogger().severe("Cannot find the getTargetBlock function!");
+                    e.printStackTrace();
+                    return;
+                } catch(IllegalAccessException | InvocationTargetException e){
+                    getPlugin().getLogger().severe("Cannot access the getTargetBlock function!");
+                    e.printStackTrace();
+                    return;
+                }
+
                 if(block == null){
                     throw new CommandMessageException(Lang.COMMAND_EDITOR_LOOT_SETNOBLOCK);
                 }

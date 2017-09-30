@@ -49,6 +49,7 @@ hooks:
   vanishnopacket: true
   factions: true
   kingdoms: true
+  feudalkingdoms: true
   gangs: true
   mcmmo: true
   pvpmanager: true
@@ -85,6 +86,7 @@ koth:
     every-x-seconds: 600
     decrease-by: 60
     minimum: 300
+  start-new-on-end: false # This is using the map-rotation!
   map-rotation:
     - "map1"
     - "map2"

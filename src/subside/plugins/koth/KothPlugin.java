@@ -13,12 +13,7 @@ import subside.plugins.koth.events.KothPluginInitializationEvent;
 import subside.plugins.koth.gamemodes.GamemodeRegistry;
 import subside.plugins.koth.hooks.HookManager;
 import subside.plugins.koth.loot.LootHandler;
-import subside.plugins.koth.modules.AbstractModule;
-import subside.plugins.koth.modules.CacheHandler;
-import subside.plugins.koth.modules.ConfigHandler;
-import subside.plugins.koth.modules.EventListener;
-import subside.plugins.koth.modules.KothHandler;
-import subside.plugins.koth.modules.Lang;
+import subside.plugins.koth.modules.*;
 import subside.plugins.koth.scheduler.MapRotation;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.utils.MessageBuilder;
@@ -37,6 +32,7 @@ public class KothPlugin extends JavaPlugin {
     private @Getter MapRotation mapRotation;
 	private @Getter DataTable dataTable;
 	private @Getter CacheHandler cacheHandler;
+	private @Getter VersionChecker versionChecker;
 	
 	private List<AbstractModule> activeModules;
 	
@@ -95,6 +91,10 @@ public class KothPlugin extends JavaPlugin {
         // Add ScheduleHandler
         scheduleHandler = new ScheduleHandler(this);
         activeModules.add(scheduleHandler);
+
+        // Add VersionChecker
+		versionChecker = new VersionChecker(this);
+		activeModules.add(versionChecker);
         
         
         /* Now add all the dynamic modules */

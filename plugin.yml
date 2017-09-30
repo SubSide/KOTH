@@ -1,6 +1,6 @@
 name: KoTH
 main: subside.plugins.koth.KothPlugin
-version: 1.5.0
+version: 1.5.1
 author: SubSide
 softdepend: [Multiverse-Core, Factions, Kingdoms, LegacyFactions, PlaceholderAPI, VanishNoPacket]
 commands:
@@ -23,6 +23,7 @@ permissions:
       koth.version: true
       koth.ignore: true
       koth.next: true
+      koth.top: true
   koth.help:
     description: Gives the player permissions to /koth (help)
     default: true
@@ -43,6 +44,9 @@ permissions:
     default: true
   koth.next:
     description: Gives the player permissions to /koth next
+    default: true
+  koth.top:
+    description: Gives the player permissions to /koth top
     default: true
 
   koth.admin:
