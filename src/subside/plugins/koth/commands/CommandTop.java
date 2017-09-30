@@ -85,7 +85,7 @@ public class CommandTop extends AbstractCommand {
 
     @Override
     public IPerm getPermission() {
-        return Perm.Admin.EDIT;
+        return Perm.TOP;
     }
 
     @Override
