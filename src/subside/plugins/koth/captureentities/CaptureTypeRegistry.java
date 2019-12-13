@@ -12,11 +12,11 @@ import lombok.Setter;
 import org.bukkit.plugin.PluginManager;
 import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.gamemodes.KothConquest;
-import subside.plugins.koth.modules.AbstractModule;
+import subside.plugins.koth.modules.Module;
 import subside.plugins.koth.modules.ConfigHandler;
 
 @SuppressWarnings("rawtypes")
-public class CaptureTypeRegistry extends AbstractModule {
+public class CaptureTypeRegistry extends Module {
     private @Getter Map<String, Class<? extends Capper>> captureClasses;
     private @Getter Map<String, Class<? extends Capper>> captureTypes;
     private @Getter @Setter Class<? extends Capper> preferedClass;

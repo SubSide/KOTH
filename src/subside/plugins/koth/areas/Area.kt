@@ -2,6 +2,7 @@ package subside.plugins.koth.areas
 
 import org.bukkit.Location
 import org.bukkit.OfflinePlayer
+import org.bukkit.configuration.serialization.ConfigurationSerializable
 import org.json.simple.JSONObject
 import subside.plugins.koth.utils.Utils
 import java.lang.Double.max
@@ -11,7 +12,7 @@ data class Area(
         val name: String,
         private var min: Location,
         private var max: Location
-) : Cappable {
+) : Cappable, ConfigurationSerializable {
     val middle: Location
         get() = min.clone().add(max.clone()).multiply(0.5)
 
@@ -35,15 +36,24 @@ data class Area(
         max = getMaximum(loc1, loc2)
     }
 
-    fun save(): JSONObject? {
-        val obj = JSONObject()
-        obj["name"] = name // name
-        obj["loc1"] = Utils.createLocObject(min) // loc1
-        obj["loc2"] = Utils.createLocObject(max) // loc2
-        return obj
+    override fun serialize(): Map<String, Any> {
+        return mapOf(
+            "name" to name,
+            "min" to min.serialize(),
+            "max" to max.serialize()
+        )
     }
 
     companion object {
+
+        @JvmStatic fun deserialize(args: Map<String, Any>): Area {
+            return Area(
+                args["name"] as String,
+                Location.deserialize(args["min"] as Map<String, Any?>),
+                Location.deserialize(args["max"] as Map<String, Any?>)
+            )
+        }
+
         fun getMinimum(loc1: Location, loc2: Location) =
                 Location(loc1.world, min(loc1.x, loc2.x), min(loc1.y, loc2.y), min(loc1.z, loc2.z))
 

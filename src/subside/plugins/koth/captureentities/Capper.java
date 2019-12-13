@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import subside.plugins.koth.areas.Cappable;
 
-public abstract class Capper<T> {
+public abstract class Capper<T> implements ConfigurationSerializable {
     protected @Getter CaptureTypeRegistry captureTypeRegistry;
     private @Getter String uniqueClassIdentifier;
     private @Getter T object;

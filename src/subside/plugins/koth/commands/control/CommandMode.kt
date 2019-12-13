@@ -26,10 +26,10 @@ class CommandMode : Command {
 
     private fun captureType(kothManager: KothManager, sender: CommandSender, args: Array<String>) {
         if (args.isEmpty()) {
-            MessageBuilder(Lang.COMMAND_ENTITY_LIST_TITLE).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_ENTITY_LIST_TITLE).send(sender)
 
             kothManager.captureTypeRegistry.captureTypes.forEach { (key, _) ->
-                MessageBuilder(Lang.COMMAND_ENTITY_LIST_ENTRY).entry(key).buildAndSend(sender)
+                MessageBuilder(Lang.COMMAND_ENTITY_LIST_ENTRY).entry(key).send(sender)
             }
             return
         }
@@ -38,22 +38,22 @@ class CommandMode : Command {
         if (captureType == null) {
             MessageBuilder(Lang.COMMAND_ENTITY_NOT_EXIST)
                     .entry(args[0])
-                    .buildAndSend(sender)
+                    .send(sender)
             return
         }
 
         kothManager.captureTypeRegistry.preferedClass = captureType
         MessageBuilder(Lang.COMMAND_ENTITY_CHANGED)
                 .entry(args[0])
-                .buildAndSend(sender)
+                .send(sender)
     }
 
     private fun gameMode(kothManager: KothManager, sender: CommandSender, args: Array<String>) {
         if (args.isEmpty()) {
-            MessageBuilder(Lang.COMMAND_MODE_LIST_TITLE).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_MODE_LIST_TITLE).send(sender)
 
             kothManager.gamemodeRegistry.gamemodes.forEach { (key, _) ->
-                MessageBuilder(Lang.COMMAND_MODE_LIST_ENTRY).entry(key).buildAndSend(sender)
+                MessageBuilder(Lang.COMMAND_MODE_LIST_ENTRY).entry(key).send(sender)
             }
             return
         }
@@ -62,14 +62,14 @@ class CommandMode : Command {
         if (gamemode == null) {
             MessageBuilder(Lang.COMMAND_MODE_NOT_EXIST)
                     .entry(args[0])
-                    .buildAndSend(sender)
+                    .send(sender)
             return
         }
 
         kothManager.gamemodeRegistry.currentMode = gamemode
         MessageBuilder(Lang.COMMAND_MODE_CHANGED)
                 .entry(args[0])
-                .buildAndSend(sender)
+                .send(sender)
     }
 
     private fun showHelp(sender: CommandSender) {

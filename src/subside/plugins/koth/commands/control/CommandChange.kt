@@ -20,7 +20,7 @@ class CommandChange : Command {
 
         val runningKoth = kothManager.kothHandler.runningKoth
         if (runningKoth == null) {
-            MessageBuilder(Lang.KOTH_ERROR_NONE_RUNNING).buildAndSend(sender)
+            MessageBuilder(Lang.KOTH_ERROR_NONE_RUNNING).send(sender)
             return
         }
 
@@ -51,12 +51,12 @@ class CommandChange : Command {
         val pointsHelp = MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0].toString() + "/koth change points (add|set|del|reset) <faction> <points>")
 
         if (args.size < 3) {
-            pointsHelp.buildAndSend(sender)
+            pointsHelp.send(sender)
             return
         }
 
         if (runningKoth !is KothConquest) {
-            MessageBuilder(Lang.KOTH_ERROR_NOT_COMPATIBLE).buildAndSend(sender)
+            MessageBuilder(Lang.KOTH_ERROR_NOT_COMPATIBLE).send(sender)
             return
         }
 
@@ -67,14 +67,14 @@ class CommandChange : Command {
             0
         } else {
             if (args.size < 3) {
-                pointsHelp.buildAndSend(sender)
+                pointsHelp.send(sender)
             }
 
             val argPoints = try {
                 Integer.parseInt(args[2])
             } catch (e: NumberFormatException) {
                 MessageBuilder(Lang.COMMAND_CHANGE_POINTS_NOTANUMBER)
-                        .buildAndSend(sender)
+                        .send(sender)
                 return
             }
 
@@ -83,7 +83,7 @@ class CommandChange : Command {
                 "del" -> fScore.points - argPoints
                 "set" -> argPoints
                 else -> {
-                    pointsHelp.buildAndSend(sender)
+                    pointsHelp.send(sender)
                     return
                 }
             }

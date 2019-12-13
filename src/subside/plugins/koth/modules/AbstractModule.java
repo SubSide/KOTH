@@ -1,6 +1,7 @@
 package subside.plugins.koth.modules;
 
 import lombok.Getter;
+import subside.plugins.koth.KothManager;
 import subside.plugins.koth.KothPlugin;
 
 public abstract class AbstractModule {
@@ -10,7 +11,7 @@ public abstract class AbstractModule {
         this.plugin = plugin;
     }
     
-    public void onLoad(){}
-    public void onEnable(){}
-    public void onDisable(){}
+    public void onLoad(KothManager kothManager){}
+    public void onEnable(KothManager kothManager){}
+    public void onDisable(KothManager kothManager){}
 }

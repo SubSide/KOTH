@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class VersionChecker extends AbstractModule implements Listener {
+public class VersionChecker extends Module implements Listener {
 
     private @Getter String newVersion = null;
 

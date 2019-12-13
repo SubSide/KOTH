@@ -13,12 +13,12 @@ class CommandStop : Command {
     override fun run(kothManager: KothManager, sender: CommandSender, args: Array<String>) {
         if (args.isEmpty()) {
             kothManager.kothHandler.endAllKoths(RunningKoth.EndReason.FORCED)
-            MessageBuilder(Lang.COMMAND_TERMINATE_ALL_KOTHS).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_TERMINATE_ALL_KOTHS).send(sender)
         } else {
             kothManager.kothHandler.endKoth(args[0], RunningKoth.EndReason.FORCED)
             MessageBuilder(Lang.COMMAND_TERMINATE_SPECIFIC_KOTH)
                     .koth(kothManager.kothHandler, args[0])
-                    .buildAndSend(sender)
+                    .send(sender)
         }
     }
 

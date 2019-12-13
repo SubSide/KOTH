@@ -10,9 +10,9 @@ import subside.plugins.koth.utils.Perm
 
 class CommandList : Command {
     override fun run(kothManager: KothManager, sender: CommandSender, args: Array<String>) {
-        MessageBuilder(Lang.COMMAND_LISTS_LIST_TITLE).buildAndSend(sender)
+        MessageBuilder(Lang.COMMAND_LISTS_LIST_TITLE).send(sender)
         kothManager.kothHandler.availableKoths.forEach {
-            MessageBuilder(Lang.COMMAND_LISTS_LIST_ENTRY).koth(it).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_LISTS_LIST_ENTRY).koth(it).send(sender)
         }
     }
 

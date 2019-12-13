@@ -22,10 +22,10 @@ import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.captureentities.CaptureTypeRegistry;
 import subside.plugins.koth.datatable.listener.KothWinListener;
 import subside.plugins.koth.datatable.listener.PlayerIgnoreListener;
-import subside.plugins.koth.modules.AbstractModule;
+import subside.plugins.koth.modules.Module;
 import subside.plugins.koth.modules.ConfigHandler;
 
-public class DataTable extends AbstractModule {
+public class DataTable extends Module {
     private @Getter IDatabase databaseProvider;
     private List<Listener> eventListeners;
 

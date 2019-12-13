@@ -12,14 +12,14 @@ class CommandRemove : Command {
     override fun run(kothManager: KothManager, sender: CommandSender, args: Array<String>) {
         if (args.isEmpty()) {
             MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0].toString() + "/koth remove <name>")
-                    .buildAndSend(sender)
+                    .send(sender)
             return
         }
 
         kothManager.kothHandler.removeKoth(args[0])
         MessageBuilder(Lang.COMMAND_KOTH_REMOVED)
                 .koth(kothManager.kothHandler, args[0])
-                .buildAndSend(sender)
+                .send(sender)
     }
 
     override val permission: IPerm = Perm.Admin.REMOVE

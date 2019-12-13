@@ -6,9 +6,9 @@ import java.util.logging.Level;
 import lombok.Getter;
 import lombok.Setter;
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.modules.AbstractModule;
+import subside.plugins.koth.modules.Module;
 
-public class GamemodeRegistry extends AbstractModule {
+public class GamemodeRegistry extends Module {
     private @Getter HashMap<String, Class<? extends RunningKoth>> gamemodes;
     private @Getter @Setter String currentMode;
     

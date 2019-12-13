@@ -18,7 +18,7 @@ class CommandReload : Command {
             trigger(KothPlugin.LoadingState.ENABLE)
         }
 
-        MessageBuilder(Lang.COMMAND_RELOAD_RELOAD).buildAndSend(sender)
+        MessageBuilder(Lang.COMMAND_RELOAD_RELOAD).send(sender)
     }
 
     override val permission = Perm.Admin.RELOAD

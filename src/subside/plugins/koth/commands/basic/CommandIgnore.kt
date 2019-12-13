@@ -13,14 +13,14 @@ import subside.plugins.koth.utils.Utils
 class CommandIgnore : Command {
     override fun run(kothManager: KothManager, sender: CommandSender, args: Array<String>) {
         if (sender !is Player) {
-            MessageBuilder(Lang.COMMAND_GLOBAL_ONLYFROMINGAME).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_GLOBAL_ONLYFROMINGAME).send(sender)
             return
         }
 
         if (Utils.toggleIgnoring(kothManager, sender)) {
-            MessageBuilder(Lang.COMMAND_IGNORE_START).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_IGNORE_START).send(sender)
         } else {
-            MessageBuilder(Lang.COMMAND_IGNORE_STOP).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_IGNORE_STOP).send(sender)
         }
     }
 

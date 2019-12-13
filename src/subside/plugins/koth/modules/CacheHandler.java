@@ -8,7 +8,7 @@ import subside.plugins.koth.KothPlugin;
 import subside.plugins.koth.gamemodes.RunningKoth;
 import subside.plugins.koth.utils.JSONLoader;
 
-public class CacheHandler extends AbstractModule {
+public class CacheHandler extends Module {
     
     public CacheHandler(KothPlugin plugin){
         super(plugin);

@@ -10,9 +10,9 @@ import org.bukkit.event.Listener;
 
 import lombok.Getter;
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.modules.AbstractModule;
+import subside.plugins.koth.modules.Module;
 
-public class HookManager extends AbstractModule {
+public class HookManager extends Module {
     private @Getter List<AbstractHook> hooks;
     
     public HookManager(KothPlugin plugin){

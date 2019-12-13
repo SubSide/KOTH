@@ -14,7 +14,7 @@ class CommandStart : Command {
     override fun run(kothManager: KothManager, sender: CommandSender, args: Array<String>) {
         if (args.isEmpty()) {
             MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0].toString() + "/koth start <name> [time] [maxRunTime] [lootAmount] [entitytype]")
-                    .buildAndSend(sender)
+                    .send(sender)
             return
         }
 
@@ -28,9 +28,9 @@ class CommandStart : Command {
             kothManager.kothHandler.startKoth(params)
         } catch (e: NumberFormatException) {
             MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0].toString() + "/koth start <name> [time] [maxRunTime] [lootAmount]")
-                    .buildAndSend(sender)
+                    .send(sender)
         } catch(e: Exception) {
-            MessageBuilder(e.message).buildAndSend(sender)
+            MessageBuilder(e.message).send(sender)
         }
 
 

@@ -3,12 +3,10 @@ package subside.plugins.koth;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 import subside.plugins.koth.captureentities.CaptureTypeRegistry;
-import subside.plugins.koth.commands.CommandHandler;
 import subside.plugins.koth.datatable.DataTable;
 import subside.plugins.koth.events.KothPluginInitializationEvent;
 import subside.plugins.koth.gamemodes.GamemodeRegistry;
 import subside.plugins.koth.hooks.HookManager;
-import subside.plugins.koth.loot.LootHandler;
 import subside.plugins.koth.modules.*;
 import subside.plugins.koth.scheduler.ScheduleHandler;
 import subside.plugins.koth.utils.MessageBuilder;
@@ -31,7 +29,7 @@ public class KothPlugin extends JavaPlugin {
 	private @Getter CacheHandler cacheHandler;
 	private @Getter VersionChecker versionChecker;
 	
-	private List<AbstractModule> activeModules;
+	private List<Module> activeModules;
 	
 	
 	// Loaded on server startup (Not to be confused with enable)
@@ -128,7 +126,7 @@ public class KothPlugin extends JavaPlugin {
 	}
 	
 	public void trigger(LoadingState state){
-	    for(AbstractModule module : activeModules){
+	    for(Module module : activeModules){
 	        switch(state){
 	            case LOAD:
 	                module.onLoad();

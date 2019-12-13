@@ -19,21 +19,21 @@ class CommandInfo : Command {
             val newArgs = offsetArgs(args, 1)
             when (args[0].toLowerCase()) {
                 "koth"-> kothInfo(kothManager, sender, newArgs)
-                "loot" -> lootInfo(sender, newArgs)
-                "schedule" -> scheduleInfo(sender, newArgs)
+                "loot" -> lootInfo(kothManager, sender, newArgs)
+                "schedule" -> scheduleInfo(kothManager, sender, newArgs)
                 else -> sendHelp(sender)
             }
         } else if (Perm.VERSION.has(sender)) {
             CommandVersion.sendVersionInfo(kothManager, sender, false)
         } else {
-            MessageBuilder(Lang.COMMAND_GLOBAL_NO_PERMISSION).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_GLOBAL_NO_PERMISSION).send(sender)
         }
     }
 
     private fun kothInfo(kothManager: KothManager, sender: CommandSender, args: Array<String>) {
         val koth = kothManager.kothHandler.getKoth(args[0])
         if (koth == null) {
-            MessageBuilder(Lang.KOTH_ERROR_NOTEXIST).koth(kothManager.kothHandler, koth).buildAndSend(sender)
+            MessageBuilder(Lang.KOTH_ERROR_NOTEXIST).koth(kothManager.kothHandler, koth).send(sender)
             return
         }
 
@@ -70,7 +70,7 @@ class CommandInfo : Command {
     private fun lootInfo(kothManager: KothManager, sender: CommandSender, args: Array<String>) {
         val loot = kothManager.lootHandler.getLoot(args[0])
         if (loot == null) {
-            MessageBuilder(Lang.LOOT_ERROR_NOTEXIST).loot(loot).buildAndSend(sender)
+            MessageBuilder(Lang.LOOT_ERROR_NOTEXIST).loot(loot).send(sender)
             return
         }
 
@@ -110,10 +110,10 @@ class CommandInfo : Command {
             id = args[0].toInt()
             kothManager.scheduleHandler.schedules[id]
         } catch (e: NumberFormatException) {
-            MessageBuilder(Lang.COMMAND_SCHEDULE_NOTANUMBER).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_SCHEDULE_NOTANUMBER).send(sender)
             return
         } catch (e: NumberFormatException) {
-            MessageBuilder(Lang.COMMAND_SCHEDULE_NOTEXIST).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_SCHEDULE_NOTEXIST).send(sender)
             return
         }
 

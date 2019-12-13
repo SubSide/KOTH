@@ -15,20 +15,20 @@ import subside.plugins.koth.utils.Perm
 class CommandCreate : Command {
     override fun run(kothManager: KothManager, sender: CommandSender, args: Array<String>) {
         if (sender !is Player) {
-            MessageBuilder(Lang.COMMAND_GLOBAL_ONLYFROMINGAME).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_GLOBAL_ONLYFROMINGAME).send(sender)
             return
         }
 
         if (args.isEmpty()) {
             MessageBuilder(Lang.COMMAND_GLOBAL_USAGE[0].toString() + "/koth create <name>")
-                    .buildAndSend(sender)
+                    .send(sender)
             return
         }
 
         if (kothManager.kothHandler.getKoth(args[0]) != null) {
             MessageBuilder(Lang.COMMAND_KOTH_ALREADYEXISTS)
                     .koth(kothManager.kothHandler, args[0])
-                    .buildAndSend(sender)
+                    .send(sender)
             return
         }
 
@@ -36,7 +36,7 @@ class CommandCreate : Command {
                 .getSelection(sender)
 
         if (selection == null) {
-            MessageBuilder(Lang.COMMAND_GLOBAL_WESELECT).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_GLOBAL_WESELECT).send(sender)
             return
         }
 
@@ -46,7 +46,7 @@ class CommandCreate : Command {
 
         MessageBuilder(Lang.COMMAND_KOTH_CREATED)
                 .koth(koth)
-                .buildAndSend(sender)
+                .send(sender)
     }
 
     override val permission: IPerm = Perm.Admin.CREATE

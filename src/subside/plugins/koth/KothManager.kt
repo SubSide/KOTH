@@ -22,7 +22,7 @@ class KothManager {
      val kothHandler: KothHandler
      val hookManager: HookManager
      val scheduleHandler: ScheduleHandler
-     val dataTable: DataTable
+     val dataTable: DataTable?
      val cacheHandler: CacheHandler
      val versionChecker: VersionChecker
 

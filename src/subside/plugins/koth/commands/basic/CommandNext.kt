@@ -13,14 +13,14 @@ class CommandNext : Command {
         val schedule = kothManager.scheduleHandler.nextEvent
 
         if (schedule == null) {
-            MessageBuilder(Lang.COMMAND_NEXT_NO_NEXT_FOUND).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_NEXT_NO_NEXT_FOUND).send(sender)
             return
         }
 
         MessageBuilder(Lang.COMMAND_NEXT_MESSAGE)
                 .koth(kothManager.kothHandler, schedule.koth)
                 .timeTillNext(schedule)
-                .buildAndSend(sender)
+                .send(sender)
     }
 
     override val permission = Perm.NEXT

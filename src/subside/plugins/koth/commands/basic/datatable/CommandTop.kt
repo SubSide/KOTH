@@ -23,7 +23,7 @@ class CommandTop : Command {
                 Integer.parseInt(args[0])
             } else 1
         } catch (e: NumberFormatException) {
-            MessageBuilder(Lang.COMMAND_TOP_NOTANUMBER).buildAndSend(sender)
+            MessageBuilder(Lang.COMMAND_TOP_NOTANUMBER).send(sender)
             return
         }
 

@@ -7,7 +7,7 @@ import subside.plugins.koth.KothPlugin;
 
 import java.util.*;
 
-public class ConfigHandler extends AbstractModule {
+public class ConfigHandler extends Module {
     
 	private @Getter Global global;
 	private @Getter Loot loot;

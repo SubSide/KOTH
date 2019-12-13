@@ -35,7 +35,7 @@ import subside.plugins.koth.utils.MessageBuilder;
  * @author Thomas "SubSide" van den Bulk
  *
  */
-public class KothHandler extends AbstractModule implements Runnable {
+public class KothHandler extends Module implements Runnable {
     private final @Getter List<RunningKoth> runningKoths;
     private final @Getter List<Koth> availableKoths;
     
