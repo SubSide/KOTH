@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
-import subside.plugins.koth.areas.Capable;
+import subside.plugins.koth.areas.Cappable;
 
 public abstract class Capper<T> {
     protected @Getter CaptureTypeRegistry captureTypeRegistry;
@@ -60,7 +60,7 @@ public abstract class Capper<T> {
      * @param area the area to be checked
      * @return a Collection of players that are currently standing in the area
      */
-    public Collection<Player> getAvailablePlayers(Capable area){
+    public Collection<Player> getAvailablePlayers(Cappable area){
         Collection<Player> list = new ArrayList<>();
         
         for(Player player : getAllOnlinePlayers()){
@@ -79,7 +79,7 @@ public abstract class Capper<T> {
      * @param cap The Capable area to check
      * @return true if the Capper is still standing on the point
      */
-    public boolean areaCheck(Capable cap) {
+    public boolean areaCheck(Cappable cap) {
         for(Player player : getAllOnlinePlayers()){
             if(cap.isInArea(player) && captureTypeRegistry.getPlugin().getHookManager().canCap(player)){
                 return true;

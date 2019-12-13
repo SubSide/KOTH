@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
-import subside.plugins.koth.areas.Area;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.captureentities.CapInfo;
 import subside.plugins.koth.captureentities.Capper;

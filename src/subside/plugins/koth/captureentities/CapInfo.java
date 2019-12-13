@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.areas.Capable;
+import subside.plugins.koth.areas.Cappable;
 import subside.plugins.koth.events.KothCapEvent;
 import subside.plugins.koth.events.KothLeftEvent;
 import subside.plugins.koth.gamemodes.RunningKoth;
@@ -24,11 +24,12 @@ public class CapInfo {
     
     private @Getter @Setter Capper capper;
     private @Getter RunningKoth runningKoth;
-    private @Getter Capable captureZone;
+    private @Getter
+    Cappable captureZone;
     private @Getter Class<? extends Capper> ofType;
     private boolean sendMessages;
     
-    public CapInfo(RunningKoth runningKoth, Capable captureZone, Class<? extends Capper> ofType, boolean sendMessages){
+    public CapInfo(RunningKoth runningKoth, Cappable captureZone, Class<? extends Capper> ofType, boolean sendMessages){
         this.runningKoth = runningKoth;
         this.captureZone = captureZone;
         this.sendMessages = sendMessages;
@@ -44,11 +45,11 @@ public class CapInfo {
         }
     }
     
-    public CapInfo(RunningKoth runningKoth, Capable captureZone, Class<? extends Capper> ofType){
+    public CapInfo(RunningKoth runningKoth, Cappable captureZone, Class<? extends Capper> ofType){
     	this(runningKoth, captureZone, ofType, true);
     }
     
-    public CapInfo(RunningKoth runningKoth, Capable captureZone){
+    public CapInfo(RunningKoth runningKoth, Cappable captureZone){
     	this(runningKoth, captureZone, null);
     }
 

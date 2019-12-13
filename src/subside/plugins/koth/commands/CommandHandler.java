@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 
 import lombok.Getter;
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.modules.AbstractModule;
 import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.MessageBuilder;

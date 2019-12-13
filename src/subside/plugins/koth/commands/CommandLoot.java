@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
-import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.LootAlreadyExistException;
 import subside.plugins.koth.exceptions.LootNotExistException;
 import subside.plugins.koth.gamemodes.RunningKoth;

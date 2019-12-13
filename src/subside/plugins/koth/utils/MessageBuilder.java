@@ -9,19 +9,16 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import subside.plugins.koth.KothPlugin;
-import subside.plugins.koth.areas.Area;
-import subside.plugins.koth.areas.Capable;
+import subside.plugins.koth.areas.Cappable;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.gamemodes.TimeObject;
 import subside.plugins.koth.modules.KothHandler;
 import subside.plugins.koth.scheduler.Schedule;
-import subside.plugins.koth.scheduler.ScheduleHandler;
 
 public class MessageBuilder {
     private StrObj message;
@@ -229,7 +226,7 @@ public class MessageBuilder {
         return this;
     }
 
-    public MessageBuilder exclude(Capper<?> capper, Capable area){
+    public MessageBuilder exclude(Capper<?> capper, Cappable area){
         if(capper != null)
             this.exclude(capper.getAvailablePlayers(area));
 
@@ -245,7 +242,7 @@ public class MessageBuilder {
         buildAndSend(players);
     }
     
-    public void buildAndSend(Capper<?> capper, Capable area){
+    public void buildAndSend(Capper<?> capper, Cappable area){
         if(capper != null)
             buildAndSend(capper.getAvailablePlayers(area));
     }

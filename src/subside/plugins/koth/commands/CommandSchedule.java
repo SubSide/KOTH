@@ -8,7 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
-import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.scheduler.Day;
 import subside.plugins.koth.scheduler.Schedule;

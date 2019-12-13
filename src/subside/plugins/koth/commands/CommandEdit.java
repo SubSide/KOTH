@@ -15,12 +15,10 @@ import org.bukkit.entity.Player;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 
-import subside.plugins.koth.areas.Area;
 import subside.plugins.koth.areas.Koth;
 import subside.plugins.koth.commands.CommandHandler.CommandCategory;
 import subside.plugins.koth.exceptions.AreaAlreadyExistException;
 import subside.plugins.koth.exceptions.AreaNotExistException;
-import subside.plugins.koth.exceptions.CommandMessageException;
 import subside.plugins.koth.exceptions.KothNotExistException;
 import subside.plugins.koth.modules.Lang;
 import subside.plugins.koth.utils.IPerm;

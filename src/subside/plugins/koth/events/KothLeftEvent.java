@@ -5,7 +5,7 @@ import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
 import lombok.Setter;
-import subside.plugins.koth.areas.Capable;
+import subside.plugins.koth.areas.Cappable;
 import subside.plugins.koth.captureentities.Capper;
 import subside.plugins.koth.gamemodes.RunningKoth;
 
@@ -19,9 +19,10 @@ public class KothLeftEvent extends AbstractEvent implements Cancellable {
     private @Getter int amountSecondsCapped;
     private @Getter @Setter Capper<?> nextCapper;
     private @Getter RunningKoth runningKoth;
-    private @Getter Capable captureZone;
+    private @Getter
+    Cappable captureZone;
     
-    public KothLeftEvent(RunningKoth runningKoth, Capable captureZone, Capper<?> capper, int amountSecondsCapped){
+    public KothLeftEvent(RunningKoth runningKoth, Cappable captureZone, Capper<?> capper, int amountSecondsCapped){
         super(runningKoth.getKoth());
         this.runningKoth = runningKoth;
         this.captureZone = captureZone;
