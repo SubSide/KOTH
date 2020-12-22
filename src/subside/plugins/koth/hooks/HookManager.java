@@ -29,7 +29,7 @@ public class HookManager extends AbstractModule {
         registerHook(new EssentialsVanishHook(this));
         
         if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")){
-            new PlaceholderAPIHook(plugin).hook();
+            new PlaceholderAPIHook(plugin).register();
         }
     }
     

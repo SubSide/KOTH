@@ -47,7 +47,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String identifier) {
+    public String onPlaceholderRequest(Player player, @NotNull String identifier) {
         if (player == null) {
             return "";
         }
