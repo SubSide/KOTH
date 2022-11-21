@@ -22,14 +22,14 @@
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
-        <repository>
-            <id>sk89q-repo</id>
-            <url>http://maven.sk89q.com/repo/</url>
-        </repository>
-        <repository>
-            <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
+	<repository>
+  	    <id>enginehub-maven</id>
+  	    <url>https://maven.enginehub.org/repo/</url>
+	</repository>
+	<repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+	</repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -37,17 +37,22 @@
             <artifactId>spigot-api</artifactId>
             <version>1.12.2-R0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>worldedit</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-         <groupId>me.clip</groupId>
-          <artifactId>placeholderapi</artifactId>
-          <version>2.0.8</version>
-         <scope>provided</scope>
-        </dependency>
+		<dependency>
+			<groupId>com.sk89q.worldedit</groupId>
+			<artifactId>worldedit-bukkit</artifactId>
+			<version>6.1.4-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sk89q.worldedit</groupId>
+			<artifactId>worldedit-core</artifactId>
+			<version>6.1.4-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+	<dependency>
+	    <groupId>com.github.PlaceholderAPI</groupId>
+	    <artifactId>PlaceholderAPI</artifactId>
+	    <version>2.11.2</version>
+	</dependency>
     </dependencies>
 </project>
