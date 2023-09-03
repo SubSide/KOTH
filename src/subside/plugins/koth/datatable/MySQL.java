@@ -15,21 +15,23 @@ public class MySQL implements IDatabase {
     public MySQL(KothPlugin plugin){
         this.plugin = plugin;
     }
-    
+
     public Connection getConnection() throws SQLException {
-        if(connection != null && !connection.isClosed())
+        if (connection != null && !connection.isClosed())
             return connection;
-        
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
             ConfigHandler.Database cDB = plugin.getConfigHandler().getDatabase();
-            String url = "//" + cDB.getHost() +  ":" + cDB.getPort() + "/" + cDB.getDatabase();
-            this.connection = DriverManager.getConnection("jdbc:mysql:" + url, cDB.getUsername(), cDB.getPassword());
+            String url = "//" + cDB.getHost() + ":" + cDB.getPort() + "/" + cDB.getDatabase();
+            // Add autoReconnect=true to the JDBC URL
+            this.connection = DriverManager.getConnection("jdbc:mysql:" + url + "?autoReconnect=true", cDB.getUsername(), cDB.getPassword());
             return this.connection;
         } catch (ClassNotFoundException e) {
             plugin.getLogger().log(Level.SEVERE, "Couldn't find the MySQL library!", e);
         }
-        
+
         return null;
     }
+
 }
